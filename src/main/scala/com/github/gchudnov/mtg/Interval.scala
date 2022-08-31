@@ -1,8 +1,8 @@
 package com.github.gchudnov.mtg
 
 /**
-  * Generic Interval Representation
-  */
-trait Interval[A: PartialOrdering]:
-  def x1: A
-  def x2: A
+ * Generic Interval Representation
+ */
+trait Interval[A: Ordering]:
+  def x1: Option[A]
+  def x2: Option[A]

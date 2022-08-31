@@ -6,8 +6,8 @@ final class IntervalSpec extends TestSpec:
   "Interval" when {
     "IntInterval" should {
       "comparable" in {
-        val x = IntInterval(1, 2)
-        val y = IntInterval(1, 2)
+        // val x = IntInterval(1, 2)
+        // val y = IntInterval(1, 2)
       }
     }
   }
