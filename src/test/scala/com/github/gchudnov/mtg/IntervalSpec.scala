@@ -8,13 +8,23 @@ final class IntervalSpec extends TestSpec:
   // final case class IntInterval(x1: Option[Int], x2: Option[Int]) extends Interval[Int]
 
   "Interval" when {
-    "IntInterval" should {
-      "comparable" in {
+    "several intervals" should {
+      "be joined in a sequence" in {
+        val xs: List[Interval[Int]] = List(
+          Empty,
+          Degenerate(1),
+          Open(1, 2),
+          Closed(3, 4),
+          LeftClosedRightOpen(5, 6),
+          LeftOpenRightClosed(7, 8),
+          LeftOpen(9),
+          LeftClosed(1),
+          RightOpen(3),
+          RightClosed(4),
+          Unbounded
+        )
 
-        // TODO: a collection of intervals can be added to a collection
-
-        // val x = IntInterval(1, 2)
-        // val y = IntInterval(1, 2)
+        xs.size mustBe 11
       }
     }
   }

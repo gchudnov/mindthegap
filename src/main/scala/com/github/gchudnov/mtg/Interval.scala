@@ -21,7 +21,7 @@ package com.github.gchudnov.mtg
  *   - Unbounded                        | (-∞, +∞) = R
  * }}}
  */
-sealed trait Interval[T: Ordering]
+sealed trait Interval[+T: Ordering]
 
 /**
  * Proper
