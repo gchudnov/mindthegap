@@ -16,6 +16,14 @@ package com.github.gchudnov.mtg
  *   [AAA]              | A starts B              | (s)
  *   [BBBBBB]           | B is-started-by A       | (S)
  *
+ *     [AA]             | A during B              | (d)
+ *   [BBBBBB]           | B contains A            | (D)
+ *
+ *      [AAA]           | A finishes B            | (f)
+ *   [BBBBBB]           | B is-finished-by A      | (F)
+ *
+ *   [AAA]              | A equals B              | (e)
+ *   [BBB]              |                         |
  * }}}
  */
 object Relation:
@@ -25,7 +33,7 @@ object Relation:
    *
    * A preceeds B
    *
-   * A < B
+   * A p B
    *
    * {{{
    *  [AAA]
@@ -40,7 +48,7 @@ object Relation:
    *
    * B is-predeeded-by A
    *
-   * B > A
+   * B P A
    *
    * {{{
    *  [AAA]
@@ -107,7 +115,7 @@ object Relation:
    *    [BBB]
    * }}}
    */
-  def IsOverlapedBy[T: Ordering](b: Interval[T], a: Interval[T]): Boolean =
+  def isOverlapedBy[T: Ordering](b: Interval[T], a: Interval[T]): Boolean =
     overlapsWith(a, b)
 
   /**
@@ -137,5 +145,80 @@ object Relation:
    *  [BBBBBB]
    * }}}
    */
-  def IsStartedBy[T: Ordering](b: Interval[T], a: Interval[T]): Boolean =
+  def isStartedBy[T: Ordering](b: Interval[T], a: Interval[T]): Boolean =
     starts(a, b)
+
+  /**
+   * During (d)
+   *
+   * A during B
+   *
+   * A d B
+   *
+   * {{{
+   *    [AA]
+   *  [BBBBBB]
+   * }}}
+   */
+  def during[T: Ordering](a: Interval[T], b: Interval[T]): Boolean =
+    ???
+
+  /**
+   * Contains (D)
+   *
+   * B contains A
+   *
+   * D D A
+   *
+   * {{{
+   *    [AA]
+   *  [BBBBBB]
+   * }}}
+   */
+  def contains[T: Ordering](b: Interval[T], a: Interval[T]): Boolean =
+    during(a, b)
+
+  /**
+   * Finishes (d)
+   *
+   * A finishes B
+   *
+   * A f B
+   *
+   * {{{
+   *     [AAA]
+   *  [BBBBBB]
+   * }}}
+   */
+  def finishes[T: Ordering](a: Interval[T], b: Interval[T]): Boolean =
+    ???
+
+  /**
+   * IsFinishedBy (F)
+   *
+   * B is-finished-by A
+   *
+   * B F A
+   *
+   * {{{
+   *     [AAA]
+   *  [BBBBBB]
+   * }}}
+   */
+  def isFinishedBy[T: Ordering](b: Interval[T], a: Interval[T]): Boolean =
+    finishes(a, b)
+
+  /**
+   * Equals (e)
+   *
+   * A equals B
+   *
+   * A e B
+   *
+   * {{{
+   *  [AAA]
+   *  [BBB]
+   * }}}
+   */
+  def equals[T: Ordering](a: Interval[T], b: Interval[T]): Boolean =
+    ???
