@@ -45,23 +45,23 @@ package com.github.gchudnov.mtg
  */
 sealed trait Interval[+T: Ordering]
 
-case object Empty                        extends Interval[Nothing]
-case class Degenerate[T: Ordering](a: T) extends Interval[T]
+// case object Empty                        extends Interval[Nothing]
+// case class Degenerate[T: Ordering](a: T) extends Interval[T]
 
-sealed abstract class Bounded[T: Ordering](a: T, b: T, isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]
+// sealed abstract class Bounded[T: Ordering](a: T, b: T, isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]
 
-final case class Open[T: Ordering](a: T, b: T)                extends Bounded[T](a, b, isIncludeA = false, isIncludeB = false)
-final case class Closed[T: Ordering](a: T, b: T)              extends Bounded[T](a, b, isIncludeA = true, isIncludeB = true)
-final case class LeftClosedRightOpen[T: Ordering](a: T, b: T) extends Bounded[T](a, b, isIncludeA = true, isIncludeB = false)
-final case class LeftOpenRightClosed[T: Ordering](a: T, b: T) extends Bounded[T](a, b, isIncludeA = false, isIncludeB = true)
+// final case class Open[T: Ordering](a: T, b: T)                extends Bounded[T](a, b, isIncludeA = false, isIncludeB = false)
+// final case class Closed[T: Ordering](a: T, b: T)              extends Bounded[T](a, b, isIncludeA = true, isIncludeB = true)
+// final case class LeftClosedRightOpen[T: Ordering](a: T, b: T) extends Bounded[T](a, b, isIncludeA = true, isIncludeB = false)
+// final case class LeftOpenRightClosed[T: Ordering](a: T, b: T) extends Bounded[T](a, b, isIncludeA = false, isIncludeB = true)
 
-sealed abstract class Unbounded[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]
+// sealed abstract class Unbounded[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]
 
-final case class LeftOpen[T: Ordering](a: T)   extends Unbounded[T](Some(a), None, isIncludeA = false, isIncludeB = false)
-final case class LeftClosed[T: Ordering](a: T) extends Unbounded[T](Some(a), None, isIncludeA = true, isIncludeB = false)
+// final case class LeftOpen[T: Ordering](a: T)   extends Unbounded[T](Some(a), None, isIncludeA = false, isIncludeB = false)
+// final case class LeftClosed[T: Ordering](a: T) extends Unbounded[T](Some(a), None, isIncludeA = true, isIncludeB = false)
 
-final case class RightOpen[T: Ordering](b: T)   extends Unbounded[T](None, Some(b), isIncludeA = false, isIncludeB = false)
-final case class RightClosed[T: Ordering](b: T) extends Unbounded[T](None, Some(b), isIncludeA = false, isIncludeB = true)
+// final case class RightOpen[T: Ordering](b: T)   extends Unbounded[T](None, Some(b), isIncludeA = false, isIncludeB = false)
+// final case class RightClosed[T: Ordering](b: T) extends Unbounded[T](None, Some(b), isIncludeA = false, isIncludeB = true)
 
 /*   def isOpen: Boolean =
     !isIncludeA && !isIncludeB
@@ -76,37 +76,25 @@ final case class RightClosed[T: Ordering](b: T) extends Unbounded[T](None, Some(
     !isIncludeA && isIncludeB
  */
 
-object Interval:
+// object Interval:
 
-  val empty: Empty.type =
-    Empty
+  // val empty: Empty.type =
+  //   Empty
 
-  def degenerate[T: Ordering](a: T): Degenerate[T] =
-    Degenerate[T](a)
+  // def degenerate[T: Ordering](a: T): Degenerate[T] =
+  //   Degenerate[T](a)
 
-  def open[T: Ordering](a: T, b: T): Open[T] =
-    Open[T](
-      a = a,
-      b = b
-    )
+  // def open[T: Ordering](a: T, b: T): Open[T] =
+  //   Open[T](a = a, b = b)
 
-  def closed[T: Ordering](a: T, b: T): Closed[T] =
-    Closed[T](
-      a = a,
-      b = b
-    )
+  // def closed[T: Ordering](a: T, b: T): Closed[T] =
+  //   Closed[T](a = a, b = b)
 
-  def leftClosedRightOpen[T: Ordering](a: T, b: T): LeftClosedRightOpen[T] =
-    LeftClosedRightOpen[T](
-      a = a,
-      b = b
-    )
+  // def leftClosedRightOpen[T: Ordering](a: T, b: T): LeftClosedRightOpen[T] =
+  //   LeftClosedRightOpen[T](a = a, b = b)
 
-  def leftOpenRightClosed[T: Ordering](a: T, b: T): LeftOpenRightClosed[T] =
-    LeftOpenRightClosed[T](
-      a = a,
-      b = b
-    )
+  // def leftOpenRightClosed[T: Ordering](a: T, b: T): LeftOpenRightClosed[T] =
+  //   LeftOpenRightClosed[T](a = a, b = b)
 
 /*
 import java.time.Instant
