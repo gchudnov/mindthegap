@@ -13,7 +13,6 @@ final class IntervalSpec extends TestSpec:
 
         // TODO: a collection of intervals can be added to a collection
 
-
         // val x = IntInterval(1, 2)
         // val y = IntInterval(1, 2)
       }

@@ -1,5 +1,3 @@
 package com.github.gchudnov.mtg
 
-object Algebra {
-
-}
+object Algebra {}
