@@ -20,180 +20,142 @@ package com.github.gchudnov.mtg
  *     - RightClosed                    | (-∞, b] = {x | x < b}
  *   - Unbounded                        | (-∞, +∞) = R
  * }}}
- */
-sealed trait Interval[+T: Ordering]
-
-/**
- * Proper
- *
- * An interval that is neither Empty nor Degenerate is said to be Proper.
- *
- * Marker Trait
- */
-sealed trait Proper
-
-/**
- * LeftBounded
- *
- * An interval is left-bounded, if there is a value that is smaller than all its elements.
- */
-sealed trait LeftBounded
-
-/**
- * RightBounded
- *
- * An interval is right-bounded, if there is s value that is larger than all its elements.
- */
-sealed trait RightBounded
-
-/**
- * Bounded
- *
- * An interval is Bounded, if it is both Left- and Right-bounded; and is said to be Unbounded otherwise.
- *
- * Intervals that are Bounded at only one end are said to be Half-Bounded. Bounded intervals are also commonly known as finite intervals.
- *
- * Marker Trait
- */
-sealed trait Bounded extends LeftBounded with RightBounded
-
-/**
- * LeftUnbounded
- *
- * (+inf, ...
- */
-sealed trait LeftUnbounded
-
-/**
- * RightUnbounded
- *
- * ..., +inf)
- */
-sealed trait RightUnbounded
-
-/**
- * HalfOpen
- *
- * includes only one of its endpoints, e.g. (0, 1]. [0, 1).
- *
- * Marker Trait
- */
-sealed trait HalfOpen
-
-/**
- * Empty:
- * {{{
- *   [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
- * }}}
- */
-object Empty extends Interval[Nothing]
-
-/**
- * Degenerate
- *
- * Sonsists of a single real number
  *
  * {{{
- *   [a, a] = {a}
+ *   Proper               - An interval that is neither Empty nor Degenerate is said to be Proper.
+ *   LeftBounded          - An interval is left-bounded, if there is a value that is smaller than all its elements.
+ *   RightBounded         - An interval is right-bounded, if there is s value that is larger than all its elements.
+ *   Bounded              - An interval is Bounded, if it is both Left- and Right-bounded; and is said to be Unbounded otherwise.
+ *                          Bounded intervals are also commonly known as finite intervals.
+ *   LeftUnbounded        - (+inf, ...
+ *   RightUnbounded       - ..., +inf)
+ *   HalfOpen             - includes only one of its endpoints, e.g. (0, 1]. [0, 1).
+ *   Empty                - [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅.
+ *   Degenerate           - Consists of a single real number: [a, a] = {a}.
+ *   Open                 - does not include its endpoints, and is indicated with parentheses, e.g. (0, 1); (a, b) = {x | a < x < b}
+ *   Closed               - an interval which includes all its limit points, e.g. [0, 1]; [a, b] = {x | a <= x <= b}
+ *   LeftClosedRightOpen  - [a, b) = {x | a <= x < b}
+ *   LeftOpenRightClosed  - (a, b] = {x | a < x <= b}
+ *   LeftOpen             - LeftBounded and RightUnbounded; (a, +∞) = {x | x > a}.
+ *   LeftClosed           - LeftBounded and RightUnbounded; [a, +∞) = {x | x >= a}.
+ *   RightOpen            - LeftUnbounded and RightBounded; (-∞, b) = {x | x < b}.
+ *   RightClosed          - LeftUnbounded and RightBounded; (-∞, b] = {x | x < b}.
+ *   Unbounded            - Unbounded at both ends; (-∞, +∞) = R
  * }}}
  */
-final case class Degenerate[T: Ordering](a: T) extends Interval[T]
+final case class Interval[+T: Ordering](
+  start: Option[T],
+  end: Option[T],
+  startInclusive: Boolean,
+  endInclusive: Boolean
+):
+  def isBounded: Boolean =
+    start.nonEmpty && end.nonEmpty
 
-/**
- * Open - does not include its endpoints, and is indicated with parentheses, e.g. (0, 1).
- *
- * Proper and Bounded
- *
- * {{{
- *   (a, b) = {x | a < x < b}
- * }}}
- */
-final case class Open[T: Ordering](a: T, b: T) extends Interval[T] with Proper with Bounded
+  def isUnbounded: Boolean =
+    !isBounded
 
-/**
- * Closed - an interval which includes all its limit points, e.g. [0, 1].
- *
- * Proper and Bounded
- *
- * {{{
- *   [a, b] = {x | a <= x <= b}
- * }}}
- */
-final case class Closed[T: Ordering](a: T, b: T) extends Interval[T] with Proper with Bounded
 
-/**
- * LeftClosedRightOpen
- *
- * Proper and Bounded
- *
- * {{{
- *   [a, b) = {x | a <= x < b}
- * }}}
- */
-final case class LeftClosedRightOpen[T: Ordering](a: T, b: T) extends Interval[T] with Proper with Bounded with HalfOpen
+object Interval:
+  val empty: Interval[Nothing] = Interval[Nothing](
+    start = Some(null.asInstanceOf[Nothing]),
+    end = Some(null.asInstanceOf[Nothing]),
+    startInclusive = true,
+    endInclusive = false
+  )
 
-/**
- * LeftOpenRightClosed
- *
- * Proper and Bounded
- *
- * {{{
- *   (a, b] = {x | a < x <= b}
- * }}}
- */
-final case class LeftOpenRightClosed[T: Ordering](a: T, b: T) extends Interval[T] with Proper with Bounded with HalfOpen
+/*
+import java.time.Instant
+import scala.math.Ordering.Implicits._
+case class TsTzRange(
+  start: Option[Instant],
+  end: Option[Instant],
+  startInclusive: Boolean = true,
+  endInclusive: Boolean = true) {
 
-/**
- * LeftOpen
- *
- * LeftBounded and RightUnbounded
- *
- * {{{
- *   (a, +∞) = {x | x > a}
- * }}}
- */
-final case class LeftOpen[T: Ordering](a: T) extends Interval[T] with LeftBounded with RightUnbounded
+  // if start and end are specified, start must be less than or equal to end
+  require((for { s <- start; e <- end} yield { s <= e}).getOrElse(true))
 
-/**
- * LeftClosed
- *
- * LeftBounded and RightUnbounded
- *
- * {{{
- *   [a, +∞) = {x | x >= a}
- * }}}
- */
-final case class LeftClosed[T: Ordering](a: T) extends Interval[T] with LeftBounded with RightUnbounded
+  def zero: Boolean = this.bounded && this.start == this.end && !this.startInclusive || !this.endInclusive
 
-/**
- * RightOpen
- *
- * LeftUnbounded and RightBounded
- *
- * {{{
- *   (-∞, b) = {x | x < b}
- * }}}
- */
-final case class RightOpen[T: Ordering](b: T) extends Interval[T] with LeftUnbounded with RightBounded
+  def infinite: Boolean = this.start.isEmpty && this.end.isEmpty
 
-/**
- * RightClosed
- *
- * LeftUnbounded and RightBounded
- *
- * {{{
- *   (-∞, b] = {x | x < b}
- * }}}
- */
-final case class RightClosed[T: Ordering](b: T) extends Interval[T] with LeftUnbounded with RightBounded
+  // unbounded in this context refers to an interval that is only unbounded on one side
+  def unbounded: Boolean = leftUnbounded || rightUnbounded
 
-/**
- * Unbounded
- *
- * Unbounded at both ends (simultaneously open and closed).
- *
- * {{{
- *   (-∞, +∞) = R
- * }}}
+  def leftUnbounded: Boolean = this.start.isEmpty && this.end.nonEmpty
+
+  def rightUnbounded: Boolean = this.start.nonEmpty && this.end.isEmpty
+
+  def bounded: Boolean = this.start.nonEmpty && this.end.nonEmpty
+
+  private def touchingEdges(left: TsTzRange, right: TsTzRange): Boolean =
+    left.end == right.start && left.endInclusive && right.startInclusive
+
+  // Checks if the end of bounded2 lies anywhere within bounded1
+  private def boundedCheckLeftOverlap(bounded1: TsTzRange, bounded2: TsTzRange): Boolean =
+    bounded2.end > bounded1.start && bounded2.end <= bounded1.end
+
+  // Checks if the start of bounded2 lies anywhere within bounded1
+  private def boundedCheckRightOverlap(bounded1: TsTzRange, bounded2: TsTzRange): Boolean =
+    bounded2.start >= bounded1.start && bounded2.start < bounded1.end
+
+  // boundedCheck assumes both intervals are bounded
+  private def boundedCheck(bounded1: TsTzRange, bounded2: TsTzRange): Boolean =
+    boundedCheckLeftOverlap(bounded1, bounded2) ||
+      boundedCheckRightOverlap(bounded1, bounded2) ||
+      touchingEdges(bounded2, bounded1) ||
+      touchingEdges(bounded1, bounded2)
+
+  // checks if both ranges are unbounded in opposite directions, and check overlap if so
+  private def oppositeUnboundedCheck(leftUnbounded: TsTzRange, rightUnbounded: TsTzRange): Boolean =
+    leftUnbounded.leftUnbounded &&
+      rightUnbounded.rightUnbounded &&
+      (leftUnbounded.end > rightUnbounded.start || touchingEdges(leftUnbounded, rightUnbounded))
+
+  // checks if both ranges are unbounded in the same direction
+  private def sameUnboundedCheck(unbounded1: TsTzRange, unbounded2: TsTzRange): Boolean =
+    (unbounded1.leftUnbounded && unbounded2.leftUnbounded) ||
+      (unbounded1.rightUnbounded && unbounded2.rightUnbounded)
+
+  private def doubleUnboundedCheck(unbounded1: TsTzRange, unbounded2: TsTzRange): Boolean =
+    sameUnboundedCheck(unbounded1, unbounded2) ||
+      oppositeUnboundedCheck(unbounded1, unbounded2) ||
+      oppositeUnboundedCheck(unbounded2, unbounded1)
+
+  private def singleUnboundedLeftUnboundedCheck(bounded: TsTzRange, leftUnbounded: TsTzRange): Boolean =
+    leftUnbounded.leftUnbounded && leftUnbounded.end > bounded.start
+
+  private def singleUnboundedRightUnboundedCheck(bounded: TsTzRange, rightUnbounded: TsTzRange): Boolean =
+    rightUnbounded.rightUnbounded && rightUnbounded.start < bounded.end
+
+  // if only one of the intervals is bounded
+  private def singleUnboundedCheck(bounded: TsTzRange, unbounded: TsTzRange): Boolean =
+    singleUnboundedLeftUnboundedCheck(bounded, unbounded) ||
+      singleUnboundedRightUnboundedCheck(bounded, unbounded) ||
+      touchingEdges(bounded, unbounded) ||
+      touchingEdges(unbounded, bounded)
+
+  def overlaps(other: TsTzRange): Boolean = {
+    // if any of the intervals are zero, return false early
+    !(this.zero || other.zero) &&
+      // if any of the intervals are infinite, return true early
+      (this.infinite || other.infinite) ||
+      // otherwise, depending on the boundedness of the 2 intervals, check accordingly
+      (this.unbounded && other.unbounded && doubleUnboundedCheck(this, other)) ||
+      (!this.unbounded && !other.unbounded && boundedCheck(this, other)) ||
+      (!this.unbounded && other.unbounded && singleUnboundedCheck(this, other)) ||
+      (this.unbounded && !other.unbounded && singleUnboundedCheck(other, this))
+  }
+
+  def contains(other: Instant): Boolean = {
+    overlaps(TsTzRange(Some(other), Some(other)))
+  }
+
+  // returns true if it overlaps with the current time
+  def isCurrent: Boolean = {
+    this.contains(Instant.now)
+  }
+
+}
  */
-case object Unbounded extends Interval[Nothing] with LeftUnbounded with RightBounded
