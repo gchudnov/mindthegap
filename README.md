@@ -10,6 +10,8 @@ Operations on intervals
 - [Complete Interval Arithmetic and its Implementation on the Computer](https://www.math.kit.edu/ianm2/~kulisch/media/arjpkx.pdf)
 - [Interval Arithmetic](https://web.mit.edu/hyperbook/Patrikalakis-Maekawa-Cho/node45.html)
 
+- [github/brein-time-utilities](https://github.com/Breinify/brein-time-utilities)
+
 
 https://www.researchgate.net/profile/Sebastian-Mate/publication/336678634/figure/fig1/AS:816058416001024@1571574896574/Allens-time-interval-algebra-The-table-shows-the-13-possible-Allen-relations-between.png
 
