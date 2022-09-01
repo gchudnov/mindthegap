@@ -1,11 +1,12 @@
 package com.github.gchudnov.mtg
 
-final class RelationSpec extends TestSpec:
+final class ArithmeticSpec extends TestSpec:
 
-  "Relation" when {
+  "Arithmetic" when {
     "xxx" should {
       "yyy" in {
 
       }
     }
   }
+  
