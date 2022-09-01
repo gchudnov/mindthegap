@@ -43,26 +43,88 @@ package com.github.gchudnov.mtg
  *   Unbounded            - Unbounded at both ends; (-∞, +∞) = R
  * }}}
  */
-final case class Interval[+T: Ordering](
-  start: Option[T],
-  end: Option[T],
-  startInclusive: Boolean,
-  endInclusive: Boolean
-):
-  def isBounded: Boolean =
-    start.nonEmpty && end.nonEmpty
+sealed trait Interval[+T: Ordering]
 
-  def isUnbounded: Boolean =
-    !isBounded
+case object Empty extends Interval[Nothing]
+
+case class Degenerate[+T: Ordering](a: T) extends Interval[T]
+
+final case class Bounded[+T: Ordering](
+  a: T,
+  b: T,
+  isIncludeA: Boolean,
+  isIncludeB: Boolean
+) extends Interval[T]:
+
+  def isOpen: Boolean =
+    !isIncludeA && !isIncludeB
+
+  def isClosed: Boolean =
+    isIncludeA && isIncludeB
+
+  def isLeftClosedRightOpen: Boolean =
+    isIncludeA && !isIncludeB
+
+  def isLeftOpenRightClosed: Boolean =
+    !isIncludeA && isIncludeB
+
+final case class Unbounded[+T: Ordering](
+  a: Option[T],
+  b: Option[T],
+  isIncludeA: Boolean,
+  isIncludeB: Boolean
+) extends Interval[T]
+
+/*
+ *   - LeftBounded and RightUnbounded
+ *     - LeftOpen                       | (a, +∞) = {x | x > a}
+ *     - LeftClosed                     | [a, +∞) = {x | x >= a}
+ *   - LeftUnbounded and RightBounded
+ *     - RightOpen                      | (-∞, b) = {x | x < b}
+ *     - RightClosed                    | (-∞, b] = {x | x < b}
+ *   - Unbounded                        | (-∞, +∞) = R
+*/
 
 
 object Interval:
-  val empty: Interval[Nothing] = Interval[Nothing](
-    start = Some(null.asInstanceOf[Nothing]),
-    end = Some(null.asInstanceOf[Nothing]),
-    startInclusive = true,
-    endInclusive = false
-  )
+
+  val empty: Empty.type =
+    Empty
+
+  def degenerate[T: Ordering](a: T): Degenerate[T] =
+    Degenerate[T](a)
+
+  def open[T: Ordering](a: T, b: T): Bounded[T] =
+    Bounded[T](
+      a = a,
+      b = b,
+      isIncludeA = false,
+      isIncludeB = false
+    )
+
+  def closed[T: Ordering](a: T, b: T): Bounded[T] =
+    Bounded[T](
+      a = a,
+      b = b,
+      isIncludeA = true,
+      isIncludeB = true
+    )
+
+  def leftClosedRightOpen[T: Ordering](a: T, b: T): Bounded[T] =
+    Bounded[T](
+      a = a,
+      b = b,
+      isIncludeA = true,
+      isIncludeB = false
+    )
+
+  def leftOpenRightClosed[T: Ordering](a: T, b: T): Bounded[T] =
+    Bounded[T](
+      a = a,
+      b = b,
+      isIncludeA = false,
+      isIncludeB = true
+    )
 
 /*
 import java.time.Instant
