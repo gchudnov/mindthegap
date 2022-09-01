@@ -9,7 +9,9 @@ package com.github.gchudnov.mtg
  *   - Proper and Bounded
  *     - Open
  *     - Closed
- *     - TODO: define
+ *     - LeftClosedRightOpen
+ *     - LeftOpenRightClosed
+ *   - LeftBounded and RightUnbounded
  */
 sealed trait Interval[T: Ordering]
 
@@ -23,13 +25,30 @@ sealed trait Interval[T: Ordering]
 sealed trait Proper
 
 /**
+ * LeftBounded
+ * 
+ * An interval is left-bounded, 
+ * if there is a value that is smaller than all its elements.
+ */
+sealed trait LeftBounded
+
+/**
+ * RightBounded
+ * 
+ * An interval is right-bounded, 
+ * if there is s value that is larger than all its elements.
+ */
+sealed trait RightBounded
+
+/**
  * Bounded
  *
- * An interval is said to be Bounded, if it is both left- and right-bounded; and is said to be Unbounded otherwise.
+ * An interval is Bounded, if it is both Lleft- and Right-bounded;
+ * and is said to be Unbounded otherwise.
  *
  * Marker Trait
  */
-sealed trait Bounded
+sealed trait Bounded extends LeftBounded with RightBounded
 
 /**
  * HalfOpen
