@@ -72,7 +72,7 @@ object Relation:
    */
   def meets[T: Ordering](a: Interval[T], b: Interval[T]): Boolean =
     // (a, b) match {
-    //   case (x @ Bounded[T], y @ Bounded[T]) =>
+    //   case (Proper[T](_, _, _, _), Proper[T](_, _, _, _)) =>
     //     ???
     //   case _ =>
     //     ???
