@@ -4,9 +4,6 @@ final class ArithmeticSpec extends TestSpec:
 
   "Arithmetic" when {
     "xxx" should {
-      "yyy" in {
-
-      }
+      "yyy" in {}
     }
   }
-  

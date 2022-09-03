@@ -45,23 +45,33 @@ package com.github.gchudnov.mtg
  */
 sealed trait Interval[+T: Ordering]
 
-case object Empty                        extends Interval[Nothing]:
+case object Empty extends Interval[Nothing]:
   override def toString(): String = "∅"
 
 final case class Degenerate[T: Ordering](a: T) extends Interval[T]:
-  override def toString(): String = "{a}"
+  override def toString(): String = s"{${a.toString()}}"
 
 final case class Proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]:
+
+  // make sure that a <= b if specified
+  require((for x <- a; y <- b yield summon[Ordering[T]].lteq(x, y)).getOrElse(true))
+
   override def toString(): String =
-    // val leftBound = isIncludeA = 
-    ???
+    import Proper.Tags
+    val leftBound  = Tags.leftBound(isIncludeA)
+    val rightBound = Tags.rightBound(isIncludeB)
+    val leftValue  = Tags.leftValue(a)
+    val rightValue = Tags.rightValue(b)
+    s"${leftBound}${leftValue},${rightValue}${rightBound}"
 
 object Proper:
 
-  private object Tags {
-    private val leftOpen = "("
-    private val leftClosed = "["
-    private val rightOpen = ")"
+  private object Tags:
+    private val infinite = "∞"
+
+    private val leftOpen    = "("
+    private val leftClosed  = "["
+    private val rightOpen   = ")"
     private val rightClosed = "]"
 
     def leftBound(isInclude: Boolean): String =
@@ -69,10 +79,32 @@ object Proper:
 
     def rightBound(isInclude: Boolean): String =
       if isInclude then Tags.rightClosed else Tags.rightOpen
-  }
 
+    def leftValue(x: Option[?]): String =
+      x.fold(s"-${Tags.infinite}")(_.toString())
 
+    def rightValue(x: Option[?]): String =
+      x.fold(s"+${Tags.infinite}")(_.toString())
 
+object Interval:
+
+  val empty: Interval[Nothing] =
+    Empty
+
+  def degenerate[T: Ordering](a: T): Interval[T] =
+    Degenerate(a)
+
+  def proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
+    Proper(a, b, isIncludeA, isIncludeB)
+
+  def make[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
+    ???
+
+/*
+ *   - Empty                            | [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
+ *   - Degenerate                       | [a, a] = {a}
+ *   - Proper and Bounded
+ */
 
 // sealed abstract class Bounded[T: Ordering](a: T, b: T, isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]
 
@@ -104,23 +136,23 @@ object Proper:
 
 // object Interval:
 
-  // val empty: Empty.type =
-  //   Empty
+// val empty: Empty.type =
+//   Empty
 
-  // def degenerate[T: Ordering](a: T): Degenerate[T] =
-  //   Degenerate[T](a)
+// def degenerate[T: Ordering](a: T): Degenerate[T] =
+//   Degenerate[T](a)
 
-  // def open[T: Ordering](a: T, b: T): Open[T] =
-  //   Open[T](a = a, b = b)
+// def open[T: Ordering](a: T, b: T): Open[T] =
+//   Open[T](a = a, b = b)
 
-  // def closed[T: Ordering](a: T, b: T): Closed[T] =
-  //   Closed[T](a = a, b = b)
+// def closed[T: Ordering](a: T, b: T): Closed[T] =
+//   Closed[T](a = a, b = b)
 
-  // def leftClosedRightOpen[T: Ordering](a: T, b: T): LeftClosedRightOpen[T] =
-  //   LeftClosedRightOpen[T](a = a, b = b)
+// def leftClosedRightOpen[T: Ordering](a: T, b: T): LeftClosedRightOpen[T] =
+//   LeftClosedRightOpen[T](a = a, b = b)
 
-  // def leftOpenRightClosed[T: Ordering](a: T, b: T): LeftOpenRightClosed[T] =
-  //   LeftOpenRightClosed[T](a = a, b = b)
+// def leftOpenRightClosed[T: Ordering](a: T, b: T): LeftOpenRightClosed[T] =
+//   LeftOpenRightClosed[T](a = a, b = b)
 
 /*
 import java.time.Instant
