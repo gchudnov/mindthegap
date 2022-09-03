@@ -98,6 +98,12 @@ object Interval:
     Proper(a, b, isIncludeA, isIncludeB)
 
   def make[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
+    // (a, b) match {
+    //   case (Some(x), Some(y)) =>
+    //     ???
+
+    //   case
+    // }
     ???
 
 /*
