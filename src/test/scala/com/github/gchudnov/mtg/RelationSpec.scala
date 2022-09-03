@@ -1,7 +1,6 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Relation.*
-import org.scalacheck.Gen
 
 final class RelationSpec extends TestSpec:
 
@@ -20,9 +19,7 @@ final class RelationSpec extends TestSpec:
 
     }
   }
-
-  val points = for (n <- Gen.choose(-1000, 1000)) yield 2 * n
-  
+ 
 
 /*
 We can posit prop­er­ties like these:

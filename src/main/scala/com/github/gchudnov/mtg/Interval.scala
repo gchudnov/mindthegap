@@ -45,9 +45,33 @@ package com.github.gchudnov.mtg
  */
 sealed trait Interval[+T: Ordering]
 
-case object Empty                        extends Interval[Nothing]
-final case class Degenerate[T: Ordering](a: T) extends Interval[T]
-final case class Proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]
+case object Empty                        extends Interval[Nothing]:
+  override def toString(): String = "∅"
+
+final case class Degenerate[T: Ordering](a: T) extends Interval[T]:
+  override def toString(): String = "{a}"
+
+final case class Proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]:
+  override def toString(): String =
+    // val leftBound = isIncludeA = 
+    ???
+
+object Proper:
+
+  private object Tags {
+    private val leftOpen = "("
+    private val leftClosed = "["
+    private val rightOpen = ")"
+    private val rightClosed = "]"
+
+    def leftBound(isInclude: Boolean): String =
+      if isInclude then Tags.leftClosed else Tags.leftOpen
+
+    def rightBound(isInclude: Boolean): String =
+      if isInclude then Tags.rightClosed else Tags.rightOpen
+  }
+
+
 
 
 // sealed abstract class Bounded[T: Ordering](a: T, b: T, isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]

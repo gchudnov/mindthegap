@@ -4,12 +4,9 @@ import java.time.Instant
 
 final class IntervalSpec extends TestSpec:
 
-  // final case class InstantInterval(x1: Option[Instant], x2: Option[Instant]) extends Interval[Instant]
-  // final case class IntInterval(x1: Option[Int], x2: Option[Int]) extends Interval[Int]
-
   "Interval" when {
-    "several intervals" should {
-      "be joined in a sequence" in {
+    "converted to string" should {
+      "be represented with a compact value" in {
         // val xs: List[Interval[Int]] = List(
         //   Empty,
         //   Degenerate(1),
