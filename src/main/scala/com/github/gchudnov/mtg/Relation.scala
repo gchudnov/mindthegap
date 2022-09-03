@@ -71,6 +71,15 @@ object Relation:
    * }}}
    */
   def meets[T: Ordering](a: Interval[T], b: Interval[T]): Boolean =
+    a match {
+      case Empty =>
+        ???
+      case Degenerate(x) =>
+        ???
+      case Proper(x, y, ix, iy) =>
+        ???
+    }
+
     // (a, b) match {
     //   case (Proper[T](_, _, _, _), Proper[T](_, _, _, _)) =>
     //     ???

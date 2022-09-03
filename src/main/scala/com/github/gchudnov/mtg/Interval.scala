@@ -49,13 +49,6 @@ case object Empty                        extends Interval[Nothing]
 final case class Degenerate[T: Ordering](a: T) extends Interval[T]
 final case class Proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]
 
-object Interval:
-  def unapply[T: Ordering](i: Interval[T]): Option[(Option[T], Option[T], Boolean, Boolean)] = {
-    i match {
-      case _ =>
-        ???
-    }
-  }
 
 // sealed abstract class Bounded[T: Ordering](a: T, b: T, isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]
 
