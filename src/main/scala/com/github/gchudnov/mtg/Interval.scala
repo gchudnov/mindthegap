@@ -53,8 +53,8 @@ final case class Degenerate[T: Ordering](a: T) extends Interval[T]:
 
 final case class Proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]:
 
-  // make sure that a <= b if specified
-  require((for x <- a; y <- b yield summon[Ordering[T]].lteq(x, y)).getOrElse(true))
+  // make sure that a < b if provided
+  require((for x <- a; y <- b yield summon[Ordering[T]].lt(x, y)).getOrElse(true))
 
   override def toString(): String =
     import Proper.Tags
@@ -98,19 +98,14 @@ object Interval:
     Proper(a, b, isIncludeA, isIncludeB)
 
   def make[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
-    // (a, b) match {
-    //   case (Some(x), Some(y)) =>
-    //     ???
-
-    //   case
-    // }
-    ???
-
-/*
- *   - Empty                            | [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
- *   - Degenerate                       | [a, a] = {a}
- *   - Proper and Bounded
- */
+    val ord = summon[Ordering[T]]
+    (a, b) match
+      case (Some(x), Some(y)) =>
+        if ord.equiv(x, y) && isIncludeA && isIncludeB then degenerate(x)
+        else if ord.lt(x, y) then proper(a, b, isIncludeA, isIncludeB)
+        else empty
+      case _ =>
+        proper(a, b, isIncludeA, isIncludeB)
 
 // sealed abstract class Bounded[T: Ordering](a: T, b: T, isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]
 

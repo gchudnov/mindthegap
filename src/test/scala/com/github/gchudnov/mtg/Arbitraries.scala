@@ -12,7 +12,7 @@ object Arbitraries:
    *
    * It will allow to construct Proper intervals.
    */
-  val intTupleXleY: Gen[(Int, Int)] =
+  val genIntTupleLteq: Gen[(Int, Int)] =
     for
       x <- Gen.choose(xMin, xMax - 1)
       y <- Gen.choose(x + 1, xMax)
@@ -23,7 +23,7 @@ object Arbitraries:
    *
    * It will allow to construct Proper and Degenerate intervals.
    */
-  val intTupleXleqY: Gen[(Int, Int)] =
+  val genIntTupleLt: Gen[(Int, Int)] =
     for
       x <- Gen.choose(xMin, xMax)
       y <- Gen.choose(x, xMax)
@@ -34,8 +34,29 @@ object Arbitraries:
    *
    * That will allow to construct Empty, Degenrate and Proper intervals.
    */
-  val intTupleXanyY: Gen[(Int, Int)] =
+  val genIntTupleAny: Gen[(Int, Int)] =
     for
       x <- Gen.choose(xMin, xMax)
       y <- Gen.choose(xMin, xMax)
     yield (x, y)
+
+  /**
+   * Generator to make any tuple (a?, b?) where a and b are unordered.
+   *
+   * That will allow to construct Empty, Degenrate and Proper intervals.
+   */
+  val genOptIntTupleAny: Gen[(Option[Int], Option[Int])] =
+    for
+      x <- Gen.option(Gen.choose(xMin, xMax))
+      y <- Gen.option(Gen.choose(xMin, xMax))
+    yield (x, y)
+
+  /**
+   * Boolean Generator that produces true 50% of the time.
+   */
+  val genBoolEq: Gen[Boolean] = Gen.oneOf(true, false)
+
+  /**
+   * Boolean Generator that produces true 75% of the time.
+   */
+  val genBool75 = Gen.prob(0.75)
