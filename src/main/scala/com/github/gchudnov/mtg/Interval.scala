@@ -48,6 +48,15 @@ sealed trait Interval[+T: Ordering]:
   def isDegenrate: Boolean
   def isProper: Boolean
 
+  def nonEmpty: Boolean =
+    !isEmpty
+
+  def nonDegenerate: Boolean =
+    !isDegenrate
+
+  def nonProper: Boolean =
+    !isProper
+
 /**
  * Empty Interval
  */

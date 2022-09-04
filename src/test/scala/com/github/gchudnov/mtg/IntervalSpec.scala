@@ -33,6 +33,10 @@ final class IntervalSpec extends TestSpec:
 
           actual match
             case Empty =>
+              actual.isEmpty mustBe(true)
+              actual.isDegenrate mustBe(false)
+              actual.isProper mustBe(false)
+
               (ox, oy) match
                 case (Some(x), Some(y)) =>
                   val isXgtY = x > y
@@ -42,6 +46,10 @@ final class IntervalSpec extends TestSpec:
                 case _ =>
                   fail("Empty Interval boundaries must be defined.")
             case Degenerate(a) =>
+              actual.isEmpty mustBe(false)
+              actual.isDegenrate mustBe(true)
+              actual.isProper mustBe(false)
+
               (ox, oy) match
                 case (Some(x), Some(y)) =>
                   ix mustBe (true)
@@ -50,6 +58,10 @@ final class IntervalSpec extends TestSpec:
                 case _ =>
                   fail("Degenerate Interval boundaries must be defined.")
             case Proper(oa, ob, ia, ib) =>
+              actual.isEmpty mustBe(false)
+              actual.isDegenrate mustBe(false)
+              actual.isProper mustBe(true)
+
               (ox, oy) match
                 case (Some(x), Some(y)) =>
                   (x < y) mustBe (true)
