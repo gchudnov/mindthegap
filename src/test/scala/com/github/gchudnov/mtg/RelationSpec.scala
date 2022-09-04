@@ -18,27 +18,68 @@ final class RelationSpec extends TestSpec:
 
   "Relation" when {
 
-    "meets & metBy" should {
+    /**
+     * Preceeds, IsPreceededBy
+     *
+     * {{{
+     *   AAA]
+     *        [BBB
+     * }}}
+     */
+    "preceeds & isPreceededBy" should {
+      "check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
+          val xy = Interval.make(ox, oy, ix, iy)
+          val wz = Interval.make(ow, oz, iw, iz)
 
-      /**
-       * Meets, IsMetBy
-       *
-       * {{{
-       *   AAA]
-       *      [BBB
-       * }}}
-       */
+          if xy.preceeds(wz) then
+            wz.isPreceededBy(xy) mustBe (true)
+            xy.meets(wz) mustBe (false)
+            wz.isMetBy(xy) mustBe (false)
+
+            val isYltW = pOrd.lt(oy, ow)
+            val isYeqW = pOrd.equiv(oy, ow)
+
+            (isYltW || (isYeqW && !(iy && iw))) mustBe (true)
+          else
+            val isYeqW = pOrd.equiv(oy, ow)
+            val isYgtW = pOrd.gt(oy, ow)
+            val isXgtY = pOrd.gt(ox, oy)
+            val isWgtZ = pOrd.gt(ow, oz)
+            val isXeqY = pOrd.eq(ox, oy)
+            val isWeqZ = pOrd.eq(ow, oz)
+
+            val a = (isYgtW || (isYeqW && (iy && iw)))
+            val b = isXgtY                          // Empty
+            val c = isWgtZ                          // Empty
+            val d = (isXeqY || (ix && iy) == false) // Empty
+            val e = (isWeqZ || (iw && iz) == false) // Empty
+
+            (a || b || c || d || e) mustBe (true)
+        }
+      }
+    }
+
+    /**
+     * Meets, IsMetBy
+     *
+     * {{{
+     *   AAA]
+     *      [BBB
+     * }}}
+     */
+    "meets & metBy" should {
       "check" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
           val xy = Interval.make(ox, oy, ix, iy)
           val wz = Interval.make(ow, oz, iw, iz)
 
           if xy.meets(wz) then
-            val isYeqW = pOrd.equiv(oy, ow)
-
-            println((xy, wz))
-
             wz.isMetBy(xy) mustBe (true)
+            xy.preceeds(wz) mustBe (false)
+            wz.isPreceededBy(xy) mustBe (false)
+
+            val isYeqW = pOrd.equiv(oy, ow)
 
             isYeqW mustEqual (true)
             (iy && iw) mustBe (true)
@@ -50,10 +91,10 @@ final class RelationSpec extends TestSpec:
             val isWeqZ = pOrd.eq(ow, oz)
 
             val a = (!isYeqW || (iy && iw) == false)
-            val b = isXgtY
-            val c = isWgtZ
-            val d = (isXeqY || (ix && iy) == false)
-            val e = (isWeqZ || (iw && iz) == false)
+            val b = isXgtY                          // Empty
+            val c = isWgtZ                          // Empty
+            val d = (isXeqY || (ix && iy) == false) // Empty
+            val e = (isWeqZ || (iw && iz) == false) // Empty
 
             (a || b || c || d || e) mustBe (true)
         }

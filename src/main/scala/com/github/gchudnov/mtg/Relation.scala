@@ -28,43 +28,53 @@ package com.github.gchudnov.mtg
  */
 object Relation:
 
-  // /**
-  //  * Preceeds (p)
-  //  *
-  //  * A preceeds B
-  //  *
-  //  * A p B
-  //  *
-  //  * {{{
-  //  *  [AAA]
-  //  *        [BBB]
-  //  * }}}
-  //  */
-  // def preceeds[T: Ordering](a: Interval[T], b: Interval[T]): Boolean =
-  //   ???
-
-  // /**
-  //  * IsPreceededBy (P)
-  //  *
-  //  * B is-predeeded-by A
-  //  *
-  //  * B P A
-  //  *
-  //  * {{{
-  //  *  [AAA]
-  //  *        [BBB]
-  //  * }}}
-  //  */
-  // def isPreceededBy[T: Ordering](b: Interval[T], a: Interval[T]): Boolean =
-  //   preceeds(a, b)
-
   extension [T: Ordering](a: Interval[T])
+    /**
+     * Preceeds (p)
+     *
+     * A preceeds B
+     *
+     * A <p> B
+     *
+     * {{{
+     *   AAA]
+     *        [BBB
+     * }}}
+     */
+    def preceeds(b: Interval[T]): Boolean =
+      (a, b) match
+        case (Degenerate(x), Degenerate(y)) =>
+          summon[Ordering[T]].lt(x, y)
+        case (Degenerate(x), Proper(Some(y1), _, includeY1, _)) =>
+          summon[Ordering[T]].lt(x, y1) || (summon[Ordering[T]].equiv(x, y1) && !includeY1)
+        case (Proper(_, Some(x2), _, includeX2), Degenerate(y)) =>
+          summon[Ordering[T]].lt(x2, y) || (summon[Ordering[T]].equiv(x2, y) && !includeX2)
+        case (Proper(_, Some(x2), _, includeX2), Proper(Some(y1), _, includeY1, _)) =>
+          summon[Ordering[T]].lt(x2, y1) || (summon[Ordering[T]].equiv(x2, y1) && (!includeX2 || !includeY1))
+        case _ =>
+          false
+
+    /**
+     * IsPreceededBy (P)
+     *
+     * A is-predeeded-by B
+     *
+     * A <P> B
+     *
+     * {{{
+     *   BBB]
+     *        [AAA
+     * }}}
+     */
+    def isPreceededBy(b: Interval[T]): Boolean =
+      b.preceeds(a)
+
     /**
      * Meets (m)
      *
      * A meets B
      *
-     * A m B
+     * A <m> B
      *
      * {{{
      *  AAA]
@@ -89,7 +99,7 @@ object Relation:
      *
      * A is-met-by B
      *
-     * A M B
+     * A <M> B
      *
      * {{{
      *   BBB]
