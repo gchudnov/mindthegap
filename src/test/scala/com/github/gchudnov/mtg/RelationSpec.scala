@@ -1,6 +1,8 @@
 package com.github.gchudnov.mtg
 
+import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Relation.*
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
 final class RelationSpec extends TestSpec:
 
@@ -8,12 +10,37 @@ final class RelationSpec extends TestSpec:
     "IntIntervals" should {
 
       /**
+       * {{{
+       *  Meets:
+       *  [AAA]
+       *      [BBB]
+       *
+       * IsMetBy
+       *  [BBB]
+       *      [AAA]
+       * }}}
        */
-      "meet & metBy" in {
-        // forAll(t) { (a, b, expected) =>
-        //   a.meets(b) mustBe expected
-        //   b.isMetBy(a) mustBe expected
-        // }
+      "meets & metBy" in {
+        forAll(genIntervalTuple, genIntervalTuple) { case (((x, y), ix, iy), ((w, z), iw, iz)) =>
+          val xy = Interval.make(x, y, ix, iy)
+          val wz = Interval.make(w, z, iw, iz)
+
+          if xy.meets(wz) then
+            wz.isMetBy(xy) mustBe (true)
+            (y, w) match
+              case (Some(u), Some(v)) =>
+                (iy && iw) mustBe (true)
+                u mustEqual (v)
+              case _ =>
+                fail("When two intervals are met, both boundaries must be finite.")
+          else
+            (y, w) match
+              case (Some(u), Some(v)) =>
+                val isEq = (u == v)
+                (!isEq || ((iy && iw) == false)) mustBe true
+              case _ =>
+                succeed
+        }
       }
 
     }

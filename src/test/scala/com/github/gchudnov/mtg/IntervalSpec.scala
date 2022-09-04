@@ -1,8 +1,9 @@
 package com.github.gchudnov.mtg
 
-import java.time.Instant
 import com.github.gchudnov.mtg.Arbitraries.*
 import org.scalacheck.Gen
+
+import java.time.Instant
 
 final class IntervalSpec extends TestSpec:
 
@@ -33,7 +34,7 @@ final class IntervalSpec extends TestSpec:
 
                   (isXgtY || (isXeqY && ((ix == false && iy == false) || (ix == true && iy == false) || (ix == false && iy == true)))) mustBe (true)
                 case _ =>
-                  fail("Empty Interval boundaries must be defined")
+                  fail("Empty Interval boundaries must be defined.")
             case Degenerate(a) =>
               x.isDefined mustBe (true)
               y.isDefined mustBe (true)

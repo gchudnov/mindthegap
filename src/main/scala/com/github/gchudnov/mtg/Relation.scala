@@ -83,13 +83,13 @@ object Relation:
     /**
      * IsMetBy (M)
      *
-     * B is-met-by A
+     * A is-met-by B
      *
-     * B M A
+     * A M B
      *
      * {{{
-     *  [AAA]
-     *      [BBB]
+     *  [BBB]
+     *      [AAA]
      * }}}
      */
     def isMetBy(b: Interval[T]): Boolean =

@@ -60,3 +60,13 @@ object Arbitraries:
    * Boolean Generator that produces true 75% of the time.
    */
   val genBool75 = Gen.prob(0.75)
+
+  /**
+    * Generate Tuple to build an interval
+    */
+  val genIntervalTuple: Gen[((Option[Int], Option[Int]), Boolean, Boolean)] =
+    for
+      ab <- genOptIntTupleAny
+      ia <- genBoolEq
+      ib <- genBoolEq
+    yield (ab, ia, ib)
