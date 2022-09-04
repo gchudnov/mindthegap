@@ -27,25 +27,25 @@ final class RelationSpec extends TestSpec:
        * }}}
        */
       "check" in {
-        forAll(genOneIntTuple, genOneIntTuple) { case (((x, y), ix, iy), ((w, z), iw, iz)) =>
-          val xy = Interval.make(x, y, ix, iy)
-          val wz = Interval.make(w, z, iw, iz)
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
+          val xy = Interval.make(ox, oy, ix, iy)
+          val wz = Interval.make(ow, oz, iw, iz)
 
           println((xy, wz))
 
           if xy.meets(wz) then
             wz.isMetBy(xy) mustBe (true)
-            (y, w) match
-              case (Some(u), Some(v)) =>
+            (oy, ow) match
+              case (Some(y), Some(w)) =>
                 (iy && iw) mustBe (true)
-                u mustEqual (v)
+                y mustEqual (w)
               case _ =>
                 fail("When two intervals are met, both boundaries must be finite.")
           else
-            (y, w) match
-              case (Some(u), Some(v)) =>
-                val isEq = (u == v)
-                (!isEq || ((iy && iw) == false)) mustBe true
+            (oy, ow) match
+              case (Some(y), Some(w)) =>
+                val isYeqW = (y == w)
+                (!isYeqW || ((iy && iw) == false)) mustBe true
               case _ =>
                 succeed
         }

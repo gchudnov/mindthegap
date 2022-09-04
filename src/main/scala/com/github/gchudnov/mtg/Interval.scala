@@ -43,14 +43,34 @@ package com.github.gchudnov.mtg
  *   Unbounded            - Unbounded at both ends; (-∞, +∞) = R
  * }}}
  */
-sealed trait Interval[+T: Ordering]
+sealed trait Interval[+T: Ordering]:
+  def isEmpty: Boolean
+  def isDegenrate: Boolean
+  def isProper: Boolean
 
+/**
+ * Empty Interval
+ */
 case object Empty extends Interval[Nothing]:
   override def toString(): String = "∅"
 
+  override def isEmpty: Boolean     = true
+  override def isDegenrate: Boolean = false
+  override def isProper: Boolean    = false
+
+/**
+ * Degenerate Interval
+ */
 final case class Degenerate[T: Ordering](a: T) extends Interval[T]:
   override def toString(): String = s"{${a.toString()}}"
 
+  override def isEmpty: Boolean     = false
+  override def isDegenrate: Boolean = true
+  override def isProper: Boolean    = false
+
+/**
+ * Proper Interval
+ */
 final case class Proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]:
 
   // make sure that a < b if provided
@@ -63,6 +83,10 @@ final case class Proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boo
     val leftValue  = Tags.leftValue(a)
     val rightValue = Tags.rightValue(b)
     s"${leftBound}${leftValue},${rightValue}${rightBound}"
+
+  override def isEmpty: Boolean     = false
+  override def isDegenrate: Boolean = false
+  override def isProper: Boolean    = true
 
 object Proper:
 

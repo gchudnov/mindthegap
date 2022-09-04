@@ -67,14 +67,18 @@ object Relation:
      * A m B
      *
      * {{{
-     *  [AAA]
-     *      [BBB]
+     *  AAA]
+     *     [BBB
      * }}}
      */
     def meets(b: Interval[T]): Boolean =
       (a, b) match
         case (Degenerate(x), Degenerate(y)) =>
           summon[Ordering[T]].equiv(x, y)
+        case (Degenerate(x), Proper(Some(y1), _, includeY1, _)) =>
+          summon[Ordering[T]].equiv(x, y1) && includeY1
+        case (Proper(_, Some(x2), _, includeX2), Degenerate(y)) =>
+          summon[Ordering[T]].equiv(x2, y) && includeX2
         case (Proper(_, Some(x2), _, includeX2), Proper(Some(y1), _, includeY1, _)) =>
           summon[Ordering[T]].equiv(x2, y1) && includeX2 && includeY1
         case _ =>
@@ -88,8 +92,8 @@ object Relation:
      * A M B
      *
      * {{{
-     *  [BBB]
-     *      [AAA]
+     *   BBB]
+     *      [AAA
      * }}}
      */
     def isMetBy(b: Interval[T]): Boolean =

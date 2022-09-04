@@ -28,29 +28,31 @@ final class IntervalSpec extends TestSpec:
        * }}}
        */
       "create intervals" in {
-        forAll(genOneIntTuple) { case ((x, y), ix, iy) =>
-          val actual = Interval.make(x, y, ix, iy)
+        forAll(genOneIntTuple) { case ((ox, oy), ix, iy) =>
+          val actual = Interval.make(ox, oy, ix, iy)
 
           actual match
             case Empty =>
-              (x, y) match
-                case (Some(x1), Some(y1)) =>
-                  val isXgtY = x1 > y1
+              (ox, oy) match
+                case (Some(x), Some(y)) =>
+                  val isXgtY = x > y
                   val isXeqY = x == y
 
                   (isXgtY || (isXeqY && ((ix == false && iy == false) || (ix == true && iy == false) || (ix == false && iy == true)))) mustBe (true)
                 case _ =>
                   fail("Empty Interval boundaries must be defined.")
             case Degenerate(a) =>
-              x.isDefined mustBe (true)
-              y.isDefined mustBe (true)
-              ix mustBe (true)
-              iy mustBe (true)
-              x mustEqual (y)
-            case Proper(a, b, ia, ib) =>
-              (x, y) match
-                case (Some(x1), Some(y1)) =>
-                  (x1 < y1) mustBe (true)
+              (ox, oy) match
+                case (Some(x), Some(y)) =>
+                  ix mustBe (true)
+                  iy mustBe (true)
+                  x mustEqual (y)
+                case _ =>
+                  fail("Degenerate Interval boundaries must be defined.")
+            case Proper(oa, ob, ia, ib) =>
+              (ox, oy) match
+                case (Some(x), Some(y)) =>
+                  (x < y) mustBe (true)
                 case _ =>
                   succeed
         }
