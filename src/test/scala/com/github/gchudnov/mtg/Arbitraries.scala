@@ -92,8 +92,13 @@ object Arbitraries:
 
     // (a, a) = [a, a) = (a, a]
     val g2 = genIntTupleEq
+    val g21 = for
+      ab <- g1.map(toSome)
+      ia <- genBoolEq
+      ib <- if (ia) then Gen.const(false) else genBoolEq // if we selected '[', the second boundary cannot be ']', otherwise it will produce a degenerate interval.
+    yield (ab, ia, ib)
 
-    ???
+    Gen.oneOf(g11, g21)
 
   /**
    * Generate Degenerate Intervals
