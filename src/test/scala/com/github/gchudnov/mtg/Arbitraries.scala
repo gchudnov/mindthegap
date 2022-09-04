@@ -11,6 +11,7 @@ object Arbitraries:
   val intRange5: IntRange  = IntRange(min = -5, max = 5)
 
   val intProb226: IntProb = IntProb(empty = 2, degenerate = 2, proper = 6)
+  val intProb127: IntProb = IntProb(empty = 1, degenerate = 2, proper = 7)
 
   /**
    * Parameters to contruct an integer interval `({a, b}, isIncludeA, IsIncludeB)`, where:

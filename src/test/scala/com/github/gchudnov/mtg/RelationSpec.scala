@@ -2,14 +2,19 @@ package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Relation.*
+import com.github.gchudnov.mtg.ordering.OptionPartialOrdering
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+
+import scala.math.PartialOrdering
 
 final class RelationSpec extends TestSpec:
 
   given intRange: IntRange = intRange5
-  given intProb: IntProb   = intProb226
+  given intProb: IntProb   = intProb127
 
-  given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
+  given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 200)
+
+  val pOrd: PartialOrdering[Option[Int]] = summon[PartialOrdering[Option[Int]]]
 
   "Relation" when {
 
@@ -17,42 +22,42 @@ final class RelationSpec extends TestSpec:
 
       /**
        * Meets, IsMetBy
-       * 
-       * 
-       * 
+       *
        * {{{
        *   AAA]
        *      [BBB
        * }}}
        */
-      // "check" in {
-      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
-      //     val xy = Interval.make(ox, oy, ix, iy)
-      //     val wz = Interval.make(ow, oz, iw, iz)
+      "check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
+          val xy = Interval.make(ox, oy, ix, iy)
+          val wz = Interval.make(ow, oz, iw, iz)
 
-      //     println((xy, wz))
+          if xy.meets(wz) then
+            val isYeqW = pOrd.equiv(oy, ow)
 
-      //     if xy.meets(wz) then
-      //       wz.isMetBy(xy) mustBe (true)
-      //       (oy, ow) match
-      //         case (Some(y), Some(w)) =>
-      //           (iy && iw) mustBe (true)
-      //           y mustEqual (w)
-      //         case _ =>
-      //           fail("When two intervals are met, both boundaries must be finite.")
-      //     else
-      //     (oy, ow) match
-      //       case (Some(y), Some(w)) =>
-      //         val isYeqW = (y == w)
+            println((xy, wz))
 
-      //         // val isXgtY = (x > y)
-      //         // val isWgtZ = (w > z)
+            wz.isMetBy(xy) mustBe (true)
 
-      //         (!isYeqW || ((iy && iw) == false)) mustBe true
-      //       case _ =>
-      //         succeed
-      //   }
-      // }
+            isYeqW mustEqual (true)
+            (iy && iw) mustBe (true)
+          else
+            val isYeqW = pOrd.equiv(oy, ow)
+            val isXgtY = pOrd.gt(ox, oy)
+            val isWgtZ = pOrd.gt(ow, oz)
+            val isXeqY = pOrd.eq(ox, oy)
+            val isWeqZ = pOrd.eq(ow, oz)
+
+            val a = (!isYeqW || (iy && iw) == false)
+            val b = isXgtY
+            val c = isWgtZ
+            val d = (isXeqY || (ix && iy) == false)
+            val e = (isWeqZ || (iw && iz) == false)
+
+            (a || b || c || d || e) mustBe (true)
+        }
+      }
 
     }
   }
