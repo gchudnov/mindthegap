@@ -82,9 +82,17 @@ object Arbitraries:
    * }}}
    */
   val genEmptyIntTuple: Gen[IntTuple] =
+    // [b, a] = (b, a) = [b, a) = (b, a]
     val g1 = genIntTupleGt
+    val g11 = for
+      ab <- g1.map(toSome)
+      ia <- genBoolEq
+      ib <- genBoolEq
+    yield (ab, ia, ib)
 
-    
+    // (a, a) = [a, a) = (a, a]
+    val g2 = genIntTupleEq
+
     ???
 
   /**
@@ -94,7 +102,7 @@ object Arbitraries:
    * }}}
    */
   val genDegenerateIntTuple: Gen[IntTuple] =
-    for ab <- genIntTupleEq.map { case (a, b) => (Some(a), Some(b)) } yield (ab, true, true)
+    for ab <- genIntTupleEq.map(toSome) yield (ab, true, true)
 
   /**
    * Generate Proper Intervals
@@ -125,3 +133,6 @@ object Arbitraries:
       ia <- genBoolEq
       ib <- genBoolEq
     yield (ab, ia, ib)
+
+  private def toSome(t: Tuple2[Int, Int]): Tuple2[Option[Int], Option[Int]] =
+    (Some(t._1), Some(t._2))
