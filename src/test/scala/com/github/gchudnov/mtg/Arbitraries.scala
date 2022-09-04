@@ -83,22 +83,20 @@ object Arbitraries:
    */
   val genEmptyIntTuple: Gen[IntTuple] =
     // [b, a] = (b, a) = [b, a) = (b, a]
-    val g1 = genIntTupleGt
-    val g11 = for
-      ab <- g1.map(toSome)
+    val g1 = for
+      ab <- genIntTupleGt.map(toSome)
       ia <- genBoolEq
       ib <- genBoolEq
     yield (ab, ia, ib)
 
     // (a, a) = [a, a) = (a, a]
-    val g2 = genIntTupleEq
-    val g21 = for
-      ab <- g1.map(toSome)
+    val g2 = for
+      ab <- genIntTupleEq.map(toSome)
       ia <- genBoolEq
       ib <- if (ia) then Gen.const(false) else genBoolEq // if we selected '[', the second boundary cannot be ']', otherwise it will produce a degenerate interval.
     yield (ab, ia, ib)
 
-    Gen.oneOf(g11, g21)
+    Gen.oneOf(g1, g2)
 
   /**
    * Generate Degenerate Intervals
@@ -111,33 +109,35 @@ object Arbitraries:
 
   /**
    * Generate Proper Intervals
+   *
+   * Neither Empty nor Degenerate
    * {{{
-   *   neither Empty nor Degenerate
+   *   {a, b}
    * }}}
    */
   val genProperIntTuple: Gen[IntTuple] =
-    ???
-
-  /**
-   * Generator to make any tuple (a?, b?) where a and b are unordered.
-   *
-   * That will allow to construct Empty, Degenrate and Proper intervals.
-   */
-  private val genOptIntTupleAny: Gen[(Option[Int], Option[Int])] =
     for
-      x <- Gen.option(Gen.choose(xMin, xMax))
-      y <- Gen.option(Gen.choose(xMin, xMax))
-    yield (x, y)
-
-  /**
-   * Generate Tuple to build an interval
-   */
-  val genIntervalTuple: Gen[((Option[Int], Option[Int]), Boolean, Boolean)] =
-    for
-      ab <- genOptIntTupleAny
+      ab <- genIntTupleLteq
+      oa <- Gen.option(Gen.const(ab._1))
+      ob <- Gen.option(Gen.const(ab._2))
       ia <- genBoolEq
       ib <- genBoolEq
-    yield (ab, ia, ib)
+    yield ((oa, ob), ia, ib)
+
+  /**
+   * Generate any interval tuple.
+   */
+  val genAnyIntTuple: Gen[IntTuple] =
+    for
+      ab <- genIntTupleAny
+      oa <- Gen.option(Gen.const(ab._1))
+      ob <- Gen.option(Gen.const(ab._2))
+      ia <- genBoolEq
+      ib <- genBoolEq
+    yield ((oa, ob), ia, ib)
+
+  val genOneIntTuple: Gen[IntTuple] =
+    Gen.oneOf(genEmptyIntTuple, genDegenerateIntTuple, genProperIntTuple)
 
   private def toSome(t: Tuple2[Int, Int]): Tuple2[Option[Int], Option[Int]] =
     (Some(t._1), Some(t._2))

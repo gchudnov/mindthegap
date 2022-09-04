@@ -23,7 +23,7 @@ final class IntervalSpec extends TestSpec:
       "create intervals" in {
         import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
-        forAll(genIntervalTuple) { case ((x, y), ix, iy) =>
+        forAll(genOneIntTuple) { case ((x, y), ix, iy) =>
           val actual = Interval.make(x, y, ix, iy)
           actual match
             case Empty =>

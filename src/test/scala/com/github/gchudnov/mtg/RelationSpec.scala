@@ -23,9 +23,11 @@ final class RelationSpec extends TestSpec:
        * }}}
        */
       "meets & metBy" in {
-        forAll(genIntervalTuple, genIntervalTuple) { case (((x, y), ix, iy), ((w, z), iw, iz)) =>
+        forAll(genOneIntTuple, genOneIntTuple) { case (((x, y), ix, iy), ((w, z), iw, iz)) =>
           val xy = Interval.make(x, y, ix, iy)
           val wz = Interval.make(w, z, iw, iz)
+
+          print(xy, wz)
 
           if xy.meets(wz) then
             wz.isMetBy(xy) mustBe (true)
