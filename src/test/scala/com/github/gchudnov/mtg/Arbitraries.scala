@@ -136,6 +136,9 @@ object Arbitraries:
       ib <- genBoolEq
     yield ((oa, ob), ia, ib)
 
+  /**
+   * Generate one of the (Empty, Degenerate, Proper) intervals
+   */
   val genOneIntTuple: Gen[IntTuple] =
     Gen.oneOf(genEmptyIntTuple, genDegenerateIntTuple, genProperIntTuple)
 

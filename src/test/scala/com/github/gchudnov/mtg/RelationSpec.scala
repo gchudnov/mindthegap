@@ -10,8 +10,6 @@ final class RelationSpec extends TestSpec:
     "IntIntervals" should {
 
       /**
-       * 
-       * 
        * {{{
        *  Meets:
        *  [AAA]
@@ -27,7 +25,7 @@ final class RelationSpec extends TestSpec:
           val xy = Interval.make(x, y, ix, iy)
           val wz = Interval.make(w, z, iw, iz)
 
-          print(xy, wz)
+          // println((xy, wz))
 
           if xy.meets(wz) then
             wz.isMetBy(xy) mustBe (true)
