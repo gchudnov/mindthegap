@@ -1,17 +1,18 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Arbitraries.*
-import org.scalacheck.Gen
-import org.scalatest.prop.Configuration.PropertyCheckConfiguration
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 
 import java.time.Instant
 
 final class IntervalSpec extends TestSpec:
 
   given intRange: IntRange = intRange5
+  given intProb: IntProb   = intProb226
 
-  given generatorDrivenConfig: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 50)
+  given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
 
   "Interval" when {
 
@@ -29,8 +30,6 @@ final class IntervalSpec extends TestSpec:
       "create intervals" in {
         forAll(genOneIntTuple) { case ((x, y), ix, iy) =>
           val actual = Interval.make(x, y, ix, iy)
-
-          println(actual)
 
           actual match
             case Empty =>

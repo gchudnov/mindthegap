@@ -5,9 +5,12 @@ import org.scalacheck.Gen
 object Arbitraries:
 
   final case class IntRange(min: Int, max: Int)
+  final case class IntProb(empty: Int, degenerate: Int, proper: Int)
 
-  val intRange10 = IntRange(-10, 10)
-  val intRange5  = IntRange(-5, 5)
+  val intRange10: IntRange = IntRange(min = -10, max = 10)
+  val intRange5: IntRange  = IntRange(min = -5, max = 5)
+
+  val intProb226: IntProb = IntProb(empty = 2, degenerate = 2, proper = 6)
 
   /**
    * Parameters to contruct an integer interval `({a, b}, isIncludeA, IsIncludeB)`, where:
@@ -141,11 +144,11 @@ object Arbitraries:
   /**
    * Generate one of the (Empty, Degenerate, Proper) intervals
    */
-  def genOneIntTuple(using ir: IntRange): Gen[IntTuple] =
+  def genOneIntTuple(using ir: IntRange, ip: IntProb): Gen[IntTuple] =
     Gen.frequency(
-      2 -> genEmptyIntTuple,
-      2 -> genDegenerateIntTuple,
-      6 -> genProperIntTuple
+      ip.empty      -> genEmptyIntTuple,
+      ip.degenerate -> genDegenerateIntTuple,
+      ip.proper     -> genProperIntTuple
     )
 
   /**

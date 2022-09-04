@@ -7,6 +7,9 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 final class RelationSpec extends TestSpec:
 
   given intRange: IntRange = intRange5
+  given intProb: IntProb   = intProb226
+
+  given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
 
   "Relation" when {
 
@@ -28,7 +31,7 @@ final class RelationSpec extends TestSpec:
           val xy = Interval.make(x, y, ix, iy)
           val wz = Interval.make(w, z, iw, iz)
 
-          // println((xy, wz))
+          println((xy, wz))
 
           if xy.meets(wz) then
             wz.isMetBy(xy) mustBe (true)
