@@ -7,6 +7,8 @@ import java.time.Instant
 
 final class IntervalSpec extends TestSpec:
 
+  given intRange: IntRange = intRange5
+
   "Interval" when {
 
     "make" should {

@@ -6,8 +6,11 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
 final class RelationSpec extends TestSpec:
 
+  given intRange: IntRange = intRange5
+
   "Relation" when {
-    "IntIntervals" should {
+
+    "meets & metBy" should {
 
       /**
        * {{{
@@ -20,7 +23,7 @@ final class RelationSpec extends TestSpec:
        *      [AAA]
        * }}}
        */
-      "meets & metBy" in {
+      "check" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((x, y), ix, iy), ((w, z), iw, iz)) =>
           val xy = Interval.make(x, y, ix, iy)
           val wz = Interval.make(w, z, iw, iz)

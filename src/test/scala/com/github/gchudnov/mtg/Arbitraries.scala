@@ -4,6 +4,11 @@ import org.scalacheck.Gen
 
 object Arbitraries:
 
+  final case class IntRange(min: Int, max: Int)
+
+  val intRange10 = IntRange(-10, 10)
+  val intRange5  = IntRange(-5, 5)
+
   /**
    * Parameters to contruct an integer interval `({a, b}, isIncludeA, IsIncludeB)`, where:
    *
@@ -16,50 +21,47 @@ object Arbitraries:
    */
   type IntTuple = ((Option[Int], Option[Int]), Boolean, Boolean)
 
-  private val xMin = -10
-  private val xMax = 10
-
   /**
    * Generate a tuple (a, a) where both values have the same value. | Degenerate intervals
    */
-  private val genIntTupleEq: Gen[(Int, Int)] =
-    for x <- Gen.choose(xMin, xMax)
+  private def genIntTupleEq(using ir: IntRange): Gen[(Int, Int)] =
+    for x <- Gen.choose(ir.min, ir.max)
     yield (x, x)
 
   /**
    * Generate a tuple (a, b), whre a < b. | Proper intervals
    */
-  private val genIntTupleLteq: Gen[(Int, Int)] =
+  private def genIntTupleLteq(using ir: IntRange): Gen[(Int, Int)] =
     for
-      x <- Gen.choose(xMin, xMax - 1)
-      y <- Gen.choose(x + 1, xMax)
+      x <- Gen.choose(ir.min, ir.max - 1)
+      y <- Gen.choose(x + 1, ir.max)
     yield (x, y)
 
   /**
    * Generate a tuple (a, b), whre a <= b. | Degenerate, Proper intervals
    */
-  private val genIntTupleLt: Gen[(Int, Int)] =
+  private def genIntTupleLt(using ir: IntRange): Gen[(Int, Int)] =
     for
-      x <- Gen.choose(xMin, xMax)
-      y <- Gen.choose(x, xMax)
+      x <- Gen.choose(ir.min, ir.max)
+      y <- Gen.choose(x, ir.max)
     yield (x, y)
 
   /**
    * Generate a tuple (b, a), where b > a | Empty
    */
-  private val genIntTupleGt: Gen[(Int, Int)] =
+  private def genIntTupleGt(using ir: IntRange): Gen[(Int, Int)] =
     for
-      x <- Gen.choose(xMin + 1, xMax)
-      y <- Gen.choose(xMin, x - 1)
+      x <- Gen.choose(ir.min + 1, ir.max)
+      y <- Gen.choose(ir.min, x - 1)
     yield (x, y)
 
   /**
    * Generate a tuple (a, b) where a and b are random. | Empty, Degenrate or Proper intervals
    */
-  private val genIntTupleAny: Gen[(Int, Int)] =
+  private def genIntTupleAny(using ir: IntRange): Gen[(Int, Int)] =
     for
-      x <- Gen.choose(xMin, xMax)
-      y <- Gen.choose(xMin, xMax)
+      x <- Gen.choose(ir.min, ir.max)
+      y <- Gen.choose(ir.min, ir.max)
     yield (x, y)
 
   /**
@@ -81,7 +83,7 @@ object Arbitraries:
    *   [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
    * }}}
    */
-  val genEmptyIntTuple: Gen[IntTuple] =
+  def genEmptyIntTuple(using ir: IntRange): Gen[IntTuple] =
     // [b, a] = (b, a) = [b, a) = (b, a]
     val g1 = for
       ab <- genIntTupleGt.map(toSome)
@@ -104,7 +106,7 @@ object Arbitraries:
    *   [a, a] = {a}
    * }}}
    */
-  val genDegenerateIntTuple: Gen[IntTuple] =
+  def genDegenerateIntTuple(using ir: IntRange): Gen[IntTuple] =
     for ab <- genIntTupleEq.map(toSome) yield (ab, true, true)
 
   /**
@@ -115,7 +117,7 @@ object Arbitraries:
    *   {a, b}
    * }}}
    */
-  val genProperIntTuple: Gen[IntTuple] =
+  def genProperIntTuple(using ir: IntRange): Gen[IntTuple] =
     for
       ab <- genIntTupleLteq
       oa <- Gen.option(Gen.const(ab._1))
@@ -127,7 +129,7 @@ object Arbitraries:
   /**
    * Generate any interval tuple.
    */
-  val genAnyIntTuple: Gen[IntTuple] =
+  def genAnyIntTuple(using ir: IntRange): Gen[IntTuple] =
     for
       ab <- genIntTupleAny
       oa <- Gen.option(Gen.const(ab._1))
@@ -139,8 +141,15 @@ object Arbitraries:
   /**
    * Generate one of the (Empty, Degenerate, Proper) intervals
    */
-  val genOneIntTuple: Gen[IntTuple] =
-    Gen.oneOf(genEmptyIntTuple, genDegenerateIntTuple, genProperIntTuple)
+  def genOneIntTuple(using ir: IntRange): Gen[IntTuple] =
+    Gen.frequency(
+      2 -> genEmptyIntTuple,
+      2 -> genDegenerateIntTuple,
+      6 -> genProperIntTuple
+    )
 
-  private def toSome(t: Tuple2[Int, Int]): Tuple2[Option[Int], Option[Int]] =
+  /**
+   * Converts a tuple of values to the tuple of some values.
+   */
+  private def toSome[T](t: Tuple2[T, T]): Tuple2[Option[T], Option[T]] =
     (Some(t._1), Some(t._2))
