@@ -17,42 +17,42 @@ final class RelationSpec extends TestSpec:
 
       /**
        * Meets, IsMetBy
+       * 
+       * 
+       * 
        * {{{
        *   AAA]
        *      [BBB
        * }}}
        */
-      "check" in {
-        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
-          val xy = Interval.make(ox, oy, ix, iy)
-          val wz = Interval.make(ow, oz, iw, iz)
+      // "check" in {
+      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
+      //     val xy = Interval.make(ox, oy, ix, iy)
+      //     val wz = Interval.make(ow, oz, iw, iz)
 
-          println((xy, wz))
+      //     println((xy, wz))
 
-          if xy.meets(wz) then
-            wz.isMetBy(xy) mustBe (true)
-            (oy, ow) match
-              case (Some(y), Some(w)) =>
-                (iy && iw) mustBe (true)
-                y mustEqual (w)
-              case _ =>
-                fail("When two intervals are met, both boundaries must be finite.")
-          else
+      //     if xy.meets(wz) then
+      //       wz.isMetBy(xy) mustBe (true)
+      //       (oy, ow) match
+      //         case (Some(y), Some(w)) =>
+      //           (iy && iw) mustBe (true)
+      //           y mustEqual (w)
+      //         case _ =>
+      //           fail("When two intervals are met, both boundaries must be finite.")
+      //     else
+      //     (oy, ow) match
+      //       case (Some(y), Some(w)) =>
+      //         val isYeqW = (y == w)
 
-            ???
+      //         // val isXgtY = (x > y)
+      //         // val isWgtZ = (w > z)
 
-          // (oy, ow) match
-          //   case (Some(y), Some(w)) =>
-          //     val isYeqW = (y == w)
-
-          //     val isXgtY = (x > y)
-          //     val isWgtZ = (w > z)
-
-          //     (!isYeqW || ((iy && iw) == false)) mustBe true
-          //   case _ =>
-          //     succeed
-        }
-      }
+      //         (!isYeqW || ((iy && iw) == false)) mustBe true
+      //       case _ =>
+      //         succeed
+      //   }
+      // }
 
     }
   }

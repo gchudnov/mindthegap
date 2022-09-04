@@ -8,9 +8,9 @@ given IntOrdering: Ordering[Int] with
     x.compare(y)
 
 /**
- * Int Partially Ordering
+ * Int Partial Ordering
  */
-given IntPartiallyOrdering: PartialOrdering[Int] with
+given IntPartialOrdering: PartialOrdering[Int] with
   override def tryCompare(x: Int, y: Int): Option[Int] =
     Some(x.compare(y))
 
