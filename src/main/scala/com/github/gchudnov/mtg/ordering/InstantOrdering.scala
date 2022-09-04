@@ -1,9 +1,9 @@
-package com.github.gchudnov.mtg.orderings
+package com.github.gchudnov.mtg.ordering
 
 import java.time.Instant
 
 /**
- * Ordered Instant
+ * Instant Ordering
  */
 given InstantOrdering: Ordering[Instant] with
   override def compare(x: Instant, y: Instant): Int =

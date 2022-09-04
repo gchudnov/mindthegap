@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.orderings
+package com.github.gchudnov.mtg.ordering
 
 import com.github.gchudnov.mtg.TestSpec
 import java.time.Instant

@@ -16,14 +16,10 @@ final class RelationSpec extends TestSpec:
     "meets & metBy" should {
 
       /**
+       * Meets, IsMetBy
        * {{{
-       *  Meets:
-       *  [AAA]
-       *      [BBB]
-       *
-       * IsMetBy
-       *  [BBB]
-       *      [AAA]
+       *   AAA]
+       *      [BBB
        * }}}
        */
       "check" in {
@@ -42,12 +38,19 @@ final class RelationSpec extends TestSpec:
               case _ =>
                 fail("When two intervals are met, both boundaries must be finite.")
           else
-            (oy, ow) match
-              case (Some(y), Some(w)) =>
-                val isYeqW = (y == w)
-                (!isYeqW || ((iy && iw) == false)) mustBe true
-              case _ =>
-                succeed
+
+            ???
+
+          // (oy, ow) match
+          //   case (Some(y), Some(w)) =>
+          //     val isYeqW = (y == w)
+
+          //     val isXgtY = (x > y)
+          //     val isWgtZ = (w > z)
+
+          //     (!isYeqW || ((iy && iw) == false)) mustBe true
+          //   case _ =>
+          //     succeed
         }
       }
 

@@ -1,14 +1,14 @@
-package com.github.gchudnov.mtg.orderings
+package com.github.gchudnov.mtg.ordering
 
 /**
- * Ordered Int
+ * Int Ordering
  */
 given IntOrdering: Ordering[Int] with
   override def compare(x: Int, y: Int): Int =
     x.compare(y)
 
 /**
- * Partially Ordered Int
+ * Int Partially Ordering
  */
 given IntPartiallyOrdering: PartialOrdering[Int] with
   override def tryCompare(x: Int, y: Int): Option[Int] =
