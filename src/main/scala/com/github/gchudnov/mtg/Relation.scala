@@ -4,41 +4,59 @@ package com.github.gchudnov.mtg
  * Relations
  *
  * {{{
- *   [AAA]              | A preceeds B            | (p)
- *         [BBB]        | B is-predeeded-by A     | (P)
+ *   AAA              | A preceeds B            | (p)
+ *         BBB        | B is-predeeded-by A     | (P)
  *
- *   [AAA]              | A meets B               | (m)
- *       [BBB]          | B is-met-by A           | (M)
+ *   AAA              | A meets B               | (m)
+ *      BBB           | B is-met-by A           | (M)
  *
- *   [AAA]              | A overlaps B            | (o)
- *     [BBB]            | B is-overlapped-by A    | (O)
+ *   AAA              | A overlaps B            | (o)
+ *     BBB            | B is-overlapped-by A    | (O)
  *
- *   [AAA]              | A starts B              | (s)
- *   [BBBBBB]           | B is-started-by A       | (S)
+ *   AAA              | A starts B              | (s)
+ *   BBBBBB           | B is-started-by A       | (S)
  *
- *     [AA]             | A during B              | (d)
- *   [BBBBBB]           | B contains A            | (D)
+ *     AA             | A during B              | (d)
+ *   BBBBBB           | B contains A            | (D)
  *
- *      [AAA]           | A finishes B            | (f)
- *   [BBBBBB]           | B is-finished-by A      | (F)
+ *      AAA           | A finishes B            | (f)
+ *   BBBBBB           | B is-finished-by A      | (F)
  *
- *   [AAA]              | A equals B              | (e)
- *   [BBB]              |                         |
+ *   AAA              | A equals B              | (e)
+ *   BBB              |                         |
  * }}}
  */
 object Relation:
 
   extension [T: Ordering](a: Interval[T])
     /**
-     * Preceeds (p)
+     * Preceeds (p), Before (b)
      *
-     * A preceeds B
-     *
-     * A <p> B
+     * IsPreceededBy (P), After (A)
      *
      * {{{
-     *   AAA]
-     *        [BBB
+     *   {a-, a+}; {b-; b+}
+     *   a- < b-
+     *   a- < b+
+     *   a+ < b-
+     *   a+ < b+
+     * }}}
+     *
+     * {{{
+     *   A preceeds B
+     *   A before B
+     *   B is-predeeded-by A
+     *   B after A
+     * }}}
+     *
+     * {{{
+     *   A <p> B
+     *   B <P> A
+     * }}}
+     *
+     * {{{
+     *   AAA
+     *        BBB
      * }}}
      */
     def preceeds(b: Interval[T]): Boolean =
@@ -54,31 +72,41 @@ object Relation:
         case _ =>
           false
 
-    /**
-     * IsPreceededBy (P)
-     *
-     * A is-predeeded-by B
-     *
-     * A <P> B
-     *
-     * {{{
-     *   BBB]
-     *        [AAA
-     * }}}
-     */
     def isPreceededBy(b: Interval[T]): Boolean =
+      b.preceeds(a)
+
+    def before(b: Interval[T]): Boolean =
+      a.preceeds(b)
+
+    def after(b: Interval[T]): Boolean =
       b.preceeds(a)
 
     /**
      * Meets (m)
      *
-     * A meets B
-     *
-     * A <m> B
+     * IsMetBy (M)
      *
      * {{{
-     *   AAA]
-     *      [BBB
+     *   {a-, a+}; {b-; b+}
+     *   a- < b-
+     *   a- < b+
+     *   a+ = b-
+     *   a+ < b+
+     * }}}
+     *
+     * {{{
+     *   A meets B
+     *   A is-met-by B
+     * }}}
+     *
+     * {{{
+     *   A <m> B
+     *   B <M> A
+     * }}}
+     *
+     * {{{
+     *   AAA
+     *      BBB
      * }}}
      */
     def meets(b: Interval[T]): Boolean =
@@ -94,31 +122,35 @@ object Relation:
         case _ =>
           false
 
-    /**
-     * IsMetBy (M)
-     *
-     * A is-met-by B
-     *
-     * A <M> B
-     *
-     * {{{
-     *   BBB]
-     *      [AAA
-     * }}}
-     */
     def isMetBy(b: Interval[T]): Boolean =
       b.meets(a)
 
     /**
      * Overlaps (o)
      *
-     * A overlaps B
-     *
-     * A <o> B
+     * IsOverlapedBy (O)
      *
      * {{{
-     *   [AAA]
-     *     [BBB]
+     *   {a-, a+}; {b-; b+}
+     *   a- < b-
+     *   a- < b+
+     *   a+ > b-
+     *   a+ < b+
+     * }}}
+     *
+     * {{{
+     *   A overlaps B
+     *   B is-overlapped-by A
+     * }}}
+     *
+     * {{{
+     *   A <o> B
+     *   B <O> A
+     * }}}
+     *
+     * {{{
+     *   AAAA
+     *     BBBB
      * }}}
      */
     def overlaps(b: Interval[T]): Boolean =
@@ -142,125 +174,137 @@ object Relation:
         case _ =>
           false
 
-    /**
-     * IsOverlapedBy (O)
-     *
-     * B is-overlapped-by A
-     *
-     * B <O> A
-     *
-     * {{{
-     *   [AAA]
-     *     [BBB]
-     * }}}
-     */
     def isOverlapedBy(b: Interval[T]): Boolean =
       b.overlaps(a)
 
-// /**
-//  * Starts (s)
-//  *
-//  * A starts B
-//  *
-//  * A s B
-//  *
-//  * {{{
-//  *  [AAA]
-//  *  [BBBBBB]
-//  * }}}
-//  */
-// def starts[T: Ordering](a: Interval[T], b: Interval[T]): Boolean =
-//   ???
+    /**
+     * During (d)
+     *
+     * Contains (D), Includes (I)
+     *
+     * {{{
+     *   {a-, a+}; {b-; b+}
+     *   a- > b-
+     *   a- < b+
+     *   a+ > b-
+     *   a+ < b+
+     * }}}
+     *
+     * {{{
+     *   A during B
+     *   B contains A
+     *   B includes A
+     * }}}
+     *
+     * {{{
+     *   A d B
+     * }}}
+     *
+     * {{{
+     *     AA
+     *   BBBBBB
+     * }}}
+     */
+    def during(b: Interval[T]): Boolean =
+      ???
 
-// /**
-//  * IsStartedBy (S)
-//  *
-//  * B is-started-by A
-//  *
-//  * B S A
-//  *
-//  * {{{
-//  *  [AAA]
-//  *  [BBBBBB]
-//  * }}}
-//  */
-// def isStartedBy[T: Ordering](b: Interval[T], a: Interval[T]): Boolean =
-//   starts(a, b)
+    def contains(b: Interval[T]): Boolean =
+      b.during(a)
 
-// /**
-//  * During (d)
-//  *
-//  * A during B
-//  *
-//  * A d B
-//  *
-//  * {{{
-//  *    [AA]
-//  *  [BBBBBB]
-//  * }}}
-//  */
-// def during[T: Ordering](a: Interval[T], b: Interval[T]): Boolean =
-//   ???
+    /**
+     * Starts (s)
+     *
+     * IsStartedBy (S)
+     *
+     * {{{
+     *   {a-, a+}; {b-; b+}
+     *   a- = b-
+     *   a- < b+
+     *   a+ > b-
+     *   a+ < b+
+     * }}}
+     *
+     * {{{
+     *   A starts B
+     *   B is-started-by A
+     * }}}
+     *
+     * {{{
+     *   A <s> B
+     *   B <S> A
+     * }}}
+     *
+     * {{{
+     *   AAA
+     *   BBBBBB
+     * }}}
+     */
+    def starts(b: Interval[T]): Boolean =
+      ???
 
-// /**
-//  * Contains (D)
-//  *
-//  * B contains A
-//  *
-//  * D D A
-//  *
-//  * {{{
-//  *    [AA]
-//  *  [BBBBBB]
-//  * }}}
-//  */
-// def contains[T: Ordering](b: Interval[T], a: Interval[T]): Boolean =
-//   during(a, b)
+    def isStartedBy(b: Interval[T]): Boolean =
+      b.starts(a)
 
-// /**
-//  * Finishes (d)
-//  *
-//  * A finishes B
-//  *
-//  * A f B
-//  *
-//  * {{{
-//  *     [AAA]
-//  *  [BBBBBB]
-//  * }}}
-//  */
-// def finishes[T: Ordering](a: Interval[T], b: Interval[T]): Boolean =
-//   ???
+    /**
+     * Finishes (f)
+     *
+     * IsFinishedBy (F)
+     *
+     * {{{
+     *   {a-, a+}; {b-; b+}
+     *   a- > b-
+     *   a- < b+
+     *   a+ > b-
+     *   a+ = b+
+     * }}}
+     *
+     * {{{
+     *   A finishes B
+     *   B is-finished-by A
+     * }}}
+     *
+     * {{{
+     *   A <f> B
+     *   B <F> A
+     * }}}
+     *
+     * {{{
+     *      AAA
+     *   BBBBBB
+     * }}}
+     */
+    def finishes(b: Interval[T]): Boolean =
+      ???
 
-// /**
-//  * IsFinishedBy (F)
-//  *
-//  * B is-finished-by A
-//  *
-//  * B F A
-//  *
-//  * {{{
-//  *     [AAA]
-//  *  [BBBBBB]
-//  * }}}
-//  */
-// def isFinishedBy[T: Ordering](b: Interval[T], a: Interval[T]): Boolean =
-//   finishes(a, b)
+    def isFinishedBy(b: Interval[T]): Boolean =
+      b.finishes(a)
 
-// /**
-//  * Equals (e)
-//  *
-//  * A equals B
-//  *
-//  * A e B
-//  *
-//  * {{{
-//  *  [AAA]
-//  *  [BBB]
-//  * }}}
-//  */
-// def equals[T: Ordering](a: Interval[T], b: Interval[T]): Boolean =
-//   ???
+    /**
+     * Equals (e)
+     *
+     * {{{
+     *   {a-, a+}; {b-; b+}
+     *   a- = b-
+     *   a- < b+
+     *   a+ > b-
+     *   a+ = b+
+     * }}}
+     *
+     * {{{
+     *   A equals B
+     * }}}
+     *
+     * {{{
+     *   A <e> B
+     * }}}
+     *
+     * {{{
+     *   AAAA
+     *   BBBB
+     * }}}
+     */
+    def equals(b: Interval[T]): Boolean =
+      ???
 
 // sealed abstract class Bounded[T: Ordering](a: T, b: T, isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]
 
