@@ -1,7 +1,7 @@
 # TODO
 
 - start algebra impl
-
+- add edge tests
 
 what if:
 

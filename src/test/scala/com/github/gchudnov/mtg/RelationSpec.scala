@@ -14,7 +14,7 @@ final class RelationSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 100.0)
 
-  val pOrd: PartialOrdering[Option[Int]] = summon[PartialOrdering[Option[Int]]]
+  private val pOrd: PartialOrdering[Option[Int]] = summon[PartialOrdering[Option[Int]]]
 
   "Relation" when {
 
@@ -35,10 +35,7 @@ final class RelationSpec extends TestSpec:
           whenever(xy.preceeds(wz)) {
             // println(s"p: ${(xy, wz)}")
 
-            wz.isPreceededBy(xy) mustBe (true)
-
-            xy.meets(wz) mustBe (false)
-            wz.isMetBy(xy) mustBe (false)
+            assertRelation("p", xy, wz)
 
             val isYltW = pOrd.lt(oy, ow)
             val isYeqW = pOrd.equiv(oy, ow)
@@ -57,7 +54,7 @@ final class RelationSpec extends TestSpec:
      *      [BBB
      * }}}
      */
-    "meets & metBy" should {
+    "meets & isMetBy" should {
       "check" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
           val xy = Interval.make(ox, oy, ix, iy)
@@ -66,10 +63,7 @@ final class RelationSpec extends TestSpec:
           whenever(xy.meets(wz)) {
             // println(s"m: ${(xy, wz)}")
 
-            wz.isMetBy(xy) mustBe (true)
-
-            xy.preceeds(wz) mustBe (false)
-            wz.isPreceededBy(xy) mustBe (false)
+            assertRelation("m", xy, wz)
 
             val isYeqW = pOrd.equiv(oy, ow)
 
@@ -77,9 +71,64 @@ final class RelationSpec extends TestSpec:
           }
         }
       }
+    }
 
+    /**
+     * Overlaps, IsOverlapedBy
+     *
+     * {{{
+     *   [AAA]
+     *     [BBB]
+     * }}}
+     */
+    "overlaps & isOverlapedBy" should {
+      "check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
+          val xy = Interval.make(ox, oy, ix, iy)
+          val wz = Interval.make(ow, oz, iw, iz)
+
+          whenever(xy.overlaps(wz)) {
+            println(s"o: ${(xy, wz)}")
+
+            assertRelation("o", xy, wz)
+
+            val isYeqW = pOrd.equiv(oy, ow)
+
+            (isYeqW && (iy && iw)) mustBe (true)
+          }
+        }
+      }
     }
   }
+
+  private def makeRelations[T: Ordering] =
+    Map(
+      "p" -> ((ab: Interval[T], cd: Interval[T]) => ab.preceeds(cd)),
+      "P" -> ((ab: Interval[T], cd: Interval[T]) => ab.isPreceededBy(cd)),
+      "m" -> ((ab: Interval[T], cd: Interval[T]) => ab.meets(cd)),
+      "M" -> ((ab: Interval[T], cd: Interval[T]) => ab.isMetBy(cd)),
+      "o" -> ((ab: Interval[T], cd: Interval[T]) => ab.overlaps(cd)),
+      "O" -> ((ab: Interval[T], cd: Interval[T]) => ab.isOverlapedBy(cd))
+    )
+
+  private def assertRelation[T: Ordering](r: String, xy: Interval[T], wz: Interval[T]): Unit =
+    val relations = makeRelations[T]
+
+    val fk = r
+    val bk = r.map(_.toUpper)
+    val ks = List(fk, bk)
+
+    val fwd  = relations(fk)
+    val bck  = relations(bk)
+    val rest = relations.filterNot { case (k, _) => ks.contains(k) }
+
+    fwd(xy, wz) mustBe (true)
+    bck(wz, xy) mustBe (true)
+
+    rest.foreach { case (_, fn) =>
+      fn(xy, wz) mustBe (false)
+      fn(wz, xy) mustBe (false)
+    }
 
 /*
 We can posit prop­er­ties like these:

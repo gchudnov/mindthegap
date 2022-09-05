@@ -77,8 +77,8 @@ object Relation:
      * A <m> B
      *
      * {{{
-     *  AAA]
-     *     [BBB
+     *   AAA]
+     *      [BBB
      * }}}
      */
     def meets(b: Interval[T]): Boolean =
@@ -117,44 +117,30 @@ object Relation:
      * A <o> B
      *
      * {{{
-     *  [AAA]
-     *    [BBB]
+     *   [AAA]
+     *     [BBB]
      * }}}
      */
     def overlaps(b: Interval[T]): Boolean =
       (a, b) match
         case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
           val ord = summon[Ordering[T]]
-          (ord.lt(x1, y1) || (ord.equiv(x1, y1) && includeX1 && !includeY1)) && 
-          (ord.lt(y1, x2) || (ord.equiv(y1, x2) && !includeX2 && includeY2))
-          ???
+          (ord.lt(x1, y1) || (ord.equiv(x1, y1) && includeX1 && !includeY1)) &&
+          (ord.lt(y1, x2)) &&
+          (ord.lt(x2, y2) || (ord.equiv(x2, y2) && !includeX2 && includeY2))
         case (Proper(None, Some(x2), _, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
           val ord = summon[Ordering[T]]
-          (ord.lt(y1, x2)) && 
+          (ord.lt(y1, x2)) &&
           (ord.lt(x2, y2) || (ord.equiv(x2, y2) && !includeX2 && includeY2))
         case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), None, includeY1, _)) =>
           val ord = summon[Ordering[T]]
-          (ord.lt(y1, x2)) && 
-          (ord.lt(x1, y1) || (ord.equiv(x1, y1) && includeX1 && !includeY1))          
+          (ord.lt(y1, x2)) &&
+          (ord.lt(x1, y1) || (ord.equiv(x1, y1) && includeX1 && !includeY1))
         case (Proper(None, Some(x2), _, includeX2), Proper(Some(y1), None, includeY1, _)) =>
           val ord = summon[Ordering[T]]
-          ord.lt(y1, x2)          
+          ord.lt(y1, x2)
         case _ =>
           false
-
-/*
-  def overlaps(other: TsTzRange): Boolean = {
-    // if any of the intervals are zero, return false early
-    !(this.zero || other.zero) &&
-      // if any of the intervals are infinite, return true early
-      (this.infinite || other.infinite) ||
-      // otherwise, depending on the boundedness of the 2 intervals, check accordingly
-      (this.unbounded && other.unbounded && doubleUnboundedCheck(this, other)) ||
-      (!this.unbounded && !other.unbounded && boundedCheck(this, other)) ||
-      (!this.unbounded && other.unbounded && singleUnboundedCheck(this, other)) ||
-      (this.unbounded && !other.unbounded && singleUnboundedCheck(other, this))
-  }
-*/
 
     /**
      * IsOverlapedBy (O)
@@ -164,8 +150,8 @@ object Relation:
      * B <O> A
      *
      * {{{
-     *  [AAA]
-     *    [BBB]
+     *   [AAA]
+     *     [BBB]
      * }}}
      */
     def isOverlapedBy(b: Interval[T]): Boolean =
@@ -275,9 +261,6 @@ object Relation:
 //  */
 // def equals[T: Ordering](a: Interval[T], b: Interval[T]): Boolean =
 //   ???
-
-
-
 
 // sealed abstract class Bounded[T: Ordering](a: T, b: T, isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]
 
