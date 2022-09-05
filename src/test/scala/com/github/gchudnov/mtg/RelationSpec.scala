@@ -12,7 +12,7 @@ final class RelationSpec extends TestSpec:
   given intRange: IntRange = intRange5
   given intProb: IntProb   = intProb127
 
-  given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 200)
+  given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 100.0)
 
   val pOrd: PartialOrdering[Option[Int]] = summon[PartialOrdering[Option[Int]]]
 
@@ -32,8 +32,11 @@ final class RelationSpec extends TestSpec:
           val xy = Interval.make(ox, oy, ix, iy)
           val wz = Interval.make(ow, oz, iw, iz)
 
-          if xy.preceeds(wz) then
+          whenever(xy.preceeds(wz)) {
+            // println(s"p: ${(xy, wz)}")
+
             wz.isPreceededBy(xy) mustBe (true)
+
             xy.meets(wz) mustBe (false)
             wz.isMetBy(xy) mustBe (false)
 
@@ -41,21 +44,7 @@ final class RelationSpec extends TestSpec:
             val isYeqW = pOrd.equiv(oy, ow)
 
             (isYltW || (isYeqW && !(iy && iw))) mustBe (true)
-          else
-            val isYeqW = pOrd.equiv(oy, ow)
-            val isYgtW = pOrd.gt(oy, ow)
-            val isXgtY = pOrd.gt(ox, oy)
-            val isWgtZ = pOrd.gt(ow, oz)
-            val isXeqY = pOrd.eq(ox, oy)
-            val isWeqZ = pOrd.eq(ow, oz)
-
-            val a = (isYgtW || (isYeqW && (iy && iw)))
-            val b = isXgtY                          // Empty
-            val c = isWgtZ                          // Empty
-            val d = (isXeqY || (ix && iy) == false) // Empty
-            val e = (isWeqZ || (iw && iz) == false) // Empty
-
-            (a || b || c || d || e) mustBe (true)
+          }
         }
       }
     }
@@ -74,29 +63,18 @@ final class RelationSpec extends TestSpec:
           val xy = Interval.make(ox, oy, ix, iy)
           val wz = Interval.make(ow, oz, iw, iz)
 
-          if xy.meets(wz) then
+          whenever(xy.meets(wz)) {
+            // println(s"m: ${(xy, wz)}")
+
             wz.isMetBy(xy) mustBe (true)
+
             xy.preceeds(wz) mustBe (false)
             wz.isPreceededBy(xy) mustBe (false)
 
             val isYeqW = pOrd.equiv(oy, ow)
 
-            isYeqW mustEqual (true)
-            (iy && iw) mustBe (true)
-          else
-            val isYeqW = pOrd.equiv(oy, ow)
-            val isXgtY = pOrd.gt(ox, oy)
-            val isWgtZ = pOrd.gt(ow, oz)
-            val isXeqY = pOrd.eq(ox, oy)
-            val isWeqZ = pOrd.eq(ow, oz)
-
-            val a = (!isYeqW || (iy && iw) == false)
-            val b = isXgtY                          // Empty
-            val c = isWgtZ                          // Empty
-            val d = (isXeqY || (ix && iy) == false) // Empty
-            val e = (isWeqZ || (iw && iz) == false) // Empty
-
-            (a || b || c || d || e) mustBe (true)
+            (isYeqW && (iy && iw)) mustBe (true)
+          }
         }
       }
 

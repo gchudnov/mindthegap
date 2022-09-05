@@ -14,3 +14,6 @@ what if:
 [info]         arg1 = ((None,None),true,true) // 1 shrink
 [info]       )
 [info]     Init Seed: 7031681133510526206
+
+^^
+add inf as a test
