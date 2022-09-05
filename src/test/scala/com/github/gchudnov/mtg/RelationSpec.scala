@@ -88,13 +88,18 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.overlaps(wz)) {
-            println(s"o: ${(xy, wz)}")
+            // println(s"o: ${(xy, wz)}")
 
             assertRelation("o", xy, wz)
 
-            val isYeqW = pOrd.equiv(oy, ow)
+            val isYgtW = pOrd.gt(oy, ow)
+            val isYltZ = pOrd.lt(oy, oz)
+            val isYeqZ = pOrd.equiv(oy, oz)
+            val isXltW = pOrd.lt(ox, ow)
+            val isXeqW = pOrd.equiv(ox, ow)
 
-            (isYeqW && (iy && iw)) mustBe (true)
+            (isYgtW && ((ox.isEmpty && oz.isEmpty) || (isXltW && oz.isEmpty) || (isXeqW && ix && !iw && oz.isEmpty) || (ox.isEmpty && isYltZ)
+              || (ox.isEmpty && isYeqZ && !iy && iz) || ((isXltW || (isXeqW && ix && !iw)) && (isYltZ || (isYeqZ && !iy && iz))))) mustBe (true)
           }
         }
       }
