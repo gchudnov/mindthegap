@@ -22,11 +22,11 @@ final class RelationSpec extends TestSpec:
      * Preceeds, IsPreceededBy
      *
      * {{{
-     *   AAA]
-     *        [BBB
+     *   AAA
+     *        BBB
      * }}}
      */
-    "preceeds & isPreceededBy" should {
+    "preceeds (before) & isPreceededBy (after)" should {
       "check" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
           val xy = Interval.make(ox, oy, ix, iy)
@@ -50,8 +50,8 @@ final class RelationSpec extends TestSpec:
      * Meets, IsMetBy
      *
      * {{{
-     *   AAA]
-     *      [BBB
+     *   AAA
+     *      BBB
      * }}}
      */
     "meets & isMetBy" should {
@@ -77,8 +77,8 @@ final class RelationSpec extends TestSpec:
      * Overlaps, IsOverlapedBy
      *
      * {{{
-     *   [AAA]
-     *     [BBB]
+     *   AAAA
+     *     BBBB
      * }}}
      */
     "overlaps & isOverlapedBy" should {
@@ -104,6 +104,39 @@ final class RelationSpec extends TestSpec:
         }
       }
     }
+
+    /**
+     * During, Contains
+     *
+     * {{{
+     *     AA
+     *   BBBBBB
+     * }}}
+     */
+    "during & contains (includes)" should {
+      "check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
+          val xy = Interval.make(ox, oy, ix, iy)
+          val wz = Interval.make(ow, oz, iw, iz)
+
+          whenever(xy.during(wz)) {
+            println(s"d: ${(xy, wz)}")
+
+            assertRelation("d", xy, wz)
+
+            val isXltW = pOrd.lt(ox, ow)
+            val isXeqW = pOrd.equiv(ox, ow)
+
+            val isYltZ = pOrd.lt(oy, oz)
+            val isYeqZ = pOrd.equiv(oy, oz)
+
+            (((isXltW || (isXeqW && iw && !ix)) && (isYltZ || (isYeqZ && iz && !iy))) ||
+              ((isXltW || (isXeqW && iw && !ix)) && oz.isEmpty) ||
+              ((isYltZ || (isYeqZ && iz && !iy)) && ow.isEmpty)) mustBe (true)
+          }
+        }
+      }
+    }
   }
 
   private def makeRelations[T: Ordering] =
@@ -113,7 +146,9 @@ final class RelationSpec extends TestSpec:
       "m" -> ((ab: Interval[T], cd: Interval[T]) => ab.meets(cd)),
       "M" -> ((ab: Interval[T], cd: Interval[T]) => ab.isMetBy(cd)),
       "o" -> ((ab: Interval[T], cd: Interval[T]) => ab.overlaps(cd)),
-      "O" -> ((ab: Interval[T], cd: Interval[T]) => ab.isOverlapedBy(cd))
+      "O" -> ((ab: Interval[T], cd: Interval[T]) => ab.isOverlapedBy(cd)),
+      "d" -> ((ab: Interval[T], cd: Interval[T]) => ab.during(cd)),
+      "D" -> ((ab: Interval[T], cd: Interval[T]) => ab.contains(cd))
     )
 
   private def assertRelation[T: Ordering](r: String, xy: Interval[T], wz: Interval[T]): Unit =

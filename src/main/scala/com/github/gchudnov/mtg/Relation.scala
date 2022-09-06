@@ -5,7 +5,7 @@ package com.github.gchudnov.mtg
  *
  * {{{
  *   AAA              | A preceeds B            | (p)
- *         BBB        | B is-predeeded-by A     | (P)
+ *        BBB         | B is-predeeded-by A     | (P)
  *
  *   AAA              | A meets B               | (m)
  *      BBB           | B is-met-by A           | (M)
@@ -13,11 +13,11 @@ package com.github.gchudnov.mtg
  *   AAA              | A overlaps B            | (o)
  *     BBB            | B is-overlapped-by A    | (O)
  *
- *   AAA              | A starts B              | (s)
- *   BBBBBB           | B is-started-by A       | (S)
- *
  *     AA             | A during B              | (d)
  *   BBBBBB           | B contains A            | (D)
+ *
+ *   AAA              | A starts B              | (s)
+ *   BBBBBB           | B is-started-by A       | (S)
  *
  *      AAA           | A finishes B            | (f)
  *   BBBBBB           | B is-finished-by A      | (F)
@@ -156,21 +156,21 @@ object Relation:
     def overlaps(b: Interval[T]): Boolean =
       (a, b) match
         case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
-          val ord = summon[Ordering[T]]
-          (ord.lt(x1, y1) || (ord.equiv(x1, y1) && includeX1 && !includeY1)) &&
-          (ord.lt(y1, x2)) &&
-          (ord.lt(x2, y2) || (ord.equiv(x2, y2) && !includeX2 && includeY2))
+          val ordT = summon[Ordering[T]]
+          (ordT.lt(x1, y1) || (ordT.equiv(x1, y1) && includeX1 && !includeY1)) &&
+          (ordT.lt(y1, x2)) &&
+          (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
         case (Proper(None, Some(x2), _, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
-          val ord = summon[Ordering[T]]
-          (ord.lt(y1, x2)) &&
-          (ord.lt(x2, y2) || (ord.equiv(x2, y2) && !includeX2 && includeY2))
+          val ordT = summon[Ordering[T]]
+          (ordT.lt(y1, x2)) &&
+          (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
         case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), None, includeY1, _)) =>
-          val ord = summon[Ordering[T]]
-          (ord.lt(y1, x2)) &&
-          (ord.lt(x1, y1) || (ord.equiv(x1, y1) && includeX1 && !includeY1))
+          val ordT = summon[Ordering[T]]
+          (ordT.lt(y1, x2)) &&
+          (ordT.lt(x1, y1) || (ordT.equiv(x1, y1) && includeX1 && !includeY1))
         case (Proper(None, Some(x2), _, includeX2), Proper(Some(y1), None, includeY1, _)) =>
-          val ord = summon[Ordering[T]]
-          ord.lt(y1, x2)
+          val ordT = summon[Ordering[T]]
+          ordT.lt(y1, x2)
         case _ =>
           false
 
@@ -197,7 +197,8 @@ object Relation:
      * }}}
      *
      * {{{
-     *   A d B
+     *   A <d> B
+     *   B <D> A
      * }}}
      *
      * {{{
@@ -206,9 +207,30 @@ object Relation:
      * }}}
      */
     def during(b: Interval[T]): Boolean =
-      ???
+      (a, b) match
+        case (Degenerate(x), Proper(Some(y1), None, includeY1, _)) =>
+          val ordT = summon[Ordering[T]]
+          ordT.gt(x, y1)
+        case (Degenerate(x), Proper(None, Some(y2), _, includeY2)) =>
+          val ordT = summon[Ordering[T]]
+          ordT.lt(x, y2)
+        case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), None, includeY1, _)) =>
+          val ordT = summon[Ordering[T]]
+          (ordT.lt(y1, x1) || (ordT.equiv(y1, x1) && includeY1 && !includeX1))
+        case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(None, Some(y2), _, includeY2)) =>
+          val ordT = summon[Ordering[T]]
+          (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
+        case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
+          val ordT = summon[Ordering[T]]
+          (ordT.lt(y1, x1) || (ordT.equiv(y1, x1) && includeY1 && !includeX1)) &&
+          (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
+        case _ =>
+          false
 
     def contains(b: Interval[T]): Boolean =
+      b.during(a)
+
+    def includes(b: Interval[T]): Boolean =
       b.during(a)
 
     /**
