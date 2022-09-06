@@ -165,10 +165,11 @@ final class RelationSpec extends TestSpec:
     fwd(xy, wz) mustBe (true)
     bck(wz, xy) mustBe (true)
 
-    rest.foreach { case (_, fn) =>
-      fn(xy, wz) mustBe (false)
-      fn(wz, xy) mustBe (false)
-    }
+    if xy.isProper && wz.isProper then
+      rest.foreach { case (_, fn) =>
+        fn(xy, wz) mustBe (false)
+        fn(wz, xy) mustBe (false)
+      }
 
 /*
 We can posit prop­er­ties like these:

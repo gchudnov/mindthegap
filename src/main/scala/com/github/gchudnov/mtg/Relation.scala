@@ -262,8 +262,13 @@ object Relation:
      * }}}
      */
     def starts(b: Interval[T]): Boolean =
-      ???
-
+      (a, b) match
+        case (Degenerate(x), Proper(Some(y1), None, includeY1, _)) =>
+          val ordT = summon[Ordering[T]]
+          ordT.gt(x, y1)
+        case _ =>
+          false
+          
     def isStartedBy(b: Interval[T]): Boolean =
       b.starts(a)
 
