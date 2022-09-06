@@ -120,18 +120,18 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.during(wz)) {
-            println(s"d: ${(xy, wz)}")
+            // println(s"d: ${(xy, wz)}")
 
             assertRelation("d", xy, wz)
 
-            val isXltW = pOrd.lt(ox, ow)
+            val isXgtW = pOrd.gt(ox, ow)
             val isXeqW = pOrd.equiv(ox, ow)
 
             val isYltZ = pOrd.lt(oy, oz)
             val isYeqZ = pOrd.equiv(oy, oz)
 
-            (((isXltW || (isXeqW && iw && !ix)) && (isYltZ || (isYeqZ && iz && !iy))) ||
-              ((isXltW || (isXeqW && iw && !ix)) && oz.isEmpty) ||
+            (((isXgtW || (isXeqW && iw && !ix)) && (isYltZ || (isYeqZ && iz && !iy))) ||
+              ((isXgtW || (isXeqW && iw && !ix)) && oz.isEmpty) ||
               ((isYltZ || (isYeqZ && iz && !iy)) && ow.isEmpty)) mustBe (true)
           }
         }
