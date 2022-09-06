@@ -137,6 +137,41 @@ final class RelationSpec extends TestSpec:
         }
       }
     }
+
+    /**
+     * Starts, IsStartedBy
+     *
+     * {{{
+     *   AAA
+     *   BBBBBB
+     * }}}
+     */
+    "starts & isStartedBy" should {
+      "check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
+          val xy = Interval.make(ox, oy, ix, iy)
+          val wz = Interval.make(ow, oz, iw, iz)
+
+          whenever(xy.starts(wz)) {
+            println(s"s: ${(xy, wz)}")
+
+            assertRelation("s", xy, wz)
+
+            // TODO: finish
+
+            // val isXgtW = pOrd.gt(ox, ow)
+            // val isXeqW = pOrd.equiv(ox, ow)
+
+            // val isYltZ = pOrd.lt(oy, oz)
+            // val isYeqZ = pOrd.equiv(oy, oz)
+
+            // (((isXgtW || (isXeqW && iw && !ix)) && (isYltZ || (isYeqZ && iz && !iy))) ||
+            //   ((isXgtW || (isXeqW && iw && !ix)) && oz.isEmpty) ||
+            //   ((isYltZ || (isYeqZ && iz && !iy)) && ow.isEmpty)) mustBe (true)
+          }
+        }
+      }
+    }    
   }
 
   private def makeRelations[T: Ordering] =
@@ -148,7 +183,9 @@ final class RelationSpec extends TestSpec:
       "o" -> ((ab: Interval[T], cd: Interval[T]) => ab.overlaps(cd)),
       "O" -> ((ab: Interval[T], cd: Interval[T]) => ab.isOverlapedBy(cd)),
       "d" -> ((ab: Interval[T], cd: Interval[T]) => ab.during(cd)),
-      "D" -> ((ab: Interval[T], cd: Interval[T]) => ab.contains(cd))
+      "D" -> ((ab: Interval[T], cd: Interval[T]) => ab.contains(cd)),
+      "s" -> ((ab: Interval[T], cd: Interval[T]) => ab.starts(cd)),
+      "S" -> ((ab: Interval[T], cd: Interval[T]) => ab.isStartedBy(cd))      
     )
 
   private def assertRelation[T: Ordering](r: String, xy: Interval[T], wz: Interval[T]): Unit =
@@ -165,6 +202,8 @@ final class RelationSpec extends TestSpec:
     fwd(xy, wz) mustBe (true)
     bck(wz, xy) mustBe (true)
 
+    // NOTE: for Proper intervals only one of the relations holds.
+    //       for Degenerate multiple relations might hold, e.g. { Meets, Starts } or { Meets, Equals } at the same time.
     if xy.isProper && wz.isProper then
       rest.foreach { case (_, fn) =>
         fn(xy, wz) mustBe (false)
