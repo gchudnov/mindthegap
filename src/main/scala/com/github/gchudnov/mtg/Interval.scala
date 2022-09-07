@@ -130,6 +130,9 @@ object Interval:
   def proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
     Proper(a, b, isIncludeA, isIncludeB)
 
+  def open[T: Ordering](a: T, b: T): Interval[T] =
+    Proper(Some(a), Some(b), isIncludeA = false, isIncludeB = false)
+
   def make[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
     val ord = summon[Ordering[T]]
     (a, b) match

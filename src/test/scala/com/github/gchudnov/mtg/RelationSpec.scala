@@ -103,6 +103,26 @@ final class RelationSpec extends TestSpec:
           }
         }
       }
+
+      "edge cases" in {
+        Interval.open(1, 10).overlaps(Interval.open(5, 100)) mustBe(true)
+        Interval.open(1, 10).overlaps(Interval.open(11, 100)) mustBe(false)
+
+
+        // TODO: impl it, see https://github.com/Breinify/brein-time-utilities/blob/master/test/com/brein/time/timeintervals/intervals/TestInterval.java
+
+
+        /*
+        Assert.assertFalse(new LongInterval(1L, 10L).overlaps(new DoubleInterval(10.1, 10.2)));
+        Assert.assertTrue(new LongInterval(1L, 10L).overlaps(new LongInterval(10L, 10L)));
+        Assert.assertTrue(new LongInterval(1L, 10L).overlaps(new LongInterval(-10L, 12L)));
+
+        Assert.assertTrue(new DoubleInterval(1.0, 5.0, true, true).overlaps(new DoubleInterval(1.0, 5.0, true, true)));
+        Assert.assertFalse(new DoubleInterval(1.0, 4.9, true, true).overlaps(new DoubleInterval(4.9, 5.0, true, true)));
+        Assert.assertTrue(new DoubleInterval(1.0, 4.9, true, false)
+                .overlaps(new DoubleInterval(4.9, 5.0, false, true)));
+        */
+      }
     }
 
     /**
