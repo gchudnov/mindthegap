@@ -2,7 +2,7 @@
 
 - start arithmetic impl
 - add separate edge tests
-
+- make Tags.comma
 
  Relation when during & contains (includes) should check - org.scalatest.exceptions.GeneratorDrivenPropertyCheckFailedException: TestFailedException was thrown during property evaluation.
   Message: false was not equal to true
