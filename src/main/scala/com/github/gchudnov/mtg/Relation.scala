@@ -307,7 +307,18 @@ object Relation:
      * }}}
      */
     def finishes(b: Interval[T]): Boolean =
-      ???
+      (a, b) match
+        case (Degenerate(x), Proper(_, Some(y2), _, includeY2)) =>
+          val ordT = summon[Ordering[T]]
+          ordT.equiv(x, y2) && includeY2
+        case (Proper(Some(_), Some(x2), _, includeX2), Proper(None, Some(y2), _, includeY2)) =>
+          val ordT = summon[Ordering[T]]
+          (ordT.equiv(x2, y2) && includeX2 && includeY2)
+        case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
+          val ordT = summon[Ordering[T]]
+          (ordT.equiv(x2, y2) && includeX2 && includeY2) && (ordT.gt(x1, y1) || (ordT.equiv(x1, y1) && !includeX1 && includeY1))
+        case _ =>
+          false
 
     def isFinishedBy(b: Interval[T]): Boolean =
       b.finishes(a)

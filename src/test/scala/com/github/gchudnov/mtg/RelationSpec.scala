@@ -167,6 +167,36 @@ final class RelationSpec extends TestSpec:
         }
       }
     }
+
+    /**
+     * Finishes, IsFinishedBy
+     *
+     * {{{
+     *      AAA
+     *   BBBBBB
+     * }}}
+     */
+    "finishes & isFinishedBy" should {
+      "check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
+          val xy = Interval.make(ox, oy, ix, iy)
+          val wz = Interval.make(ow, oz, iw, iz)
+
+          whenever(xy.finishes(wz)) {
+            // println(s"f: ${(xy, wz)}")
+
+            assertRelation("f", xy, wz)
+
+            val isYeqZ = pOrd.equiv(oy, oz)
+
+            val isXgtW = pOrd.gt(ox, ow)
+            val isXeqW = pOrd.equiv(ox, ow)
+
+            (isYeqZ && ((ox.isDefined && ow.isEmpty) || (isXgtW || (isXeqW && (iw && !ix))))) mustBe (true)
+          }
+        }
+      }
+    }
   }
 
   private def makeRelations[T: Ordering] =
@@ -180,7 +210,9 @@ final class RelationSpec extends TestSpec:
       "d" -> ((ab: Interval[T], cd: Interval[T]) => ab.during(cd)),
       "D" -> ((ab: Interval[T], cd: Interval[T]) => ab.contains(cd)),
       "s" -> ((ab: Interval[T], cd: Interval[T]) => ab.starts(cd)),
-      "S" -> ((ab: Interval[T], cd: Interval[T]) => ab.isStartedBy(cd))
+      "S" -> ((ab: Interval[T], cd: Interval[T]) => ab.isStartedBy(cd)),
+      "f" -> ((ab: Interval[T], cd: Interval[T]) => ab.finishes(cd)),
+      "F" -> ((ab: Interval[T], cd: Interval[T]) => ab.isFinishedBy(cd))
     )
 
   private def assertRelation[T: Ordering](r: String, xy: Interval[T], wz: Interval[T]): Unit =
