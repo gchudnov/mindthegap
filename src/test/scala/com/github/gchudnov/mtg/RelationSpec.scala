@@ -197,6 +197,8 @@ final class RelationSpec extends TestSpec:
         }
       }
     }
+
+    // TODO: add equals test
   }
 
   private def makeRelations[T: Ordering] =

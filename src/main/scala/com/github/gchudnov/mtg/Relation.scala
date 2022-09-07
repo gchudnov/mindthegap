@@ -348,7 +348,19 @@ object Relation:
      * }}}
      */
     def equals(b: Interval[T]): Boolean =
-      ???
+      import com.github.gchudnov.mtg.ordering.OptionOrdering
+      (a, b) match
+        case (Empty, Empty) =>
+          true
+        case (Degenerate(x), Degenerate(y)) =>
+          val ordT = summon[Ordering[T]]
+          ordT.equiv(x, y)
+        case (Proper(ox1, ox2, includeX1, includeX2), Proper(oy1, oy2, includeY1, includeY2)) =>
+          val ordT = summon[Ordering[Option[T]]]
+          (ordT.equiv(ox1, oy1) && (includeX1 == includeY1)) &&
+          (ordT.equiv(ox2, oy2) && (includeX2 == includeY2))
+        case _ =>
+          false
 
 // sealed abstract class Bounded[T: Ordering](a: T, b: T, isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]
 
