@@ -198,7 +198,33 @@ final class RelationSpec extends TestSpec:
       }
     }
 
-    // TODO: add equals test
+    /**
+     * Equals
+     * 
+     * {{{
+     *   AAAA
+     *   BBBB
+     * }}}
+     */
+    "equals" should {
+      "check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
+          val xy = Interval.make(ox, oy, ix, iy)
+          val wz = Interval.make(ow, oz, iw, iz)
+
+          whenever(xy.same(wz)) {
+            println(s"e: ${(xy, wz)}")
+
+            assertRelation("e", xy, wz)
+
+            // val isXeqW = pOrd.equiv(ox, ow)
+            // val isYeqZ = pOrd.equiv(oy, oz)
+
+            // (isXeqW && isYeqZ && (ix == iw) && (iy == iz)) mustBe (true)
+          }
+        }
+      }
+    }
   }
 
   private def makeRelations[T: Ordering] =
@@ -214,7 +240,8 @@ final class RelationSpec extends TestSpec:
       "s" -> ((ab: Interval[T], cd: Interval[T]) => ab.starts(cd)),
       "S" -> ((ab: Interval[T], cd: Interval[T]) => ab.isStartedBy(cd)),
       "f" -> ((ab: Interval[T], cd: Interval[T]) => ab.finishes(cd)),
-      "F" -> ((ab: Interval[T], cd: Interval[T]) => ab.isFinishedBy(cd))
+      "F" -> ((ab: Interval[T], cd: Interval[T]) => ab.isFinishedBy(cd)),
+      "e" -> ((ab: Interval[T], cd: Interval[T]) => ab.same(cd)),
     )
 
   private def assertRelation[T: Ordering](r: String, xy: Interval[T], wz: Interval[T]): Unit =
