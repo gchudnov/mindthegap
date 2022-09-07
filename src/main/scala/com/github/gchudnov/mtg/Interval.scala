@@ -82,7 +82,7 @@ final case class Degenerate[T: Ordering](a: T) extends Interval[T]:
  */
 final case class Proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]:
 
-  // make sure that a < b if provided
+  // make sure that a < b, if provided
   require((for x <- a; y <- b yield summon[Ordering[T]].lt(x, y)).getOrElse(true))
 
   override def toString(): String =

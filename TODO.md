@@ -1,6 +1,6 @@
 # TODO
 
-- start algebra impl
+- start arithmetic impl
 - add separate edge tests
 
 
