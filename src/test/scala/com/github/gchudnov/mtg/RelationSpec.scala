@@ -12,7 +12,7 @@ final class RelationSpec extends TestSpec:
   given intRange: IntRange = intRange5
   given intProb: IntProb   = intProb127
 
-  given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 100.0)
+  given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   private val pOrd: PartialOrdering[Option[Int]] = summon[PartialOrdering[Option[Int]]]
 
@@ -153,25 +153,20 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.starts(wz)) {
-            println(s"s: ${(xy, wz)}")
+            // println(s"s: ${(xy, wz)}")
 
             assertRelation("s", xy, wz)
 
-            // TODO: finish
+            val isXeqW = pOrd.equiv(ox, ow)
 
-            // val isXgtW = pOrd.gt(ox, ow)
-            // val isXeqW = pOrd.equiv(ox, ow)
+            val isYltZ = pOrd.lt(oy, oz)
+            val isYeqZ = pOrd.equiv(oy, oz)
 
-            // val isYltZ = pOrd.lt(oy, oz)
-            // val isYeqZ = pOrd.equiv(oy, oz)
-
-            // (((isXgtW || (isXeqW && iw && !ix)) && (isYltZ || (isYeqZ && iz && !iy))) ||
-            //   ((isXgtW || (isXeqW && iw && !ix)) && oz.isEmpty) ||
-            //   ((isYltZ || (isYeqZ && iz && !iy)) && ow.isEmpty)) mustBe (true)
+            (isXeqW && ((oy.isDefined && oz.isEmpty) || (isYltZ || (isYeqZ && (!iy && iz))))) mustBe (true)
           }
         }
       }
-    }    
+    }
   }
 
   private def makeRelations[T: Ordering] =
@@ -185,7 +180,7 @@ final class RelationSpec extends TestSpec:
       "d" -> ((ab: Interval[T], cd: Interval[T]) => ab.during(cd)),
       "D" -> ((ab: Interval[T], cd: Interval[T]) => ab.contains(cd)),
       "s" -> ((ab: Interval[T], cd: Interval[T]) => ab.starts(cd)),
-      "S" -> ((ab: Interval[T], cd: Interval[T]) => ab.isStartedBy(cd))      
+      "S" -> ((ab: Interval[T], cd: Interval[T]) => ab.isStartedBy(cd))
     )
 
   private def assertRelation[T: Ordering](r: String, xy: Interval[T], wz: Interval[T]): Unit =
