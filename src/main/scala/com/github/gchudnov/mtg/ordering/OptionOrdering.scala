@@ -22,7 +22,7 @@ given OptionPartialOrdering[T: Ordering]: PartialOrdering[Option[T]] with
   override def tryCompare(ox: Option[T], oy: Option[T]): Option[Int] =
     (ox, oy) match
       case (None, None) =>
-        None
+        Some(0)
       case (None, Some(_)) =>
         None
       case (Some(_), None) =>
@@ -33,7 +33,7 @@ given OptionPartialOrdering[T: Ordering]: PartialOrdering[Option[T]] with
   override def lteq(ox: Option[T], oy: Option[T]): Boolean =
     (ox, oy) match
       case (None, None) =>
-        false
+        true
       case (None, Some(_)) =>
         false
       case (Some(_), None) =>

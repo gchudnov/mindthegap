@@ -18,9 +18,6 @@ Prior work:
 - https://github.com/philippus/between
 - https://github.com/typelevel/spire/blob/main/core/src/main/scala/spire/math/Interval.scala
 
-- https://siawyoung.com/tstzrange
-- https://noelwelsh.com/posts/annihilators-in-scala/
-
 https://web.mit.edu/hyperbook/Patrikalakis-Maekawa-Cho/node45.html
 
 https://www.scalatest.org/user_guide/generator_driven_property_checks

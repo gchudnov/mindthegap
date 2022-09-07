@@ -213,14 +213,15 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.same(wz)) {
-            println(s"e: ${(xy, wz)}")
+            // println(s"e: ${(xy, wz)}")
 
             assertRelation("e", xy, wz)
 
-            // val isXeqW = pOrd.equiv(ox, ow)
-            // val isYeqZ = pOrd.equiv(oy, oz)
+            val isXeqW = pOrd.equiv(ox, ow)
+            val isYeqZ = pOrd.equiv(oy, oz)
 
-            // (isXeqW && isYeqZ && (ix == iw) && (iy == iz)) mustBe (true)
+            ((isXeqW && isYeqZ && (ix == iw) && (iy == iz)) ||
+             (xy.isEmpty && wz.isEmpty)) mustBe (true)
           }
         }
       }
@@ -242,6 +243,7 @@ final class RelationSpec extends TestSpec:
       "f" -> ((ab: Interval[T], cd: Interval[T]) => ab.finishes(cd)),
       "F" -> ((ab: Interval[T], cd: Interval[T]) => ab.isFinishedBy(cd)),
       "e" -> ((ab: Interval[T], cd: Interval[T]) => ab.same(cd)),
+      "E" -> ((ab: Interval[T], cd: Interval[T]) => ab.same(cd)),      
     )
 
   private def assertRelation[T: Ordering](r: String, xy: Interval[T], wz: Interval[T]): Unit =
@@ -265,11 +267,3 @@ final class RelationSpec extends TestSpec:
         fn(xy, wz) mustBe (false)
         fn(wz, xy) mustBe (false)
       }
-
-/*
-We can posit prop­er­ties like these:
-
-Given any three time­stamps f1, f2, and f3, if [f1,f2] con­tains f3, then f3 >= f1 and f3 <= f2. Else, f3 < f1 or f3 > f2.
-
-Given any two time­stamps f1 and f2, if (,f1) over­laps (f2,), then f1 > f2. Else, f1 <= f2.
- */
