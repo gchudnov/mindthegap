@@ -24,6 +24,16 @@ package com.github.gchudnov.mtg
  *
  *   AAA              | A equals B              | (e)
  *   BBB              |                         |
+ * 
+ * 
+ * 
+ *  Relation         Abbr.    AAAAA
+ *  preceeds(a,b)    p|P      :   : BBBBBBBBB
+ *  meets(a,b)       m|M      :   BBBBBBBBB
+ *  overlaps(a,b)    o|O      : BBBBBBBBB
+ *  starts(a,b)      s|S      BBBBBBBBB
+ *  during(a,b)      d|D    BBBBBBBBB
+ *  finishes(a,b)    f|F  BBBBBBBBB
  * }}}
  */
 object Relation:
