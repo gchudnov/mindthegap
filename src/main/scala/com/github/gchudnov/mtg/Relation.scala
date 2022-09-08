@@ -7,11 +7,11 @@ package com.github.gchudnov.mtg
  *   AAA              | A preceeds B            | (p)
  *        BBB         | B is-predeeded-by A     | (P)
  *
- *   AAA              | A meets B               | (m)
- *      BBB           | B is-met-by A           | (M)
+ *   AAAA             | A meets B               | (m)
+ *      BBBB          | B is-met-by A           | (M)
  *
- *   AAA              | A overlaps B            | (o)
- *     BBB            | B is-overlapped-by A    | (O)
+ *   AAAA             | A overlaps B            | (o)
+ *     BBBB           | B is-overlapped-by A    | (O)
  *
  *     AA             | A during B              | (d)
  *   BBBBBB           | B contains A            | (D)
@@ -24,7 +24,6 @@ package com.github.gchudnov.mtg
  *
  *   AAA              | A equals B              | (e)
  *   BBB              |                         |
- * 
  * 
  * 
  *  Relation         Abbr.    AAAAA
@@ -119,8 +118,8 @@ object Relation:
      * }}}
      *
      * {{{
-     *   AAA
-     *      BBB
+     *   AAAA
+     *      BBBB
      * }}}
      */
     def meets(b: Interval[T]): Boolean =
