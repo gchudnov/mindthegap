@@ -348,7 +348,7 @@ object Relation:
      * }}}
      */
     def same(b: Interval[T]): Boolean =
-      import com.github.gchudnov.mtg.ordering.OptionOrdering      
+      import com.github.gchudnov.mtg.ordering.OptionOrdering
       (a, b) match
         case (Empty, Empty) =>
           true

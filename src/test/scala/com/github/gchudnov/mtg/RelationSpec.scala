@@ -120,22 +120,22 @@ final class RelationSpec extends TestSpec:
         Interval.open(1, 10).isOverlapedBy(Interval.open(2, 10)) mustBe (false)
         Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
 
-        Interval.unbounded.overlaps(Interval.open(1, 10)) mustBe (false)
-        Interval.open(1, 10).overlaps(Interval.unbounded) mustBe (false)
+        Interval.unbounded[Int].overlaps(Interval.open(1, 10)) mustBe (false)
+        Interval.open(1, 10).overlaps(Interval.unbounded[Int]) mustBe (false)
 
-        Interval.unbounded.isOverlapedBy(Interval.open(1, 10)) mustBe (false)
-        Interval.open(1, 10).isOverlapedBy(Interval.unbounded) mustBe (false)
+        Interval.unbounded[Int].isOverlapedBy(Interval.open(1, 10)) mustBe (false)
+        Interval.open(1, 10).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
 
-        Interval.unbounded.isOverlapedBy(Interval.degenerate(2, 2)) mustBe (false)
-        Interval.degenerate(2, 2).isOverlapedBy(Interval.unbounded) mustBe (false)
+        Interval.unbounded[Int].isOverlapedBy(Interval.degenerate(2)) mustBe (false)
+        Interval.degenerate(2).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
 
         Interval.open(1, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (false)
         Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
 
         Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
 
-        // TODO: fix this test
-        Interval.leftOpen(2).overlaps(Interval.rightOpen(-2)) mustBe(true)
+        Interval.rightOpen(2).overlaps(Interval.leftOpen(-2)) mustBe (true)
+        Interval.leftOpen(-2).isOverlapedBy(Interval.rightOpen(2)) mustBe (true)
       }
     }
 
@@ -258,6 +258,16 @@ final class RelationSpec extends TestSpec:
               (xy.isEmpty && wz.isEmpty)) mustBe (true)
           }
         }
+      }
+
+      "check in edge cases" in {
+        Interval.unbounded[Int].same(Interval.unbounded[Int]) mustBe (true)
+        Interval.open(0, 5).same(Interval.open(0, 5)) mustBe (true)
+        Interval.closed(0, 5).same(Interval.closed(0, 5)) mustBe (true)
+        Interval.leftOpen(0, 5).same(Interval.leftOpen(0, 5)) mustBe (true)
+        Interval.rightOpen(0, 5).same(Interval.rightOpen(0, 5)) mustBe (true)
+        Interval.leftClosed(0, 5).same(Interval.leftClosed(0, 5)) mustBe (true)
+        Interval.rightClosed(0, 5).same(Interval.rightClosed(0, 5)) mustBe (true)
       }
     }
   }

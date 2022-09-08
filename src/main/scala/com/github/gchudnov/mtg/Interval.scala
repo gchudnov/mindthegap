@@ -122,36 +122,42 @@ object Proper:
 object Interval:
 
   // ∅
-  val empty: Interval[Nothing] =
+  def empty[T: Ordering]: Interval[T] =
     Empty
 
   // (-∞, +∞)
-  val unbounded: Interval[Nothing] =
-    Proper(None, None, isIncludeA = false, isIncludeB = false)
+  def unbounded[T: Ordering]: Interval[T] =
+    Proper[T](None, None, isIncludeA = false, isIncludeB = false)
 
-  // TODO: add comments
-
+  // [a, a] = {a}
   def degenerate[T: Ordering](a: T): Interval[T] =
     Degenerate(a)
 
+  // {a, b}
   def proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
     Proper(a, b, isIncludeA, isIncludeB)
 
+  // (a, b) = {x | a < x < b}
   def open[T: Ordering](a: T, b: T): Interval[T] =
     Proper(Some(a), Some(b), isIncludeA = false, isIncludeB = false)
 
+  // [a, b] = {x | a <= x <= b}
   def closed[T: Ordering](a: T, b: T): Interval[T] =
     Proper(Some(a), Some(b), isIncludeA = true, isIncludeB = true)
 
+  // (a, +∞) = {x | x > a}
   def leftOpen[T: Ordering](a: T): Interval[T] =
     Proper(Some(a), None, isIncludeA = false, isIncludeB = false)
 
+  // [a, +∞) = {x | x >= a}
   def leftClosed[T: Ordering](a: T): Interval[T] =
     Proper(Some(a), None, isIncludeA = true, isIncludeB = false)
 
+  // (-∞, b) = {x | x < b}
   def rightOpen[T: Ordering](b: T): Interval[T] =
     Proper(None, Some(b), isIncludeA = false, isIncludeB = false)
 
+  // (-∞, b] = {x | x < b}
   def rightClosed[T: Ordering](b: T): Interval[T] =
     Proper(None, Some(b), isIncludeA = false, isIncludeB = true)
 

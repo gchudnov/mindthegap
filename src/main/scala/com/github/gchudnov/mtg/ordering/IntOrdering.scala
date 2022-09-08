@@ -3,9 +3,9 @@ package com.github.gchudnov.mtg.ordering
 /**
  * Int Ordering
  */
-given IntOrdering: Ordering[Int] with
-  override def compare(x: Int, y: Int): Int =
-    x.compare(y)
+// given IntOrdering: Ordering[Int] with
+//   override def compare(x: Int, y: Int): Int =
+//     x.compare(y)
 
 /**
  * Int Partial Ordering

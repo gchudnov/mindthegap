@@ -74,7 +74,7 @@ final class IntervalSpec extends TestSpec:
     "toString" should {
 
       "represent an Empty interval" in {
-        val value    = Interval.empty
+        val value    = Interval.empty[Int]
         val actual   = value.toString()
         val expected = "∅"
 
