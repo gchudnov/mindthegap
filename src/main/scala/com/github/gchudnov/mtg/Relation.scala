@@ -4,26 +4,26 @@ package com.github.gchudnov.mtg
  * Relations
  *
  * {{{
- *   AAA              | A preceeds B            | (p)
- *        BBB         | B is-predeeded-by A     | (P)
+ *   AAA              | A preceeds (before) B            | (p)
+ *        BBB         | B is-predeeded-by (after) A      | (P)
  *
- *   AAAA             | A meets B               | (m)
- *      BBBB          | B is-met-by A           | (M)
+ *   AAAA             | A meets B                        | (m)
+ *      BBBB          | B is-met-by A                    | (M)
  *
- *   AAAA             | A overlaps B            | (o)
- *     BBBB           | B is-overlapped-by A    | (O)
+ *   AAAA             | A overlaps B                     | (o)
+ *     BBBB           | B is-overlapped-by A             | (O)
  *
- *     AA             | A during B              | (d)
- *   BBBBBB           | B contains A            | (D)
+ *     AA             | A during B                       | (d)
+ *   BBBBBB           | B contains A                     | (D)
  *
- *   AAA              | A starts B              | (s)
- *   BBBBBB           | B is-started-by A       | (S)
+ *   AAA              | A starts B                       | (s)
+ *   BBBBBB           | B is-started-by A                | (S)
  *
- *      AAA           | A finishes B            | (f)
- *   BBBBBB           | B is-finished-by A      | (F)
+ *      AAA           | A finishes B                     | (f)
+ *   BBBBBB           | B is-finished-by A               | (F)
  *
- *   AAA              | A equals B              | (e)
- *   BBB              |                         |
+ *   AAA              | A equals B                       | (e)
+ *   BBB              | B equals A                       | (E)
  * 
  * 
  *  Relation         Abbr.    AAAAA
