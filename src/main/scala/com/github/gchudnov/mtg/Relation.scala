@@ -40,6 +40,8 @@ object Relation:
      *   a- < b+
      *   a+ < b-
      *   a+ < b+
+     * 
+     *   a- < a+ < y- < y+
      * }}}
      *
      * {{{
@@ -92,6 +94,8 @@ object Relation:
      *   a- < b+
      *   a+ = b-
      *   a+ < b+
+     * 
+     *   a- < a+ = b- < b+
      * }}}
      *
      * {{{
@@ -111,8 +115,6 @@ object Relation:
      */
     def meets(b: Interval[T]): Boolean =
       (a, b) match
-        case (Degenerate(x), Degenerate(y)) =>
-          summon[Ordering[T]].equiv(x, y)
         case (Degenerate(x), Proper(Some(y1), _, includeY1, _)) =>
           summon[Ordering[T]].equiv(x, y1) && includeY1
         case (Proper(_, Some(x2), _, includeX2), Degenerate(y)) =>
@@ -136,6 +138,8 @@ object Relation:
      *   a- < b+
      *   a+ > b-
      *   a+ < b+
+     * 
+     *   a- < b- < a+ < b+
      * }}}
      *
      * {{{
@@ -188,6 +192,8 @@ object Relation:
      *   a- < b+
      *   a+ > b-
      *   a+ < b+
+     * 
+     *   b- < a- < a+ < b+
      * }}}
      *
      * {{{
@@ -247,6 +253,8 @@ object Relation:
      *   a- < b+
      *   a+ > b-
      *   a+ < b+
+     * 
+     *   a- = b- < a+ < b+
      * }}}
      *
      * {{{
@@ -292,6 +300,8 @@ object Relation:
      *   a- < b+
      *   a+ > b-
      *   a+ = b+
+     * 
+     *   b- < a- < a+ = b+
      * }}}
      *
      * {{{
@@ -327,7 +337,7 @@ object Relation:
       b.finishes(a)
 
     /**
-     * Equals (e) | Same
+     * Equals (e)
      *
      * {{{
      *   {a-, a+}; {b-; b+}
@@ -335,10 +345,12 @@ object Relation:
      *   a- < b+
      *   a+ > b-
      *   a+ = b+
+     * 
+     *   a- = b- < a+ = b+
      * }}}
      *
      * {{{
-     *   A equals B
+     *   A equalsTo B
      * }}}
      *
      * {{{
@@ -350,7 +362,7 @@ object Relation:
      *   BBBB
      * }}}
      */
-    def same(b: Interval[T]): Boolean =
+    def equalsTo(b: Interval[T]): Boolean =
       import com.github.gchudnov.mtg.ordering.OptionOrdering
       (a, b) match
         case (Empty, Empty) =>

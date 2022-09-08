@@ -33,7 +33,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.preceeds(wz)) {
-            // println(s"p: ${(xy, wz)}")
+            println(s"p: ${(xy, wz)}")
 
             assertRelation("p", xy, wz)
 
@@ -66,7 +66,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.meets(wz)) {
-            // println(s"m: ${(xy, wz)}")
+            println(s"m: ${(xy, wz)}")
 
             assertRelation("m", xy, wz)
 
@@ -97,7 +97,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.overlaps(wz)) {
-            // println(s"o: ${(xy, wz)}")
+            println(s"o: ${(xy, wz)}")
 
             assertRelation("o", xy, wz)
 
@@ -163,7 +163,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.during(wz)) {
-            // println(s"d: ${(xy, wz)}")
+            println(s"d: ${(xy, wz)}")
 
             assertRelation("d", xy, wz)
 
@@ -201,7 +201,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.starts(wz)) {
-            // println(s"s: ${(xy, wz)}")
+            println(s"s: ${(xy, wz)}")
 
             assertRelation("s", xy, wz)
 
@@ -242,7 +242,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.finishes(wz)) {
-            // println(s"f: ${(xy, wz)}")
+            println(s"f: ${(xy, wz)}")
 
             assertRelation("f", xy, wz)
 
@@ -277,8 +277,8 @@ final class RelationSpec extends TestSpec:
           val xy = Interval.make(ox, oy, ix, iy)
           val wz = Interval.make(ow, oz, iw, iz)
 
-          whenever(xy.same(wz)) {
-            // println(s"e: ${(xy, wz)}")
+          whenever(xy.equalsTo(wz)) {
+            println(s"e: ${(xy, wz)}")
 
             assertRelation("e", xy, wz)
 
@@ -292,13 +292,13 @@ final class RelationSpec extends TestSpec:
       }
 
       "check edge cases" in {
-        Interval.unbounded[Int].same(Interval.unbounded[Int]) mustBe (true)
-        Interval.open(0, 5).same(Interval.open(0, 5)) mustBe (true)
-        Interval.closed(0, 5).same(Interval.closed(0, 5)) mustBe (true)
-        Interval.leftOpen(0, 5).same(Interval.leftOpen(0, 5)) mustBe (true)
-        Interval.rightOpen(0, 5).same(Interval.rightOpen(0, 5)) mustBe (true)
-        Interval.leftClosed(0, 5).same(Interval.leftClosed(0, 5)) mustBe (true)
-        Interval.rightClosed(0, 5).same(Interval.rightClosed(0, 5)) mustBe (true)
+        Interval.unbounded[Int].equalsTo(Interval.unbounded[Int]) mustBe (true)
+        Interval.open(0, 5).equalsTo(Interval.open(0, 5)) mustBe (true)
+        Interval.closed(0, 5).equalsTo(Interval.closed(0, 5)) mustBe (true)
+        Interval.leftOpen(0, 5).equalsTo(Interval.leftOpen(0, 5)) mustBe (true)
+        Interval.rightOpen(0, 5).equalsTo(Interval.rightOpen(0, 5)) mustBe (true)
+        Interval.leftClosed(0, 5).equalsTo(Interval.leftClosed(0, 5)) mustBe (true)
+        Interval.rightClosed(0, 5).equalsTo(Interval.rightClosed(0, 5)) mustBe (true)
       }
     }
   }
@@ -317,8 +317,8 @@ final class RelationSpec extends TestSpec:
       "S" -> ((ab: Interval[T], cd: Interval[T]) => ab.isStartedBy(cd)),
       "f" -> ((ab: Interval[T], cd: Interval[T]) => ab.finishes(cd)),
       "F" -> ((ab: Interval[T], cd: Interval[T]) => ab.isFinishedBy(cd)),
-      "e" -> ((ab: Interval[T], cd: Interval[T]) => ab.same(cd)),
-      "E" -> ((ab: Interval[T], cd: Interval[T]) => ab.same(cd))
+      "e" -> ((ab: Interval[T], cd: Interval[T]) => ab.equalsTo(cd)),
+      "E" -> ((ab: Interval[T], cd: Interval[T]) => ab.equalsTo(cd))
     )
 
   private def assertRelation[T: Ordering](r: String, xy: Interval[T], wz: Interval[T]): Unit =
@@ -332,10 +332,16 @@ final class RelationSpec extends TestSpec:
     val bck  = relations(bk)
     val rest = relations.filterNot { case (k, _) => ks.contains(k) }
 
+    println(s"${fk}: ${xy} ${wz} mustBe true")
+    println(s"${bk}: ${wz} ${xy} mustBe true")
+
     fwd(xy, wz) mustBe (true)
     bck(wz, xy) mustBe (true)
 
-    rest.foreach { case (_, fn) =>
+    rest.foreach { case (k, fn) =>
+      println(s"${k}: ${xy} ${wz} mustBe false")
+      println(s"${k}: ${wz} ${xy} mustBe false")
+
       fn(xy, wz) mustBe (false)
       fn(wz, xy) mustBe (false)
     }

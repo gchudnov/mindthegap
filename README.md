@@ -13,6 +13,7 @@ Operations on intervals
 
 Prior work: 
 
+https://github.com/novisci/interval-algebra
 
 - https://github.com/Breinify/brein-time-utilities
 - https://github.com/philippus/between
