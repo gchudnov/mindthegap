@@ -324,7 +324,7 @@ object Relation:
       b.finishes(a)
 
     /**
-     * Equals (e)
+     * Equals (e) | Same
      *
      * {{{
      *   {a-, a+}; {b-; b+}

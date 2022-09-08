@@ -124,6 +124,9 @@ object Interval:
   val empty: Interval[Nothing] =
     Empty
 
+  val unbounded: Interval[Nothing] =
+    Proper(None, None, isIncludeA = false, isIncludeB = false)
+
   def degenerate[T: Ordering](a: T): Interval[T] =
     Degenerate(a)
 
@@ -132,6 +135,21 @@ object Interval:
 
   def open[T: Ordering](a: T, b: T): Interval[T] =
     Proper(Some(a), Some(b), isIncludeA = false, isIncludeB = false)
+
+  def closed[T: Ordering](a: T, b: T): Interval[T] =
+    Proper(Some(a), Some(b), isIncludeA = true, isIncludeB = true)
+
+  def leftOpen[T: Ordering](a: T): Interval[T] =
+    Proper(Some(a), None, isIncludeA = false, isIncludeB = false)
+
+  def leftClosed[T: Ordering](a: T): Interval[T] =
+    Proper(Some(a), None, isIncludeA = true, isIncludeB = false)
+
+  def rightOpen[T: Ordering](b: T): Interval[T] =
+    Proper(None, Some(b), isIncludeA = false, isIncludeB = false)
+
+  def rightClosed[T: Ordering](b: T): Interval[T] =
+    Proper(None, Some(b), isIncludeA = false, isIncludeB = true)
 
   def make[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
     val ord = summon[Ordering[T]]

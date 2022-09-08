@@ -104,24 +104,38 @@ final class RelationSpec extends TestSpec:
         }
       }
 
-      "edge cases" in {
-        Interval.open(1, 10).overlaps(Interval.open(5, 100)) mustBe(true)
-        Interval.open(1, 10).overlaps(Interval.open(11, 100)) mustBe(false)
+      "check in edge cases" in {
+        Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
+        Interval.open(1, 10).overlaps(Interval.open(11, 20)) mustBe (false)
+        Interval.open(1, 10).overlaps(Interval.open(1, 11)) mustBe (false)
+        Interval.open(1, 10).overlaps(Interval.open(20, 30)) mustBe (false)
 
+        Interval.open(1, 10).overlaps(Interval.degenerate(10)) mustBe (false)
+        Interval.closed(1, 10).overlaps(Interval.degenerate(10)) mustBe (false)
 
-        // TODO: impl it, see https://github.com/Breinify/brein-time-utilities/blob/master/test/com/brein/time/timeintervals/intervals/TestInterval.java
+        Interval.open(1, 10).overlaps(Interval.open(-10, 20)) mustBe (false)
 
+        Interval.open(1, 10).overlaps(Interval.open(2, 11)) mustBe (true)
+        Interval.open(1, 10).isOverlapedBy(Interval.open(2, 11)) mustBe (false)
+        Interval.open(1, 10).isOverlapedBy(Interval.open(2, 10)) mustBe (false)
+        Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
 
-        /*
-        Assert.assertFalse(new LongInterval(1L, 10L).overlaps(new DoubleInterval(10.1, 10.2)));
-        Assert.assertTrue(new LongInterval(1L, 10L).overlaps(new LongInterval(10L, 10L)));
-        Assert.assertTrue(new LongInterval(1L, 10L).overlaps(new LongInterval(-10L, 12L)));
+        Interval.unbounded.overlaps(Interval.open(1, 10)) mustBe (false)
+        Interval.open(1, 10).overlaps(Interval.unbounded) mustBe (false)
 
-        Assert.assertTrue(new DoubleInterval(1.0, 5.0, true, true).overlaps(new DoubleInterval(1.0, 5.0, true, true)));
-        Assert.assertFalse(new DoubleInterval(1.0, 4.9, true, true).overlaps(new DoubleInterval(4.9, 5.0, true, true)));
-        Assert.assertTrue(new DoubleInterval(1.0, 4.9, true, false)
-                .overlaps(new DoubleInterval(4.9, 5.0, false, true)));
-        */
+        Interval.unbounded.isOverlapedBy(Interval.open(1, 10)) mustBe (false)
+        Interval.open(1, 10).isOverlapedBy(Interval.unbounded) mustBe (false)
+
+        Interval.unbounded.isOverlapedBy(Interval.degenerate(2, 2)) mustBe (false)
+        Interval.degenerate(2, 2).isOverlapedBy(Interval.unbounded) mustBe (false)
+
+        Interval.open(1, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (false)
+        Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
+
+        Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
+
+        // TODO: fix this test
+        Interval.leftOpen(2).overlaps(Interval.rightOpen(-2)) mustBe(true)
       }
     }
 
@@ -220,7 +234,7 @@ final class RelationSpec extends TestSpec:
 
     /**
      * Equals
-     * 
+     *
      * {{{
      *   AAAA
      *   BBBB
@@ -241,7 +255,7 @@ final class RelationSpec extends TestSpec:
             val isYeqZ = pOrd.equiv(oy, oz)
 
             ((isXeqW && isYeqZ && (ix == iw) && (iy == iz)) ||
-             (xy.isEmpty && wz.isEmpty)) mustBe (true)
+              (xy.isEmpty && wz.isEmpty)) mustBe (true)
           }
         }
       }
@@ -263,7 +277,7 @@ final class RelationSpec extends TestSpec:
       "f" -> ((ab: Interval[T], cd: Interval[T]) => ab.finishes(cd)),
       "F" -> ((ab: Interval[T], cd: Interval[T]) => ab.isFinishedBy(cd)),
       "e" -> ((ab: Interval[T], cd: Interval[T]) => ab.same(cd)),
-      "E" -> ((ab: Interval[T], cd: Interval[T]) => ab.same(cd)),      
+      "E" -> ((ab: Interval[T], cd: Interval[T]) => ab.same(cd))
     )
 
   private def assertRelation[T: Ordering](r: String, xy: Interval[T], wz: Interval[T]): Unit =
