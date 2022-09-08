@@ -44,6 +44,11 @@ final class RelationSpec extends TestSpec:
           }
         }
       }
+
+      "check edge cases" in {
+        Interval.open(1, 2).preceeds(Interval.open(5, 6)) mustBe (true)
+        Interval.open(5, 6).isPreceededBy(Interval.open(1, 2)) mustBe (true)
+      }
     }
 
     /**
@@ -70,6 +75,10 @@ final class RelationSpec extends TestSpec:
             (isYeqW && (iy && iw)) mustBe (true)
           }
         }
+      }
+
+      "check edge cases" in {
+        Interval.closed(1, 5).meets(Interval.closed(5, 10)) mustBe (true)
       }
     }
 
@@ -104,7 +113,7 @@ final class RelationSpec extends TestSpec:
         }
       }
 
-      "check in edge cases" in {
+      "check edge cases" in {
         Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
         Interval.open(1, 10).overlaps(Interval.open(11, 20)) mustBe (false)
         Interval.open(1, 10).overlaps(Interval.open(1, 11)) mustBe (false)
@@ -170,6 +179,11 @@ final class RelationSpec extends TestSpec:
           }
         }
       }
+
+      "check edge cases" in {
+        Interval.degenerate(5).during(Interval.open(2, 9)) mustBe (true)
+        Interval.open(2, 9).contains(Interval.degenerate(5)) mustBe (true)
+      }
     }
 
     /**
@@ -199,6 +213,17 @@ final class RelationSpec extends TestSpec:
             (isXeqW && ((oy.isDefined && oz.isEmpty) || (isYltZ || (isYeqZ && (!iy && iz))))) mustBe (true)
           }
         }
+      }
+
+      "check edge cases" in {
+        Interval.leftClosedRightOpen(5, 10).starts(Interval.leftClosed(5)) mustBe (true)
+        Interval.leftClosedRightOpen(5, 10).isStartedBy(Interval.leftClosed(5)) mustBe (false)
+
+        Interval.unbounded[Int].starts(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].isStartedBy(Interval.unbounded[Int]) mustBe (false)
+
+        Interval.closed(1, 2).starts(Interval.closed(1, 10)) mustBe (true)
+        Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) mustBe (true)
       }
     }
 
@@ -230,6 +255,12 @@ final class RelationSpec extends TestSpec:
           }
         }
       }
+
+      "check edge cases" in {
+        Interval.unbounded[Int].finishes(Interval.unbounded[Int]) mustBe (false)
+
+        Interval.leftOpenRightClosed(5, 10).finishes(Interval.leftOpenRightClosed(2, 10)) mustBe (true)
+      }
     }
 
     /**
@@ -260,7 +291,7 @@ final class RelationSpec extends TestSpec:
         }
       }
 
-      "check in edge cases" in {
+      "check edge cases" in {
         Interval.unbounded[Int].same(Interval.unbounded[Int]) mustBe (true)
         Interval.open(0, 5).same(Interval.open(0, 5)) mustBe (true)
         Interval.closed(0, 5).same(Interval.closed(0, 5)) mustBe (true)
@@ -304,10 +335,7 @@ final class RelationSpec extends TestSpec:
     fwd(xy, wz) mustBe (true)
     bck(wz, xy) mustBe (true)
 
-    // NOTE: for Proper intervals only one of the relations holds.
-    //       for Degenerate multiple relations might hold, e.g. { Meets, Starts } or { Meets, Equals } at the same time.
-    if xy.isProper && wz.isProper then
-      rest.foreach { case (_, fn) =>
-        fn(xy, wz) mustBe (false)
-        fn(wz, xy) mustBe (false)
-      }
+    rest.foreach { case (_, fn) =>
+      fn(xy, wz) mustBe (false)
+      fn(wz, xy) mustBe (false)
+    }

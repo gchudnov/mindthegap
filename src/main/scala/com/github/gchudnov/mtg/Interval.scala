@@ -121,46 +121,151 @@ object Proper:
 
 object Interval:
 
-  // ∅
+  /**
+   * ∅
+   */
   def empty[T: Ordering]: Interval[T] =
     Empty
 
-  // (-∞, +∞)
+  /**
+   * (-∞, +∞)
+   */
   def unbounded[T: Ordering]: Interval[T] =
     Proper[T](None, None, isIncludeA = false, isIncludeB = false)
 
-  // [a, a] = {a}
+  /**
+   * [a, a] = {a}
+   *
+   * @param a
+   *   point
+   * @return
+   *   a new interval
+   */
   def degenerate[T: Ordering](a: T): Interval[T] =
     Degenerate(a)
 
-  // {a, b}
+  /**
+   * {a, b}
+   *
+   * @param a
+   *   left boundary
+   * @param b
+   *   right boundary
+   * @param isIncludeA
+   *   whether to include left boundary in the interval or not
+   * @param isIncludeB
+   *   whether to include right boundary in the interval or not
+   * @return
+   *   a new interval
+   */
   def proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
     Proper(a, b, isIncludeA, isIncludeB)
 
-  // (a, b) = {x | a < x < b}
+  /**
+   * (a, b) = {x | a < x < b}
+   *
+   * @param a
+   *   left boundary
+   * @param b
+   *   right boundary
+   * @return
+   *   a new interval
+   */
   def open[T: Ordering](a: T, b: T): Interval[T] =
     Proper(Some(a), Some(b), isIncludeA = false, isIncludeB = false)
 
-  // [a, b] = {x | a <= x <= b}
+  /**
+   * [a, b] = {x | a <= x <= b}
+   *
+   * @param a
+   *   left boundary
+   * @param b
+   *   right boundary
+   * @return
+   *   a new interval
+   */
   def closed[T: Ordering](a: T, b: T): Interval[T] =
     Proper(Some(a), Some(b), isIncludeA = true, isIncludeB = true)
 
-  // (a, +∞) = {x | x > a}
+  /**
+   * (a, +∞) = {x | x > a}
+   *
+   * @param a
+   *   left boundary
+   * @return
+   *   a new interval
+   */
   def leftOpen[T: Ordering](a: T): Interval[T] =
     Proper(Some(a), None, isIncludeA = false, isIncludeB = false)
 
-  // [a, +∞) = {x | x >= a}
+  /**
+   * [a, +∞) = {x | x >= a}
+   *
+   * @param a
+   *   left boundary
+   * @return
+   *   a new interval
+   */
   def leftClosed[T: Ordering](a: T): Interval[T] =
     Proper(Some(a), None, isIncludeA = true, isIncludeB = false)
 
-  // (-∞, b) = {x | x < b}
+  /**
+   * (-∞, b) = {x | x < b}
+   *
+   * @param a
+   *   right boundary
+   * @return
+   *   a new interval
+   */
   def rightOpen[T: Ordering](b: T): Interval[T] =
     Proper(None, Some(b), isIncludeA = false, isIncludeB = false)
 
-  // (-∞, b] = {x | x < b}
+  /**
+   * (-∞, b] = {x | x < b}
+   *
+   * @param a
+   *   right boundary
+   * @return
+   *   a new interval
+   */
   def rightClosed[T: Ordering](b: T): Interval[T] =
     Proper(None, Some(b), isIncludeA = false, isIncludeB = true)
 
+  /**
+   * [a, b) = {x | a <= x < b}
+   *
+   * @param a
+   *   right boundary
+   * @return
+   *   a new interval
+   */
+  def leftClosedRightOpen[T: Ordering](a: T, b: T): Interval[T] =
+    proper(Some(a), Some(b), isIncludeA = true, isIncludeB = false)
+
+  /**
+   * (a, b] = {x | a < x <= b}
+   *
+   * @param a
+   *   right boundary
+   * @return
+   *   a new interval
+   */
+  def leftOpenRightClosed[T: Ordering](a: T, b: T): Interval[T] =
+    proper(Some(a), Some(b), isIncludeA = false, isIncludeB = true)
+
+  /**
+   * Make an arbitraty interval
+   *
+   * @param a
+   *   left boundary
+   * @param b
+   *   right boundary
+   * @param isIncludeA
+   *   whether to include left boundary in the interval or not
+   * @param isIncludeB
+   *   whether to include right boundary in the interval or not
+   * @return
+   */
   def make[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
     val ord = summon[Ordering[T]]
     (a, b) match
