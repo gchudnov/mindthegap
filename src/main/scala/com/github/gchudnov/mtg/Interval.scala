@@ -121,11 +121,15 @@ object Proper:
 
 object Interval:
 
+  // ∅
   val empty: Interval[Nothing] =
     Empty
 
+  // (-∞, +∞)
   val unbounded: Interval[Nothing] =
     Proper(None, None, isIncludeA = false, isIncludeB = false)
+
+  // TODO: add comments
 
   def degenerate[T: Ordering](a: T): Interval[T] =
     Degenerate(a)
