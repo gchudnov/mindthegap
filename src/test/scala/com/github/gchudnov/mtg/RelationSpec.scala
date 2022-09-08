@@ -301,6 +301,26 @@ final class RelationSpec extends TestSpec:
         Interval.rightClosed(0, 5).equalsTo(Interval.rightClosed(0, 5)) mustBe (true)
       }
     }
+
+    "satisfy" should {
+      "only one relation" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
+          val xy = Interval.make(ox, oy, ix, iy)
+          val wz = Interval.make(ow, oz, iw, iz)
+
+          val relations = makeRelations[Int]
+
+          val trues = relations.foldLeft(List.empty[String]) { case (acc, (k, fn)) =>
+            val res = fn(xy, wz)
+            if res then acc :+ k
+            else acc
+          }
+
+          trues.nonEmpty mustBe (true)
+          trues.size mustBe (1)
+        }
+      }
+    }
   }
 
   private def makeRelations[T: Ordering] =
@@ -336,11 +356,8 @@ final class RelationSpec extends TestSpec:
     bck(wz, xy) mustBe (true)
 
     rest.foreach { case (k, fn) =>
-      if fn(xy, wz) then
-        println(s"${fk}|${xy}, ${wz}| == true; ${k}|${xy}, ${wz}| mustBe false, got true")
-
-      if fn(wz, xy) then
-        println(s"${fk}|${xy}, ${wz}| == true; ${k}|${wz}, ${xy}| mustBe false, got true")
+      if fn(xy, wz) then println(s"${fk}|${xy}, ${wz}| == true; ${k}|${xy}, ${wz}| mustBe false, got true")
+      if fn(wz, xy) then println(s"${fk}|${xy}, ${wz}| == true; ${k}|${wz}, ${xy}| mustBe false, got true")
 
       fn(xy, wz) mustBe (false)
       fn(wz, xy) mustBe (false)

@@ -40,7 +40,7 @@ object Relation:
      *   a- < b+
      *   a+ < b-
      *   a+ < b+
-     * 
+     *
      *   a- < a+ < y- < y+
      * }}}
      *
@@ -94,7 +94,7 @@ object Relation:
      *   a- < b+
      *   a+ = b-
      *   a+ < b+
-     * 
+     *
      *   a- < a+ = b- < b+
      * }}}
      *
@@ -134,7 +134,7 @@ object Relation:
      *   a- < b+
      *   a+ > b-
      *   a+ < b+
-     * 
+     *
      *   a- < b- < a+ < b+
      * }}}
      *
@@ -188,7 +188,7 @@ object Relation:
      *   a- < b+
      *   a+ > b-
      *   a+ < b+
-     * 
+     *
      *   b- < a- < a+ < b+
      * }}}
      *
@@ -249,7 +249,7 @@ object Relation:
      *   a- < b+
      *   a+ > b-
      *   a+ < b+
-     * 
+     *
      *   a- = b- < a+ < b+
      * }}}
      *
@@ -296,7 +296,7 @@ object Relation:
      *   a- < b+
      *   a+ > b-
      *   a+ = b+
-     * 
+     *
      *   b- < a- < a+ = b+
      * }}}
      *
@@ -341,7 +341,7 @@ object Relation:
      *   a- < b+
      *   a+ > b-
      *   a+ = b+
-     * 
+     *
      *   a- = b- < a+ = b+
      * }}}
      *
