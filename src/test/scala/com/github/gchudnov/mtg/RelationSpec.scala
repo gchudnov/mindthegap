@@ -33,7 +33,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.preceeds(wz)) {
-            println(s"p: ${(xy, wz)}")
+            // println(s"p: ${(xy, wz)}")
 
             assertRelation("p", xy, wz)
 
@@ -66,7 +66,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.meets(wz)) {
-            println(s"m: ${(xy, wz)}")
+            // println(s"m: ${(xy, wz)}")
 
             assertRelation("m", xy, wz)
 
@@ -97,7 +97,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.overlaps(wz)) {
-            println(s"o: ${(xy, wz)}")
+            // println(s"o: ${(xy, wz)}")
 
             assertRelation("o", xy, wz)
 
@@ -163,7 +163,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.during(wz)) {
-            println(s"d: ${(xy, wz)}")
+            // println(s"d: ${(xy, wz)}")
 
             assertRelation("d", xy, wz)
 
@@ -201,7 +201,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.starts(wz)) {
-            println(s"s: ${(xy, wz)}")
+            // println(s"s: ${(xy, wz)}")
 
             assertRelation("s", xy, wz)
 
@@ -242,7 +242,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.finishes(wz)) {
-            println(s"f: ${(xy, wz)}")
+            // println(s"f: ${(xy, wz)}")
 
             assertRelation("f", xy, wz)
 
@@ -278,7 +278,7 @@ final class RelationSpec extends TestSpec:
           val wz = Interval.make(ow, oz, iw, iz)
 
           whenever(xy.equalsTo(wz)) {
-            println(s"e: ${(xy, wz)}")
+            // println(s"e: ${(xy, wz)}")
 
             assertRelation("e", xy, wz)
 
@@ -332,15 +332,15 @@ final class RelationSpec extends TestSpec:
     val bck  = relations(bk)
     val rest = relations.filterNot { case (k, _) => ks.contains(k) }
 
-    println(s"${fk}: ${xy} ${wz} mustBe true")
-    println(s"${bk}: ${wz} ${xy} mustBe true")
-
     fwd(xy, wz) mustBe (true)
     bck(wz, xy) mustBe (true)
 
     rest.foreach { case (k, fn) =>
-      println(s"${k}: ${xy} ${wz} mustBe false")
-      println(s"${k}: ${wz} ${xy} mustBe false")
+      if fn(xy, wz) then
+        println(s"${fk}|${xy}, ${wz}| == true; ${k}|${xy}, ${wz}| mustBe false, got true")
+
+      if fn(wz, xy) then
+        println(s"${fk}|${xy}, ${wz}| == true; ${k}|${wz}, ${xy}| mustBe false, got true")
 
       fn(xy, wz) mustBe (false)
       fn(wz, xy) mustBe (false)
