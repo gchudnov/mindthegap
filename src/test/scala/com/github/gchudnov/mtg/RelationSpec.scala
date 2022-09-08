@@ -303,16 +303,16 @@ final class RelationSpec extends TestSpec:
     }
 
     "satisfy" should {
-      "only one relation" in {
+      "one relation only" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
           val xy = Interval.make(ox, oy, ix, iy)
           val wz = Interval.make(ow, oz, iw, iz)
 
           val relations = makeRelations[Int]
 
-          val trues = relations.foldLeft(List.empty[String]) { case (acc, (k, fn)) =>
+          val trues = relations.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>
             val res = fn(xy, wz)
-            if res then acc :+ k
+            if res then acc + k
             else acc
           }
 
