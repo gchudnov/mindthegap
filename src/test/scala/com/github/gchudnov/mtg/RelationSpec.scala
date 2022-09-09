@@ -19,14 +19,14 @@ final class RelationSpec extends TestSpec:
   "Relation" when {
 
     /**
-     * Preceeds, IsPreceededBy
+     * Before, After (Preceeds, IsPreceededBy)
      *
      * {{{
      *   AAA
      *        BBB
      * }}}
      */
-    "preceeds (before) & isPreceededBy (after)" should {
+    "before (preceeds) & after (isPreceededBy)" should {
       "check" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
           val xy = Interval.make(ox, oy, ix, iy)
@@ -35,7 +35,7 @@ final class RelationSpec extends TestSpec:
           whenever(xy.preceeds(wz)) {
             // println(s"p: ${(xy, wz)}")
 
-            assertRelation("p", xy, wz)
+            assertRelation("b", xy, wz)
 
             val isYltW = pOrd.lt(oy, ow)
             val isYeqW = pOrd.equiv(oy, ow)
@@ -325,8 +325,8 @@ final class RelationSpec extends TestSpec:
 
   private def makeRelations[T: Ordering] =
     Map(
-      "p" -> ((ab: Interval[T], cd: Interval[T]) => ab.preceeds(cd)),
-      "P" -> ((ab: Interval[T], cd: Interval[T]) => ab.isPreceededBy(cd)),
+      "b" -> ((ab: Interval[T], cd: Interval[T]) => ab.preceeds(cd)),
+      "B" -> ((ab: Interval[T], cd: Interval[T]) => ab.isPreceededBy(cd)),
       "m" -> ((ab: Interval[T], cd: Interval[T]) => ab.meets(cd)),
       "M" -> ((ab: Interval[T], cd: Interval[T]) => ab.isMetBy(cd)),
       "o" -> ((ab: Interval[T], cd: Interval[T]) => ab.overlaps(cd)),

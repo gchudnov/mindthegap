@@ -9,7 +9,7 @@ Operations on intervals
 - [Allen's Interval Algebra](https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html)
 - [Complete Interval Arithmetic and its Implementation on the Computer](https://www.math.kit.edu/ianm2/~kulisch/media/arjpkx.pdf)
 - [Interval Arithmetic](https://web.mit.edu/hyperbook/Patrikalakis-Maekawa-Cho/node45.html)
-
+- [Finding a Consistent Scenario to an Interval Algebra Network Containing Possibly Infinite Intervals](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.430.1918&rep=rep1&type=pdf)
 
 Prior work: 
 

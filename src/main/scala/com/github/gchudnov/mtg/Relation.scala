@@ -4,8 +4,8 @@ package com.github.gchudnov.mtg
  * Relations
  *
  * {{{
- *   AAA              | A preceeds (before) B            | (p)
- *        BBB         | B is-predeeded-by (after) A      | (P)
+ *   AAA              | A before (preceeds) B            | (b)
+ *        BBB         | B after  (is-predeeded-by) A     | (B)
  *
  *   AAAA             | A meets B                        | (m)
  *      BBBB          | B is-met-by A                    | (M)
@@ -24,10 +24,10 @@ package com.github.gchudnov.mtg
  *
  *   AAA              | A equals B                       | (e)
  *   BBB              | B equals A                       | (E)
- * 
- * 
+ *
+ *
  *  Relation         Abbr.    AAAAA
- *  preceeds(a,b)    p|P      :   : BBBBBBBBB
+ *  before(a,b)      b|B      :   : BBBBBBBBB
  *  meets(a,b)       m|M      :   BBBBBBBBB
  *  overlaps(a,b)    o|O      : BBBBBBBBB
  *  starts(a,b)      s|S      BBBBBBBBB
@@ -39,9 +39,9 @@ object Relation:
 
   extension [T: Ordering](a: Interval[T])
     /**
-     * Preceeds (p), Before (b)
+     * Before (b), Preceeds (p)
      *
-     * IsPreceededBy (P), After (A)
+     * After (B), IsPreceededBy (P)
      *
      * {{{
      *   {a-, a+}; {b-; b+}
@@ -54,15 +54,15 @@ object Relation:
      * }}}
      *
      * {{{
-     *   A preceeds B
      *   A before B
-     *   B is-predeeded-by A
      *   B after A
+     *   A preceeds B
+     *   B is-predeeded-by A
      * }}}
      *
      * {{{
-     *   A <p> B
-     *   B <P> A
+     *   A <b> B
+     *   B <B> A
      * }}}
      *
      * {{{
@@ -70,7 +70,7 @@ object Relation:
      *        BBB
      * }}}
      */
-    def preceeds(b: Interval[T]): Boolean =
+    def before(b: Interval[T]): Boolean =
       (a, b) match
         case (Degenerate(x), Degenerate(y)) =>
           summon[Ordering[T]].lt(x, y)
@@ -83,14 +83,14 @@ object Relation:
         case _ =>
           false
 
-    def isPreceededBy(b: Interval[T]): Boolean =
-      b.preceeds(a)
-
-    def before(b: Interval[T]): Boolean =
-      a.preceeds(b)
-
     def after(b: Interval[T]): Boolean =
-      b.preceeds(a)
+      b.before(a)
+
+    def preceeds(b: Interval[T]): Boolean =
+      a.before(b)
+
+    def isPreceededBy(b: Interval[T]): Boolean =
+      b.before(a)
 
     /**
      * Meets (m)
@@ -290,6 +290,19 @@ object Relation:
           (ordT.equiv(x1, y1) && includeX1 && includeY1) && (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
         case _ =>
           false
+
+    /*
+[info]   when satisfy
+[info]   - should only one relation *** FAILED ***
+[info]     TestFailedException was thrown during property evaluation.
+[info]       Message: false was not equal to true
+[info]       Location: (RelationSpec.scala:319)
+[info]       Occurred when passed generated values (
+[info]         arg0 = ((None,None),true,true), // 2 shrinks
+[info]         arg1 = ((None,None),true,false) // 2 shrinks
+[info]       )
+[info]     Init Seed: 7688653401697036339
+     */
 
     def isStartedBy(b: Interval[T]): Boolean =
       b.starts(a)
