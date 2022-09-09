@@ -32,3 +32,29 @@ https://github.com/philippus/between
 https://github.com/novisci/interval-algebra
 
 
+https://github.com/davedelong/time
+
+/*
+    func isBefore<OS>(_ other: Absolute<OS>) -> Bool {
+        let r = relation(to: other)
+        return r == .before || r == .meets
+    }
+
+    func isAfter<OS>(_ other: Absolute<OS>) -> Bool {
+        return other.isBefore(self)
+    }
+
+    func contains<OS>(_ other: Absolute<OS>) -> Bool {
+        let r = relation(to: other)
+        return r == .contains || r == .isStartedBy || r == .isFinishedBy
+    }
+
+    func isDuring<OS>(_ other: Absolute<OS>) -> Bool {
+        let r = relation(to: other)
+        return r == .during || r == .starts || r == .finishes
+    }
+
+    func overlaps<OS>(_ other: Absolute<OS>) -> Bool {
+        return relation(to: other).isOverlapping
+    }
+*/
