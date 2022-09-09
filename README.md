@@ -2,6 +2,8 @@
 
 Operations on intervals
 
+Extended with infinity (extended real line)
+
 ## Links
 
 - [Interval (mathematics)](https://en.wikipedia.org/wiki/Interval_(mathematics))

@@ -282,6 +282,9 @@ object Relation:
         case (Degenerate(x), Proper(Some(y1), _, includeY1, _)) =>
           val ordT = summon[Ordering[T]]
           ordT.equiv(x, y1) && includeY1
+        case (Proper(None, None, includeX1, includeX2), Proper(None, None, includeY1, includeY2)) =>
+          val ordT = summon[Ordering[T]]
+          (includeX1 && includeY1 && !includeX2 && includeY2)
         case (Proper(Some(x1), Some(_), includeX1, _), Proper(Some(y1), None, includeY1, _)) =>
           val ordT = summon[Ordering[T]]
           (ordT.equiv(x1, y1) && includeX1 && includeY1)
@@ -290,19 +293,6 @@ object Relation:
           (ordT.equiv(x1, y1) && includeX1 && includeY1) && (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
         case _ =>
           false
-
-    /*
-[info]   when satisfy
-[info]   - should only one relation *** FAILED ***
-[info]     TestFailedException was thrown during property evaluation.
-[info]       Message: false was not equal to true
-[info]       Location: (RelationSpec.scala:319)
-[info]       Occurred when passed generated values (
-[info]         arg0 = ((None,None),true,true), // 2 shrinks
-[info]         arg1 = ((None,None),true,false) // 2 shrinks
-[info]       )
-[info]     Init Seed: 7688653401697036339
-     */
 
     def isStartedBy(b: Interval[T]): Boolean =
       b.starts(a)

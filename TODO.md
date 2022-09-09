@@ -1,7 +1,9 @@
 # TODO
 
 - start arithmetic impl
+- add tests for extended infinity
 - add interval renderer
+- check boundaries incl or not incl -- allen's algebra, open and closed intervals
 
 TODO: FIX
 
@@ -17,33 +19,6 @@ TODO: FIX
 [info]     Init Seed: 7688653401697036339
 
       ^^^ TODO: STARTS ^^^^
-
-/**
- * Relations
- *
- * {{{
- *   AAA              | A preceeds B            | (p)
- *        BBB         | B is-predeeded-by A     | (P)
- *
- *   AAA              | A meets B               | (m)
- *      BBB           | B is-met-by A           | (M)
- *
- *   AAA              | A overlaps B            | (o)
- *     BBB            | B is-overlapped-by A    | (O)
- *
- *     AA             | A during B              | (d)
- *   BBBBBB           | B contains A            | (D)
- *
- *   AAA              | A starts B              | (s)
- *   BBBBBB           | B is-started-by A       | (S)
- *
- *      AAA           | A finishes B            | (f)
- *   BBBBBB           | B is-finished-by A      | (F)
- *
- *   AAA              | A equals B              | (e)
- *   BBB              |                         |
- * }}}
- */
 
 
 https://web.mit.edu/hyperbook/Patrikalakis-Maekawa-Cho/node45.html
