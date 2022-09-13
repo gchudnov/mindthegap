@@ -165,6 +165,15 @@ final class RelationSpec extends TestSpec:
 
         Interval.rightOpen(2).overlaps(Interval.leftOpen(-2)) mustBe (true)
         Interval.leftOpen(-2).isOverlapedBy(Interval.rightOpen(2)) mustBe (true)
+
+        // [1, 5]  [3, +inf)
+        Interval.closed(1, 5).overlaps(Interval.leftClosed(3)) mustBe (true)
+
+        // (-inf, 5]  [3, 10]
+        Interval.rightClosed(5).overlaps(Interval.closed(3, 10)) mustBe (true)
+
+        // (-inf, 5]  [3, +inf)
+        Interval.rightClosed(5).overlaps(Interval.leftClosed(3)) mustBe (true)
       }
     }
 
