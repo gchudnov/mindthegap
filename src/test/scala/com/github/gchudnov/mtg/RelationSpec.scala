@@ -210,8 +210,20 @@ final class RelationSpec extends TestSpec:
       }
 
       "check edge cases" in {
+        // {5}  (2, 9)
         Interval.degenerate(5).during(Interval.open(2, 9)) mustBe (true)
+
+        // (2, 9)  {5}
         Interval.open(2, 9).contains(Interval.degenerate(5)) mustBe (true)
+
+        // [5, 7]  [3, +inf)
+        Interval.closed(5, 7).during(Interval.leftClosed(3)) mustBe (true)
+
+        // [5, 7]  (-inf, 10]
+        Interval.closed(5, 7).during(Interval.rightClosed(10)) mustBe (true)
+
+        // [5, 7] (-inf, +inf)
+        Interval.closed(5, 7).during(Interval.unbounded[Int]) mustBe (true)
       }
     }
 
