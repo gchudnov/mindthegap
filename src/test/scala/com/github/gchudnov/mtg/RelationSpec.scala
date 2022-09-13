@@ -46,14 +46,18 @@ final class RelationSpec extends TestSpec:
       }
 
       "check edge cases" in {
+        // (1, 2)  (5, 6)
         Interval.open(1, 2).preceeds(Interval.open(5, 6)) mustBe (true)
         Interval.open(5, 6).isPreceededBy(Interval.open(1, 2)) mustBe (true)
 
+        // (1, 2) (3, +inf)
         Interval.open(1, 2).before(Interval.leftOpen(3)) mustBe (true)
-        Interval.rightOpen(2).before(Interval.open(3, 5)) mustBe (true)
-        Interval.rightOpen(2).before(Interval.leftOpen(3)) mustBe (true)
 
-        
+        // (-inf, 2) (3, 5)
+        Interval.rightOpen(2).before(Interval.open(3, 5)) mustBe (true)
+
+        // (-inf, 2) (3, +inf)
+        Interval.rightOpen(2).before(Interval.leftOpen(3)) mustBe (true)
       }
     }
 
