@@ -1,5 +1,8 @@
 # TODO
 
+- starts, finishes and infinity, add tests
+- add missing cases
+
 - start arithmetic impl
 - add tests for extended infinity
 - add interval renderer
@@ -19,6 +22,10 @@ TODO: FIX
 [info]     Init Seed: 7688653401697036339
 
       ^^^ TODO: STARTS ^^^^
+
+https://davisvaughan.github.io/ivs/reference/allen-relation-locate.html
+
+https://community.oracle.com/tech/developers/discussion/4177878/handling-nulls-in-interval-algebra
 
 
 https://web.mit.edu/hyperbook/Patrikalakis-Maekawa-Cho/node45.html
