@@ -298,8 +298,10 @@ final class RelationSpec extends TestSpec:
       }
 
       "check edge cases" in {
+        // (-inf, +inf)  (-inf, +inf)
         Interval.unbounded[Int].finishes(Interval.unbounded[Int]) mustBe (false)
 
+        // (5, 10]  (2, 10]
         Interval.leftOpenRightClosed(5, 10).finishes(Interval.leftOpenRightClosed(2, 10)) mustBe (true)
       }
     }
