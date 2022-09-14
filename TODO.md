@@ -1,5 +1,22 @@
 # TODO
 
+TODO: FIX TESTS
+
+[info]   when equals
+[info]   - should check
+[info]   - should check edge cases
+[info]   when satisfy
+[info]   - should one relation only *** FAILED ***
+[info]     TestFailedException was thrown during property evaluation.
+[info]       Message: false was not equal to true
+[info]       Location: (RelationSpec.scala:426)
+[info]       Occurred when passed generated values (
+[info]         arg0 = ((None,None),false,false),
+[info]         arg1 = ((Some(0),Some(0)),false,false) // 4 shrinks
+[info]       )
+[info]     Init Seed: -2895607596025151233
+
+
 TODO: reconsider points --- what relations do they have?
 
 open, closed, degenerate, empty, unbounded
@@ -17,21 +34,6 @@ d|[-∞,0], [-∞,+∞)| == true; s|[-∞,0], [-∞,+∞)| mustBe false, got tru
 - add tests for extended infinity
 - add interval renderer
 - check boundaries incl or not incl -- allen's algebra, open and closed intervals
-
-TODO: FIX
-
-[info]   when satisfy
-[info]   - should only one relation *** FAILED ***
-[info]     TestFailedException was thrown during property evaluation.
-[info]       Message: false was not equal to true
-[info]       Location: (RelationSpec.scala:319)
-[info]       Occurred when passed generated values (
-[info]         arg0 = ((None,None),true,true), // 2 shrinks
-[info]         arg1 = ((None,None),true,false) // 2 shrinks
-[info]       )
-[info]     Init Seed: 7688653401697036339
-
-      ^^^ TODO: STARTS ^^^^
 
 https://davisvaughan.github.io/ivs/reference/allen-relation-locate.html
 
