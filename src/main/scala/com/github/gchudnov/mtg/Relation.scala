@@ -221,6 +221,8 @@ object Relation:
      */
     def during(b: Interval[T]): Boolean =
       (a, b) match
+        case (xx, Proper(None, None, _, _)) =>
+          xx.nonEmpty
         case (Degenerate(x), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
           val ordT = summon[Ordering[T]]
           (ordT.gt(x, y1) && ordT.lt(x, y2))
