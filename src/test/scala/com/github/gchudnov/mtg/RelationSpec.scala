@@ -239,6 +239,9 @@ final class RelationSpec extends TestSpec:
         // [-∞,0]  [-∞,+∞)
         Interval.proper(None, Some(0), true, true).during(Interval.proper[Int](None, None, true, false)) mustBe (false)
 
+        // [0, 1)  [-∞,+∞]
+        Interval.proper(Some(0), Some(1), true, false).during(Interval.proper[Int](None, None, true, true)) mustBe (true)
+
         // Infinity
 
         // [5, 7]  [3, +inf)
