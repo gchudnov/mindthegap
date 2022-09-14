@@ -47,6 +47,7 @@ sealed trait Interval[+T: Ordering]:
   def isEmpty: Boolean
   def isDegenrate: Boolean
   def isProper: Boolean
+  def isUnbounded: Boolean
 
   def nonEmpty: Boolean =
     !isEmpty
@@ -57,6 +58,9 @@ sealed trait Interval[+T: Ordering]:
   def nonProper: Boolean =
     !isProper
 
+  def nonUnbounded: Boolean =
+    !isUnbounded
+
 /**
  * Empty Interval
  */
@@ -66,6 +70,7 @@ case object Empty extends Interval[Nothing]:
   override def isEmpty: Boolean     = true
   override def isDegenrate: Boolean = false
   override def isProper: Boolean    = false
+  override def isUnbounded: Boolean = false
 
 /**
  * Degenerate Interval
@@ -76,6 +81,7 @@ final case class Degenerate[T: Ordering](a: T) extends Interval[T]:
   override def isEmpty: Boolean     = false
   override def isDegenrate: Boolean = true
   override def isProper: Boolean    = false
+  override def isUnbounded: Boolean = false
 
 /**
  * Proper Interval
@@ -96,6 +102,7 @@ final case class Proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boo
   override def isEmpty: Boolean     = false
   override def isDegenrate: Boolean = false
   override def isProper: Boolean    = true
+  override def isUnbounded: Boolean = a.isEmpty && b.isEmpty
 
 object Proper:
 

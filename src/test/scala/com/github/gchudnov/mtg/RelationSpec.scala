@@ -295,6 +295,9 @@ final class RelationSpec extends TestSpec:
 
         // (-inf, 5]  (-inf, 10]
         Interval.rightClosed(5).starts(Interval.rightClosed(10)) mustBe (true)
+
+        // (-inf, 5)  (-inf, +inf)
+        Interval.rightClosed(5).starts(Interval.unbounded[Int]) mustBe (true)
       }
     }
 

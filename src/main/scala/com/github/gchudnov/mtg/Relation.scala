@@ -137,7 +137,7 @@ object Relation:
      *
      * IsOverlapedBy (O)
      *
-     * If any of the intervals is empty, there is no overlapping
+     *   - If any of the intervals is Empty, there is no overlapping.
      *
      * {{{
      *   {a-, a+}; {b-; b+}
@@ -222,7 +222,7 @@ object Relation:
     def during(b: Interval[T]): Boolean =
       (a, b) match
         case (xx, Proper(None, None, _, _)) =>
-          xx.nonEmpty
+          xx.nonEmpty && xx.nonUnbounded
         case (Degenerate(x), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
           val ordT = summon[Ordering[T]]
           (ordT.gt(x, y1) && ordT.lt(x, y2))
@@ -286,6 +286,9 @@ object Relation:
         case (Degenerate(x), Proper(Some(y1), _, includeY1, _)) =>
           val ordT = summon[Ordering[T]]
           ordT.equiv(x, y1) && includeY1
+        case (Proper(None, Some(_), includeX1, _), Proper(None, None, includeY1, _)) =>
+          val ordT = summon[Ordering[T]]
+          (includeX1 == includeY1)
         case (Proper(None, Some(x2), includeX1, includeX2), Proper(None, Some(y2), includeY1, includeY2)) =>
           val ordT = summon[Ordering[T]]
           (includeX1 == includeY1) && (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
