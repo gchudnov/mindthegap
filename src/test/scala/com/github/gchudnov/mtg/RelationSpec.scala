@@ -50,13 +50,15 @@ final class RelationSpec extends TestSpec:
         Interval.open(1, 2).preceeds(Interval.open(5, 6)) mustBe (true)
         Interval.open(5, 6).isPreceededBy(Interval.open(1, 2)) mustBe (true)
 
-        // (1, 2) (3, +inf)
+        // Infinity
+
+        // (1, 2)  (3, +inf)
         Interval.open(1, 2).before(Interval.leftOpen(3)) mustBe (true)
 
-        // (-inf, 2) (3, 5)
+        // (-inf, 2)  (3, 5)
         Interval.rightOpen(2).before(Interval.open(3, 5)) mustBe (true)
 
-        // (-inf, 2) (3, +inf)
+        // (-inf, 2)  (3, +inf)
         Interval.rightOpen(2).before(Interval.leftOpen(3)) mustBe (true)
       }
     }
@@ -90,6 +92,8 @@ final class RelationSpec extends TestSpec:
       "check edge cases" in {
         // [1, 5]  [5, 10]
         Interval.closed(1, 5).meets(Interval.closed(5, 10)) mustBe (true)
+
+        // Infinity
 
         // [1, 5]  [5, +inf)
         Interval.closed(1, 5).meets(Interval.leftClosed(5)) mustBe (true)
@@ -166,6 +170,8 @@ final class RelationSpec extends TestSpec:
         Interval.rightOpen(2).overlaps(Interval.leftOpen(-2)) mustBe (true)
         Interval.leftOpen(-2).isOverlapedBy(Interval.rightOpen(2)) mustBe (true)
 
+        // Infinity
+
         // [1, 5]  [3, +inf)
         Interval.closed(1, 5).overlaps(Interval.leftClosed(3)) mustBe (true)
 
@@ -174,6 +180,20 @@ final class RelationSpec extends TestSpec:
 
         // (-inf, 5]  [3, +inf)
         Interval.rightClosed(5).overlaps(Interval.leftClosed(3)) mustBe (true)
+
+        // Empty
+
+        // TODO: add tests for https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
+
+        // {}  (-inf, +inf)
+        Interval.empty[Int].overlaps(Interval.unbounded[Int]) mustBe(false)
+        Interval.unbounded[Int].overlaps(Interval.empty[Int]) mustBe(false)
+
+        // {} [1, 2]
+        Interval.empty[Int].overlaps(Interval.closed(1, 2)) mustBe(false)
+        Interval.closed(1, 2).overlaps(Interval.empty[Int]) mustBe(false)
+
+        // TODO: add tests for empty intervals
       }
     }
 
@@ -215,6 +235,8 @@ final class RelationSpec extends TestSpec:
 
         // (2, 9)  {5}
         Interval.open(2, 9).contains(Interval.degenerate(5)) mustBe (true)
+
+        // Infinity
 
         // [5, 7]  [3, +inf)
         Interval.closed(5, 7).during(Interval.leftClosed(3)) mustBe (true)

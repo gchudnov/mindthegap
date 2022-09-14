@@ -136,6 +136,8 @@ object Relation:
      * Overlaps (o)
      *
      * IsOverlapedBy (O)
+     * 
+     * If any of the intervals is empty, there is no overlapping
      *
      * {{{
      *   {a-, a+}; {b-; b+}
