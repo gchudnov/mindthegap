@@ -4,6 +4,11 @@ TODO: reconsider points --- what relations do they have?
 
 open, closed, degenerate, empty, unbounded
 
+d|[-∞,4], [-∞,+∞)| == true; s|[-∞,4], [-∞,+∞)| mustBe false, got true
+d|[-∞,2], [-∞,+∞)| == true; s|[-∞,2], [-∞,+∞)| mustBe false, got true
+d|[-∞,1], [-∞,+∞)| == true; s|[-∞,1], [-∞,+∞)| mustBe false, got true
+d|[-∞,0], [-∞,+∞)| == true; s|[-∞,0], [-∞,+∞)| mustBe false, got true
+
 
 - starts, finishes and infinity, add tests
 - add missing cases

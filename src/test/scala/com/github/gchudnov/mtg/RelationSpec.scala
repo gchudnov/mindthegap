@@ -336,6 +336,17 @@ final class RelationSpec extends TestSpec:
 
         // (5, 10]  (2, 10]
         Interval.leftOpenRightClosed(5, 10).finishes(Interval.leftOpenRightClosed(2, 10)) mustBe (true)
+
+        // Infinity
+
+        // [5, 10]  (-inf, 10]
+        Interval.closed(5, 10).finishes(Interval.rightClosed(10)) mustBe (true)
+
+        // [10, +inf)  [5, +inf)
+        Interval.leftClosed(10).finishes(Interval.leftClosed(5)) mustBe (true)
+
+        // [5, +inf)  (-inf, +inf)
+        Interval.leftClosed(5).finishes(Interval.unbounded[Int]) mustBe (true)
       }
     }
 
@@ -368,13 +379,23 @@ final class RelationSpec extends TestSpec:
       }
 
       "check edge cases" in {
-        Interval.unbounded[Int].equalsTo(Interval.unbounded[Int]) mustBe (true)
         Interval.open(0, 5).equalsTo(Interval.open(0, 5)) mustBe (true)
         Interval.closed(0, 5).equalsTo(Interval.closed(0, 5)) mustBe (true)
         Interval.leftOpen(0, 5).equalsTo(Interval.leftOpen(0, 5)) mustBe (true)
         Interval.rightOpen(0, 5).equalsTo(Interval.rightOpen(0, 5)) mustBe (true)
         Interval.leftClosed(0, 5).equalsTo(Interval.leftClosed(0, 5)) mustBe (true)
         Interval.rightClosed(0, 5).equalsTo(Interval.rightClosed(0, 5)) mustBe (true)
+
+        // Infinity
+
+        // [5, +inf)  [5, +inf)
+        Interval.leftClosed(5).equalsTo(Interval.leftClosed(5)) mustBe (true)
+
+        // (-inf, 5]  (-inf, 5]
+        Interval.rightClosed(5).equalsTo(Interval.rightClosed(5)) mustBe (true)
+
+        // (-inf, +inf)  (-inf, +inf)
+        Interval.unbounded[Int].equalsTo(Interval.unbounded[Int]) mustBe (true)
       }
     }
 
