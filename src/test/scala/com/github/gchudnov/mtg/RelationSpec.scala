@@ -186,12 +186,12 @@ final class RelationSpec extends TestSpec:
         // TODO: add tests for https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
 
         // {}  (-inf, +inf)
-        Interval.empty[Int].overlaps(Interval.unbounded[Int]) mustBe(false)
-        Interval.unbounded[Int].overlaps(Interval.empty[Int]) mustBe(false)
+        Interval.empty[Int].overlaps(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].overlaps(Interval.empty[Int]) mustBe (false)
 
         // {} [1, 2]
-        Interval.empty[Int].overlaps(Interval.closed(1, 2)) mustBe(false)
-        Interval.closed(1, 2).overlaps(Interval.empty[Int]) mustBe(false)
+        Interval.empty[Int].overlaps(Interval.closed(1, 2)) mustBe (false)
+        Interval.closed(1, 2).overlaps(Interval.empty[Int]) mustBe (false)
 
         // TODO: add tests for empty intervals
       }
@@ -287,6 +287,14 @@ final class RelationSpec extends TestSpec:
 
         Interval.closed(1, 2).starts(Interval.closed(1, 10)) mustBe (true)
         Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) mustBe (true)
+
+        // Infinity
+
+        // [1, 5] [1, +inf)
+        Interval.closed(1, 5).starts(Interval.leftClosed(1)) mustBe (true)
+
+        // (-inf, 5]  (-inf, 10]
+        Interval.rightClosed(5).starts(Interval.rightClosed(10)) mustBe (true)
       }
     }
 

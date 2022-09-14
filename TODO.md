@@ -2,6 +2,8 @@
 
 TODO: reconsider points --- what relations do they have?
 
+open, closed, degenerate, empty, unbounded
+
 
 - starts, finishes and infinity, add tests
 - add missing cases
