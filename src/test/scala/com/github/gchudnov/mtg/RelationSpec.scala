@@ -224,7 +224,8 @@ final class RelationSpec extends TestSpec:
 
             (((isX1gtY1 || (isX1eqY1 && iy1 && !ix1)) && (isX2ltY2 || (isX2eqY2 && iy2 && !ix2))) ||
               ((isX1gtY1 || (isX1eqY1 && iy1 && !ix1)) && oy2.isEmpty) ||
-              ((isX2ltY2 || (isX2eqY2 && iy2 && !ix2)) && oy1.isEmpty)) mustBe (true)
+              ((isX2ltY2 || (isX2eqY2 && iy2 && !ix2)) && oy1.isEmpty) ||
+              (ox1.isDefined && ox2.isDefined && oy1.isEmpty && oy2.isEmpty)) mustBe (true)
           }
         }
       }
