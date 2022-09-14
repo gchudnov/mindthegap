@@ -236,6 +236,9 @@ final class RelationSpec extends TestSpec:
         // (2, 9)  {5}
         Interval.open(2, 9).contains(Interval.degenerate(5)) mustBe (true)
 
+        // [-∞,0]  [-∞,+∞)
+        Interval.proper(None, Some(0), true, true).during(Interval.proper[Int](None, None, true, false)) mustBe (false)
+
         // Infinity
 
         // [5, 7]  [3, +inf)
