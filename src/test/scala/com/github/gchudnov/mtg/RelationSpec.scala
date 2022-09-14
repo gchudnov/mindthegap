@@ -28,19 +28,19 @@ final class RelationSpec extends TestSpec:
      */
     "before (preceeds) & after (isPreceededBy)" should {
       "check" in {
-        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
-          val xy = Interval.make(ox, oy, ix, iy)
-          val wz = Interval.make(ow, oz, iw, iz)
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-          whenever(xy.preceeds(wz)) {
-            // println(s"p: ${(xy, wz)}")
+          whenever(xx.preceeds(yy)) {
+            // println(s"p: ${(xx, yy)}")
 
-            assertRelation("b", xy, wz)
+            assertRelation("b", xx, yy)
 
-            val isYltW = pOrd.lt(oy, ow)
-            val isYeqW = pOrd.equiv(oy, ow)
+            val isX2ltY1 = pOrd.lt(ox2, oy1)
+            val isX2eqY1 = pOrd.equiv(ox2, oy1)
 
-            (isYltW || (isYeqW && !(iy && iw))) mustBe (true)
+            (isX2ltY1 || (isX2eqY1 && !(ix2 && iy1))) mustBe (true)
           }
         }
       }
@@ -73,18 +73,18 @@ final class RelationSpec extends TestSpec:
      */
     "meets & isMetBy" should {
       "check" in {
-        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
-          val xy = Interval.make(ox, oy, ix, iy)
-          val wz = Interval.make(ow, oz, iw, iz)
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-          whenever(xy.meets(wz)) {
-            // println(s"m: ${(xy, wz)}")
+          whenever(xx.meets(yy)) {
+            // println(s"m: ${(xx, yy)}")
 
-            assertRelation("m", xy, wz)
+            assertRelation("m", xx, yy)
 
-            val isYeqW = pOrd.equiv(oy, ow)
+            val isX2eqY1 = pOrd.equiv(ox2, oy1)
 
-            (isYeqW && (iy && iw)) mustBe (true)
+            (isX2eqY1 && (ix2 && iy1)) mustBe (true)
           }
         }
       }
@@ -116,23 +116,23 @@ final class RelationSpec extends TestSpec:
      */
     "overlaps & isOverlapedBy" should {
       "check" in {
-        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
-          val xy = Interval.make(ox, oy, ix, iy)
-          val wz = Interval.make(ow, oz, iw, iz)
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-          whenever(xy.overlaps(wz)) {
-            // println(s"o: ${(xy, wz)}")
+          whenever(xx.overlaps(yy)) {
+            // println(s"o: ${(xx, yy)}")
 
-            assertRelation("o", xy, wz)
+            assertRelation("o", xx, yy)
 
-            val isYgtW = pOrd.gt(oy, ow)
-            val isYltZ = pOrd.lt(oy, oz)
-            val isYeqZ = pOrd.equiv(oy, oz)
-            val isXltW = pOrd.lt(ox, ow)
-            val isXeqW = pOrd.equiv(ox, ow)
+            val isX2gtY1 = pOrd.gt(ox2, oy1)
+            val isX2ltY2 = pOrd.lt(ox2, oy2)
+            val isX2eqY2 = pOrd.equiv(ox2, oy2)
+            val isX1ltY1 = pOrd.lt(ox1, oy1)
+            val isX1eqY1 = pOrd.equiv(ox1, oy1)
 
-            (isYgtW && ((ox.isEmpty && oz.isEmpty) || (isXltW && oz.isEmpty) || (isXeqW && ix && !iw && oz.isEmpty) || (ox.isEmpty && isYltZ)
-              || (ox.isEmpty && isYeqZ && !iy && iz) || ((isXltW || (isXeqW && ix && !iw)) && (isYltZ || (isYeqZ && !iy && iz))))) mustBe (true)
+            (isX2gtY1 && ((ox1.isEmpty && oy2.isEmpty) || (isX1ltY1 && oy2.isEmpty) || (isX1eqY1 && ix1 && !iy1 && oy2.isEmpty) || (ox1.isEmpty && isX2ltY2)
+              || (ox1.isEmpty && isX2eqY2 && !ix2 && iy2) || ((isX1ltY1 || (isX1eqY1 && ix1 && !iy1)) && (isX2ltY2 || (isX2eqY2 && !ix2 && iy2))))) mustBe (true)
           }
         }
       }
@@ -183,7 +183,7 @@ final class RelationSpec extends TestSpec:
 
         // Empty
 
-        // TODO: add tests for https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
+        // TODO: add tests for https://stackoverfloy1.com/questions/325933/determine-whether-two-date-ranges-overlap
 
         // {}  (-inf, +inf)
         Interval.empty[Int].overlaps(Interval.unbounded[Int]) mustBe (false)
@@ -207,24 +207,24 @@ final class RelationSpec extends TestSpec:
      */
     "during & contains (includes)" should {
       "check" in {
-        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
-          val xy = Interval.make(ox, oy, ix, iy)
-          val wz = Interval.make(ow, oz, iw, iz)
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-          whenever(xy.during(wz)) {
-            // println(s"d: ${(xy, wz)}")
+          whenever(xx.during(yy)) {
+            // println(s"d: ${(xx, yy)}")
 
-            assertRelation("d", xy, wz)
+            assertRelation("d", xx, yy)
 
-            val isXgtW = pOrd.gt(ox, ow)
-            val isXeqW = pOrd.equiv(ox, ow)
+            val isX1gtY1 = pOrd.gt(ox1, oy1)
+            val isX1eqY1 = pOrd.equiv(ox1, oy1)
 
-            val isYltZ = pOrd.lt(oy, oz)
-            val isYeqZ = pOrd.equiv(oy, oz)
+            val isX2ltY2 = pOrd.lt(ox2, oy2)
+            val isX2eqY2 = pOrd.equiv(ox2, oy2)
 
-            (((isXgtW || (isXeqW && iw && !ix)) && (isYltZ || (isYeqZ && iz && !iy))) ||
-              ((isXgtW || (isXeqW && iw && !ix)) && oz.isEmpty) ||
-              ((isYltZ || (isYeqZ && iz && !iy)) && ow.isEmpty)) mustBe (true)
+            (((isX1gtY1 || (isX1eqY1 && iy1 && !ix1)) && (isX2ltY2 || (isX2eqY2 && iy2 && !ix2))) ||
+              ((isX1gtY1 || (isX1eqY1 && iy1 && !ix1)) && oy2.isEmpty) ||
+              ((isX2ltY2 || (isX2eqY2 && iy2 && !ix2)) && oy1.isEmpty)) mustBe (true)
           }
         }
       }
@@ -241,6 +241,9 @@ final class RelationSpec extends TestSpec:
 
         // [0, 1)  [-∞,+∞]
         Interval.proper(Some(0), Some(1), true, false).during(Interval.proper[Int](None, None, true, true)) mustBe (true)
+
+        // [0]  [-∞,+∞)
+        Interval.degenerate(0).during(Interval.proper[Int](None, None, true, false)) mustBe (true)
 
         // Infinity
 
@@ -265,21 +268,21 @@ final class RelationSpec extends TestSpec:
      */
     "starts & isStartedBy" should {
       "check" in {
-        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
-          val xy = Interval.make(ox, oy, ix, iy)
-          val wz = Interval.make(ow, oz, iw, iz)
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-          whenever(xy.starts(wz)) {
-            // println(s"s: ${(xy, wz)}")
+          whenever(xx.starts(yy)) {
+            // println(s"s: ${(xx, yy)}")
 
-            assertRelation("s", xy, wz)
+            assertRelation("s", xx, yy)
 
-            val isXeqW = pOrd.equiv(ox, ow)
+            val isX1eqY1 = pOrd.equiv(ox1, oy1)
 
-            val isYltZ = pOrd.lt(oy, oz)
-            val isYeqZ = pOrd.equiv(oy, oz)
+            val isX2ltY2 = pOrd.lt(ox2, oy2)
+            val isX2eqY2 = pOrd.equiv(ox2, oy2)
 
-            (isXeqW && ((oy.isDefined && oz.isEmpty) || (isYltZ || (isYeqZ && (!iy && iz))))) mustBe (true)
+            (isX1eqY1 && ((ox2.isDefined && oy2.isEmpty) || (isX2ltY2 || (isX2eqY2 && (!ix2 && iy2))))) mustBe (true)
           }
         }
       }
@@ -317,21 +320,21 @@ final class RelationSpec extends TestSpec:
      */
     "finishes & isFinishedBy" should {
       "check" in {
-        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
-          val xy = Interval.make(ox, oy, ix, iy)
-          val wz = Interval.make(ow, oz, iw, iz)
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-          whenever(xy.finishes(wz)) {
-            // println(s"f: ${(xy, wz)}")
+          whenever(xx.finishes(yy)) {
+            // println(s"f: ${(xx, yy)}")
 
-            assertRelation("f", xy, wz)
+            assertRelation("f", xx, yy)
 
-            val isYeqZ = pOrd.equiv(oy, oz)
+            val isX2eqY2 = pOrd.equiv(ox2, oy2)
 
-            val isXgtW = pOrd.gt(ox, ow)
-            val isXeqW = pOrd.equiv(ox, ow)
+            val isX1gtY1 = pOrd.gt(ox1, oy1)
+            val isX1eqY1 = pOrd.equiv(ox1, oy1)
 
-            (isYeqZ && ((ox.isDefined && ow.isEmpty) || (isXgtW || (isXeqW && (iw && !ix))))) mustBe (true)
+            (isX2eqY2 && ((ox1.isDefined && oy1.isEmpty) || (isX1gtY1 || (isX1eqY1 && (iy1 && !ix1))))) mustBe (true)
           }
         }
       }
@@ -366,20 +369,20 @@ final class RelationSpec extends TestSpec:
      */
     "equals" should {
       "check" in {
-        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
-          val xy = Interval.make(ox, oy, ix, iy)
-          val wz = Interval.make(ow, oz, iw, iz)
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-          whenever(xy.equalsTo(wz)) {
-            // println(s"e: ${(xy, wz)}")
+          whenever(xx.equalsTo(yy)) {
+            // println(s"e: ${(xx, yy)}")
 
-            assertRelation("e", xy, wz)
+            assertRelation("e", xx, yy)
 
-            val isXeqW = pOrd.equiv(ox, ow)
-            val isYeqZ = pOrd.equiv(oy, oz)
+            val isX1eqY1 = pOrd.equiv(ox1, oy1)
+            val isX2eqY2 = pOrd.equiv(ox2, oy2)
 
-            ((isXeqW && isYeqZ && (ix == iw) && (iy == iz)) ||
-              (xy.isEmpty && wz.isEmpty)) mustBe (true)
+            ((isX1eqY1 && isX2eqY2 && (ix1 == iy1) && (ix2 == iy2)) ||
+              (xx.isEmpty && yy.isEmpty)) mustBe (true)
           }
         }
       }
@@ -407,14 +410,14 @@ final class RelationSpec extends TestSpec:
 
     "satisfy" should {
       "one relation only" in {
-        forAll(genOneIntTuple, genOneIntTuple) { case (((ox, oy), ix, iy), ((ow, oz), iw, iz)) =>
-          val xy = Interval.make(ox, oy, ix, iy)
-          val wz = Interval.make(ow, oz, iw, iz)
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           val relations = makeRelations[Int]
 
           val trues = relations.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>
-            val res = fn(xy, wz)
+            val res = fn(xx, yy)
             if res then acc + k
             else acc
           }
@@ -444,7 +447,7 @@ final class RelationSpec extends TestSpec:
       "E" -> ((ab: Interval[T], cd: Interval[T]) => ab.equalsTo(cd))
     )
 
-  private def assertRelation[T: Ordering](r: String, xy: Interval[T], wz: Interval[T]): Unit =
+  private def assertRelation[T: Ordering](r: String, xx: Interval[T], yy: Interval[T]): Unit =
     val relations = makeRelations[T]
 
     val fk = r
@@ -455,13 +458,13 @@ final class RelationSpec extends TestSpec:
     val bck  = relations(bk)
     val rest = relations.filterNot { case (k, _) => ks.contains(k) }
 
-    fwd(xy, wz) mustBe (true)
-    bck(wz, xy) mustBe (true)
+    fwd(xx, yy) mustBe (true)
+    bck(yy, xx) mustBe (true)
 
     rest.foreach { case (k, fn) =>
-      if fn(xy, wz) then println(s"${fk}|${xy}, ${wz}| == true; ${k}|${xy}, ${wz}| mustBe false, got true")
-      if fn(wz, xy) then println(s"${fk}|${xy}, ${wz}| == true; ${k}|${wz}, ${xy}| mustBe false, got true")
+      if fn(xx, yy) then println(s"${fk}|${xx}, ${yy}| == true; ${k}|${xx}, ${yy}| mustBe false, got true")
+      if fn(yy, xx) then println(s"${fk}|${xx}, ${yy}| == true; ${k}|${yy}, ${xx}| mustBe false, got true")
 
-      fn(xy, wz) mustBe (false)
-      fn(wz, xy) mustBe (false)
+      fn(xx, yy) mustBe (false)
+      fn(yy, xx) mustBe (false)
     }
