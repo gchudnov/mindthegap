@@ -1,17 +1,5 @@
 # TODO
 
-TODO: FIX TESTS
-
-[info]   - should one relation only *** FAILED ***
-[info]     TestFailedException was thrown during property evaluation.
-[info]       Message: xx: Proper(Some(0),Some(5),true,false), yy: Proper(Some(-1),Some(5),true,false): |[0,5), [-1,5)| satisfies 0 relations: [], expected: 1
-[info]       Location: (RelationSpec.scala:512)
-[info]       Occurred when passed generated values (
-[info]         arg0 = ((Some(0),Some(5)),true,false), // 2 shrinks
-[info]         arg1 = ((Some(-1),Some(5)),true,false) // 2 shrinks
-[info]       )
-[info]     Init Seed: 6626990138027787900
-
 
 
 TODO: find relation between two intervals
