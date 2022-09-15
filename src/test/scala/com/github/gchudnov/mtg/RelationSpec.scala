@@ -2,6 +2,7 @@ package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Relation.*
+import com.github.gchudnov.mtg.Show.*
 import com.github.gchudnov.mtg.ordering.OptionPartialOrdering
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
@@ -47,19 +48,29 @@ final class RelationSpec extends TestSpec:
 
       "check edge cases" in {
         // Empty
-        Interval.empty[Int].before(Interval.empty[Int]) mustBe(false)
-        Interval.empty[Int].before(Interval.degenerate(1)) mustBe(false)
-        Interval.empty[Int].before(Interval.closed(1, 2)) mustBe(false)
-        Interval.empty[Int].before(Interval.open(1, 2)) mustBe(false)
-        Interval.empty[Int].before(Interval.unbounded[Int]) mustBe(false)
+        Interval.empty[Int].before(Interval.empty[Int]) mustBe (false)
+        Interval.empty[Int].before(Interval.degenerate(1)) mustBe (false)
+        Interval.empty[Int].before(Interval.closed(1, 2)) mustBe (false)
+        Interval.empty[Int].before(Interval.open(1, 2)) mustBe (false)
+        Interval.empty[Int].before(Interval.unbounded[Int]) mustBe (false)
 
         // Degenerate (Point)
-
+        Interval.degenerate(5).before(Interval.empty[Int]) mustBe (false)
+        Interval.degenerate(5).before(Interval.degenerate(5)) mustBe (false)
+        Interval.degenerate(5).before(Interval.degenerate(10)) mustBe (true)
+        Interval.degenerate(5).before(Interval.open(5, 10)) mustBe (true)
+        Interval.degenerate(5).before(Interval.closed(5, 10)) mustBe (false)
+        Interval.degenerate(5).before(Interval.closed(6, 10)) mustBe (true)
+        Interval.degenerate(5).before(Interval.leftClosed(5)) mustBe (false)
+        Interval.degenerate(5).before(Interval.leftClosed(6)) mustBe (true)
+        Interval.degenerate(5).before(Interval.unbounded[Int]) mustBe (false)
 
         // Proper
-        // (1, 2)  (5, 6)
+        Interval.open(1, 2).before(Interval.empty[Int]) mustBe (false)
         Interval.open(1, 2).preceeds(Interval.open(5, 6)) mustBe (true)
         Interval.open(5, 6).isPreceededBy(Interval.open(1, 2)) mustBe (true)
+        Interval.open(1, 2).preceeds(Interval.open(2, 3)) mustBe (true)
+        Interval.open(1, 2).preceeds(Interval.closed(5, 6)) mustBe (true)
 
         // Infinity
         // (1, 2)  (3, +inf)
@@ -179,18 +190,7 @@ final class RelationSpec extends TestSpec:
         Interval.rightOpen(2).overlaps(Interval.leftOpen(-2)) mustBe (true)
         Interval.leftOpen(-2).isOverlapedBy(Interval.rightOpen(2)) mustBe (true)
 
-        // Infinity
-        // [1, 5]  [3, +inf)
-        Interval.closed(1, 5).overlaps(Interval.leftClosed(3)) mustBe (true)
-
-        // (-inf, 5]  [3, 10]
-        Interval.rightClosed(5).overlaps(Interval.closed(3, 10)) mustBe (true)
-
-        // (-inf, 5]  [3, +inf)
-        Interval.rightClosed(5).overlaps(Interval.leftClosed(3)) mustBe (true)
-
         // Empty
-
         // TODO: add tests for https://stackoverfloy1.com/questions/325933/determine-whether-two-date-ranges-overlap
 
         // {}  (-inf, +inf)
@@ -201,7 +201,22 @@ final class RelationSpec extends TestSpec:
         Interval.empty[Int].overlaps(Interval.closed(1, 2)) mustBe (false)
         Interval.closed(1, 2).overlaps(Interval.empty[Int]) mustBe (false)
 
-        // TODO: add tests for empty intervals
+        // Degenerate (Point)
+
+        // Proper
+
+        // Infinity
+        // [1, 5]  [3, +inf)
+        Interval.closed(1, 5).overlaps(Interval.leftClosed(3)) mustBe (true)
+
+        // (-inf, 5]  [3, 10]
+        Interval.rightClosed(5).overlaps(Interval.closed(3, 10)) mustBe (true)
+
+        // (-inf, 5]  [3, +inf)
+        Interval.rightClosed(5).overlaps(Interval.leftClosed(3)) mustBe (true)
+
+        // [-inf, 1)  (-inf, +inf)
+        Interval.proper(None, Some(1), true, false).overlaps(Interval.unbounded[Int]) mustBe (true)
       }
     }
 
@@ -362,6 +377,9 @@ final class RelationSpec extends TestSpec:
 
         // [5, +inf)  (-inf, +inf)
         Interval.leftClosed(5).finishes(Interval.unbounded[Int]) mustBe (true)
+
+        // (0, 3)  (-inf, 3)
+        Interval.open(0, 3).finishes(Interval.rightOpen(3)) mustBe(true)
       }
     }
 
@@ -410,6 +428,9 @@ final class RelationSpec extends TestSpec:
 
         // (-inf, +inf)  (-inf, +inf)
         Interval.unbounded[Int].equalsTo(Interval.unbounded[Int]) mustBe (true)
+
+        // (-inf, 5)  (-inf, 5)
+        Interval.rightOpen(5).equalsTo(Interval.rightOpen(5)) mustBe (true)
       }
     }
 
@@ -419,20 +440,16 @@ final class RelationSpec extends TestSpec:
           val xx = Interval.make(ox1, ox2, ix1, ix2)
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-          val relations = makeRelations[Int]
-
-          val trues = relations.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>
-            val res = fn(xx, yy)
-            if res then acc + k
-            else acc
-          }
-
-          val isAnyEmpty = xx.isEmpty || yy.isEmpty
-
-          if isAnyEmpty then
-            trues.nonEmpty mustBe (true)
-            trues.size mustBe (1)
+          assertOneRelation(xx, yy)
         }
+      }
+
+      "one relation only for edge cases" in {
+        val intervals = List(
+          (Interval.rightOpen(5), Interval.rightOpen(5))
+        )
+
+        intervals.foreach { case (xx, yy) => assertOneRelation(xx, yy) }
       }
     }
   }
@@ -470,9 +487,22 @@ final class RelationSpec extends TestSpec:
     bck(yy, xx) mustBe (true)
 
     rest.foreach { case (k, fn) =>
-      if fn(xx, yy) then println(s"${fk}|${xx}, ${yy}| == true; ${k}|${xx}, ${yy}| mustBe false, got true")
-      if fn(yy, xx) then println(s"${fk}|${xx}, ${yy}| == true; ${k}|${yy}, ${xx}| mustBe false, got true")
-
-      fn(xx, yy) mustBe (false)
-      fn(yy, xx) mustBe (false)
+      if fn(xx, yy) then fail(s"xx: ${xx}, yy: ${yy}: ${fk}|${xx.show}, ${yy.show}| == true; ${k}|${xx.show}, ${yy.show}| mustBe false, got true")
+      if fn(yy, xx) then fail(s"xx: ${xx}, yy: ${yy}: ${fk}|${xx.show}, ${yy.show}| == true; ${k}|${yy.show}, ${xx.show}| mustBe false, got true")
     }
+
+  private def assertOneRelation[T: Ordering](xx: Interval[T], yy: Interval[T]): Unit =
+    val relations = makeRelations[T]
+
+    val trues = relations.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>
+      val res = fn(xx, yy)
+      if res then acc + k
+      else acc
+    }
+
+    val isNonEmpty = !(xx.isEmpty || yy.isEmpty)
+
+    if isNonEmpty then
+      // it is OK if xx, yy satisfy both [e, E]
+      val expectedSize = if trues.contains("e") || trues.contains("E") then 2 else 1
+      if trues.size != expectedSize then fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected: ${expectedSize}")

@@ -182,6 +182,8 @@ object Relation:
         case (Proper(None, Some(x2), _, includeX2), Proper(Some(y1), None, includeY1, _)) =>
           val ordT = summon[Ordering[T]]
           ordT.lt(y1, x2)
+        case (Proper(None, Some(_), includeX1, _), Proper(None, None, includeY1, _)) =>
+          includeX1 && !includeY1
         case _ =>
           false
 
@@ -346,7 +348,7 @@ object Relation:
           ordT.equiv(x, y2) && includeY2
         case (Proper(Some(_), Some(x2), _, includeX2), Proper(None, Some(y2), _, includeY2)) =>
           val ordT = summon[Ordering[T]]
-          (ordT.equiv(x2, y2) && includeX2 && includeY2)
+          (ordT.equiv(x2, y2) && includeX2 == includeY2)
         case (Proper(Some(x1), None, includeX1, includeX2), Proper(Some(y1), None, includeY1, includeY2)) =>
           val ordT = summon[Ordering[T]]
           (includeX2 == includeY2) && (ordT.gt(x1, y1) || (ordT.equiv(x1, y1) && !includeX1 && includeY1))

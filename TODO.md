@@ -13,6 +13,18 @@ TODO: FIX TESTS
 [info]     Init Seed: -3843122997246562178
 
 
+[info]   - should one relation only *** FAILED ***
+[info]     TestFailedException was thrown during property evaluation.
+[info]       Message: false was not equal to true
+[info]       Location: (RelationSpec.scala:505)
+[info]       Occurred when passed generated values (
+[info]         arg0 = ((Some(0),None),false,true), // 2 shrinks
+[info]         arg1 = ((None,None),false,false) // 1 shrink
+[info]       )
+[info]     Init Seed: -8208383222040301324
+
+
+
 TODO: reconsider points --- what relations do they have?
 
 open, closed, degenerate, empty, unbounded

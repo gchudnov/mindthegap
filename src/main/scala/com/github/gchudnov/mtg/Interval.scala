@@ -65,8 +65,6 @@ sealed trait Interval[+T: Ordering]:
  * Empty Interval
  */
 case object Empty extends Interval[Nothing]:
-  override def toString(): String = "∅"
-
   override def isEmpty: Boolean     = true
   override def isDegenrate: Boolean = false
   override def isProper: Boolean    = false
@@ -76,8 +74,6 @@ case object Empty extends Interval[Nothing]:
  * Degenerate Interval
  */
 final case class Degenerate[T: Ordering](a: T) extends Interval[T]:
-  override def toString(): String = s"{${a.toString()}}"
-
   override def isEmpty: Boolean     = false
   override def isDegenrate: Boolean = true
   override def isProper: Boolean    = false
@@ -91,40 +87,11 @@ final case class Proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boo
   // make sure that a < b, if provided
   require((for x <- a; y <- b yield summon[Ordering[T]].lt(x, y)).getOrElse(true))
 
-  override def toString(): String =
-    import Proper.Tags
-    val leftBound  = Tags.leftBound(isIncludeA)
-    val rightBound = Tags.rightBound(isIncludeB)
-    val leftValue  = Tags.leftValue(a)
-    val rightValue = Tags.rightValue(b)
-    s"${leftBound}${leftValue},${rightValue}${rightBound}"
-
   override def isEmpty: Boolean     = false
   override def isDegenrate: Boolean = false
   override def isProper: Boolean    = true
   override def isUnbounded: Boolean = a.isEmpty && b.isEmpty
 
-object Proper:
-
-  private object Tags:
-    private val infinite = "∞"
-
-    private val leftOpen    = "("
-    private val leftClosed  = "["
-    private val rightOpen   = ")"
-    private val rightClosed = "]"
-
-    def leftBound(isInclude: Boolean): String =
-      if isInclude then Tags.leftClosed else Tags.leftOpen
-
-    def rightBound(isInclude: Boolean): String =
-      if isInclude then Tags.rightClosed else Tags.rightOpen
-
-    def leftValue(x: Option[?]): String =
-      x.fold(s"-${Tags.infinite}")(_.toString())
-
-    def rightValue(x: Option[?]): String =
-      x.fold(s"+${Tags.infinite}")(_.toString())
 
 object Interval:
 
