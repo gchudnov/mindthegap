@@ -37,6 +37,7 @@ final class RelationSpec extends TestSpec:
             // println(s"p: ${(xx, yy)}")
 
             assertRelation("b", xx, yy)
+            assertOneRelation(xx, yy)
 
             val isX2ltY1 = pOrd.lt(ox2, oy1)
             val isX2eqY1 = pOrd.equiv(ox2, oy1)
@@ -102,6 +103,7 @@ final class RelationSpec extends TestSpec:
             // println(s"m: ${(xx, yy)}")
 
             assertRelation("m", xx, yy)
+            assertOneRelation(xx, yy)
 
             val isX2eqY1 = pOrd.equiv(ox2, oy1)
 
@@ -145,6 +147,7 @@ final class RelationSpec extends TestSpec:
             // println(s"o: ${(xx, yy)}")
 
             assertRelation("o", xx, yy)
+            assertOneRelation(xx, yy)
 
             val isX2gtY1 = pOrd.gt(ox2, oy1)
             val isX2ltY2 = pOrd.lt(ox2, oy2)
@@ -268,6 +271,7 @@ final class RelationSpec extends TestSpec:
             // println(s"d: ${(xx, yy)}")
 
             assertRelation("d", xx, yy)
+            assertOneRelation(xx, yy)
 
             val isX1gtY1 = pOrd.gt(ox1, oy1)
             val isX1eqY1 = pOrd.equiv(ox1, oy1)
@@ -330,6 +334,7 @@ final class RelationSpec extends TestSpec:
             // println(s"s: ${(xx, yy)}")
 
             assertRelation("s", xx, yy)
+            assertOneRelation(xx, yy)
 
             val isX1eqY1 = pOrd.equiv(ox1, oy1)
 
@@ -385,6 +390,7 @@ final class RelationSpec extends TestSpec:
             // println(s"f: ${(xx, yy)}")
 
             assertRelation("f", xx, yy)
+            assertOneRelation(xx, yy)
 
             val isX2eqY2 = pOrd.equiv(ox2, oy2)
 
@@ -440,6 +446,7 @@ final class RelationSpec extends TestSpec:
             // println(s"e: ${(xx, yy)}")
 
             assertRelation("e", xx, yy)
+            assertOneRelation(xx, yy)
 
             val isX1eqY1 = pOrd.equiv(ox1, oy1)
             val isX2eqY2 = pOrd.equiv(ox2, oy2)

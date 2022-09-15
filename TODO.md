@@ -13,6 +13,19 @@ TODO: FIX TESTS
 [info]     Init Seed: -5694568526110233283
 
 
+
+[info]   - should one relation only *** FAILED ***
+[info]     TestFailedException was thrown during property evaluation.
+[info]       Message: xx: Proper(Some(0),Some(1),false,true), yy: Proper(Some(0),None,false,true): |(0,1], (0,+∞]| satisfies 0 relations: [], expected: 1
+[info]       Location: (RelationSpec.scala:556)
+[info]       Occurred when passed generated values (
+[info]         arg0 = ((Some(0),Some(1)),false,true), // 2 shrinks
+[info]         arg1 = ((Some(0),None),false,true)
+[info]       )
+[info]     Init Seed: 4987461434585462096
+
+
+
 TODO: find relation between two intervals
 
 TODO: reconsider points --- what relations do they have?
