@@ -313,6 +313,10 @@ final class RelationSpec extends TestSpec:
 
         // [0]  [-∞,+∞)
         Interval.degenerate(0).during(Interval.proper[Int](None, None, true, false)) mustBe (true)
+
+        // (3,+∞), (0,+∞]
+        Interval.leftOpen(3).during(Interval.proper(Some(0), None, false, true)) mustBe (true)
+        Interval.proper(Some(0), None, false, true).contains(Interval.leftOpen(3)) mustBe (true)
       }
     }
 
