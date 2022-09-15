@@ -2,19 +2,15 @@
 
 TODO: FIX TESTS
 
-[info]   when equals
-[info]   - should check
-[info]   - should check edge cases
-[info]   when satisfy
 [info]   - should one relation only *** FAILED ***
 [info]     TestFailedException was thrown during property evaluation.
 [info]       Message: false was not equal to true
-[info]       Location: (RelationSpec.scala:426)
+[info]       Location: (RelationSpec.scala:433)
 [info]       Occurred when passed generated values (
-[info]         arg0 = ((None,None),false,false),
-[info]         arg1 = ((Some(0),Some(0)),false,false) // 4 shrinks
+[info]         arg0 = ((None,None),false,true), // 2 shrinks
+[info]         arg1 = ((Some(0),Some(0)),true,false) // 4 shrinks
 [info]       )
-[info]     Init Seed: -2895607596025151233
+[info]     Init Seed: -3843122997246562178
 
 
 TODO: reconsider points --- what relations do they have?
@@ -131,3 +127,7 @@ https://www.scalatest.org/user_guide/property_based_testing
 
 
 https://hackage.haskell.org/package/rampart-2.0.0.3/docs/Rampart.html
+
+
+https://abstractmath.org/MM/MMSetSpecific.htm
+

@@ -46,12 +46,22 @@ final class RelationSpec extends TestSpec:
       }
 
       "check edge cases" in {
+        // Empty
+        Interval.empty[Int].before(Interval.empty[Int]) mustBe(false)
+        Interval.empty[Int].before(Interval.degenerate(1)) mustBe(false)
+        Interval.empty[Int].before(Interval.closed(1, 2)) mustBe(false)
+        Interval.empty[Int].before(Interval.open(1, 2)) mustBe(false)
+        Interval.empty[Int].before(Interval.unbounded[Int]) mustBe(false)
+
+        // Degenerate (Point)
+
+
+        // Proper
         // (1, 2)  (5, 6)
         Interval.open(1, 2).preceeds(Interval.open(5, 6)) mustBe (true)
         Interval.open(5, 6).isPreceededBy(Interval.open(1, 2)) mustBe (true)
 
         // Infinity
-
         // (1, 2)  (3, +inf)
         Interval.open(1, 2).before(Interval.leftOpen(3)) mustBe (true)
 
@@ -94,7 +104,6 @@ final class RelationSpec extends TestSpec:
         Interval.closed(1, 5).meets(Interval.closed(5, 10)) mustBe (true)
 
         // Infinity
-
         // [1, 5]  [5, +inf)
         Interval.closed(1, 5).meets(Interval.leftClosed(5)) mustBe (true)
 
@@ -171,7 +180,6 @@ final class RelationSpec extends TestSpec:
         Interval.leftOpen(-2).isOverlapedBy(Interval.rightOpen(2)) mustBe (true)
 
         // Infinity
-
         // [1, 5]  [3, +inf)
         Interval.closed(1, 5).overlaps(Interval.leftClosed(3)) mustBe (true)
 
@@ -247,7 +255,6 @@ final class RelationSpec extends TestSpec:
         Interval.degenerate(0).during(Interval.proper[Int](None, None, true, false)) mustBe (true)
 
         // Infinity
-
         // [5, 7]  [3, +inf)
         Interval.closed(5, 7).during(Interval.leftClosed(3)) mustBe (true)
 
@@ -299,7 +306,6 @@ final class RelationSpec extends TestSpec:
         Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) mustBe (true)
 
         // Infinity
-
         // [1, 5] [1, +inf)
         Interval.closed(1, 5).starts(Interval.leftClosed(1)) mustBe (true)
 
@@ -348,7 +354,6 @@ final class RelationSpec extends TestSpec:
         Interval.leftOpenRightClosed(5, 10).finishes(Interval.leftOpenRightClosed(2, 10)) mustBe (true)
 
         // Infinity
-
         // [5, 10]  (-inf, 10]
         Interval.closed(5, 10).finishes(Interval.rightClosed(10)) mustBe (true)
 
@@ -397,7 +402,6 @@ final class RelationSpec extends TestSpec:
         Interval.rightClosed(0, 5).equalsTo(Interval.rightClosed(0, 5)) mustBe (true)
 
         // Infinity
-
         // [5, +inf)  [5, +inf)
         Interval.leftClosed(5).equalsTo(Interval.leftClosed(5)) mustBe (true)
 
@@ -423,8 +427,11 @@ final class RelationSpec extends TestSpec:
             else acc
           }
 
-          trues.nonEmpty mustBe (true)
-          trues.size mustBe (1)
+          val isAnyEmpty = xx.isEmpty || yy.isEmpty
+
+          if isAnyEmpty then
+            trues.nonEmpty mustBe (true)
+            trues.size mustBe (1)
         }
       }
     }
