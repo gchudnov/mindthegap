@@ -24,6 +24,8 @@ TODO: FIX TESTS
 [info]     Init Seed: -8527902485853447293
 
 
+TODO: find relation between two intervals
+
 TODO: reconsider points --- what relations do they have?
 
 open, closed, degenerate, empty, unbounded
@@ -33,6 +35,10 @@ d|[-∞,2], [-∞,+∞)| == true; s|[-∞,2], [-∞,+∞)| mustBe false, got tru
 d|[-∞,1], [-∞,+∞)| == true; s|[-∞,1], [-∞,+∞)| mustBe false, got true
 d|[-∞,0], [-∞,+∞)| == true; s|[-∞,0], [-∞,+∞)| mustBe false, got true
 
+
+https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
+
+https://github.com/MenoData/Time4J
 
 - starts, finishes and infinity, add tests
 - add missing cases

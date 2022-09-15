@@ -220,6 +220,9 @@ final class RelationSpec extends TestSpec:
 
         // (-inf, +inf)  (0, +inf]
         Interval.unbounded[Int].overlaps(Interval.proper(Some(0), None, false, true)) mustBe (true)
+
+        // (-inf, +inf)  [0, +inf]
+        Interval.unbounded[Int].overlaps(Interval.proper(Some(0), None, true, true)) mustBe (true)        
       }
     }
 
