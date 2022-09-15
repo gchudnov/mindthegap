@@ -13,16 +13,6 @@ TODO: FIX TESTS
 [info]     Init Seed: 6626990138027787900
 
 
-[info]   - should check *** FAILED ***
-[info]     TestFailedException was thrown during property evaluation.
-[info]       Message: false was not equal to true
-[info]       Location: (RelationSpec.scala:155)
-[info]       Occurred when passed generated values (
-[info]         arg0 = ((None,None),false,false),
-[info]         arg1 = ((Some(0),None),true,true) // 2 shrinks
-[info]       )
-[info]     Init Seed: -8527902485853447293
-
 
 TODO: find relation between two intervals
 

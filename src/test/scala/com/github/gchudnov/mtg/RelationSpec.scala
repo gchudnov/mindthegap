@@ -222,7 +222,7 @@ final class RelationSpec extends TestSpec:
         Interval.unbounded[Int].overlaps(Interval.proper(Some(0), None, false, true)) mustBe (true)
 
         // (-inf, +inf)  [0, +inf]
-        Interval.unbounded[Int].overlaps(Interval.proper(Some(0), None, true, true)) mustBe (true)        
+        Interval.unbounded[Int].overlaps(Interval.proper(Some(0), None, true, true)) mustBe (true)
       }
     }
 
@@ -368,8 +368,9 @@ final class RelationSpec extends TestSpec:
       }
 
       "check edge cases" in {
-        // (-inf, +inf)  (-inf, +inf)
-        Interval.unbounded[Int].finishes(Interval.unbounded[Int]) mustBe (false)
+        // Proper
+        // [0,5)  [-1,5)
+        Interval.leftClosedRightOpen(0, 5).finishes(Interval.leftClosedRightOpen(-1, 5)) mustBe (true)
 
         // (5, 10]  (2, 10]
         Interval.leftOpenRightClosed(5, 10).finishes(Interval.leftOpenRightClosed(2, 10)) mustBe (true)
@@ -386,6 +387,9 @@ final class RelationSpec extends TestSpec:
 
         // (0, 3)  (-inf, 3)
         Interval.open(0, 3).finishes(Interval.rightOpen(3)) mustBe (true)
+
+        // (-inf, +inf)  (-inf, +inf)
+        Interval.unbounded[Int].finishes(Interval.unbounded[Int]) mustBe (false)
       }
     }
 
