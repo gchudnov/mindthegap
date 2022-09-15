@@ -15,14 +15,24 @@ TODO: FIX TESTS
 
 [info]   - should one relation only *** FAILED ***
 [info]     TestFailedException was thrown during property evaluation.
-[info]       Message: false was not equal to true
-[info]       Location: (RelationSpec.scala:505)
+[info]       Message: xx: Proper(Some(0),Some(5),true,false), yy: Proper(Some(-1),Some(5),true,false): |[0,5), [-1,5)| satisfies 0 relations: [], expected: 1
+[info]       Location: (RelationSpec.scala:512)
 [info]       Occurred when passed generated values (
-[info]         arg0 = ((Some(0),None),false,true), // 2 shrinks
-[info]         arg1 = ((None,None),false,false) // 1 shrink
+[info]         arg0 = ((Some(0),Some(5)),true,false), // 2 shrinks
+[info]         arg1 = ((Some(-1),Some(5)),true,false) // 2 shrinks
 [info]       )
-[info]     Init Seed: -8208383222040301324
+[info]     Init Seed: 6626990138027787900
 
+
+[info]   - should check *** FAILED ***
+[info]     TestFailedException was thrown during property evaluation.
+[info]       Message: false was not equal to true
+[info]       Location: (RelationSpec.scala:155)
+[info]       Occurred when passed generated values (
+[info]         arg0 = ((None,None),false,false),
+[info]         arg1 = ((Some(0),None),true,true) // 2 shrinks
+[info]       )
+[info]     Init Seed: -8527902485853447293
 
 
 TODO: reconsider points --- what relations do they have?

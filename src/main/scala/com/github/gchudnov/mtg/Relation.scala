@@ -184,6 +184,8 @@ object Relation:
           ordT.lt(y1, x2)
         case (Proper(None, Some(_), includeX1, _), Proper(None, None, includeY1, _)) =>
           includeX1 && !includeY1
+        case (Proper(None, None, _, includeX2), Proper(Some(_), None, _, includeY2)) =>
+          !includeX2 && includeY2
         case _ =>
           false
 

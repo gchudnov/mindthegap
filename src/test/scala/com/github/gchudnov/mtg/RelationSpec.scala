@@ -217,6 +217,9 @@ final class RelationSpec extends TestSpec:
 
         // [-inf, 1)  (-inf, +inf)
         Interval.proper(None, Some(1), true, false).overlaps(Interval.unbounded[Int]) mustBe (true)
+
+        // (-inf, +inf)  (0, +inf]
+        Interval.unbounded[Int].overlaps(Interval.proper(Some(0), None, false, true)) mustBe (true)
       }
     }
 
@@ -379,7 +382,7 @@ final class RelationSpec extends TestSpec:
         Interval.leftClosed(5).finishes(Interval.unbounded[Int]) mustBe (true)
 
         // (0, 3)  (-inf, 3)
-        Interval.open(0, 3).finishes(Interval.rightOpen(3)) mustBe(true)
+        Interval.open(0, 3).finishes(Interval.rightOpen(3)) mustBe (true)
       }
     }
 
@@ -505,4 +508,5 @@ final class RelationSpec extends TestSpec:
     if isNonEmpty then
       // it is OK if xx, yy satisfy both [e, E]
       val expectedSize = if trues.contains("e") || trues.contains("E") then 2 else 1
-      if trues.size != expectedSize then fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected: ${expectedSize}")
+      if trues.size != expectedSize then
+        fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected: ${expectedSize}")
