@@ -4,17 +4,6 @@ TODO: FIX TESTS
 
 [info]   - should one relation only *** FAILED ***
 [info]     TestFailedException was thrown during property evaluation.
-[info]       Message: false was not equal to true
-[info]       Location: (RelationSpec.scala:433)
-[info]       Occurred when passed generated values (
-[info]         arg0 = ((None,None),false,true), // 2 shrinks
-[info]         arg1 = ((Some(0),Some(0)),true,false) // 4 shrinks
-[info]       )
-[info]     Init Seed: -3843122997246562178
-
-
-[info]   - should one relation only *** FAILED ***
-[info]     TestFailedException was thrown during property evaluation.
 [info]       Message: xx: Proper(Some(0),Some(5),true,false), yy: Proper(Some(-1),Some(5),true,false): |[0,5), [-1,5)| satisfies 0 relations: [], expected: 1
 [info]       Location: (RelationSpec.scala:512)
 [info]       Occurred when passed generated values (

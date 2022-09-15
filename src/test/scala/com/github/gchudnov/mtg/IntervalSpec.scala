@@ -69,5 +69,9 @@ final class IntervalSpec extends TestSpec:
                   succeed
         }
       }
+
+      "edge cases" in {
+        Interval.make(Some(0), Some(0), true, false).isEmpty mustBe (true)
+      }
     }
   }
