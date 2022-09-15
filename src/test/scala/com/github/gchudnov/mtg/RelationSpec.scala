@@ -111,6 +111,7 @@ final class RelationSpec extends TestSpec:
       }
 
       "check edge cases" in {
+        // Proper
         // [1, 5]  [5, 10]
         Interval.closed(1, 5).meets(Interval.closed(5, 10)) mustBe (true)
 
@@ -158,38 +159,6 @@ final class RelationSpec extends TestSpec:
       }
 
       "check edge cases" in {
-        Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
-        Interval.open(1, 10).overlaps(Interval.open(11, 20)) mustBe (false)
-        Interval.open(1, 10).overlaps(Interval.open(1, 11)) mustBe (false)
-        Interval.open(1, 10).overlaps(Interval.open(20, 30)) mustBe (false)
-
-        Interval.open(1, 10).overlaps(Interval.degenerate(10)) mustBe (false)
-        Interval.closed(1, 10).overlaps(Interval.degenerate(10)) mustBe (false)
-
-        Interval.open(1, 10).overlaps(Interval.open(-10, 20)) mustBe (false)
-
-        Interval.open(1, 10).overlaps(Interval.open(2, 11)) mustBe (true)
-        Interval.open(1, 10).isOverlapedBy(Interval.open(2, 11)) mustBe (false)
-        Interval.open(1, 10).isOverlapedBy(Interval.open(2, 10)) mustBe (false)
-        Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
-
-        Interval.unbounded[Int].overlaps(Interval.open(1, 10)) mustBe (false)
-        Interval.open(1, 10).overlaps(Interval.unbounded[Int]) mustBe (false)
-
-        Interval.unbounded[Int].isOverlapedBy(Interval.open(1, 10)) mustBe (false)
-        Interval.open(1, 10).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
-
-        Interval.unbounded[Int].isOverlapedBy(Interval.degenerate(2)) mustBe (false)
-        Interval.degenerate(2).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
-
-        Interval.open(1, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (false)
-        Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
-
-        Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
-
-        Interval.rightOpen(2).overlaps(Interval.leftOpen(-2)) mustBe (true)
-        Interval.leftOpen(-2).isOverlapedBy(Interval.rightOpen(2)) mustBe (true)
-
         // Empty
         // TODO: add tests for https://stackoverfloy1.com/questions/325933/determine-whether-two-date-ranges-overlap
 
@@ -204,6 +173,47 @@ final class RelationSpec extends TestSpec:
         // Degenerate (Point)
 
         // Proper
+        // (1, 10)  (5, 20)
+        Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
+
+        // (1, 10)  (2, 11)
+        Interval.open(1, 10).overlaps(Interval.open(2, 11)) mustBe (true)
+
+        // (1, 10)  (11, 20)
+        Interval.open(1, 10).overlaps(Interval.open(11, 20)) mustBe (false)
+
+        // (1, 10)  (1, 11)
+        Interval.open(1, 10).overlaps(Interval.open(1, 11)) mustBe (false)
+
+        // (1, 10)  (20, 30)
+        Interval.open(1, 10).overlaps(Interval.open(20, 30)) mustBe (false)
+
+        // (1, 10)  {10}
+        Interval.open(1, 10).overlaps(Interval.degenerate(10)) mustBe (false)
+
+        // [1, 10], {10}
+        Interval.closed(1, 10).overlaps(Interval.degenerate(10)) mustBe (false)
+
+        // (1, 10)  (-10, 20)
+        Interval.open(1, 10).overlaps(Interval.open(-10, 20)) mustBe (false)
+
+        // (1, 10)  (2, 11)
+        Interval.open(1, 10).isOverlapedBy(Interval.open(2, 11)) mustBe (false)
+
+        // (1, 10)  (2, 10)
+        Interval.open(1, 10).isOverlapedBy(Interval.open(2, 10)) mustBe (false)
+
+        // (2, 12)  (1, 10)
+        Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
+
+        // (1, 12)  (1, 10)
+        Interval.open(1, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (false)
+
+        // (2, 12)  (1, 10)
+        Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
+
+        // (1, 10)  (5, 20)
+        Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
 
         // Infinity
         // [1, 5]  [3, +inf)
@@ -223,6 +233,20 @@ final class RelationSpec extends TestSpec:
 
         // (-inf, +inf)  [0, +inf]
         Interval.unbounded[Int].overlaps(Interval.proper(Some(0), None, true, true)) mustBe (true)
+
+        // (-inf, +inf) (1, 10)
+        Interval.unbounded[Int].overlaps(Interval.open(1, 10)) mustBe (false)
+        Interval.open(1, 10).overlaps(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].isOverlapedBy(Interval.open(1, 10)) mustBe (false)
+        Interval.open(1, 10).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
+
+        // (-inf, +inf) {2}
+        Interval.unbounded[Int].isOverlapedBy(Interval.degenerate(2)) mustBe (false)
+        Interval.degenerate(2).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
+
+        // (-inf, 2)  (-2, +inf)
+        Interval.rightOpen(2).overlaps(Interval.leftOpen(-2)) mustBe (true)
+        Interval.leftOpen(-2).isOverlapedBy(Interval.rightOpen(2)) mustBe (true)
       }
     }
 
@@ -260,20 +284,12 @@ final class RelationSpec extends TestSpec:
       }
 
       "check edge cases" in {
+        // Proper
         // {5}  (2, 9)
         Interval.degenerate(5).during(Interval.open(2, 9)) mustBe (true)
 
         // (2, 9)  {5}
         Interval.open(2, 9).contains(Interval.degenerate(5)) mustBe (true)
-
-        // [-∞,0]  [-∞,+∞)
-        Interval.proper(None, Some(0), true, true).during(Interval.proper[Int](None, None, true, false)) mustBe (false)
-
-        // [0, 1)  [-∞,+∞]
-        Interval.proper(Some(0), Some(1), true, false).during(Interval.proper[Int](None, None, true, true)) mustBe (true)
-
-        // [0]  [-∞,+∞)
-        Interval.degenerate(0).during(Interval.proper[Int](None, None, true, false)) mustBe (true)
 
         // Infinity
         // [5, 7]  [3, +inf)
@@ -284,6 +300,15 @@ final class RelationSpec extends TestSpec:
 
         // [5, 7] (-inf, +inf)
         Interval.closed(5, 7).during(Interval.unbounded[Int]) mustBe (true)
+
+        // [-∞,0]  [-∞,+∞)
+        Interval.proper(None, Some(0), true, true).during(Interval.proper[Int](None, None, true, false)) mustBe (false)
+
+        // [0, 1)  [-∞,+∞]
+        Interval.proper(Some(0), Some(1), true, false).during(Interval.proper[Int](None, None, true, true)) mustBe (true)
+
+        // [0]  [-∞,+∞)
+        Interval.degenerate(0).during(Interval.proper[Int](None, None, true, false)) mustBe (true)
       }
     }
 
@@ -317,12 +342,8 @@ final class RelationSpec extends TestSpec:
       }
 
       "check edge cases" in {
-        Interval.leftClosedRightOpen(5, 10).starts(Interval.leftClosed(5)) mustBe (true)
-        Interval.leftClosedRightOpen(5, 10).isStartedBy(Interval.leftClosed(5)) mustBe (false)
-
-        Interval.unbounded[Int].starts(Interval.unbounded[Int]) mustBe (false)
-        Interval.unbounded[Int].isStartedBy(Interval.unbounded[Int]) mustBe (false)
-
+        // Proper
+        // [1, 2]  [1, 10]
         Interval.closed(1, 2).starts(Interval.closed(1, 10)) mustBe (true)
         Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) mustBe (true)
 
@@ -335,6 +356,14 @@ final class RelationSpec extends TestSpec:
 
         // (-inf, 5)  (-inf, +inf)
         Interval.rightClosed(5).starts(Interval.unbounded[Int]) mustBe (true)
+
+        //  [5, 10)  [5, +inf)
+        Interval.leftClosedRightOpen(5, 10).starts(Interval.leftClosed(5)) mustBe (true)
+        Interval.leftClosedRightOpen(5, 10).isStartedBy(Interval.leftClosed(5)) mustBe (false)
+
+        // (-inf, +inf)  (-inf, +inf)
+        Interval.unbounded[Int].starts(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].isStartedBy(Interval.unbounded[Int]) mustBe (false)
       }
     }
 
@@ -422,6 +451,7 @@ final class RelationSpec extends TestSpec:
       }
 
       "check edge cases" in {
+        // Proper
         Interval.open(0, 5).equalsTo(Interval.open(0, 5)) mustBe (true)
         Interval.closed(0, 5).equalsTo(Interval.closed(0, 5)) mustBe (true)
         Interval.leftOpen(0, 5).equalsTo(Interval.leftOpen(0, 5)) mustBe (true)

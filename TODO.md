@@ -1,5 +1,16 @@
 # TODO
 
+TODO: FIX TESTS
+
+[info]   - should one relation only *** FAILED ***
+[info]     TestFailedException was thrown during property evaluation.
+[info]       Message: xx: Proper(Some(3),None,false,false), yy: Proper(Some(0),None,false,true): |(3,+∞), (0,+∞]| satisfies 0 relations: [], expected: 1
+[info]       Location: (RelationSpec.scala:519)
+[info]       Occurred when passed generated values (
+[info]         arg0 = ((Some(3),None),false,false), // 1 shrink
+[info]         arg1 = ((Some(0),None),false,true) // 3 shrinks
+[info]       )
+[info]     Init Seed: -5694568526110233283
 
 
 TODO: find relation between two intervals
