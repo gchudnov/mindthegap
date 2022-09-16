@@ -1,6 +1,6 @@
 package com.github.gchudnov.mtg.internal
 
-sealed trait Boundary[T: Ordering]:
+sealed trait Boundary[T]:
   def value: Option[T]
   def isInclude: Boolean
 
@@ -17,7 +17,7 @@ sealed trait Boundary[T: Ordering]:
  * @param isInclude
  *   specifies whether the given point is inclusive or exclusive
  */
-final case class LeftBoundary[T: Ordering](value: Option[T], isInclude: Boolean) extends Boundary[T]
+final case class LeftBoundary[T](value: Option[T], isInclude: Boolean) extends Boundary[T]
 
 /**
  * Right Boundary of an Interval
@@ -32,4 +32,4 @@ final case class LeftBoundary[T: Ordering](value: Option[T], isInclude: Boolean)
  * @param isInclude
  *   specifies whether the given point is inclusive or exclusive
  */
-final case class RightBoundary[T: Ordering](value: Option[T], isInclude: Boolean) extends Boundary[T]
+final case class RightBoundary[T](value: Option[T], isInclude: Boolean) extends Boundary[T]

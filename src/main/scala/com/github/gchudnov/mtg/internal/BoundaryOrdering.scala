@@ -19,9 +19,12 @@ object BoundaryOrdering:
   private final class BoundaryOrdering[T: Ordering: Value] extends Ordering[Boundary[T]]:
 
     override def compare(ba: Boundary[T], bb: Boundary[T]): Int =
+      val ordT = summon[Ordering[T]]
+      val valT = summon[Value[T]]
+
       ???
 
-      // val ordT = summon[Ordering[T]]
+
       // (ba, bb) match
       //   case (LeftBoundary(ox, ix), LeftBoundary(oy, iy)) =>
       //     (ox, oy) match {
