@@ -225,8 +225,6 @@ object Relation:
      */
     def during(b: Interval[T]): Boolean =
       (a, b) match
-        case (Proper(ox1, ox2, includeX1, includeX2), Proper(None, None, includeY1, includeY2)) =>
-          (ox1.isDefined && ox2.isDefined) || (ox1.isEmpty && (!includeX1 && includeY1)) || (ox2.isEmpty && (!includeX2 && includeY2))
         case (Degenerate(_), Proper(None, None, _, _)) =>
           true
         case (Degenerate(x), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
@@ -238,9 +236,15 @@ object Relation:
         case (Degenerate(x), Proper(None, Some(y2), _, includeY2)) =>
           val ordT = summon[Ordering[T]]
           ordT.lt(x, y2)
+        case (Proper(ox1, ox2, includeX1, includeX2), Proper(None, None, includeY1, includeY2)) =>
+          (ox1.isDefined && ox2.isDefined) || (ox1.isEmpty && (!includeX1 && includeY1)) || (ox2.isEmpty && (!includeX2 && includeY2))
         case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), None, includeY1, _)) =>
           val ordT = summon[Ordering[T]]
           (ordT.lt(y1, x1) || (ordT.equiv(y1, x1) && includeY1 && !includeX1))
+        case (Proper(Some(x1), None, includeX1, includeX2), Proper(Some(y1), None, includeY1, includeY2)) =>
+          val ordT = summon[Ordering[T]]
+          (ordT.lt(y1, x1) || (ordT.equiv(y1, x1) && includeY1 && !includeX1)) &&
+          (!includeX2 && includeY2)
         case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(None, Some(y2), _, includeY2)) =>
           val ordT = summon[Ordering[T]]
           (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))

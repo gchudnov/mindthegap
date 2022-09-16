@@ -2,17 +2,15 @@
 
 TODO: FIX TESTS
 
-[info]   - should one relation only *** FAILED ***
+[info]   - should check *** FAILED ***
 [info]     TestFailedException was thrown during property evaluation.
-[info]       Message: xx: Proper(Some(3),None,false,false), yy: Proper(Some(0),None,false,true): |(3,+∞), (0,+∞]| satisfies 0 relations: [], expected: 1
-[info]       Location: (RelationSpec.scala:519)
+[info]       Message: false was not equal to true
+[info]       Location: (RelationSpec.scala:159)
 [info]       Occurred when passed generated values (
-[info]         arg0 = ((Some(3),None),false,false), // 1 shrink
-[info]         arg1 = ((Some(0),None),false,true) // 3 shrinks
+[info]         arg0 = ((None,Some(0)),true,false), // 2 shrinks
+[info]         arg1 = ((None,None),false,false)
 [info]       )
-[info]     Init Seed: -5694568526110233283
-
-
+[info]     Init Seed: 3485263065781425407
 
 [info]   when overlaps & isOverlapedBy
 [info]   - should check *** FAILED ***
