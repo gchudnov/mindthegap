@@ -1,6 +1,6 @@
 package com.github.gchudnov.mtg.internal
 
-trait Boundary[T: Ordering]:
+sealed trait Boundary[T: Ordering]:
   def value: Option[T]
   def isInclude: Boolean
 
