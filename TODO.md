@@ -1,16 +1,15 @@
 # TODO
 
-TODO: FIX TESTS
+TODO: finish boundary implementation
+TODO: replace ordering with boundary in tests
+TODO: ordering -- do we want to remove our implenetation???
+TODO: try to remove partial ordering, it is confusing
+TODO: try to simplify ALL impl with boundaries and comparison of them
 
-[info]   - should check *** FAILED ***
-[info]     TestFailedException was thrown during property evaluation.
-[info]       Message: false was not equal to true
-[info]       Location: (RelationSpec.scala:159)
-[info]       Occurred when passed generated values (
-[info]         arg0 = ((None,Some(0)),true,false), // 2 shrinks
-[info]         arg1 = ((None,None),false,false)
-[info]       )
-[info]     Init Seed: 3485263065781425407
+
+
+
+TODO: FIX TESTS
 
 [info]   when overlaps & isOverlapedBy
 [info]   - should check *** FAILED ***
@@ -22,8 +21,6 @@ TODO: FIX TESTS
 [info]         arg1 = ((None,None),false,false)
 [info]       )
 [info]     Init Seed: -3107187084486373336
-
-
 
 TODO: find relation between two intervals
 
