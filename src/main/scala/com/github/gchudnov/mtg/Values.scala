@@ -39,3 +39,9 @@ object Values:
 
     override def pred(x: OffsetDateTime): OffsetDateTime =
       x.minus(1, unit)
+
+  /**
+   * Implicits
+   */
+  given integralValue[T: Integral]: Value[T] =
+    new IntegralValue()
