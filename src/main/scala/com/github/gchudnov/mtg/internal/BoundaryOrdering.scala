@@ -22,6 +22,10 @@ object BoundaryOrdering:
       val ordT = summon[Ordering[T]]
       val valT = summon[Value[T]]
 
+      // TODO: finish it
+
+      // ordT.lt()
+
       ???
 
 

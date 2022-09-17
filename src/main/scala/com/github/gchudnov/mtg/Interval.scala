@@ -61,6 +61,8 @@ sealed trait Interval[+T: Ordering]:
   def nonUnbounded: Boolean =
     !isUnbounded
 
+  // TODO: ADD left, right to get left and right boundaries
+
 /**
  * Empty Interval
  */

@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.TestSpec
 
-final class BoundaryOrdering extends TestSpec:
+final class BoundaryOrderingSpec extends TestSpec:
 
   "BoundaryOrdering" when {
     "two boundaries are ordered" should {
