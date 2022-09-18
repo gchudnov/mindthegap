@@ -27,9 +27,9 @@ object Show:
           "∅"
         case Degenerate(a) =>
           s"{${a.toString()}}"
-        case Proper(ox1, ox2, includeX1, includeX2) =>
-          val lb = leftBound(includeX1)
-          val rb = rightBound(includeX2)
-          val lv = leftValue(ox1)
-          val rv = rightValue(ox2)
+        case Proper(left, right) =>
+          val lb = leftBound(left.isInclude)
+          val rb = rightBound(right.isInclude)
+          val lv = leftValue(left.value)
+          val rv = rightValue(right.value)
           s"${lb}${lv},${rv}${rb}"

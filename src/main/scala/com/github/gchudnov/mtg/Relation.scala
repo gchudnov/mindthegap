@@ -37,7 +37,7 @@ package com.github.gchudnov.mtg
  */
 object Relation:
 
-  extension [T: Ordering](a: Interval[T])
+  extension [T: Ordering: Domain](a: Interval[T])
     /**
      * Before (b), Preceeds (p)
      *
@@ -50,7 +50,7 @@ object Relation:
      *   a+ < b-
      *   a+ < b+
      *
-     *   a- < a+ < y- < y+
+     *   a- < a+ < b- < b+
      * }}}
      *
      * {{{
@@ -71,17 +71,9 @@ object Relation:
      * }}}
      */
     def before(b: Interval[T]): Boolean =
-      (a, b) match
-        case (Degenerate(x), Degenerate(y)) =>
-          summon[Ordering[T]].lt(x, y)
-        case (Degenerate(x), Proper(Some(y1), _, includeY1, _)) =>
-          summon[Ordering[T]].lt(x, y1) || (summon[Ordering[T]].equiv(x, y1) && !includeY1)
-        case (Proper(_, Some(x2), _, includeX2), Degenerate(y)) =>
-          summon[Ordering[T]].lt(x2, y) || (summon[Ordering[T]].equiv(x2, y) && !includeX2)
-        case (Proper(_, Some(x2), _, includeX2), Proper(Some(y1), _, includeY1, _)) =>
-          summon[Ordering[T]].lt(x2, y1) || (summon[Ordering[T]].equiv(x2, y1) && (!includeX2 || !includeY1))
-        case _ =>
-          false
+      ???
+      // if a.isEmpty || b.isEmpty then false else 
+      //   a.left
 
     def after(b: Interval[T]): Boolean =
       b.before(a)
@@ -123,11 +115,12 @@ object Relation:
      * }}}
      */
     def meets(b: Interval[T]): Boolean =
-      (a, b) match
-        case (Proper(_, Some(x2), _, includeX2), Proper(Some(y1), _, includeY1, _)) =>
-          summon[Ordering[T]].equiv(x2, y1) && includeX2 && includeY1
-        case _ =>
-          false
+      ???
+      // (a, b) match
+      //   case (Proper(_, Some(x2), _, includeX2), Proper(Some(y1), _, includeY1, _)) =>
+      //     summon[Ordering[T]].equiv(x2, y1) && includeX2 && includeY1
+      //   case _ =>
+      //     false
 
     def isMetBy(b: Interval[T]): Boolean =
       b.meets(a)
@@ -165,29 +158,30 @@ object Relation:
      * }}}
      */
     def overlaps(b: Interval[T]): Boolean =
-      (a, b) match
-        case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          (ordT.lt(x1, y1) || (ordT.equiv(x1, y1) && includeX1 && !includeY1)) &&
-          (ordT.lt(y1, x2)) &&
-          (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
-        case (Proper(None, Some(x2), _, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          (ordT.lt(y1, x2)) &&
-          (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
-        case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), None, includeY1, _)) =>
-          val ordT = summon[Ordering[T]]
-          (ordT.lt(y1, x2)) &&
-          (ordT.lt(x1, y1) || (ordT.equiv(x1, y1) && includeX1 && !includeY1))
-        case (Proper(None, Some(x2), _, includeX2), Proper(Some(y1), None, includeY1, _)) =>
-          val ordT = summon[Ordering[T]]
-          ordT.lt(y1, x2)
-        case (Proper(None, Some(_), includeX1, _), Proper(None, None, includeY1, _)) =>
-          includeX1 && !includeY1
-        case (Proper(None, None, _, includeX2), Proper(Some(_), None, _, includeY2)) =>
-          !includeX2 && includeY2
-        case _ =>
-          false
+      ???
+      // (a, b) match
+      //   case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (ordT.lt(x1, y1) || (ordT.equiv(x1, y1) && includeX1 && !includeY1)) &&
+      //     (ordT.lt(y1, x2)) &&
+      //     (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
+      //   case (Proper(None, Some(x2), _, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (ordT.lt(y1, x2)) &&
+      //     (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
+      //   case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), None, includeY1, _)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (ordT.lt(y1, x2)) &&
+      //     (ordT.lt(x1, y1) || (ordT.equiv(x1, y1) && includeX1 && !includeY1))
+      //   case (Proper(None, Some(x2), _, includeX2), Proper(Some(y1), None, includeY1, _)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     ordT.lt(y1, x2)
+      //   case (Proper(None, Some(_), includeX1, _), Proper(None, None, includeY1, _)) =>
+      //     includeX1 && !includeY1
+      //   case (Proper(None, None, _, includeX2), Proper(Some(_), None, _, includeY2)) =>
+      //     !includeX2 && includeY2
+      //   case _ =>
+      //     false
 
     def isOverlapedBy(b: Interval[T]): Boolean =
       b.overlaps(a)
@@ -224,36 +218,37 @@ object Relation:
      * }}}
      */
     def during(b: Interval[T]): Boolean =
-      (a, b) match
-        case (Degenerate(_), Proper(None, None, _, _)) =>
-          true
-        case (Degenerate(x), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          (ordT.gt(x, y1) && ordT.lt(x, y2))
-        case (Degenerate(x), Proper(Some(y1), None, includeY1, _)) =>
-          val ordT = summon[Ordering[T]]
-          ordT.gt(x, y1)
-        case (Degenerate(x), Proper(None, Some(y2), _, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          ordT.lt(x, y2)
-        case (Proper(ox1, ox2, includeX1, includeX2), Proper(None, None, includeY1, includeY2)) =>
-          (ox1.isDefined && ox2.isDefined) || (ox1.isEmpty && (!includeX1 && includeY1)) || (ox2.isEmpty && (!includeX2 && includeY2))
-        case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), None, includeY1, _)) =>
-          val ordT = summon[Ordering[T]]
-          (ordT.lt(y1, x1) || (ordT.equiv(y1, x1) && includeY1 && !includeX1))
-        case (Proper(Some(x1), None, includeX1, includeX2), Proper(Some(y1), None, includeY1, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          (ordT.lt(y1, x1) || (ordT.equiv(y1, x1) && includeY1 && !includeX1)) &&
-          (!includeX2 && includeY2)
-        case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(None, Some(y2), _, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
-        case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          (ordT.lt(y1, x1) || (ordT.equiv(y1, x1) && includeY1 && !includeX1)) &&
-          (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
-        case _ =>
-          false
+      ???
+      // (a, b) match
+      //   case (Degenerate(_), Proper(None, None, _, _)) =>
+      //     true
+      //   case (Degenerate(x), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (ordT.gt(x, y1) && ordT.lt(x, y2))
+      //   case (Degenerate(x), Proper(Some(y1), None, includeY1, _)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     ordT.gt(x, y1)
+      //   case (Degenerate(x), Proper(None, Some(y2), _, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     ordT.lt(x, y2)
+      //   case (Proper(ox1, ox2, includeX1, includeX2), Proper(None, None, includeY1, includeY2)) =>
+      //     (ox1.isDefined && ox2.isDefined) || (ox1.isEmpty && (!includeX1 && includeY1)) || (ox2.isEmpty && (!includeX2 && includeY2))
+      //   case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), None, includeY1, _)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (ordT.lt(y1, x1) || (ordT.equiv(y1, x1) && includeY1 && !includeX1))
+      //   case (Proper(Some(x1), None, includeX1, includeX2), Proper(Some(y1), None, includeY1, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (ordT.lt(y1, x1) || (ordT.equiv(y1, x1) && includeY1 && !includeX1)) &&
+      //     (!includeX2 && includeY2)
+      //   case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(None, Some(y2), _, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
+      //   case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (ordT.lt(y1, x1) || (ordT.equiv(y1, x1) && includeY1 && !includeX1)) &&
+      //     (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
+      //   case _ =>
+      //     false
 
     def contains(b: Interval[T]): Boolean =
       b.during(a)
@@ -292,27 +287,28 @@ object Relation:
      * }}}
      */
     def starts(b: Interval[T]): Boolean =
-      (a, b) match
-        case (Degenerate(x), Proper(Some(y1), _, includeY1, _)) =>
-          val ordT = summon[Ordering[T]]
-          ordT.equiv(x, y1) && includeY1
-        case (Proper(None, Some(_), includeX1, _), Proper(None, None, includeY1, _)) =>
-          val ordT = summon[Ordering[T]]
-          (includeX1 == includeY1)
-        case (Proper(None, Some(x2), includeX1, includeX2), Proper(None, Some(y2), includeY1, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          (includeX1 == includeY1) && (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
-        case (Proper(None, None, includeX1, includeX2), Proper(None, None, includeY1, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          (includeX1 && includeY1 && !includeX2 && includeY2)
-        case (Proper(Some(x1), Some(_), includeX1, _), Proper(Some(y1), None, includeY1, _)) =>
-          val ordT = summon[Ordering[T]]
-          (ordT.equiv(x1, y1) && (includeX1 == includeY1))
-        case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          (ordT.equiv(x1, y1) && (includeX1 == includeY1)) && (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
-        case _ =>
-          false
+      ???
+      // (a, b) match
+      //   case (Degenerate(x), Proper(Some(y1), _, includeY1, _)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     ordT.equiv(x, y1) && includeY1
+      //   case (Proper(None, Some(_), includeX1, _), Proper(None, None, includeY1, _)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (includeX1 == includeY1)
+      //   case (Proper(None, Some(x2), includeX1, includeX2), Proper(None, Some(y2), includeY1, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (includeX1 == includeY1) && (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
+      //   case (Proper(None, None, includeX1, includeX2), Proper(None, None, includeY1, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (includeX1 && includeY1 && !includeX2 && includeY2)
+      //   case (Proper(Some(x1), Some(_), includeX1, _), Proper(Some(y1), None, includeY1, _)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (ordT.equiv(x1, y1) && (includeX1 == includeY1))
+      //   case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (ordT.equiv(x1, y1) && (includeX1 == includeY1)) && (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
+      //   case _ =>
+      //     false
 
     def isStartedBy(b: Interval[T]): Boolean =
       b.starts(a)
@@ -348,23 +344,24 @@ object Relation:
      * }}}
      */
     def finishes(b: Interval[T]): Boolean =
-      (a, b) match
-        case (Degenerate(x), Proper(_, Some(y2), _, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          ordT.equiv(x, y2) && includeY2
-        case (Proper(Some(_), Some(x2), _, includeX2), Proper(None, Some(y2), _, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          (ordT.equiv(x2, y2) && includeX2 == includeY2)
-        case (Proper(Some(x1), None, includeX1, includeX2), Proper(Some(y1), None, includeY1, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          (includeX2 == includeY2) && (ordT.gt(x1, y1) || (ordT.equiv(x1, y1) && !includeX1 && includeY1))
-        case (Proper(Some(_), None, _, includeX2), Proper(None, None, _, includeY2)) =>
-          (includeX2 == includeY2)
-        case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
-          val ordT = summon[Ordering[T]]
-          (ordT.equiv(x2, y2) && includeX2 == includeY2) && (ordT.gt(x1, y1) || (ordT.equiv(x1, y1) && !includeX1 && includeY1))
-        case _ =>
-          false
+      ???
+      // (a, b) match
+      //   case (Degenerate(x), Proper(_, Some(y2), _, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     ordT.equiv(x, y2) && includeY2
+      //   case (Proper(Some(_), Some(x2), _, includeX2), Proper(None, Some(y2), _, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (ordT.equiv(x2, y2) && includeX2 == includeY2)
+      //   case (Proper(Some(x1), None, includeX1, includeX2), Proper(Some(y1), None, includeY1, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (includeX2 == includeY2) && (ordT.gt(x1, y1) || (ordT.equiv(x1, y1) && !includeX1 && includeY1))
+      //   case (Proper(Some(_), None, _, includeX2), Proper(None, None, _, includeY2)) =>
+      //     (includeX2 == includeY2)
+      //   case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     (ordT.equiv(x2, y2) && includeX2 == includeY2) && (ordT.gt(x1, y1) || (ordT.equiv(x1, y1) && !includeX1 && includeY1))
+      //   case _ =>
+      //     false
 
     def isFinishedBy(b: Interval[T]): Boolean =
       b.finishes(a)
@@ -396,16 +393,17 @@ object Relation:
      * }}}
      */
     def equalsTo(b: Interval[T]): Boolean =
-      import com.github.gchudnov.mtg.ordering.OptionOrdering
-      (a, b) match
-        case (Empty, Empty) =>
-          true
-        case (Degenerate(x), Degenerate(y)) =>
-          val ordT = summon[Ordering[T]]
-          ordT.equiv(x, y)
-        case (Proper(ox1, ox2, includeX1, includeX2), Proper(oy1, oy2, includeY1, includeY2)) =>
-          val ordT = summon[Ordering[Option[T]]]
-          (ordT.equiv(ox1, oy1) && (includeX1 == includeY1)) &&
-          (ordT.equiv(ox2, oy2) && (includeX2 == includeY2))
-        case _ =>
-          false
+      ???
+      // import com.github.gchudnov.mtg.ordering.OptionOrdering
+      // (a, b) match
+      //   case (Empty, Empty) =>
+      //     true
+      //   case (Degenerate(x), Degenerate(y)) =>
+      //     val ordT = summon[Ordering[T]]
+      //     ordT.equiv(x, y)
+      //   case (Proper(ox1, ox2, includeX1, includeX2), Proper(oy1, oy2, includeY1, includeY2)) =>
+      //     val ordT = summon[Ordering[Option[T]]]
+      //     (ordT.equiv(ox1, oy1) && (includeX1 == includeY1)) &&
+      //     (ordT.equiv(ox2, oy2) && (includeX2 == includeY2))
+      //   case _ =>
+      //     false
