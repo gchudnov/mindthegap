@@ -72,7 +72,7 @@ object Relation:
      * }}}
      */
     def before(b: Interval[T]): Boolean =
-      if a.isEmpty || b.isEmpty then false else bOrd.lt(a.right, b.left)
+      a.nonEmpty && b.nonEmpty && bOrd.lt(a.right, b.left)
 
     def after(b: Interval[T]): Boolean =
       b.before(a)
@@ -114,12 +114,7 @@ object Relation:
      * }}}
      */
     def meets(b: Interval[T]): Boolean =
-      ???
-      // (a, b) match
-      //   case (Proper(_, Some(x2), _, includeX2), Proper(Some(y1), _, includeY1, _)) =>
-      //     summon[Ordering[T]].equiv(x2, y1) && includeX2 && includeY1
-      //   case _ =>
-      //     false
+      a.isProper && b.isProper && bOrd.eq(a.right, b.left)
 
     def isMetBy(b: Interval[T]): Boolean =
       b.meets(a)

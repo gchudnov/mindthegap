@@ -85,49 +85,49 @@ final class RelationSpec extends TestSpec:
       }
     }
 
-//     /**
-//      * Meets, IsMetBy
-//      *
-//      * {{{
-//      *   AAA
-//      *      BBB
-//      * }}}
-//      */
-//     "meets & isMetBy" should {
-//       "check" in {
-//         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-//           val xx = Interval.make(ox1, ox2, ix1, ix2)
-//           val yy = Interval.make(oy1, oy2, iy1, iy2)
+    /**
+     * Meets, IsMetBy
+     *
+     * {{{
+     *   AAA
+     *      BBB
+     * }}}
+     */
+    "meets & isMetBy" should {
+      // "check" in {
+      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+      //     val xx = Interval.make(ox1, ox2, ix1, ix2)
+      //     val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-//           whenever(xx.meets(yy)) {
-//             // println(s"m: ${(xx, yy)}")
+      //     whenever(xx.meets(yy)) {
+      //       // println(s"m: ${(xx, yy)}")
 
-//             assertRelation("m", xx, yy)
-//             assertOneRelation(xx, yy)
+      //       assertRelation("m", xx, yy)
+      //       assertOneRelation(xx, yy)
 
-//             val isX2eqY1 = pOrd.equiv(ox2, oy1)
+      //       val isX2eqY1 = pOrd.equiv(ox2, oy1)
 
-//             (isX2eqY1 && (ix2 && iy1)) mustBe (true)
-//           }
-//         }
-//       }
+      //       (isX2eqY1 && (ix2 && iy1)) mustBe (true)
+      //     }
+      //   }
+      // }
 
-//       "check edge cases" in {
-//         // Proper
-//         // [1, 5]  [5, 10]
-//         Interval.closed(1, 5).meets(Interval.closed(5, 10)) mustBe (true)
+      "check edge cases" in {
+        // Proper
+        // [1, 5]  [5, 10]
+        Interval.closed(1, 5).meets(Interval.closed(5, 10)) mustBe (true)
 
-//         // Infinity
-//         // [1, 5]  [5, +inf)
-//         Interval.closed(1, 5).meets(Interval.leftClosed(5)) mustBe (true)
+        // Infinity
+        // [1, 5]  [5, +inf)
+        Interval.closed(1, 5).meets(Interval.leftClosed(5)) mustBe (true)
 
-//         // (-inf, 5]  [5, 10]
-//         Interval.rightClosed(5).meets(Interval.closed(5, 10)) mustBe (true)
+        // (-inf, 5]  [5, 10]
+        Interval.rightClosed(5).meets(Interval.closed(5, 10)) mustBe (true)
 
-//         // (-inf, 5]  [5, +inf)
-//         Interval.rightClosed(5).meets(Interval.leftClosed(5)) mustBe (true)
-//       }
-//     }
+        // (-inf, 5]  [5, +inf)
+        Interval.rightClosed(5).meets(Interval.leftClosed(5)) mustBe (true)
+      }
+    }
 
 //     /**
 //      * Overlaps, IsOverlapedBy
