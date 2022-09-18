@@ -6,8 +6,6 @@ import com.github.gchudnov.mtg.Relation.*
 import com.github.gchudnov.mtg.Show.*
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
-import scala.math.PartialOrdering
-
 final class RelationSpec extends TestSpec:
 
   given intRange: IntRange = intRange5
