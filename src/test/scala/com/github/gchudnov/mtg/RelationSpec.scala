@@ -13,6 +13,8 @@ final class RelationSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
+  given intOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
+
   // private val pOrd: PartialOrdering[Option[Int]] = summon[PartialOrdering[Option[Int]]]
 
   /*
@@ -547,7 +549,7 @@ given OptionPartialOrdering[T: Ordering]: PartialOrdering[Option[T]] with
 //     }
   }
 
-  private def makeRelations[T: Ordering: Domain] =
+  private def makeRelations[T: Ordering: Domain](using bOrd: Ordering[Boundary[T]]) =
     Map(
       "b" -> ((ab: Interval[T], cd: Interval[T]) => ab.preceeds(cd)),
       "B" -> ((ab: Interval[T], cd: Interval[T]) => ab.isPreceededBy(cd)),
@@ -565,7 +567,7 @@ given OptionPartialOrdering[T: Ordering]: PartialOrdering[Option[T]] with
       "E" -> ((ab: Interval[T], cd: Interval[T]) => ab.equalsTo(cd))
     )
 
-  private def assertRelation[T: Ordering: Domain](r: String, xx: Interval[T], yy: Interval[T]): Unit =
+  private def assertRelation[T: Ordering: Domain](r: String, xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
     val relations = makeRelations[T]
 
     val fk = r
@@ -584,7 +586,7 @@ given OptionPartialOrdering[T: Ordering]: PartialOrdering[Option[T]] with
       if fn(yy, xx) then fail(s"xx: ${xx}, yy: ${yy}: ${fk}|${xx.show}, ${yy.show}| == true; ${k}|${yy.show}, ${xx.show}| mustBe false, got true")
     }
 
-  private def assertOneRelation[T: Ordering: Domain](xx: Interval[T], yy: Interval[T]): Unit =
+  private def assertOneRelation[T: Ordering: Domain](xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
     val relations = makeRelations[T]
 
     val trues = relations.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>

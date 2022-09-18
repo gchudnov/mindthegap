@@ -37,7 +37,8 @@ package com.github.gchudnov.mtg
  */
 object Relation:
 
-  extension [T: Ordering: Domain](a: Interval[T])
+  extension [T: Ordering: Domain](a: Interval[T])(using bOrd: Ordering[Boundary[T]])
+
     /**
      * Before (b), Preceeds (p)
      *
@@ -71,6 +72,7 @@ object Relation:
      * }}}
      */
     def before(b: Interval[T]): Boolean =
+
       ???
       // if a.isEmpty || b.isEmpty then false else 
       //   a.left
