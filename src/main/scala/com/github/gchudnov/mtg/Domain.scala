@@ -3,7 +3,7 @@ package com.github.gchudnov.mtg
 /**
  * Trait to get a previous and the next value.
  */
-trait Value[T]:
+trait Domain[T]:
   /**
    * Next value
    *

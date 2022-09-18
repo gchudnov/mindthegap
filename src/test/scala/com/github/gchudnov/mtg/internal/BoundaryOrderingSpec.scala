@@ -1,11 +1,16 @@
 package com.github.gchudnov.mtg.internal
 
+import com.github.gchudnov.mtg.Domains
 import com.github.gchudnov.mtg.TestSpec
 
 final class BoundaryOrderingSpec extends TestSpec:
+  import Domains.integralDomain
 
   "BoundaryOrdering" when {
-    "two boundaries are ordered" should {
-      "order points" in {}
+    "(LeftBoundary, LeftBoundary)" should {
+      "order" in {
+
+
+      }
     }
   }

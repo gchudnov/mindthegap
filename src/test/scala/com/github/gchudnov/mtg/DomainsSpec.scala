@@ -1,20 +1,20 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.Values.*
-import com.github.gchudnov.mtg.Values.given
+import com.github.gchudnov.mtg.Domains.*
+import com.github.gchudnov.mtg.Domains.given
 import org.scalactic.TolerantNumerics
 import org.scalactic.Equality
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 import java.time.Instant
 
-final class ValuesSpec extends TestSpec:
+final class DomainsSpec extends TestSpec:
 
-  "Values" when {
+  "Domains" when {
 
     "Int" should {
       "get predecessor and successor values" in {
-        val valT: Value[Int] = summon[Value[Int]]
+        val valT: Domain[Int] = summon[Domain[Int]]
 
         val x: Int = 10
 
@@ -28,7 +28,7 @@ final class ValuesSpec extends TestSpec:
 
     "Long" should {
       "get predecessor and successor values" in {
-        val valT: Value[Long] = summon[Value[Long]]
+        val valT: Domain[Long] = summon[Domain[Long]]
 
         val x: Long = 10L
 
@@ -43,7 +43,7 @@ final class ValuesSpec extends TestSpec:
     "Double" should {
       "get predecessor and successor values" in {
         given doubleEq: Equality[Double] = TolerantNumerics.tolerantDoubleEquality(0.001)
-        given valT: Value[Double]        = fractionalValue(0.001)
+        given valT: Domain[Double]        = fractionalDomain(0.001)
 
         val x: Double = 10.0
 
@@ -57,7 +57,7 @@ final class ValuesSpec extends TestSpec:
 
     "OffsetDateTime" should {
       "get predecessor and successor values" in {
-        val valT: Value[OffsetDateTime] = offsetDateTimeValue(ChronoUnit.DAYS)
+        val valT: Domain[OffsetDateTime] = offsetDateTimeDomain(ChronoUnit.DAYS)
 
         val x: OffsetDateTime = OffsetDateTime.parse("2017-07-03T17:05:29.771Z").truncatedTo(ChronoUnit.DAYS)
 
@@ -71,7 +71,7 @@ final class ValuesSpec extends TestSpec:
 
     "Instant" should {
       "get predecessor and successor values" in {
-        val valT: Value[Instant] = instantValue(ChronoUnit.DAYS)
+        val valT: Domain[Instant] = instantDomain(ChronoUnit.DAYS)
 
         val x: Instant = Instant.parse("2017-07-03T17:05:29Z").truncatedTo(ChronoUnit.DAYS)
 

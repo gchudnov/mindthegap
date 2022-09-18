@@ -1,19 +1,19 @@
 package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.TestSpec
-import com.github.gchudnov.mtg.Value
-import com.github.gchudnov.mtg.Values
+import com.github.gchudnov.mtg.Domain
+import com.github.gchudnov.mtg.Domains
 
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 
 final class BoundarySpec extends TestSpec:
-  import Values.integralValue
+  import Domains.integralDomain
 
-  given valueDouble: Value[Double]                 = Values.fractionalValue[Double](0.01)
-  given valueOffsetDateTime: Value[OffsetDateTime] = Values.offsetDateTimeValue(ChronoUnit.MINUTES)
-  given valueInstant: Value[Instant]               = Values.instantValue(ChronoUnit.MINUTES)
+  given domainDouble: Domain[Double]                 = Domains.fractionalDomain[Double](0.01)
+  given domainOffsetDateTime: Domain[OffsetDateTime] = Domains.offsetDateTimeDomain(ChronoUnit.MINUTES)
+  given domainInstant: Domain[Instant]               = Domains.instantDomain(ChronoUnit.MINUTES)
 
   "Boundary" when {
     "LeftBoundary" should {

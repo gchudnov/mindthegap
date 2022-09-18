@@ -4,12 +4,12 @@ import java.time.OffsetDateTime
 import java.time.temporal.TemporalUnit
 import java.time.Instant
 
-object Values:
+object Domains:
 
   /**
-   * Integral Value: Int, Long, ...
+   * Integral Domain: Int, Long, ...
    */
-  private final class IntegralValue[T: Integral] extends Value[T]:
+  private final class IntegralDomain[T: Integral] extends Domain[T]:
 
     override def succ(x: T): T =
       val intT = summon[Integral[T]]
@@ -20,9 +20,9 @@ object Values:
       intT.minus(x, intT.one)
 
   /**
-   * Fractional Value: Double, Float
+   * Fractional Domain: Double, Float
    */
-  private final class FractionalValue[T: Fractional](unit: T) extends Value[T]:
+  private final class FractionalDomain[T: Fractional](unit: T) extends Domain[T]:
 
     override def succ(x: T): T =
       val fracT = summon[Fractional[T]]
@@ -33,9 +33,9 @@ object Values:
       fracT.minus(x, unit)
 
   /**
-   * OffsetDateTime Value
+   * OffsetDateTime Domain
    */
-  private final class OffsetDateTimeValue(unit: TemporalUnit) extends Value[OffsetDateTime]:
+  private final class OffsetDateTimeDomain(unit: TemporalUnit) extends Domain[OffsetDateTime]:
 
     override def succ(x: OffsetDateTime): OffsetDateTime =
       x.plus(1, unit)
@@ -44,9 +44,9 @@ object Values:
       x.minus(1, unit)
 
   /**
-   * Instant Value
+   * Instant Domain
    */
-  private final class InstantValue(unit: TemporalUnit) extends Value[Instant]:
+  private final class InstantDomain(unit: TemporalUnit) extends Domain[Instant]:
 
     override def succ(x: Instant): Instant =
       x.plus(1, unit)
@@ -57,14 +57,14 @@ object Values:
   /**
    * Implicits
    */
-  given integralValue[T: Integral]: Value[T] =
-    new IntegralValue()
+  given integralDomain[T: Integral]: Domain[T] =
+    new IntegralDomain()
 
-  def fractionalValue[T: Fractional](unit: T): Value[T] =
-    new FractionalValue(unit)
+  def fractionalDomain[T: Fractional](unit: T): Domain[T] =
+    new FractionalDomain(unit)
 
-  def offsetDateTimeValue(unit: TemporalUnit): Value[OffsetDateTime] =
-    new OffsetDateTimeValue(unit)
+  def offsetDateTimeDomain(unit: TemporalUnit): Domain[OffsetDateTime] =
+    new OffsetDateTimeDomain(unit)
 
-  def instantValue(unit: TemporalUnit): Value[Instant] =
-    new InstantValue(unit)
+  def instantDomain(unit: TemporalUnit): Domain[Instant] =
+    new InstantDomain(unit)
