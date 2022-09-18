@@ -113,6 +113,9 @@ final class RelationSpec extends TestSpec:
       // }
 
       "check edge cases" in {
+
+        // TODO: add more tests
+
         // Proper
         // [1, 5]  [5, 10]
         Interval.closed(1, 5).meets(Interval.closed(5, 10)) mustBe (true)
