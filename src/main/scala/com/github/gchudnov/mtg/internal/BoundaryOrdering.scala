@@ -21,8 +21,16 @@ object BoundaryOrdering:
             case (None, None) =>
               if ix == iy then 0 else if ix && !iy then -1 else 1
 
-        case (RightBoundary(ox, ix), RightBoundary(oy, iy)) =>
-          ???
+        case (ba1 @ RightBoundary(_, ix), bb1 @ RightBoundary(_, iy)) =>
+          (ba1.effectiveValue, bb1.effectiveValue) match
+            case (Some(x), Some(y)) =>
+              ordT.compare(x, y)
+            case (Some(x), None) =>
+              -1
+            case (None, Some(y)) =>
+              1
+            case (None, None) =>
+              if ix == iy then 0 else if ix && !iy then 1 else -1
 
         case (LeftBoundary(ox, ix), RightBoundary(oy, iy)) =>
           ???
