@@ -1,8 +1,8 @@
-package com.github.gchudnov.mtg.internal
+package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Domain
 
-sealed trait Boundary[T: Domain]:
+sealed trait Boundary[+T: Domain]:
   def value: Option[T]
   def isInclude: Boolean
 
@@ -21,7 +21,7 @@ sealed trait Boundary[T: Domain]:
  * @param isInclude
  *   specifies whether the given point is inclusive or exclusive
  */
-final case class LeftBoundary[T: Domain](value: Option[T], isInclude: Boolean) extends Boundary[T]:
+final case class LeftBoundary[+T: Domain](value: Option[T], isInclude: Boolean) extends Boundary[T]:
 
   override def effectiveValue: Option[T] =
     if isInclude then value else value.map(x => summon[Domain[T]].succ(x))
@@ -39,7 +39,7 @@ final case class LeftBoundary[T: Domain](value: Option[T], isInclude: Boolean) e
  * @param isInclude
  *   specifies whether the given point is inclusive or exclusive
  */
-final case class RightBoundary[T: Domain](value: Option[T], isInclude: Boolean) extends Boundary[T]:
+final case class RightBoundary[+T: Domain](value: Option[T], isInclude: Boolean) extends Boundary[T]:
 
   override def effectiveValue: Option[T] =
     if isInclude then value else value.map(x => summon[Domain[T]].pred(x))

@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.internal
+package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Domains
 import com.github.gchudnov.mtg.TestSpec

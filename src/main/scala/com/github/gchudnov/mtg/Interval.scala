@@ -1,5 +1,7 @@
 package com.github.gchudnov.mtg
 
+import com.github.gchudnov.mtg.Domains.nothingDomain
+
 /**
  * Generic Interval Representation
  *
@@ -43,7 +45,10 @@ package com.github.gchudnov.mtg
  *   Unbounded            - Unbounded at both ends; (-∞, +∞) = R
  * }}}
  */
-sealed trait Interval[+T: Ordering]:
+sealed trait Interval[+T: Ordering: Domain]:
+  def left: LeftBoundary[T]
+  def right: RightBoundary[T]
+
   def isEmpty: Boolean
   def isDegenrate: Boolean
   def isProper: Boolean
@@ -61,53 +66,62 @@ sealed trait Interval[+T: Ordering]:
   def nonUnbounded: Boolean =
     !isUnbounded
 
-  // TODO: ADD left, right to get left and right boundaries
-
 /**
  * Empty Interval
  */
 case object Empty extends Interval[Nothing]:
-  override def isEmpty: Boolean     = true
-  override def isDegenrate: Boolean = false
-  override def isProper: Boolean    = false
-  override def isUnbounded: Boolean = false
+  override val left: LeftBoundary[Nothing] =
+    LeftBoundary(Some(null.asInstanceOf[Nothing]), false)
+
+  override val right: RightBoundary[Nothing] =
+    RightBoundary(Some(null.asInstanceOf[Nothing]), false)
+
+  override val isEmpty: Boolean     = true
+  override val isDegenrate: Boolean = false
+  override val isProper: Boolean    = false
+  override val isUnbounded: Boolean = false
 
 /**
  * Degenerate Interval
  */
-final case class Degenerate[T: Ordering](a: T) extends Interval[T]:
-  override def isEmpty: Boolean     = false
-  override def isDegenrate: Boolean = true
-  override def isProper: Boolean    = false
-  override def isUnbounded: Boolean = false
+final case class Degenerate[T: Ordering: Domain](a: T) extends Interval[T]:
+  override def left: LeftBoundary[T] =
+    LeftBoundary(Some(a), false)
+
+  override def right: RightBoundary[T] =
+    RightBoundary(Some(a), false)
+
+  override val isEmpty: Boolean     = false
+  override val isDegenrate: Boolean = true
+  override val isProper: Boolean    = false
+  override val isUnbounded: Boolean = false
 
 /**
  * Proper Interval
  */
-final case class Proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean) extends Interval[T]:
+final case class Proper[T: Ordering: Domain](left: LeftBoundary[T], right: RightBoundary[T]) extends Interval[T]:
 
   // make sure that a < b, if provided
-  require((for x <- a; y <- b yield summon[Ordering[T]].lt(x, y)).getOrElse(true))
+  require((for x <- left.value; y <- right.value yield summon[Ordering[T]].lt(x, y)).getOrElse(true))
 
-  override def isEmpty: Boolean     = false
-  override def isDegenrate: Boolean = false
-  override def isProper: Boolean    = true
-  override def isUnbounded: Boolean = a.isEmpty && b.isEmpty
-
+  override val isEmpty: Boolean     = false
+  override val isDegenrate: Boolean = false
+  override val isProper: Boolean    = true
+  override def isUnbounded: Boolean = left.value.isEmpty && right.value.isEmpty
 
 object Interval:
 
   /**
    * ∅
    */
-  def empty[T: Ordering]: Interval[T] =
+  def empty[T: Ordering: Domain]: Interval[T] =
     Empty
 
   /**
    * (-∞, +∞)
    */
-  def unbounded[T: Ordering]: Interval[T] =
-    Proper[T](None, None, isIncludeA = false, isIncludeB = false)
+  def unbounded[T: Ordering: Domain]: Interval[T] =
+    Proper[T](LeftBoundary[T](None, false), RightBoundary[T](None, false))
 
   /**
    * [a, a] = {a}
@@ -117,7 +131,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def degenerate[T: Ordering](a: T): Interval[T] =
+  def degenerate[T: Ordering: Domain](a: T): Interval[T] =
     Degenerate(a)
 
   /**
@@ -134,8 +148,8 @@ object Interval:
    * @return
    *   a new interval
    */
-  def proper[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
-    Proper(a, b, isIncludeA, isIncludeB)
+  def proper[T: Ordering: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
+    Proper(LeftBoundary(a, isIncludeA), RightBoundary(b, isIncludeB))
 
   /**
    * (a, b) = {x | a < x < b}
@@ -147,8 +161,8 @@ object Interval:
    * @return
    *   a new interval
    */
-  def open[T: Ordering](a: T, b: T): Interval[T] =
-    Proper(Some(a), Some(b), isIncludeA = false, isIncludeB = false)
+  def open[T: Ordering: Domain](a: T, b: T): Interval[T] =
+    Proper(LeftBoundary(Some(a), false), RightBoundary(Some(b), false))
 
   /**
    * [a, b] = {x | a <= x <= b}
@@ -160,8 +174,8 @@ object Interval:
    * @return
    *   a new interval
    */
-  def closed[T: Ordering](a: T, b: T): Interval[T] =
-    Proper(Some(a), Some(b), isIncludeA = true, isIncludeB = true)
+  def closed[T: Ordering: Domain](a: T, b: T): Interval[T] =
+    Proper(LeftBoundary(Some(a), true), RightBoundary(Some(b), true))
 
   /**
    * (a, +∞) = {x | x > a}
@@ -171,8 +185,8 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftOpen[T: Ordering](a: T): Interval[T] =
-    Proper(Some(a), None, isIncludeA = false, isIncludeB = false)
+  def leftOpen[T: Ordering: Domain](a: T): Interval[T] =
+    Proper(LeftBoundary(Some(a), false), RightBoundary[T](None, false))
 
   /**
    * [a, +∞) = {x | x >= a}
@@ -182,8 +196,8 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftClosed[T: Ordering](a: T): Interval[T] =
-    Proper(Some(a), None, isIncludeA = true, isIncludeB = false)
+  def leftClosed[T: Ordering: Domain](a: T): Interval[T] =
+    Proper(LeftBoundary(Some(a), true), RightBoundary[T](None, false))
 
   /**
    * (-∞, b) = {x | x < b}
@@ -193,8 +207,8 @@ object Interval:
    * @return
    *   a new interval
    */
-  def rightOpen[T: Ordering](b: T): Interval[T] =
-    Proper(None, Some(b), isIncludeA = false, isIncludeB = false)
+  def rightOpen[T: Ordering: Domain](b: T): Interval[T] =
+    Proper(LeftBoundary[T](None, false), RightBoundary(Some(b), false))
 
   /**
    * (-∞, b] = {x | x < b}
@@ -204,8 +218,8 @@ object Interval:
    * @return
    *   a new interval
    */
-  def rightClosed[T: Ordering](b: T): Interval[T] =
-    Proper(None, Some(b), isIncludeA = false, isIncludeB = true)
+  def rightClosed[T: Ordering: Domain](b: T): Interval[T] =
+    Proper(LeftBoundary[T](None, false), RightBoundary(Some(b), true))
 
   /**
    * [a, b) = {x | a <= x < b}
@@ -215,7 +229,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftClosedRightOpen[T: Ordering](a: T, b: T): Interval[T] =
+  def leftClosedRightOpen[T: Ordering: Domain](a: T, b: T): Interval[T] =
     proper(Some(a), Some(b), isIncludeA = true, isIncludeB = false)
 
   /**
@@ -226,7 +240,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftOpenRightClosed[T: Ordering](a: T, b: T): Interval[T] =
+  def leftOpenRightClosed[T: Ordering: Domain](a: T, b: T): Interval[T] =
     proper(Some(a), Some(b), isIncludeA = false, isIncludeB = true)
 
   /**
@@ -242,12 +256,12 @@ object Interval:
    *   whether to include right boundary in the interval or not
    * @return
    */
-  def make[T: Ordering](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
+  def make[T: Ordering: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
     val ord = summon[Ordering[T]]
     (a, b) match
       case (Some(x), Some(y)) =>
         if ord.equiv(x, y) && isIncludeA && isIncludeB then degenerate(x)
         else if ord.lt(x, y) then proper(a, b, isIncludeA, isIncludeB)
-        else empty
+        else empty[T]
       case _ =>
         proper(a, b, isIncludeA, isIncludeB)

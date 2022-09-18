@@ -6,6 +6,14 @@ import java.time.Instant
 
 object Domains:
 
+  private final class NothingDomain extends Domain[Nothing]:
+
+    override def succ(x: Nothing): Nothing =
+      x
+
+    override def pred(x: Nothing): Nothing =
+      x
+
   /**
    * Integral Domain: Int, Long, ...
    */
@@ -57,6 +65,9 @@ object Domains:
   /**
    * Implicits
    */
+  given nothingDomain: Domain[Nothing] =
+    new NothingDomain
+
   given integralDomain[T: Integral]: Domain[T] =
     new IntegralDomain()
 
