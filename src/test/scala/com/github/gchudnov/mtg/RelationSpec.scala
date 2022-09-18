@@ -17,6 +17,20 @@ final class RelationSpec extends TestSpec:
 
   private val pOrd: PartialOrdering[Option[Int]] = summon[PartialOrdering[Option[Int]]]
 
+  /*
+given OptionOrdering[T: Ordering]: Ordering[Option[T]] with
+  override def compare(ox: Option[T], oy: Option[T]): Int =
+    (ox, oy) match
+      case (None, None) =>
+        0
+      case (None, Some(_)) =>
+        -1
+      case (Some(_), None) =>
+        1
+      case (Some(x), Some(y)) =>
+        summon[Ordering[T]].compare(x, y)  
+  */
+
   "Relation" when {
 
     /**
