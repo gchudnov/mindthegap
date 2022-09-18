@@ -13,47 +13,7 @@ final class RelationSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  given intOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
-
-  // private val pOrd: PartialOrdering[Option[Int]] = summon[PartialOrdering[Option[Int]]]
-
-  /*
-given OptionOrdering[T: Ordering]: Ordering[Option[T]] with
-  override def compare(ox: Option[T], oy: Option[T]): Int =
-    (ox, oy) match
-      case (None, None) =>
-        0
-      case (None, Some(_)) =>
-        -1
-      case (Some(_), None) =>
-        1
-      case (Some(x), Some(y)) =>
-        summon[Ordering[T]].compare(x, y)  
-
-given OptionPartialOrdering[T: Ordering]: PartialOrdering[Option[T]] with
-  override def tryCompare(ox: Option[T], oy: Option[T]): Option[Int] =
-    (ox, oy) match
-      case (None, None) =>
-        Some(0)
-      case (None, Some(_)) =>
-        None
-      case (Some(_), None) =>
-        None
-      case (Some(x), Some(y)) =>
-        Some(summon[Ordering[T]].compare(x, y))
-
-  override def lteq(ox: Option[T], oy: Option[T]): Boolean =
-    (ox, oy) match
-      case (None, None) =>
-        true
-      case (None, Some(_)) =>
-        false
-      case (Some(_), None) =>
-        false
-      case (Some(x), Some(y)) =>
-        summon[Ordering[T]].lteq(x, y)
-
-  */
+  given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
 
   "Relation" when {
 
@@ -76,11 +36,6 @@ given OptionPartialOrdering[T: Ordering]: PartialOrdering[Option[T]] with
 
       //       assertRelation("b", xx, yy)
       //       assertOneRelation(xx, yy)
-
-      //       val isX2ltY1 = pOrd.lt(ox2, oy1)
-      //       val isX2eqY1 = pOrd.equiv(ox2, oy1)
-
-      //       (isX2ltY1 || (isX2eqY1 && !(ix2 && iy1))) mustBe (true)
       //     }
       //   }
       // }
@@ -96,6 +51,7 @@ given OptionPartialOrdering[T: Ordering]: PartialOrdering[Option[T]] with
         // Degenerate (Point)
         Interval.degenerate(5).before(Interval.empty[Int]) mustBe (false)
         Interval.degenerate(5).before(Interval.degenerate(5)) mustBe (false)
+        Interval.degenerate(5).before(Interval.degenerate(6)) mustBe (true)
         Interval.degenerate(5).before(Interval.degenerate(10)) mustBe (true)
         Interval.degenerate(5).before(Interval.open(5, 10)) mustBe (true)
         Interval.degenerate(5).before(Interval.closed(5, 10)) mustBe (false)
@@ -120,6 +76,12 @@ given OptionPartialOrdering[T: Ordering]: PartialOrdering[Option[T]] with
 
         // (-inf, 2)  (3, +inf)
         Interval.rightOpen(2).before(Interval.leftOpen(3)) mustBe (true)
+
+        // (-inf, 2]  (3, +inf)
+        Interval.rightClosed(2).before(Interval.leftOpen(3)) mustBe (true)
+
+        // (-inf, 2)  [3, +inf)
+        Interval.rightOpen(2).before(Interval.leftClosed(3)) mustBe (true)
       }
     }
 

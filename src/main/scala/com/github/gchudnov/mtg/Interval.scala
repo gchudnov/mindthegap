@@ -71,10 +71,10 @@ sealed trait Interval[+T: Ordering: Domain]:
  */
 case object Empty extends Interval[Nothing]:
   override def left: LeftBoundary[Nothing] =
-    LeftBoundary(Some(null.asInstanceOf[Nothing]), false)
+    LeftBoundary(None, false)
 
   override def right: RightBoundary[Nothing] =
-    RightBoundary(Some(null.asInstanceOf[Nothing]), false)
+    RightBoundary(None, false)
 
   override def isEmpty: Boolean     = true
   override def isDegenrate: Boolean = false
@@ -86,10 +86,10 @@ case object Empty extends Interval[Nothing]:
  */
 final case class Degenerate[T: Ordering: Domain](a: T) extends Interval[T]:
   override def left: LeftBoundary[T] =
-    LeftBoundary(Some(a), false)
+    LeftBoundary(Some(a), true)
 
   override def right: RightBoundary[T] =
-    RightBoundary(Some(a), false)
+    RightBoundary(Some(a), true)
 
   override val isEmpty: Boolean     = false
   override val isDegenrate: Boolean = true

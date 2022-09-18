@@ -72,10 +72,7 @@ object Relation:
      * }}}
      */
     def before(b: Interval[T]): Boolean =
-
-      ???
-      // if a.isEmpty || b.isEmpty then false else 
-      //   a.left
+      if a.isEmpty || b.isEmpty then false else bOrd.lt(a.right, b.left)
 
     def after(b: Interval[T]): Boolean =
       b.before(a)
