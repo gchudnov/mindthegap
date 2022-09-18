@@ -8,7 +8,6 @@ object BoundaryOrdering:
 
     override def compare(ba: Boundary[T], bb: Boundary[T]): Int =
       val ordT = summon[Ordering[T]]
-      val valT = summon[Domain[T]]
 
       (ba, bb) match
         case (ba1 @ LeftBoundary(_, ix), bb1 @ LeftBoundary(_, iy)) =>
@@ -30,3 +29,6 @@ object BoundaryOrdering:
 
         case (RightBoundary(ox, ix), LeftBoundary(oy, iy)) =>
           ???
+
+  def boundaryOrdering[T: Ordering: Domain]: Ordering[Boundary[T]] =
+    new BoundaryOrdering[T]
