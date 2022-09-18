@@ -1,11 +1,11 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Arbitraries.*
-import com.github.gchudnov.mtg.Show.*
 import com.github.gchudnov.mtg.Domains.given
+import com.github.gchudnov.mtg.Show.*
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 
 import java.time.Instant
 

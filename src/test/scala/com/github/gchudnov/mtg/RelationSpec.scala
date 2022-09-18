@@ -1,6 +1,7 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Arbitraries.*
+import com.github.gchudnov.mtg.Domains.given
 import com.github.gchudnov.mtg.Relation.*
 import com.github.gchudnov.mtg.Show.*
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
@@ -54,7 +55,7 @@ given OptionPartialOrdering[T: Ordering]: PartialOrdering[Option[T]] with
 
   */
 
-//   "Relation" when {
+  "Relation" when {
 
 //     /**
 //      * Before, After (Preceeds, IsPreceededBy)
@@ -546,58 +547,58 @@ given OptionPartialOrdering[T: Ordering]: PartialOrdering[Option[T]] with
 //         intervals.foreach { case (xx, yy) => assertOneRelation(xx, yy) }
 //       }
 //     }
-//   }
+  }
 
-//   private def makeRelations[T: Ordering] =
-//     Map(
-//       "b" -> ((ab: Interval[T], cd: Interval[T]) => ab.preceeds(cd)),
-//       "B" -> ((ab: Interval[T], cd: Interval[T]) => ab.isPreceededBy(cd)),
-//       "m" -> ((ab: Interval[T], cd: Interval[T]) => ab.meets(cd)),
-//       "M" -> ((ab: Interval[T], cd: Interval[T]) => ab.isMetBy(cd)),
-//       "o" -> ((ab: Interval[T], cd: Interval[T]) => ab.overlaps(cd)),
-//       "O" -> ((ab: Interval[T], cd: Interval[T]) => ab.isOverlapedBy(cd)),
-//       "d" -> ((ab: Interval[T], cd: Interval[T]) => ab.during(cd)),
-//       "D" -> ((ab: Interval[T], cd: Interval[T]) => ab.contains(cd)),
-//       "s" -> ((ab: Interval[T], cd: Interval[T]) => ab.starts(cd)),
-//       "S" -> ((ab: Interval[T], cd: Interval[T]) => ab.isStartedBy(cd)),
-//       "f" -> ((ab: Interval[T], cd: Interval[T]) => ab.finishes(cd)),
-//       "F" -> ((ab: Interval[T], cd: Interval[T]) => ab.isFinishedBy(cd)),
-//       "e" -> ((ab: Interval[T], cd: Interval[T]) => ab.equalsTo(cd)),
-//       "E" -> ((ab: Interval[T], cd: Interval[T]) => ab.equalsTo(cd))
-//     )
+  private def makeRelations[T: Ordering: Domain] =
+    Map(
+      "b" -> ((ab: Interval[T], cd: Interval[T]) => ab.preceeds(cd)),
+      "B" -> ((ab: Interval[T], cd: Interval[T]) => ab.isPreceededBy(cd)),
+      "m" -> ((ab: Interval[T], cd: Interval[T]) => ab.meets(cd)),
+      "M" -> ((ab: Interval[T], cd: Interval[T]) => ab.isMetBy(cd)),
+      "o" -> ((ab: Interval[T], cd: Interval[T]) => ab.overlaps(cd)),
+      "O" -> ((ab: Interval[T], cd: Interval[T]) => ab.isOverlapedBy(cd)),
+      "d" -> ((ab: Interval[T], cd: Interval[T]) => ab.during(cd)),
+      "D" -> ((ab: Interval[T], cd: Interval[T]) => ab.contains(cd)),
+      "s" -> ((ab: Interval[T], cd: Interval[T]) => ab.starts(cd)),
+      "S" -> ((ab: Interval[T], cd: Interval[T]) => ab.isStartedBy(cd)),
+      "f" -> ((ab: Interval[T], cd: Interval[T]) => ab.finishes(cd)),
+      "F" -> ((ab: Interval[T], cd: Interval[T]) => ab.isFinishedBy(cd)),
+      "e" -> ((ab: Interval[T], cd: Interval[T]) => ab.equalsTo(cd)),
+      "E" -> ((ab: Interval[T], cd: Interval[T]) => ab.equalsTo(cd))
+    )
 
-//   private def assertRelation[T: Ordering](r: String, xx: Interval[T], yy: Interval[T]): Unit =
-//     val relations = makeRelations[T]
+  private def assertRelation[T: Ordering: Domain](r: String, xx: Interval[T], yy: Interval[T]): Unit =
+    val relations = makeRelations[T]
 
-//     val fk = r
-//     val bk = r.map(_.toUpper)
-//     val ks = List(fk, bk)
+    val fk = r
+    val bk = r.map(_.toUpper)
+    val ks = List(fk, bk)
 
-//     val fwd  = relations(fk)
-//     val bck  = relations(bk)
-//     val rest = relations.filterNot { case (k, _) => ks.contains(k) }
+    val fwd  = relations(fk)
+    val bck  = relations(bk)
+    val rest = relations.filterNot { case (k, _) => ks.contains(k) }
 
-//     fwd(xx, yy) mustBe (true)
-//     bck(yy, xx) mustBe (true)
+    fwd(xx, yy) mustBe (true)
+    bck(yy, xx) mustBe (true)
 
-//     rest.foreach { case (k, fn) =>
-//       if fn(xx, yy) then fail(s"xx: ${xx}, yy: ${yy}: ${fk}|${xx.show}, ${yy.show}| == true; ${k}|${xx.show}, ${yy.show}| mustBe false, got true")
-//       if fn(yy, xx) then fail(s"xx: ${xx}, yy: ${yy}: ${fk}|${xx.show}, ${yy.show}| == true; ${k}|${yy.show}, ${xx.show}| mustBe false, got true")
-//     }
+    rest.foreach { case (k, fn) =>
+      if fn(xx, yy) then fail(s"xx: ${xx}, yy: ${yy}: ${fk}|${xx.show}, ${yy.show}| == true; ${k}|${xx.show}, ${yy.show}| mustBe false, got true")
+      if fn(yy, xx) then fail(s"xx: ${xx}, yy: ${yy}: ${fk}|${xx.show}, ${yy.show}| == true; ${k}|${yy.show}, ${xx.show}| mustBe false, got true")
+    }
 
-//   private def assertOneRelation[T: Ordering](xx: Interval[T], yy: Interval[T]): Unit =
-//     val relations = makeRelations[T]
+  private def assertOneRelation[T: Ordering: Domain](xx: Interval[T], yy: Interval[T]): Unit =
+    val relations = makeRelations[T]
 
-//     val trues = relations.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>
-//       val res = fn(xx, yy)
-//       if res then acc + k
-//       else acc
-//     }
+    val trues = relations.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>
+      val res = fn(xx, yy)
+      if res then acc + k
+      else acc
+    }
 
-//     val isNonEmpty = !(xx.isEmpty || yy.isEmpty)
+    val isNonEmpty = !(xx.isEmpty || yy.isEmpty)
 
-//     if isNonEmpty then
-//       // it is OK if xx, yy satisfy both [e, E]
-//       val expectedSize = if trues.contains("e") || trues.contains("E") then 2 else 1
-//       if trues.size != expectedSize then
-//         fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected: ${expectedSize}")
+    if isNonEmpty then
+      // it is OK if xx, yy satisfy both [e, E]
+      val expectedSize = if trues.contains("e") || trues.contains("E") then 2 else 1
+      if trues.size != expectedSize then
+        fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected: ${expectedSize}")
