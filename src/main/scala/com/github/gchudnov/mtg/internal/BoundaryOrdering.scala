@@ -32,7 +32,7 @@ object BoundaryOrdering:
             case (None, None) =>
               if ix == iy then 0 else if ix && !iy then 1 else -1
 
-        case (ba1 @ LeftBoundary(_, ix), bb1 @ RightBoundary(_, iy)) =>
+        case (ba1 @ LeftBoundary(_, _), bb1 @ RightBoundary(_, _)) =>
           (ba1.effectiveValue, bb1.effectiveValue) match
             case (Some(x), Some(y)) =>
               ordT.compare(x, y)
@@ -43,8 +43,16 @@ object BoundaryOrdering:
             case (None, None) =>
               -1
 
-        case (RightBoundary(ox, ix), LeftBoundary(oy, iy)) =>
-          ???
+        case (ba1 @ RightBoundary(_, _), bb1 @ LeftBoundary(_, _)) =>
+          (ba1.effectiveValue, bb1.effectiveValue) match
+            case (Some(x), Some(y)) =>
+              ordT.compare(x, y)
+            case (Some(x), None) =>
+              1
+            case (None, Some(y)) =>
+              1
+            case (None, None) =>
+              1
 
   def boundaryOrdering[T: Ordering: Domain]: Ordering[Boundary[T]] =
     new BoundaryOrdering[T]
