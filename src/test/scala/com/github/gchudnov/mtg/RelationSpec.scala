@@ -3,7 +3,6 @@ package com.github.gchudnov.mtg
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Relation.*
 import com.github.gchudnov.mtg.Show.*
-import com.github.gchudnov.mtg.ordering.OptionPartialOrdering
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
 import scala.math.PartialOrdering
