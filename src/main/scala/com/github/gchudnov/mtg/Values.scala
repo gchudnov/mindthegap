@@ -22,15 +22,15 @@ object Values:
   /**
    * Fractional Value: Double, Float
    */
-  private final class FractionalValue[T: Fractional](precision: T) extends Value[T]:
+  private final class FractionalValue[T: Fractional](unit: T) extends Value[T]:
 
     override def succ(x: T): T =
       val fracT = summon[Fractional[T]]
-      fracT.plus(x, precision)
+      fracT.plus(x, unit)
 
     override def pred(x: T): T =
       val fracT = summon[Fractional[T]]
-      fracT.minus(x, precision)
+      fracT.minus(x, unit)
 
   /**
    * OffsetDateTime Value
@@ -60,8 +60,8 @@ object Values:
   given integralValue[T: Integral]: Value[T] =
     new IntegralValue()
 
-  def fractionalValue[T: Fractional](precision: T): Value[T] =
-    new FractionalValue(precision)
+  def fractionalValue[T: Fractional](unit: T): Value[T] =
+    new FractionalValue(unit)
 
   def offsetDateTimeValue(unit: TemporalUnit): Value[OffsetDateTime] =
     new OffsetDateTimeValue(unit)
