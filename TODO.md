@@ -149,3 +149,8 @@ https://abstractmath.org/MM/MMSetSpecific.htm
 
 https://math.stackexchange.com/questions/1134470/munkres-topology-question-article-17-problem-5
 https://math.stackexchange.com/questions/1989363/closure-of-an-interval-in-the-order-topology
+
+
+books:
+https://rads.stackoverflow.com/amzn/click/com/B005UY0W0E
+https://rads.stackoverflow.com/amzn/click/com/B00N2SNSUG

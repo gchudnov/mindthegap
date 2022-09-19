@@ -191,7 +191,7 @@ final class RelationSpec extends TestSpec:
 
       "check edge cases" in {
 
-        // TODO: add tests for https://stackoverfloy1.com/questions/325933/determine-whether-two-date-ranges-overlap
+        // TODO: add tests for https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
 
         // Empty
         // {}  (-inf, +inf)
@@ -287,72 +287,86 @@ final class RelationSpec extends TestSpec:
       }
     }
 
-//     /**
-//      * During, Contains
-//      *
-//      * {{{
-//      *     AA
-//      *   BBBBBB
-//      * }}}
-//      */
-//     "during & contains (includes)" should {
-//       "check" in {
-//         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-//           val xx = Interval.make(ox1, ox2, ix1, ix2)
-//           val yy = Interval.make(oy1, oy2, iy1, iy2)
+    /**
+     * During, Contains
+     *
+     * {{{
+     *     AA
+     *   BBBBBB
+     * }}}
+     */
+    "during & contains (includes)" should {
+      // "check" in {
+      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+      //     val xx = Interval.make(ox1, ox2, ix1, ix2)
+      //     val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-//           whenever(xx.during(yy)) {
-//             // println(s"d: ${(xx, yy)}")
+      //     whenever(xx.during(yy)) {
+      //       // println(s"d: ${(xx, yy)}")
 
-//             assertRelation("d", xx, yy)
-//             assertOneRelation(xx, yy)
+      //       assertRelation("d", xx, yy)
+      //       assertOneRelation(xx, yy)
 
-//             val isX1gtY1 = pOrd.gt(ox1, oy1)
-//             val isX1eqY1 = pOrd.equiv(ox1, oy1)
+      //       val isX1gtY1 = pOrd.gt(ox1, oy1)
+      //       val isX1eqY1 = pOrd.equiv(ox1, oy1)
 
-//             val isX2ltY2 = pOrd.lt(ox2, oy2)
-//             val isX2eqY2 = pOrd.equiv(ox2, oy2)
+      //       val isX2ltY2 = pOrd.lt(ox2, oy2)
+      //       val isX2eqY2 = pOrd.equiv(ox2, oy2)
 
-//             (((isX1gtY1 || (isX1eqY1 && iy1 && !ix1)) && (isX2ltY2 || (isX2eqY2 && iy2 && !ix2))) ||
-//               ((isX1gtY1 || (isX1eqY1 && iy1 && !ix1)) && oy2.isEmpty) ||
-//               ((isX2ltY2 || (isX2eqY2 && iy2 && !ix2)) && oy1.isEmpty) ||
-//               (ox1.isDefined && ox2.isDefined && oy1.isEmpty && oy2.isEmpty)) mustBe (true)
-//           }
-//         }
-//       }
+      //       (((isX1gtY1 || (isX1eqY1 && iy1 && !ix1)) && (isX2ltY2 || (isX2eqY2 && iy2 && !ix2))) ||
+      //         ((isX1gtY1 || (isX1eqY1 && iy1 && !ix1)) && oy2.isEmpty) ||
+      //         ((isX2ltY2 || (isX2eqY2 && iy2 && !ix2)) && oy1.isEmpty) ||
+      //         (ox1.isDefined && ox2.isDefined && oy1.isEmpty && oy2.isEmpty)) mustBe (true)
+      //     }
+      //   }
+      // }
 
-//       "check edge cases" in {
-//         // Proper
-//         // {5}  (2, 9)
-//         Interval.degenerate(5).during(Interval.open(2, 9)) mustBe (true)
+      "check edge cases" in {
+        // Empty
+        Interval.empty[Int].during(Interval.open(5, 10)) mustBe (false)
+        Interval.empty[Int].during(Interval.degenerate(0)) mustBe (false)
+        Interval.empty[Int].during(Interval.unbounded[Int]) mustBe (false)
 
-//         // (2, 9)  {5}
-//         Interval.open(2, 9).contains(Interval.degenerate(5)) mustBe (true)
+        // Degenerate
+        // {5}  (2, 9)
+        Interval.degenerate(5).during(Interval.open(2, 9)) mustBe (true)
 
-//         // Infinity
-//         // [5, 7]  [3, +inf)
-//         Interval.closed(5, 7).during(Interval.leftClosed(3)) mustBe (true)
+        // (2, 9)  {5}
+        Interval.open(2, 9).contains(Interval.degenerate(5)) mustBe (true)
 
-//         // [5, 7]  (-inf, 10]
-//         Interval.closed(5, 7).during(Interval.rightClosed(10)) mustBe (true)
+        Interval.degenerate(5).during(Interval.closed(5, 10)) mustBe (false)
+        Interval.degenerate(5).during(Interval.open(5, 10)) mustBe (false)
+        Interval.degenerate(6).during(Interval.open(5, 10)) mustBe (false)
+        Interval.degenerate(7).during(Interval.open(5, 10)) mustBe (true)
 
-//         // [5, 7] (-inf, +inf)
-//         Interval.closed(5, 7).during(Interval.unbounded[Int]) mustBe (true)
+        // Proper
+        Interval.closed(5, 7).during(Interval.closed(2, 10)) mustBe (true)
+        Interval.open(5, 7).during(Interval.closed(5, 7)) mustBe (true)
 
-//         // [-∞,0]  [-∞,+∞)
-//         Interval.proper(None, Some(0), true, true).during(Interval.proper[Int](None, None, true, false)) mustBe (false)
+        // Infinity
+        // [5, 7]  [3, +inf)
+        Interval.closed(5, 7).during(Interval.leftClosed(3)) mustBe (true)
 
-//         // [0, 1)  [-∞,+∞]
-//         Interval.proper(Some(0), Some(1), true, false).during(Interval.proper[Int](None, None, true, true)) mustBe (true)
+        // [5, 7]  (-inf, 10]
+        Interval.closed(5, 7).during(Interval.rightClosed(10)) mustBe (true)
 
-//         // [0]  [-∞,+∞)
-//         Interval.degenerate(0).during(Interval.proper[Int](None, None, true, false)) mustBe (true)
+        // [5, 7] (-inf, +inf)
+        Interval.closed(5, 7).during(Interval.unbounded[Int]) mustBe (true)
 
-//         // (3,+∞), (0,+∞]
-//         Interval.leftOpen(3).during(Interval.proper(Some(0), None, false, true)) mustBe (true)
-//         Interval.proper(Some(0), None, false, true).contains(Interval.leftOpen(3)) mustBe (true)
-//       }
-//     }
+        // [-∞,0]  [-∞,+∞)
+        Interval.proper(None, Some(0), true, true).during(Interval.proper[Int](None, None, true, false)) mustBe (false)
+
+        // [0, 1)  [-∞,+∞]
+        Interval.proper(Some(0), Some(1), true, false).during(Interval.proper[Int](None, None, true, true)) mustBe (true)
+
+        // [0]  [-∞,+∞)
+        Interval.degenerate(0).during(Interval.proper[Int](None, None, true, false)) mustBe (true)
+
+        // (3,+∞), (0,+∞]
+        Interval.leftOpen(3).during(Interval.proper(Some(0), None, false, true)) mustBe (true)
+        Interval.proper(Some(0), None, false, true).contains(Interval.leftOpen(3)) mustBe (true)
+      }
+    }
 
 //     /**
 //      * Starts, IsStartedBy
