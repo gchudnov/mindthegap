@@ -264,24 +264,7 @@ object Relation:
      * }}}
      */
     def finishes(b: Interval[T]): Boolean =
-      ???
-      // (a, b) match
-      //   case (Degenerate(x), Proper(_, Some(y2), _, includeY2)) =>
-      //     val ordT = summon[Ordering[T]]
-      //     ordT.equiv(x, y2) && includeY2
-      //   case (Proper(Some(_), Some(x2), _, includeX2), Proper(None, Some(y2), _, includeY2)) =>
-      //     val ordT = summon[Ordering[T]]
-      //     (ordT.equiv(x2, y2) && includeX2 == includeY2)
-      //   case (Proper(Some(x1), None, includeX1, includeX2), Proper(Some(y1), None, includeY1, includeY2)) =>
-      //     val ordT = summon[Ordering[T]]
-      //     (includeX2 == includeY2) && (ordT.gt(x1, y1) || (ordT.equiv(x1, y1) && !includeX1 && includeY1))
-      //   case (Proper(Some(_), None, _, includeX2), Proper(None, None, _, includeY2)) =>
-      //     (includeX2 == includeY2)
-      //   case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
-      //     val ordT = summon[Ordering[T]]
-      //     (ordT.equiv(x2, y2) && includeX2 == includeY2) && (ordT.gt(x1, y1) || (ordT.equiv(x1, y1) && !includeX1 && includeY1))
-      //   case _ =>
-      //     false
+      a.nonEmpty && b.nonEmpty && bOrd.lt(b.left, a.left) && bOrd.lteq(a.left, a.right) && bOrd.equiv(a.right, b.right)
 
     def isFinishedBy(b: Interval[T]): Boolean =
       b.finishes(a)
@@ -313,17 +296,4 @@ object Relation:
      * }}}
      */
     def equalsTo(b: Interval[T]): Boolean =
-      ???
-      // import com.github.gchudnov.mtg.ordering.OptionOrdering
-      // (a, b) match
-      //   case (Empty, Empty) =>
-      //     true
-      //   case (Degenerate(x), Degenerate(y)) =>
-      //     val ordT = summon[Ordering[T]]
-      //     ordT.equiv(x, y)
-      //   case (Proper(ox1, ox2, includeX1, includeX2), Proper(oy1, oy2, includeY1, includeY2)) =>
-      //     val ordT = summon[Ordering[Option[T]]]
-      //     (ordT.equiv(ox1, oy1) && (includeX1 == includeY1)) &&
-      //     (ordT.equiv(ox2, oy2) && (includeX2 == includeY2))
-      //   case _ =>
-      //     false
+      bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
