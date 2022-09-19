@@ -228,7 +228,7 @@ object Relation:
      * }}}
      */
     def starts(b: Interval[T]): Boolean =
-      a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.lt(b.left, a.right) && bOrd.lt(a.right, b.right)
+      a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.lteq(b.left, a.right) && bOrd.lt(a.right, b.right)
 
     def isStartedBy(b: Interval[T]): Boolean =
       b.starts(a)

@@ -191,8 +191,6 @@ final class RelationSpec extends TestSpec:
 
       "check edge cases" in {
 
-        // TODO: add tests for https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
-
         // Empty
         // {}  (-inf, +inf)
         Interval.empty[Int].overlaps(Interval.unbounded[Int]) mustBe (false)
@@ -400,11 +398,16 @@ final class RelationSpec extends TestSpec:
 
       "check edge cases" in {
         // Empty
-        Interval.empty[Int].starts(Interval.degenerate(0)) mustBe (false)        
+        Interval.empty[Int].starts(Interval.degenerate(0)) mustBe (false)
         Interval.empty[Int].starts(Interval.closed(0, 1)) mustBe (false)
-        Interval.empty[Int].starts(Interval.unbounded[Int]) mustBe (false)        
+        Interval.empty[Int].starts(Interval.unbounded[Int]) mustBe (false)
 
         // Degenerate
+        Interval.degenerate(5).starts(Interval.closed(5, 10)) mustBe (true)
+        Interval.degenerate(5).starts(Interval.open(4, 10)) mustBe (true)
+        Interval.degenerate(5).starts(Interval.open(5, 10)) mustBe (false)
+        Interval.degenerate(5).starts(Interval.empty[Int]) mustBe(false)
+        Interval.degenerate(5).starts(Interval.unbounded[Int]) mustBe(false)
 
         // Proper
         // [1, 2]  [1, 10]
