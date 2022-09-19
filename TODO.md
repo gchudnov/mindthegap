@@ -24,16 +24,6 @@
 
 ===============
 
-[info]   - should one relation only *** FAILED ***
-[info]     TestFailedException was thrown during property evaluation.
-[info]       Message: xx: Proper(LeftBoundary(Some(4),false),RightBoundary(Some(5),false)), yy: Proper(LeftBoundary(Some(4),false),RightBoundary(None,false)): |(4,5), (4,+∞)| satisfies 0 relations: [], expected: 1
-[info]       Location: (RelationSpec.scala:586)
-[info]       Occurred when passed generated values (
-[info]         arg0 = ((Some(4),Some(5)),false,false),
-[info]         arg1 = ((Some(4),None),false,false)
-[info]       )
-[info]     Init Seed: -667928846700663402
-
 
 
 

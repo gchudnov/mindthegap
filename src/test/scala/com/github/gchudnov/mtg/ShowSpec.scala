@@ -16,6 +16,8 @@ final class ShowSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
 
+  given ord: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
+
   "Show" when {
 
     "show" should {
@@ -40,9 +42,9 @@ final class ShowSpec extends TestSpec:
         val t = Table(
           ("x", "expected"),
           (Interval.proper(Some(1), Some(2), true, true), "[1,2]"),
-          (Interval.proper(Some(1), Some(2), true, false), "[1,2)"),
-          (Interval.proper(Some(1), Some(2), false, true), "(1,2]"),
-          (Interval.proper(Some(1), Some(2), false, false), "(1,2)"),
+          (Interval.proper(Some(1), Some(3), true, false), "[1,3)"),
+          (Interval.proper(Some(1), Some(3), false, true), "(1,3]"),
+          (Interval.proper(Some(1), Some(4), false, false), "(1,4)"),
           (Interval.proper(None, Some(2), true, true), "[-∞,2]"),
           (Interval.proper(None, Some(2), true, false), "[-∞,2)"),
           (Interval.proper(None, Some(2), false, true), "(-∞,2]"),
@@ -51,10 +53,10 @@ final class ShowSpec extends TestSpec:
           (Interval.proper(Some(1), None, true, false), "[1,+∞)"),
           (Interval.proper(Some(1), None, false, true), "(1,+∞]"),
           (Interval.proper(Some(1), None, false, false), "(1,+∞)"),
-          (Interval.proper[Nothing](None, None, true, true), "[-∞,+∞]"),
-          (Interval.proper[Nothing](None, None, true, false), "[-∞,+∞)"),
-          (Interval.proper[Nothing](None, None, false, true), "(-∞,+∞]"),
-          (Interval.proper[Nothing](None, None, false, false), "(-∞,+∞)")
+          (Interval.proper[Int](None, None, true, true), "[-∞,+∞]"),
+          (Interval.proper[Int](None, None, true, false), "[-∞,+∞)"),
+          (Interval.proper[Int](None, None, false, true), "(-∞,+∞]"),
+          (Interval.proper[Int](None, None, false, false), "(-∞,+∞)")
         )
 
         forAll(t) { (x, expected) =>

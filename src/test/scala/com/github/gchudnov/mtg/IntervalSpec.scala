@@ -14,6 +14,8 @@ final class IntervalSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
 
+  given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
+
   "Interval" when {
 
     "make" should {
@@ -37,36 +39,21 @@ final class IntervalSpec extends TestSpec:
               actual.isDegenrate mustBe (false)
               actual.isProper mustBe (false)
 
-              (ox, oy) match
-                case (Some(x), Some(y)) =>
-                  val isXgtY = x > y
-                  val isXeqY = x == y
+              bOrd.gt(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe(true)
 
-                  (isXgtY || (isXeqY && ((ix == false && iy == false) || (ix == true && iy == false) || (ix == false && iy == true)))) mustBe (true)
-                case _ =>
-                  fail("Empty Interval boundaries must be defined.")
-            case Degenerate(_) =>
+            case ab @ Degenerate(_) =>
               actual.isEmpty mustBe (false)
               actual.isDegenrate mustBe (true)
               actual.isProper mustBe (false)
 
-              (ox, oy) match
-                case (Some(x), Some(y)) =>
-                  ix mustBe (true)
-                  iy mustBe (true)
-                  x mustEqual (y)
-                case _ =>
-                  fail("Degenerate Interval boundaries must be defined.")
+              bOrd.equiv(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe(true)              
+
             case Proper(_, _) =>
               actual.isEmpty mustBe (false)
               actual.isDegenrate mustBe (false)
               actual.isProper mustBe (true)
 
-              (ox, oy) match
-                case (Some(x), Some(y)) =>
-                  (x < y) mustBe (true)
-                case _ =>
-                  succeed
+              bOrd.lt(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe(true)
         }
       }
 

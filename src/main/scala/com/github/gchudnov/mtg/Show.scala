@@ -20,16 +20,24 @@ object Show:
   private def rightValue(x: Option[?]): String =
     x.fold(s"+${infinite}")(_.toString())
 
-  extension [T: Ordering](a: Interval[T])
+  extension [T](b: Boundary[T])
     def show: String =
-      a match
+      b match
+        case LeftBoundary(value, isInclude) =>
+          val lb = leftBound(isInclude)
+          val lv = leftValue(value)
+          s"${lb}${lv}"
+        case RightBoundary(value, isInclude) =>
+          val rb = rightBound(isInclude)
+          val rv = rightValue(value)
+          s"${rv}${rb}"
+
+  extension [T: Ordering](ab: Interval[T])
+    def show: String =
+      ab match
         case Empty =>
           "∅"
         case Degenerate(a) =>
           s"{${a.toString()}}"
         case Proper(left, right) =>
-          val lb = leftBound(left.isInclude)
-          val rb = rightBound(right.isInclude)
-          val lv = leftValue(left.value)
-          val rv = rightValue(right.value)
-          s"${lb}${lv},${rv}${rb}"
+          s"${left.show},${right.show}"

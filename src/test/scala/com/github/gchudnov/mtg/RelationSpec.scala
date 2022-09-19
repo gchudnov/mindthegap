@@ -42,8 +42,8 @@ final class RelationSpec extends TestSpec:
         // Empty
         Interval.empty[Int].before(Interval.empty[Int]) mustBe (false)
         Interval.empty[Int].before(Interval.degenerate(1)) mustBe (false)
-        Interval.empty[Int].before(Interval.closed(1, 2)) mustBe (false)
-        Interval.empty[Int].before(Interval.open(1, 2)) mustBe (false)
+        Interval.empty[Int].before(Interval.closed(1, 4)) mustBe (false)
+        Interval.empty[Int].before(Interval.open(1, 4)) mustBe (false)
         Interval.empty[Int].before(Interval.unbounded[Int]) mustBe (false)
 
         // Degenerate (Point)
@@ -59,19 +59,19 @@ final class RelationSpec extends TestSpec:
         Interval.degenerate(5).before(Interval.unbounded[Int]) mustBe (false)
 
         // Proper
-        Interval.open(4, 5).before(Interval.open(4, 6)) mustBe (false)
-        Interval.open(1, 3).before(Interval.empty[Int]) mustBe (false)
-        Interval.open(1, 3).preceeds(Interval.open(5, 7)) mustBe (true)
-        Interval.open(5, 7).isPreceededBy(Interval.open(1, 3)) mustBe (true)
-        Interval.open(1, 3).preceeds(Interval.open(2, 4)) mustBe (true)
-        Interval.open(1, 3).preceeds(Interval.closed(5, 6)) mustBe (true)
+        Interval.open(4, 7).before(Interval.open(4, 7)) mustBe (false)
+        Interval.open(1, 4).before(Interval.empty[Int]) mustBe (false)
+        Interval.open(1, 4).preceeds(Interval.open(5, 8)) mustBe (true)
+        Interval.open(5, 8).isPreceededBy(Interval.open(1, 4)) mustBe (true)
+        Interval.open(1, 4).preceeds(Interval.open(3, 6)) mustBe (true)
+        Interval.open(1, 4).preceeds(Interval.closed(5, 6)) mustBe (true)
 
         // Infinity
-        // (1, 3)  (3, +inf)
-        Interval.open(1, 3).before(Interval.leftOpen(3)) mustBe (true)
+        // (1, 4)  (3, +inf)
+        Interval.open(1, 4).before(Interval.leftOpen(3)) mustBe (true)
 
-        // (-inf, 2)  (3, 5)
-        Interval.rightOpen(2).before(Interval.open(3, 5)) mustBe (true)
+        // (-inf, 2)  (3, 6)
+        Interval.rightOpen(2).before(Interval.open(3, 6)) mustBe (true)
 
         // (-inf, 2)  (3, +inf)
         Interval.rightOpen(2).before(Interval.leftOpen(3)) mustBe (true)
@@ -308,7 +308,7 @@ final class RelationSpec extends TestSpec:
 
         // Proper
         Interval.closed(5, 7).during(Interval.closed(2, 10)) mustBe (true)
-        Interval.open(5, 7).during(Interval.closed(5, 7)) mustBe (true)
+        Interval.open(5, 8).during(Interval.closed(5, 8)) mustBe (true)
 
         // Infinity
         // [5, 7]  [3, +inf)
@@ -323,8 +323,8 @@ final class RelationSpec extends TestSpec:
         // [-∞,0]  [-∞,+∞)
         Interval.proper(None, Some(0), true, true).during(Interval.proper[Int](None, None, true, false)) mustBe (false)
 
-        // [0, 1)  [-∞,+∞]
-        Interval.proper(Some(0), Some(1), true, false).during(Interval.proper[Int](None, None, true, true)) mustBe (true)
+        // [0, 2)  [-∞,+∞]
+        Interval.proper(Some(0), Some(2), true, false).during(Interval.proper[Int](None, None, true, true)) mustBe (true)
 
         // [0]  [-∞,+∞)
         Interval.degenerate(0).during(Interval.proper[Int](None, None, true, false)) mustBe (true)
@@ -490,7 +490,7 @@ final class RelationSpec extends TestSpec:
         Interval.degenerate(5).equalsTo(Interval.empty[Int]) mustBe (false)
 
         // Proper
-        Interval.open(4, 5).equalsTo(Interval.open(4, 5)) mustBe (true)
+        Interval.open(4, 7).equalsTo(Interval.open(4, 7)) mustBe (true)
         Interval.open(0, 5).equalsTo(Interval.open(0, 5)) mustBe (true)
         Interval.closed(0, 5).equalsTo(Interval.closed(0, 5)) mustBe (true)
         Interval.leftOpenRightClosed(0, 5).equalsTo(Interval.leftOpenRightClosed(0, 5)) mustBe (true)
