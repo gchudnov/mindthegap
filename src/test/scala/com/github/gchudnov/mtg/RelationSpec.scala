@@ -120,7 +120,7 @@ final class RelationSpec extends TestSpec:
         Interval.empty[Int].meets(Interval.unbounded[Int]) mustBe (false)
 
         // Degenerate
-        // 5  nil
+        // 5  {}
         Interval.degenerate(6).meets(Interval.empty[Int]) mustBe (false)
 
         // 5  5
@@ -157,129 +157,135 @@ final class RelationSpec extends TestSpec:
       }
     }
 
-//     /**
-//      * Overlaps, IsOverlapedBy
-//      *
-//      * {{{
-//      *   AAAA
-//      *     BBBB
-//      * }}}
-//      */
-//     "overlaps & isOverlapedBy" should {
-//       "check" in {
-//         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-//           val xx = Interval.make(ox1, ox2, ix1, ix2)
-//           val yy = Interval.make(oy1, oy2, iy1, iy2)
+    /**
+     * Overlaps, IsOverlapedBy
+     *
+     * {{{
+     *   AAAA
+     *     BBBB
+     * }}}
+     */
+    "overlaps & isOverlapedBy" should {
+      // "check" in {
+      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+      //     val xx = Interval.make(ox1, ox2, ix1, ix2)
+      //     val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-//           whenever(xx.overlaps(yy)) {
-//             // println(s"o: ${(xx, yy)}")
+      //     whenever(xx.overlaps(yy)) {
+      //       // println(s"o: ${(xx, yy)}")
 
-//             assertRelation("o", xx, yy)
-//             assertOneRelation(xx, yy)
+      //       assertRelation("o", xx, yy)
+      //       assertOneRelation(xx, yy)
 
-//             val isX2gtY1 = pOrd.gt(ox2, oy1)
-//             val isX2ltY2 = pOrd.lt(ox2, oy2)
-//             val isX2eqY2 = pOrd.equiv(ox2, oy2)
-//             val isX1ltY1 = pOrd.lt(ox1, oy1)
-//             val isX1eqY1 = pOrd.equiv(ox1, oy1)
+      //       val isX2gtY1 = pOrd.gt(ox2, oy1)
+      //       val isX2ltY2 = pOrd.lt(ox2, oy2)
+      //       val isX2eqY2 = pOrd.equiv(ox2, oy2)
+      //       val isX1ltY1 = pOrd.lt(ox1, oy1)
+      //       val isX1eqY1 = pOrd.equiv(ox1, oy1)
 
-//             (isX2gtY1 && ((ox1.isEmpty && oy2.isEmpty) || (isX1ltY1 && oy2.isEmpty) || (isX1eqY1 && ix1 && !iy1 && oy2.isEmpty) || (ox1.isEmpty && isX2ltY2)
-//               || (ox1.isEmpty && isX2eqY2 && !ix2 && iy2) || ((isX1ltY1 || (isX1eqY1 && ix1 && !iy1)) && (isX2ltY2 || (isX2eqY2 && !ix2 && iy2))))) mustBe (true)
-//           }
-//         }
-//       }
+      //       (isX2gtY1 && ((ox1.isEmpty && oy2.isEmpty) || (isX1ltY1 && oy2.isEmpty) || (isX1eqY1 && ix1 && !iy1 && oy2.isEmpty) || (ox1.isEmpty && isX2ltY2)
+      //         || (ox1.isEmpty && isX2eqY2 && !ix2 && iy2) || ((isX1ltY1 || (isX1eqY1 && ix1 && !iy1)) && (isX2ltY2 || (isX2eqY2 && !ix2 && iy2))))) mustBe (true)
+      //     }
+      //   }
+      // }
 
-//       "check edge cases" in {
-//         // Empty
-//         // TODO: add tests for https://stackoverfloy1.com/questions/325933/determine-whether-two-date-ranges-overlap
+      "check edge cases" in {
 
-//         // {}  (-inf, +inf)
-//         Interval.empty[Int].overlaps(Interval.unbounded[Int]) mustBe (false)
-//         Interval.unbounded[Int].overlaps(Interval.empty[Int]) mustBe (false)
+        // TODO: add tests for https://stackoverfloy1.com/questions/325933/determine-whether-two-date-ranges-overlap
 
-//         // {} [1, 2]
-//         Interval.empty[Int].overlaps(Interval.closed(1, 2)) mustBe (false)
-//         Interval.closed(1, 2).overlaps(Interval.empty[Int]) mustBe (false)
+        // Empty
+        // {}  (-inf, +inf)
+        Interval.empty[Int].overlaps(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].overlaps(Interval.empty[Int]) mustBe (false)
 
-//         // Degenerate (Point)
+        // {} [1, 2]
+        Interval.empty[Int].overlaps(Interval.closed(1, 2)) mustBe (false)
+        Interval.closed(1, 2).overlaps(Interval.empty[Int]) mustBe (false)
 
-//         // Proper
-//         // (1, 10)  (5, 20)
-//         Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
+        // Degenerate (Point)
+        Interval.degenerate(5).overlaps(Interval.closed(1, 10)) mustBe (false)
+        Interval.degenerate(5).overlaps(Interval.closed(1, 3)) mustBe (false)
+        Interval.degenerate(5).overlaps(Interval.closed(7, 10)) mustBe (false)
+        Interval.degenerate(5).overlaps(Interval.empty[Int]) mustBe (false)
+        Interval.degenerate(5).overlaps(Interval.unbounded[Int]) mustBe (false)
 
-//         // (1, 10)  (2, 11)
-//         Interval.open(1, 10).overlaps(Interval.open(2, 11)) mustBe (true)
+        // Proper
+        // (1, 10)  (5, 20)
+        Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
 
-//         // (1, 10)  (11, 20)
-//         Interval.open(1, 10).overlaps(Interval.open(11, 20)) mustBe (false)
+        // (1, 10)  (2, 11)
+        Interval.open(1, 10).overlaps(Interval.open(2, 11)) mustBe (true)
 
-//         // (1, 10)  (1, 11)
-//         Interval.open(1, 10).overlaps(Interval.open(1, 11)) mustBe (false)
+        // (1, 10)  (11, 20)
+        Interval.open(1, 10).overlaps(Interval.open(11, 20)) mustBe (false)
 
-//         // (1, 10)  (20, 30)
-//         Interval.open(1, 10).overlaps(Interval.open(20, 30)) mustBe (false)
+        // (1, 10)  (1, 11)
+        Interval.open(1, 10).overlaps(Interval.open(1, 11)) mustBe (false)
 
-//         // (1, 10)  {10}
-//         Interval.open(1, 10).overlaps(Interval.degenerate(10)) mustBe (false)
+        // (1, 10)  (20, 30)
+        Interval.open(1, 10).overlaps(Interval.open(20, 30)) mustBe (false)
 
-//         // [1, 10], {10}
-//         Interval.closed(1, 10).overlaps(Interval.degenerate(10)) mustBe (false)
+        // (1, 10)  {10}
+        Interval.open(1, 10).overlaps(Interval.degenerate(10)) mustBe (false)
 
-//         // (1, 10)  (-10, 20)
-//         Interval.open(1, 10).overlaps(Interval.open(-10, 20)) mustBe (false)
+        // [1, 10], {10}
+        Interval.closed(1, 10).overlaps(Interval.degenerate(10)) mustBe (false)
 
-//         // (1, 10)  (2, 11)
-//         Interval.open(1, 10).isOverlapedBy(Interval.open(2, 11)) mustBe (false)
+        // (1, 10)  (-10, 20)
+        Interval.open(1, 10).overlaps(Interval.open(-10, 20)) mustBe (false)
 
-//         // (1, 10)  (2, 10)
-//         Interval.open(1, 10).isOverlapedBy(Interval.open(2, 10)) mustBe (false)
+        // (1, 10)  (2, 11)
+        Interval.open(1, 10).isOverlapedBy(Interval.open(2, 11)) mustBe (false)
 
-//         // (2, 12)  (1, 10)
-//         Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
+        // (1, 10)  (2, 10)
+        Interval.open(1, 10).isOverlapedBy(Interval.open(2, 10)) mustBe (false)
 
-//         // (1, 12)  (1, 10)
-//         Interval.open(1, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (false)
+        // (2, 12)  (1, 10)
+        Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
 
-//         // (2, 12)  (1, 10)
-//         Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
+        // (1, 12)  (1, 10)
+        Interval.open(1, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (false)
 
-//         // (1, 10)  (5, 20)
-//         Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
+        // (2, 12)  (1, 10)
+        Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
 
-//         // Infinity
-//         // [1, 5]  [3, +inf)
-//         Interval.closed(1, 5).overlaps(Interval.leftClosed(3)) mustBe (true)
+        // (1, 10)  (5, 20)
+        Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
 
-//         // (-inf, 5]  [3, 10]
-//         Interval.rightClosed(5).overlaps(Interval.closed(3, 10)) mustBe (true)
+        // Infinity
+        // [1, 5]  [3, +inf)
+        Interval.closed(1, 5).overlaps(Interval.leftClosed(3)) mustBe (true)
 
-//         // (-inf, 5]  [3, +inf)
-//         Interval.rightClosed(5).overlaps(Interval.leftClosed(3)) mustBe (true)
+        // (-inf, 5]  [3, 10]
+        Interval.rightClosed(5).overlaps(Interval.closed(3, 10)) mustBe (true)
 
-//         // [-inf, 1)  (-inf, +inf)
-//         Interval.proper(None, Some(1), true, false).overlaps(Interval.unbounded[Int]) mustBe (true)
+        // (-inf, 5]  [3, +inf)
+        Interval.rightClosed(5).overlaps(Interval.leftClosed(3)) mustBe (true)
 
-//         // (-inf, +inf)  (0, +inf]
-//         Interval.unbounded[Int].overlaps(Interval.proper(Some(0), None, false, true)) mustBe (true)
+        // [-inf, 1)  (-inf, +inf)
+        Interval.proper(None, Some(1), true, false).overlaps(Interval.unbounded[Int]) mustBe (true)
 
-//         // (-inf, +inf)  [0, +inf]
-//         Interval.unbounded[Int].overlaps(Interval.proper(Some(0), None, true, true)) mustBe (true)
+        // (-inf, +inf)  (0, +inf]
+        Interval.unbounded[Int].overlaps(Interval.proper(Some(0), None, false, true)) mustBe (true)
 
-//         // (-inf, +inf) (1, 10)
-//         Interval.unbounded[Int].overlaps(Interval.open(1, 10)) mustBe (false)
-//         Interval.open(1, 10).overlaps(Interval.unbounded[Int]) mustBe (false)
-//         Interval.unbounded[Int].isOverlapedBy(Interval.open(1, 10)) mustBe (false)
-//         Interval.open(1, 10).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
+        // (-inf, +inf)  [0, +inf]
+        Interval.unbounded[Int].overlaps(Interval.proper(Some(0), None, true, true)) mustBe (true)
 
-//         // (-inf, +inf) {2}
-//         Interval.unbounded[Int].isOverlapedBy(Interval.degenerate(2)) mustBe (false)
-//         Interval.degenerate(2).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
+        // (-inf, +inf) (1, 10)
+        Interval.unbounded[Int].overlaps(Interval.open(1, 10)) mustBe (false)
+        Interval.open(1, 10).overlaps(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].isOverlapedBy(Interval.open(1, 10)) mustBe (false)
+        Interval.open(1, 10).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
 
-//         // (-inf, 2)  (-2, +inf)
-//         Interval.rightOpen(2).overlaps(Interval.leftOpen(-2)) mustBe (true)
-//         Interval.leftOpen(-2).isOverlapedBy(Interval.rightOpen(2)) mustBe (true)
-//       }
-//     }
+        // (-inf, +inf) {2}
+        Interval.unbounded[Int].isOverlapedBy(Interval.degenerate(2)) mustBe (false)
+        Interval.degenerate(2).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
+
+        // (-inf, 2)  (-2, +inf)
+        Interval.rightOpen(2).overlaps(Interval.leftOpen(-2)) mustBe (true)
+        Interval.leftOpen(-2).isOverlapedBy(Interval.rightOpen(2)) mustBe (true)
+      }
+    }
 
 //     /**
 //      * During, Contains
