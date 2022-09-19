@@ -228,28 +228,7 @@ object Relation:
      * }}}
      */
     def starts(b: Interval[T]): Boolean =
-      ???
-      // (a, b) match
-      //   case (Degenerate(x), Proper(Some(y1), _, includeY1, _)) =>
-      //     val ordT = summon[Ordering[T]]
-      //     ordT.equiv(x, y1) && includeY1
-      //   case (Proper(None, Some(_), includeX1, _), Proper(None, None, includeY1, _)) =>
-      //     val ordT = summon[Ordering[T]]
-      //     (includeX1 == includeY1)
-      //   case (Proper(None, Some(x2), includeX1, includeX2), Proper(None, Some(y2), includeY1, includeY2)) =>
-      //     val ordT = summon[Ordering[T]]
-      //     (includeX1 == includeY1) && (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
-      //   case (Proper(None, None, includeX1, includeX2), Proper(None, None, includeY1, includeY2)) =>
-      //     val ordT = summon[Ordering[T]]
-      //     (includeX1 && includeY1 && !includeX2 && includeY2)
-      //   case (Proper(Some(x1), Some(_), includeX1, _), Proper(Some(y1), None, includeY1, _)) =>
-      //     val ordT = summon[Ordering[T]]
-      //     (ordT.equiv(x1, y1) && (includeX1 == includeY1))
-      //   case (Proper(Some(x1), Some(x2), includeX1, includeX2), Proper(Some(y1), Some(y2), includeY1, includeY2)) =>
-      //     val ordT = summon[Ordering[T]]
-      //     (ordT.equiv(x1, y1) && (includeX1 == includeY1)) && (ordT.lt(x2, y2) || (ordT.equiv(x2, y2) && !includeX2 && includeY2))
-      //   case _ =>
-      //     false
+      a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.lt(b.left, a.right) && bOrd.lt(a.right, b.right)
 
     def isStartedBy(b: Interval[T]): Boolean =
       b.starts(a)

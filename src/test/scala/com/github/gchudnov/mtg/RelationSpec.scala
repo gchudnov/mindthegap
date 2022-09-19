@@ -368,67 +368,74 @@ final class RelationSpec extends TestSpec:
       }
     }
 
-//     /**
-//      * Starts, IsStartedBy
-//      *
-//      * {{{
-//      *   AAA
-//      *   BBBBBB
-//      * }}}
-//      */
-//     "starts & isStartedBy" should {
-//       "check" in {
-//         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-//           val xx = Interval.make(ox1, ox2, ix1, ix2)
-//           val yy = Interval.make(oy1, oy2, iy1, iy2)
+    /**
+     * Starts, IsStartedBy
+     *
+     * {{{
+     *   AAA
+     *   BBBBBB
+     * }}}
+     */
+    "starts & isStartedBy" should {
+      // "check" in {
+      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+      //     val xx = Interval.make(ox1, ox2, ix1, ix2)
+      //     val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-//           whenever(xx.starts(yy)) {
-//             // println(s"s: ${(xx, yy)}")
+      //     whenever(xx.starts(yy)) {
+      //       // println(s"s: ${(xx, yy)}")
 
-//             assertRelation("s", xx, yy)
-//             assertOneRelation(xx, yy)
+      //       assertRelation("s", xx, yy)
+      //       assertOneRelation(xx, yy)
 
-//             val isX1eqY1 = pOrd.equiv(ox1, oy1)
+      //       val isX1eqY1 = pOrd.equiv(ox1, oy1)
 
-//             val isX2ltY2 = pOrd.lt(ox2, oy2)
-//             val isX2eqY2 = pOrd.equiv(ox2, oy2)
+      //       val isX2ltY2 = pOrd.lt(ox2, oy2)
+      //       val isX2eqY2 = pOrd.equiv(ox2, oy2)
 
-//             (isX1eqY1 && ((ox2.isDefined && oy2.isEmpty) || (isX2ltY2 || (isX2eqY2 && (!ix2 && iy2))))) mustBe (true)
-//           }
-//         }
-//       }
+      //       (isX1eqY1 && ((ox2.isDefined && oy2.isEmpty) || (isX2ltY2 || (isX2eqY2 && (!ix2 && iy2))))) mustBe (true)
+      //     }
+      //   }
+      // }
 
-//       "check edge cases" in {
-//         // Proper
-//         // [1, 2]  [1, 10]
-//         Interval.closed(1, 2).starts(Interval.closed(1, 10)) mustBe (true)
-//         Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) mustBe (true)
+      "check edge cases" in {
+        // Empty
+        Interval.empty[Int].starts(Interval.degenerate(0)) mustBe (false)        
+        Interval.empty[Int].starts(Interval.closed(0, 1)) mustBe (false)
+        Interval.empty[Int].starts(Interval.unbounded[Int]) mustBe (false)        
 
-//         // (1, 2)  (1, 10)
-//         Interval.open(1, 2).starts(Interval.open(1, 10)) mustBe (true)
+        // Degenerate
 
-//         // Infinity
-//         // [1, 5] [1, +inf)
-//         Interval.closed(1, 5).starts(Interval.leftClosed(1)) mustBe (true)
+        // Proper
+        // [1, 2]  [1, 10]
+        Interval.closed(1, 2).starts(Interval.closed(1, 10)) mustBe (true)
+        Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) mustBe (true)
 
-//         // (-inf, 5]  (-inf, 10]
-//         Interval.rightClosed(5).starts(Interval.rightClosed(10)) mustBe (true)
+        // (1, 2)  (1, 10)
+        Interval.open(1, 2).starts(Interval.open(1, 10)) mustBe (true)
 
-//         // (-inf, 5)  (-inf, +inf)
-//         Interval.rightClosed(5).starts(Interval.unbounded[Int]) mustBe (true)
+        // Infinity
+        // [1, 5] [1, +inf)
+        Interval.closed(1, 5).starts(Interval.leftClosed(1)) mustBe (true)
 
-//         //  [5, 10)  [5, +inf)
-//         Interval.leftClosedRightOpen(5, 10).starts(Interval.leftClosed(5)) mustBe (true)
-//         Interval.leftClosedRightOpen(5, 10).isStartedBy(Interval.leftClosed(5)) mustBe (false)
+        // (-inf, 5]  (-inf, 10]
+        Interval.rightClosed(5).starts(Interval.rightClosed(10)) mustBe (true)
 
-//         // (-inf, +inf)  (-inf, +inf)
-//         Interval.unbounded[Int].starts(Interval.unbounded[Int]) mustBe (false)
-//         Interval.unbounded[Int].isStartedBy(Interval.unbounded[Int]) mustBe (false)
+        // (-inf, 5)  (-inf, +inf)
+        Interval.rightClosed(5).starts(Interval.unbounded[Int]) mustBe (true)
 
-//         // (0,1]  (0,+∞]
-//         Interval.leftOpenRightClosed(0, 1).starts(Interval.leftOpen(0)) mustBe (true)
-//       }
-//     }
+        //  [5, 10)  [5, +inf)
+        Interval.leftClosedRightOpen(5, 10).starts(Interval.leftClosed(5)) mustBe (true)
+        Interval.leftClosedRightOpen(5, 10).isStartedBy(Interval.leftClosed(5)) mustBe (false)
+
+        // (-inf, +inf)  (-inf, +inf)
+        Interval.unbounded[Int].starts(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].isStartedBy(Interval.unbounded[Int]) mustBe (false)
+
+        // (0,1]  (0,+∞]
+        Interval.leftOpenRightClosed(0, 1).starts(Interval.leftOpen(0)) mustBe (true)
+      }
+    }
 
 //     /**
 //      * Finishes, IsFinishedBy
