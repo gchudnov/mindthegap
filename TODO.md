@@ -1,32 +1,5 @@
 # TODO
 
-[info]   - should one relation only *** FAILED ***
-[info]     TestFailedException was thrown during property evaluation.
-[info]       Message: xx: Proper(LeftBoundary(Some(0),false),RightBoundary(None,false)), yy: Proper(LeftBoundary(Some(-5),false),RightBoundary(Some(-4),false)): |(0,+∞), (-5,-4)| satisfies 0 relations: [], expected: 1
-[info]       Location: (RelationSpec.scala:586)
-[info]       Occurred when passed generated values (
-[info]         arg0 = ((Some(0),None),false,false), // 2 shrinks
-[info]         arg1 = ((Some(-5),Some(-4)),false,false)
-[info]       )
-[info]     Init Seed: -519403066643188367
-
-=================
-
-[info]   - should one relation only *** FAILED ***
-[info]     TestFailedException was thrown during property evaluation.
-[info]       Message: xx: Proper(LeftBoundary(None,true),RightBoundary(Some(0),true)), yy: Proper(LeftBoundary(Some(1),false),RightBoundary(Some(2),false)): |[-∞,0], (1,2)| satisfies 0 relations: [], expected: 1
-[info]       Location: (RelationSpec.scala:586)
-[info]       Occurred when passed generated values (
-[info]         arg0 = ((None,Some(0)),true,true), // 2 shrinks
-[info]         arg1 = ((Some(1),Some(2)),false,false)
-[info]       )
-[info]     Init Seed: -7149883842408116523
-
-===============
-
-
-
-
 TODO: finish boundary implementation
 TODO: replace ordering with boundary in tests
 TODO: ordering -- do we want to remove our implenetation???
