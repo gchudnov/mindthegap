@@ -113,12 +113,31 @@ final class RelationSpec extends TestSpec:
       // }
 
       "check edge cases" in {
+        // Empty
+        Interval.empty[Int].meets(Interval.empty[Int]) mustBe (false)
+        Interval.empty[Int].meets(Interval.degenerate(0)) mustBe (false)
+        Interval.empty[Int].meets(Interval.closed(5, 10)) mustBe (false)
+        Interval.empty[Int].meets(Interval.unbounded[Int]) mustBe (false)
 
-        // TODO: add more tests
+        // Degenerate
+        // 5  nil
+        Interval.degenerate(6).meets(Interval.empty[Int]) mustBe (false)
+
+        // 5  5
+        Interval.degenerate(5).meets(Interval.degenerate(5)) mustBe (false)
+
+        // 5  6
+        Interval.degenerate(5).meets(Interval.degenerate(6)) mustBe (false)
+
+        // 6  5
+        Interval.degenerate(6).meets(Interval.degenerate(5)) mustBe (false)
 
         // Proper
         // [1, 5]  [5, 10]
         Interval.closed(1, 5).meets(Interval.closed(5, 10)) mustBe (true)
+
+        // [1, 5)  (3, 10]
+        Interval.leftClosedRightOpen(1, 5).meets(Interval.leftOpenRightClosed(3, 10)) mustBe (true)
 
         // Infinity
         // [1, 5]  [5, +inf)
@@ -129,6 +148,12 @@ final class RelationSpec extends TestSpec:
 
         // (-inf, 5]  [5, +inf)
         Interval.rightClosed(5).meets(Interval.leftClosed(5)) mustBe (true)
+
+        // (-inf, 5)  (5, +inf)
+        Interval.rightOpen(5).meets(Interval.leftOpen(5)) mustBe (false)
+
+        // (-inf, 6)  [5, +inf)
+        Interval.rightOpen(6).meets(Interval.leftClosed(5)) mustBe (true)
       }
     }
 
