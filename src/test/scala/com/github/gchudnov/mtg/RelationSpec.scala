@@ -32,8 +32,6 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.preceeds(yy)) {
-            // println(s"p: ${(xx, yy)}")
-
             assertRelation("b", xx, yy)
             assertOneRelation(xx, yy)
           }
@@ -100,8 +98,6 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.meets(yy)) {
-            // println(s"m: ${(xx, yy)}")
-
             assertRelation("m", xx, yy)
             assertOneRelation(xx, yy)
           }
@@ -162,28 +158,17 @@ final class RelationSpec extends TestSpec:
      * }}}
      */
     "overlaps & isOverlapedBy" should {
-      // "check" in {
-      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-      //     val xx = Interval.make(ox1, ox2, ix1, ix2)
-      //     val yy = Interval.make(oy1, oy2, iy1, iy2)
+      "check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-      //     whenever(xx.overlaps(yy)) {
-      //       // println(s"o: ${(xx, yy)}")
-
-      //       assertRelation("o", xx, yy)
-      //       assertOneRelation(xx, yy)
-
-      //       val isX2gtY1 = pOrd.gt(ox2, oy1)
-      //       val isX2ltY2 = pOrd.lt(ox2, oy2)
-      //       val isX2eqY2 = pOrd.equiv(ox2, oy2)
-      //       val isX1ltY1 = pOrd.lt(ox1, oy1)
-      //       val isX1eqY1 = pOrd.equiv(ox1, oy1)
-
-      //       (isX2gtY1 && ((ox1.isEmpty && oy2.isEmpty) || (isX1ltY1 && oy2.isEmpty) || (isX1eqY1 && ix1 && !iy1 && oy2.isEmpty) || (ox1.isEmpty && isX2ltY2)
-      //         || (ox1.isEmpty && isX2eqY2 && !ix2 && iy2) || ((isX1ltY1 || (isX1eqY1 && ix1 && !iy1)) && (isX2ltY2 || (isX2eqY2 && !ix2 && iy2))))) mustBe (true)
-      //     }
-      //   }
-      // }
+          whenever(xx.overlaps(yy)) {
+            assertRelation("o", xx, yy)
+            assertOneRelation(xx, yy)
+          }
+        }
+      }
 
       "check edge cases" in {
 
@@ -290,30 +275,17 @@ final class RelationSpec extends TestSpec:
      * }}}
      */
     "during & contains (includes)" should {
-      // "check" in {
-      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-      //     val xx = Interval.make(ox1, ox2, ix1, ix2)
-      //     val yy = Interval.make(oy1, oy2, iy1, iy2)
+      "check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-      //     whenever(xx.during(yy)) {
-      //       // println(s"d: ${(xx, yy)}")
-
-      //       assertRelation("d", xx, yy)
-      //       assertOneRelation(xx, yy)
-
-      //       val isX1gtY1 = pOrd.gt(ox1, oy1)
-      //       val isX1eqY1 = pOrd.equiv(ox1, oy1)
-
-      //       val isX2ltY2 = pOrd.lt(ox2, oy2)
-      //       val isX2eqY2 = pOrd.equiv(ox2, oy2)
-
-      //       (((isX1gtY1 || (isX1eqY1 && iy1 && !ix1)) && (isX2ltY2 || (isX2eqY2 && iy2 && !ix2))) ||
-      //         ((isX1gtY1 || (isX1eqY1 && iy1 && !ix1)) && oy2.isEmpty) ||
-      //         ((isX2ltY2 || (isX2eqY2 && iy2 && !ix2)) && oy1.isEmpty) ||
-      //         (ox1.isDefined && ox2.isDefined && oy1.isEmpty && oy2.isEmpty)) mustBe (true)
-      //     }
-      //   }
-      // }
+          whenever(xx.during(yy)) {
+            assertRelation("d", xx, yy)
+            assertOneRelation(xx, yy)
+          }
+        }
+      }
 
       "check edge cases" in {
         // Empty
@@ -371,26 +343,17 @@ final class RelationSpec extends TestSpec:
      * }}}
      */
     "starts & isStartedBy" should {
-      // "check" in {
-      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-      //     val xx = Interval.make(ox1, ox2, ix1, ix2)
-      //     val yy = Interval.make(oy1, oy2, iy1, iy2)
+      "check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-      //     whenever(xx.starts(yy)) {
-      //       // println(s"s: ${(xx, yy)}")
-
-      //       assertRelation("s", xx, yy)
-      //       assertOneRelation(xx, yy)
-
-      //       val isX1eqY1 = pOrd.equiv(ox1, oy1)
-
-      //       val isX2ltY2 = pOrd.lt(ox2, oy2)
-      //       val isX2eqY2 = pOrd.equiv(ox2, oy2)
-
-      //       (isX1eqY1 && ((ox2.isDefined && oy2.isEmpty) || (isX2ltY2 || (isX2eqY2 && (!ix2 && iy2))))) mustBe (true)
-      //     }
-      //   }
-      // }
+          whenever(xx.starts(yy)) {
+            assertRelation("s", xx, yy)
+            assertOneRelation(xx, yy)
+          }
+        }
+      }
 
       "check edge cases" in {
         // Empty
@@ -445,26 +408,17 @@ final class RelationSpec extends TestSpec:
      * }}}
      */
     "finishes & isFinishedBy" should {
-      // "check" in {
-      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-      //     val xx = Interval.make(ox1, ox2, ix1, ix2)
-      //     val yy = Interval.make(oy1, oy2, iy1, iy2)
+      "check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-      //     whenever(xx.finishes(yy)) {
-      //       // println(s"f: ${(xx, yy)}")
-
-      //       assertRelation("f", xx, yy)
-      //       assertOneRelation(xx, yy)
-
-      //       val isX2eqY2 = pOrd.equiv(ox2, oy2)
-
-      //       val isX1gtY1 = pOrd.gt(ox1, oy1)
-      //       val isX1eqY1 = pOrd.equiv(ox1, oy1)
-
-      //       (isX2eqY2 && ((ox1.isDefined && oy1.isEmpty) || (isX1gtY1 || (isX1eqY1 && (iy1 && !ix1))))) mustBe (true)
-      //     }
-      //   }
-      // }
+          whenever(xx.finishes(yy)) {
+            assertRelation("f", xx, yy)
+            assertOneRelation(xx, yy)
+          }
+        }
+      }
 
       "check edge cases" in {
         // Empty
@@ -512,25 +466,17 @@ final class RelationSpec extends TestSpec:
      * }}}
      */
     "equals" should {
-      // "check" in {
-      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-      //     val xx = Interval.make(ox1, ox2, ix1, ix2)
-      //     val yy = Interval.make(oy1, oy2, iy1, iy2)
+      "check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-      //     whenever(xx.equalsTo(yy)) {
-      //       // println(s"e: ${(xx, yy)}")
-
-      //       assertRelation("e", xx, yy)
-      //       assertOneRelation(xx, yy)
-
-      //       val isX1eqY1 = pOrd.equiv(ox1, oy1)
-      //       val isX2eqY2 = pOrd.equiv(ox2, oy2)
-
-      //       ((isX1eqY1 && isX2eqY2 && (ix1 == iy1) && (ix2 == iy2)) ||
-      //         (xx.isEmpty && yy.isEmpty)) mustBe (true)
-      //     }
-      //   }
-      // }
+          whenever(xx.equalsTo(yy)) {
+            assertRelation("e", xx, yy)
+            assertOneRelation(xx, yy)
+          }
+        }
+      }
 
       "check edge cases" in {
         // Empty
@@ -563,24 +509,24 @@ final class RelationSpec extends TestSpec:
       }
     }
 
-    // "satisfy" should {
-    //   "one relation only" in {
-    //     forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-    //       val xx = Interval.make(ox1, ox2, ix1, ix2)
-    //       val yy = Interval.make(oy1, oy2, iy1, iy2)
+    "satisfy" should {
+      "one relation only" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-    //       assertOneRelation(xx, yy)
-    //     }
-    //   }
+          assertOneRelation(xx, yy)
+        }
+      }
 
-    //   "one relation only for edge cases" in {
-    //     val intervals = List(
-    //       (Interval.rightOpen(5), Interval.rightOpen(5))
-    //     )
+      "one relation only for edge cases" in {
+        val intervals = List(
+          (Interval.rightOpen(5), Interval.rightOpen(5))
+        )
 
-    //     intervals.foreach { case (xx, yy) => assertOneRelation(xx, yy) }
-    //   }
-    // }
+        intervals.foreach { case (xx, yy) => assertOneRelation(xx, yy) }
+      }
+    }
   }
 
   private def makeRelations[T: Ordering: Domain](using bOrd: Ordering[Boundary[T]]) =

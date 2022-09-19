@@ -114,7 +114,7 @@ object Relation:
      * }}}
      */
     def meets(b: Interval[T]): Boolean =
-      a.isProper && b.isProper && bOrd.equiv(a.right, b.left)
+      a.nonEmpty && b.nonEmpty && bOrd.lt(a.left, a.right) && bOrd.equiv(a.right, b.left) && bOrd.lt(b.left, b.right)
 
     def isMetBy(b: Interval[T]): Boolean =
       b.meets(a)
