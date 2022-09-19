@@ -411,8 +411,8 @@ final class RelationSpec extends TestSpec:
         Interval.closed(1, 2).starts(Interval.closed(1, 10)) mustBe (true)
         Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) mustBe (true)
 
-        // (1, 2)  (1, 10)
-        Interval.open(1, 2).starts(Interval.open(1, 10)) mustBe (true)
+        // (1, 3)  (1, 10)
+        Interval.open(1, 4).starts(Interval.open(1, 10)) mustBe (true)
 
         // Infinity
         // [1, 5] [1, +inf)
@@ -432,8 +432,8 @@ final class RelationSpec extends TestSpec:
         Interval.unbounded[Int].starts(Interval.unbounded[Int]) mustBe (false)
         Interval.unbounded[Int].isStartedBy(Interval.unbounded[Int]) mustBe (false)
 
-        // (0,1]  (0,+∞]
-        Interval.leftOpenRightClosed(0, 1).starts(Interval.leftOpen(0)) mustBe (true)
+        // (0,2]  (0,+∞]
+        Interval.leftOpenRightClosed(0, 2).starts(Interval.leftOpen(0)) mustBe (true)
       }
     }
 
