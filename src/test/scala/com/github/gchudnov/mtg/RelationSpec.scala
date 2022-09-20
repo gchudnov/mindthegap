@@ -302,6 +302,7 @@ final class RelationSpec extends TestSpec:
         // Degenerate
         // {5}  (2, 9)
         Interval.degenerate(5).during(Interval.open(2, 9)) mustBe (true)
+        Interval.degenerate(5).during(Interval.closed(2, 9)) mustBe (true)
 
         // (2, 9)  {5}
         Interval.open(2, 9).contains(Interval.degenerate(5)) mustBe (true)
