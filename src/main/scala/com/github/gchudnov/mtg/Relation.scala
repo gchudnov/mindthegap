@@ -52,7 +52,7 @@ object Relation:
      *   PI (Point-Interval relations):
      *   {p}; {i-, i+}
      *   p < i-
-     * 
+     *
      *   II (Interval-Interval relations):
      *   {a-, a+}; {b-, b+}
      *   a- < b-
@@ -86,18 +86,17 @@ object Relation:
      * }}}
      */
     def before(b: Interval[T]): Boolean =
-      (a, b) match {
+      (a, b) match
         case (Degenerate(_), Degenerate(_)) =>
           bOrd.lt(a.left, b.left)
         case (Degenerate(_), Proper(_, _)) =>
           bOrd.lt(a.left, b.left)
         case (Proper(_, _), Degenerate(_)) =>
-          bOrd.lt(a.right, b.left)          
+          bOrd.lt(a.right, b.left)
         case (Proper(_, _), Proper(_, _)) =>
           bOrd.lt(a.right, b.left)
         case (_, _) =>
           false
-      }
 
     def after(b: Interval[T]): Boolean =
       b.before(a)
@@ -114,6 +113,7 @@ object Relation:
      * IsMetBy (M)
      *
      * {{{
+     *   II (Interval-Interval relations):
      *   {a-, a+}; {b-; b+}
      *   a- < b-
      *   a- < b+
@@ -139,7 +139,11 @@ object Relation:
      * }}}
      */
     def meets(b: Interval[T]): Boolean =
-      a.nonEmpty && b.nonEmpty && bOrd.lt(a.left, a.right) && bOrd.equiv(a.right, b.left) && bOrd.lt(b.left, b.right)
+      (a, b) match
+        case (Proper(_, _), Proper(_, _)) =>
+          bOrd.equiv(a.right, b.left)
+        case (_, _) =>
+          false
 
     def isMetBy(b: Interval[T]): Boolean =
       b.meets(a)
@@ -152,6 +156,7 @@ object Relation:
      *   - If any of the intervals is Empty, there is no overlapping.
      *
      * {{{
+     *   II (Interval-Interval relations):
      *   {a-, a+}; {b-; b+}
      *   a- < b-
      *   a- < b+
@@ -188,6 +193,7 @@ object Relation:
      * Contains (D), Includes (I)
      *
      * {{{
+     *   II (Interval-Interval relations):
      *   {a-, a+}; {b-; b+}
      *   a- > b-
      *   a- < b+
@@ -228,6 +234,7 @@ object Relation:
      * IsStartedBy (S)
      *
      * {{{
+     *   II (Interval-Interval relations):
      *   {a-, a+}; {b-; b+}
      *   a- = b-
      *   a- < b+
@@ -264,6 +271,7 @@ object Relation:
      * IsFinishedBy (F)
      *
      * {{{
+     *   II (Interval-Interval relations):
      *   {a-, a+}; {b-; b+}
      *   a- > b-
      *   a- < b+
@@ -298,6 +306,7 @@ object Relation:
      * Equals (e)
      *
      * {{{
+     *   II (Interval-Interval relations):
      *   {a-, a+}; {b-; b+}
      *   a- = b-
      *   a- < b+
