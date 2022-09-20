@@ -17,6 +17,14 @@ final class RelationSpec extends TestSpec:
 
   "Relation" when {
 
+    "make" should {
+      
+      "set bits for 'before' relation" in {
+        // TODO: impl it
+      }
+
+    }
+
     /**
      * Before, After (Preceeds, IsPreceededBy)
      *

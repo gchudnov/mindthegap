@@ -54,6 +54,7 @@ sealed trait Interval[+T: Ordering: Domain]:
   def isEmpty: Boolean
   def isDegenrate: Boolean
   def isProper: Boolean
+  
   def isUnbounded: Boolean
 
   def nonEmpty: Boolean =

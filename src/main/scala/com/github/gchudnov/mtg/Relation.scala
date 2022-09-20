@@ -52,11 +52,20 @@ object Relation:
     if a.isEmpty || b.isEmpty then Relation(0)
     else
       // TODO: IMPL IT
-      // r1 = ...
-      // r2 = ...
-      // r3 = ...
-      // r4 = ...
-      ???
+
+      val r1: Byte = 0 // TODO: impl it
+
+      val r2: Byte = 0  // TODO: impl it
+
+      // (a- >= b-)
+      val r3: Byte = if bOrd.gteq(a.left, b.left) then 1 else 0
+
+      // (a+ <= b+)
+      val r4: Byte = if bOrd.lteq(a.right, b.right) then 1 else 0 
+
+      val r = (r1 << 3 | r2 << 2 | r3 << 1 | r4)
+
+      Relation(r.toByte)
 
   extension [T: Ordering: Domain](a: Interval[T])(using bOrd: Ordering[Boundary[T]])
 
