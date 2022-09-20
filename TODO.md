@@ -8,32 +8,7 @@ TODO: try to simplify ALL impl with boundaries and comparison of them
 
 
 
-[info]   - should one relation only *** FAILED ***
-[info]     TestFailedException was thrown during property evaluation.
-[info]       Message: xx: Proper(LeftBoundary(None,true),RightBoundary(Some(0),true)), yy: Degenerate(4): |[-∞,0], {4}| satisfies 0 relations: [], expected: 1
-[info]       Location: (RelationSpec.scala:587)
-[info]       Occurred when passed generated values (
-[info]         arg0 = ((None,Some(0)),true,true), // 3 shrinks
-[info]         arg1 = ((Some(4),Some(5)),true,false)
-[info]       )
-[info]     Init Seed: 9080558256694513057
-
-
-
 https://leetcode.com/problems/interval-list-intersections/
-
-TODO: FIX TESTS
-
-[info]   when overlaps & isOverlapedBy
-[info]   - should check *** FAILED ***
-[info]     TestFailedException was thrown during property evaluation.
-[info]       Message: false was not equal to true
-[info]       Location: (RelationSpec.scala:159)
-[info]       Occurred when passed generated values (
-[info]         arg0 = ((None,Some(0)),true,false), // 3 shrinks
-[info]         arg1 = ((None,None),false,false)
-[info]       )
-[info]     Init Seed: -3107187084486373336
 
 TODO: find relation between two intervals
 
