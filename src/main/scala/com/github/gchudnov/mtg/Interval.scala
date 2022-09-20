@@ -22,6 +22,8 @@ import com.github.gchudnov.mtg.Domains.nothingDomain
  *     - RightClosed                    | (-∞, b] = {x | x < b}
  *   - Unbounded                        | (-∞, +∞) = R
  * }}}
+ * 
+ * NOTE: Degenerate -- other names are Point, Singleton.
  *
  * {{{
  *   Proper               - An interval that is neither Empty nor Degenerate is said to be Proper.

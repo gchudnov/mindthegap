@@ -1,10 +1,10 @@
 # TODO
 
-TODO: finish boundary implementation
-TODO: replace ordering with boundary in tests
-TODO: ordering -- do we want to remove our implenetation???
-TODO: try to remove partial ordering, it is confusing
-TODO: try to simplify ALL impl with boundaries and comparison of them
+TODO: impl bits from this paper:
+
+- [The Interval Overlapping Relation as Basic Tool for Defining Interval Comparisons](10.1.1.184.440.pdf) - encode interval overlappings
+- [Parallel Detection of Interval Overlapping](10.1.1.1004.9901.pdf) - encode interval overlappings
+
 
 
 
@@ -25,9 +25,6 @@ d|[-∞,0], [-∞,+∞)| == true; s|[-∞,0], [-∞,+∞)| mustBe false, got tru
 https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
 
 https://github.com/MenoData/Time4J
-
-- starts, finishes and infinity, add tests
-- add missing cases
 
 - start arithmetic impl
 - add tests for extended infinity

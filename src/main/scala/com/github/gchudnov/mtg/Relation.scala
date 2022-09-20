@@ -35,7 +35,28 @@ package com.github.gchudnov.mtg
  *  finishes(a,b)    f|F  BBBBBBBBB
  * }}}
  */
+
+/**
+ * Relation
+ * 
+ * An encoded overlapping relation between two intervals
+ */
+final case class Relation(repr: Byte)
+
 object Relation:
+
+  /**
+   * Calculate the overlapping relation between two intervals
+   */
+  def make[T: Ordering: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Relation =
+    if a.isEmpty || b.isEmpty then Relation(0)
+    else
+      // TODO: IMPL IT
+      // r1 = ...
+      // r2 = ...
+      // r3 = ...
+      // r4 = ...
+      ???
 
   extension [T: Ordering: Domain](a: Interval[T])(using bOrd: Ordering[Boundary[T]])
 
@@ -338,7 +359,7 @@ object Relation:
      *   PP (Point-Point relations):
      *   {p}; {q}
      *   p = q
-     * 
+     *
      *   II (Interval-Interval relations):
      *   {a-, a+}; {b-; b+}
      *   a- = b-
