@@ -287,6 +287,10 @@ object Relation:
      * IsFinishedBy (F)
      *
      * {{{
+     *   PI (Point-Interval relations):
+     *   {p}; {i-, i+}
+     *   p = i+
+     *
      *   II (Interval-Interval relations):
      *   {a-, a+}; {b-; b+}
      *   a- > b-
@@ -308,12 +312,21 @@ object Relation:
      * }}}
      *
      * {{{
+     *     p
+     *   III
+     * ----------------
      *      AAA
      *   BBBBBB
      * }}}
      */
     def finishes(b: Interval[T]): Boolean =
-      a.nonEmpty && b.nonEmpty && bOrd.lt(b.left, a.left) && bOrd.lteq(a.left, a.right) && bOrd.equiv(a.right, b.right)
+      (a, b) match
+        case (Degenerate(_), Proper(_, _)) =>
+          bOrd.equiv(a.right, b.right)
+        case (Proper(_, _), Proper(_, _)) =>
+          bOrd.equiv(a.right, b.right) && bOrd.lt(b.left, a.left)
+        case (_, _) =>
+          false
 
     def isFinishedBy(b: Interval[T]): Boolean =
       b.finishes(a)
