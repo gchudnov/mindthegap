@@ -335,6 +335,10 @@ object Relation:
      * Equals (e)
      *
      * {{{
+     *   PP (Point-Point relations):
+     *   {p}; {q}
+     *   p = q
+     * 
      *   II (Interval-Interval relations):
      *   {a-, a+}; {b-; b+}
      *   a- = b-
