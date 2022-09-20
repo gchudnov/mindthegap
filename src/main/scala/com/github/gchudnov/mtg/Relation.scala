@@ -192,7 +192,7 @@ object Relation:
      *   PI (Point-Interval relations):
      *   {p}; {i-, i+}
      *   i- < p < i+
-     * 
+     *
      *   II (Interval-Interval relations):
      *   {a-, a+}; {b-; b+}
      *   a- > b-
@@ -237,6 +237,10 @@ object Relation:
      * IsStartedBy (S)
      *
      * {{{
+     *   PI (Point-Interval relations):
+     *   {p}; {i-, i+}
+     *   p = i-
+     *
      *   II (Interval-Interval relations):
      *   {a-, a+}; {b-; b+}
      *   a- = b-
@@ -258,12 +262,21 @@ object Relation:
      * }}}
      *
      * {{{
+     *   p
+     *   III
+     * ----------------
      *   AAA
      *   BBBBBB
      * }}}
      */
     def starts(b: Interval[T]): Boolean =
-      a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.lteq(b.left, a.right) && bOrd.lt(a.right, b.right)
+      (a, b) match
+        case (Degenerate(_), Proper(_, _)) =>
+          bOrd.equiv(a.left, b.left)
+        case (Proper(_, _), Proper(_, _)) =>
+          bOrd.equiv(a.left, b.left) && bOrd.lt(a.right, b.right)
+        case (_, _) =>
+          false
 
     def isStartedBy(b: Interval[T]): Boolean =
       b.starts(a)
