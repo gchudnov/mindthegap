@@ -102,7 +102,8 @@ final case class Degenerate[T: Ordering: Domain](a: T) extends Interval[T]:
 final case class Proper[T: Ordering: Domain](left: LeftBoundary[T], right: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]) extends Interval[T]:
   import com.github.gchudnov.mtg.Show.*
 
-  require(bOrd.lt(left, right), s"${left.show},${right.show}: left boundary must be less than the right boundary")
+  // The endpoint relation left (a-) < right (a+) is required for a proper interval
+  require(bOrd.lt(left, right), s"${left.show},${right.show}: left boundary must be less than the right boundary by definition")
 
   override val isEmpty: Boolean     = false
   override val isDegenrate: Boolean = false

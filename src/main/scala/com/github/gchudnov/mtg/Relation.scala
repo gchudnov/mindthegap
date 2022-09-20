@@ -45,7 +45,16 @@ object Relation:
      * After (B), IsPreceededBy (P)
      *
      * {{{
-     *   {a-, a+}; {b-; b+}
+     *   PP (Point-Point relations):
+     *   {p}; {q}
+     *   p < q
+     *
+     *   PI (Point-Interval relations):
+     *   {p}; {i-, i+}
+     *   p < i-
+     * 
+     *   II (Interval-Interval relations):
+     *   {a-, a+}; {b-, b+}
      *   a- < b-
      *   a- < b+
      *   a+ < b-
@@ -67,12 +76,24 @@ object Relation:
      * }}}
      *
      * {{{
+     *   
      *   AAA
      *        BBB
      * }}}
      */
     def before(b: Interval[T]): Boolean =
-      a.nonEmpty && b.nonEmpty && bOrd.lteq(a.left, a.right) && bOrd.lt(a.right, b.left) && bOrd.lteq(b.left, b.right)
+      (a, b) match {
+        case (Degenerate(_), Degenerate(_)) =>
+          bOrd.lt(a.left, b.left)
+        case (Degenerate(_), Proper(_, _)) =>
+          bOrd.lt(a.left, b.left)
+        case (Proper(_, _), Degenerate(_)) =>
+          bOrd.lt(a.right, b.left)          
+        case (Proper(_, _), Proper(_, _)) =>
+          bOrd.lt(a.right, b.left)
+        case (_, _) =>
+          false
+      }
 
     def after(b: Interval[T]): Boolean =
       b.before(a)

@@ -50,6 +50,7 @@ final class RelationSpec extends TestSpec:
         Interval.degenerate(5).before(Interval.empty[Int]) mustBe (false)
         Interval.degenerate(5).before(Interval.degenerate(5)) mustBe (false)
         Interval.degenerate(5).before(Interval.degenerate(6)) mustBe (true)
+        Interval.degenerate(6).after(Interval.degenerate(5)) mustBe (true)
         Interval.degenerate(5).before(Interval.degenerate(10)) mustBe (true)
         Interval.degenerate(5).before(Interval.open(5, 10)) mustBe (true)
         Interval.degenerate(5).before(Interval.closed(5, 10)) mustBe (false)
@@ -57,6 +58,10 @@ final class RelationSpec extends TestSpec:
         Interval.degenerate(5).before(Interval.leftClosed(5)) mustBe (false)
         Interval.degenerate(5).before(Interval.leftClosed(6)) mustBe (true)
         Interval.degenerate(5).before(Interval.unbounded[Int]) mustBe (false)
+
+        // [-∞,0], {4}
+        Interval.degenerate(4).after(Interval.proper[Int](None, Some(0), true, true)) mustBe (true)
+        Interval.proper[Int](None, Some(0), true, true).before(Interval.degenerate(4)) mustBe (true)
 
         // Proper
         Interval.open(4, 7).before(Interval.open(4, 7)) mustBe (false)
