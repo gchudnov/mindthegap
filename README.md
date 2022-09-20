@@ -13,6 +13,15 @@ Keywords: interval arithmetic, interval relations, hardware unit
 ```text
 Relation                      Example        Endpoints
 
+p before q            b        p               p < q
+                                   q
+
+p after q             a        q               q < p
+                                   p
+
+p equal q             e          p             p = q
+                                 q
+
 p before I            b        p               p < i-
                                  III
 
