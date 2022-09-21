@@ -53,18 +53,20 @@ object Relation:
   def make[T: Ordering: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Relation =
     if a.isEmpty || b.isEmpty then Relation(0)
     else
-      // ((a- != b-) && (a+ != b+)) -- used as the right subexpression in r1 and r2
-      val rx = (!bOrd.equiv(a.left, b.left) && !bOrd.equiv(a.right, b.right))
+      // ((a- != b-) && (a+ != b+))
+      val t1 = !bOrd.equiv(a.left, b.left)
+      val t2 = !bOrd.equiv(a.right, b.right)
+      val rx = (t1 && t2)
 
       // (a- != b-) ^ ( ((a+ <= b-) || (a- > b+)) && ((a- != b-) && (a+ != b+)) )
       val r1: Byte =
-        val lhs: Byte = if !bOrd.equiv(a.left, b.left) then 1 else 0
+        val lhs: Byte = if t1 then 1 else 0
         val rhs: Byte = if ((bOrd.lteq(a.right, b.left) || bOrd.gt(a.left, b.right)) && rx) then 1 else 0
         (lhs ^ rhs).toByte
 
       // (a+ != b+) ^ ( ((a+ < b-) || (a- >= b+)) && ((a- != b-) && (a+ != b+)) )
       val r2: Byte =
-        val lhs: Byte = if !bOrd.equiv(a.right, b.right) then 1 else 0
+        val lhs: Byte = if t2 then 1 else 0
         val rhs: Byte = if ((bOrd.lt(a.right, b.left) || bOrd.gteq(a.left, b.right)) && rx) then 1 else 0
         (lhs ^ rhs).toByte
 
