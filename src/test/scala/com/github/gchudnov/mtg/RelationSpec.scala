@@ -756,7 +756,7 @@ final class RelationSpec extends TestSpec:
 
       "manual check" in {
         // Empty
-        Interval.empty[Int].equalsTo(Interval.empty[Int]) mustBe (true)
+        Interval.empty[Int].equalsTo(Interval.empty[Int]) mustBe (false)
         Interval.empty[Int].equalsTo(Interval.degenerate(0)) mustBe (false)
         Interval.empty[Int].equalsTo(Interval.closed(0, 1)) mustBe (false)
 

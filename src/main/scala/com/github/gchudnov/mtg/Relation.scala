@@ -43,6 +43,8 @@ package com.github.gchudnov.mtg
  */
 final case class Relation(repr: Byte)
 
+// TODO: impl set relations
+
 object Relation:
 
   /**
@@ -402,4 +404,4 @@ object Relation:
      * }}}
      */
     def equalsTo(b: Interval[T]): Boolean =
-      bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
+      a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
