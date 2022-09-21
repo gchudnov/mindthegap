@@ -18,9 +18,62 @@ final class RelationSpec extends TestSpec:
   "Relation" when {
 
     "make" should {
-      
-      "set bits for 'before' relation" in {
+
+      "set bits in 'before' with auto check" in {
         // TODO: impl it
+      }
+
+      "set bits in 'before' with manual check" in {
+        val t = Table(
+          ("ab", "bit3", "bit2", "bit1", "bit0"),
+          // before
+          ((Interval.closed(3, 5), Interval.closed(8, 10)), 0, 0, 0, 1),  // [3, 5]  [8, 10]
+          ((Interval.closed(3, 5), Interval.degenerate(8)), 0, 0, 0, 1),  // [3, 5]  {8}
+          ((Interval.degenerate(1), Interval.closed(3, 5)), 0, 0, 0, 1),  // {1}  [3, 5]
+          ((Interval.degenerate(5), Interval.degenerate(8)), 0, 0, 0, 1), // {5}  {8}
+          // after
+          ((Interval.closed(8, 10), Interval.closed(3, 5)), 0, 0, 1, 0),  // [8, 10]  [3, 5]
+          ((Interval.degenerate(8), Interval.closed(3, 5)), 0, 0, 1, 0),  // {8}  [3, 5]
+          ((Interval.closed(3, 5), Interval.degenerate(1)), 0, 0, 1, 0),  // [3, 5]  {1}
+          ((Interval.degenerate(8), Interval.degenerate(5)), 0, 0, 1, 0), // {8}  {5}
+          // meets
+          ((Interval.closed(3, 5), Interval.closed(5, 10)), 0, 1, 0, 1), // [3, 5]  [5, 10]
+          // is-met-by
+          ((Interval.closed(5, 10), Interval.closed(3, 5)), 1, 0, 1, 0), // [5, 10]  [3, 5]
+          // overlaps
+          ((Interval.closed(3, 7), Interval.closed(5, 10)), 1, 1, 0, 1), // [3, 7]  [5, 10]
+          // overlapped-by
+          ((Interval.closed(5, 10), Interval.closed(3, 7)), 1, 1, 1, 0), // [5, 10]  [3, 7]
+          // starts
+          ((Interval.closed(3, 5), Interval.closed(3, 10)), 0, 1, 1, 1), // [3, 5]  [3, 10]
+          ((Interval.degenerate(1), Interval.closed(1, 5)), 0, 1, 1, 1), // {1}  [1, 5]
+          // is-srarted-by
+          ((Interval.closed(3, 10), Interval.closed(3, 5)), 0, 1, 1, 0), // [3, 10]  [3, 5]
+          ((Interval.closed(1, 5), Interval.degenerate(1)), 0, 1, 1, 0), // [1, 5]  {1}
+          // during
+          ((Interval.closed(3, 5), Interval.closed(1, 10)), 1, 1, 1, 1), // [3, 5]  [1, 10]
+          ((Interval.degenerate(3), Interval.closed(1, 5)), 1, 1, 1, 1), // {3}  [1, 5]
+          // contains
+          ((Interval.closed(1, 10), Interval.closed(3, 5)), 1, 1, 0, 0), // [1, 10]  [3, 5]
+          ((Interval.closed(1, 5), Interval.degenerate(3)), 1, 1, 0, 0), // [1, 5]  {3}
+          // finishes
+          ((Interval.closed(5, 10), Interval.closed(3, 10)), 1, 0, 1, 1), // [5, 10]  [3, 10]
+          ((Interval.degenerate(5), Interval.closed(1, 5)), 1, 0, 1, 1),  // {5}  [1, 5]
+          // is-finished-by
+          ((Interval.closed(3, 10), Interval.closed(5, 10)), 1, 0, 0, 1), // [3, 10]  [5, 10]
+          ((Interval.closed(1, 5), Interval.degenerate(5)), 1, 0, 0, 1),  // [1, 5]  {5}
+          // equals
+          ((Interval.closed(3, 5), Interval.closed(3, 5)), 0, 0, 1, 1),  // [3, 5]  [3, 5]
+          ((Interval.degenerate(5), Interval.degenerate(5)), 0, 0, 1, 1) // {5}  {5}
+        )
+
+        forAll(t) { case (ab, expectedBit3, expectedBit2, expectedBit1, expectedBit0) =>
+          val r = Relation.make(ab._1, ab._2)
+          bit0(r.repr) mustBe (expectedBit0)
+          bit1(r.repr) mustBe (expectedBit1)
+        // bit2(r.repr) mustBe (expectedBit2)
+        // bit3(r.repr) mustBe (expectedBit3)
+        }
       }
 
     }
@@ -34,7 +87,7 @@ final class RelationSpec extends TestSpec:
      * }}}
      */
     "before (preceeds) & after (isPreceededBy)" should {
-      "check" in {
+      "auto check" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
           val xx = Interval.make(ox1, ox2, ix1, ix2)
           val yy = Interval.make(oy1, oy2, iy1, iy2)
@@ -46,7 +99,7 @@ final class RelationSpec extends TestSpec:
         }
       }
 
-      "check edge cases" in {
+      "manual check" in {
         // Empty
         Interval.empty[Int].before(Interval.empty[Int]) mustBe (false)
         Interval.empty[Int].before(Interval.degenerate(1)) mustBe (false)
@@ -106,7 +159,7 @@ final class RelationSpec extends TestSpec:
      * }}}
      */
     "meets & isMetBy" should {
-      "check" in {
+      "auto check" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
           val xx = Interval.make(ox1, ox2, ix1, ix2)
           val yy = Interval.make(oy1, oy2, iy1, iy2)
@@ -118,7 +171,7 @@ final class RelationSpec extends TestSpec:
         }
       }
 
-      "check edge cases" in {
+      "manual check" in {
         // Empty
         Interval.empty[Int].meets(Interval.empty[Int]) mustBe (false)
         Interval.empty[Int].meets(Interval.degenerate(0)) mustBe (false)
@@ -172,7 +225,7 @@ final class RelationSpec extends TestSpec:
      * }}}
      */
     "overlaps & isOverlapedBy" should {
-      "check" in {
+      "auto check" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
           val xx = Interval.make(ox1, ox2, ix1, ix2)
           val yy = Interval.make(oy1, oy2, iy1, iy2)
@@ -184,7 +237,7 @@ final class RelationSpec extends TestSpec:
         }
       }
 
-      "check edge cases" in {
+      "manual check" in {
 
         // Empty
         // {}  (-inf, +inf)
@@ -289,7 +342,7 @@ final class RelationSpec extends TestSpec:
      * }}}
      */
     "during & contains (includes)" should {
-      "check" in {
+      "auto check" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
           val xx = Interval.make(ox1, ox2, ix1, ix2)
           val yy = Interval.make(oy1, oy2, iy1, iy2)
@@ -301,7 +354,7 @@ final class RelationSpec extends TestSpec:
         }
       }
 
-      "check edge cases" in {
+      "manual check" in {
         // Empty
         Interval.empty[Int].during(Interval.open(5, 10)) mustBe (false)
         Interval.empty[Int].during(Interval.degenerate(0)) mustBe (false)
@@ -358,7 +411,7 @@ final class RelationSpec extends TestSpec:
      * }}}
      */
     "starts & isStartedBy" should {
-      "check" in {
+      "auto check" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
           val xx = Interval.make(ox1, ox2, ix1, ix2)
           val yy = Interval.make(oy1, oy2, iy1, iy2)
@@ -370,7 +423,7 @@ final class RelationSpec extends TestSpec:
         }
       }
 
-      "check edge cases" in {
+      "manual check" in {
         // Empty
         Interval.empty[Int].starts(Interval.degenerate(0)) mustBe (false)
         Interval.empty[Int].starts(Interval.closed(0, 1)) mustBe (false)
@@ -423,7 +476,7 @@ final class RelationSpec extends TestSpec:
      * }}}
      */
     "finishes & isFinishedBy" should {
-      "check" in {
+      "auto check" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
           val xx = Interval.make(ox1, ox2, ix1, ix2)
           val yy = Interval.make(oy1, oy2, iy1, iy2)
@@ -435,7 +488,7 @@ final class RelationSpec extends TestSpec:
         }
       }
 
-      "check edge cases" in {
+      "manual check" in {
         // Empty
         Interval.empty[Int].finishes(Interval.empty[Int]) mustBe (false)
         Interval.empty[Int].finishes(Interval.degenerate(0)) mustBe (false)
@@ -481,7 +534,7 @@ final class RelationSpec extends TestSpec:
      * }}}
      */
     "equals" should {
-      "check" in {
+      "auto check" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
           val xx = Interval.make(ox1, ox2, ix1, ix2)
           val yy = Interval.make(oy1, oy2, iy1, iy2)
@@ -493,7 +546,7 @@ final class RelationSpec extends TestSpec:
         }
       }
 
-      "check edge cases" in {
+      "manual check" in {
         // Empty
         Interval.empty[Int].equalsTo(Interval.empty[Int]) mustBe (true)
         Interval.empty[Int].equalsTo(Interval.degenerate(0)) mustBe (false)
@@ -598,3 +651,18 @@ final class RelationSpec extends TestSpec:
       val expectedSize = if trues.contains("e") || trues.contains("E") then 2 else 1
       if trues.size != expectedSize then
         fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected: ${expectedSize}")
+
+  private def bit0(value: Byte): Int =
+    bitN(0, value)
+
+  private def bit1(value: Byte): Int =
+    bitN(1, value)
+
+  private def bit2(value: Byte): Int =
+    bitN(2, value)
+
+  private def bit3(value: Byte): Int =
+    bitN(3, value)
+
+  private def bitN(n: Byte, value: Byte): Int =
+    if ((value & (1 << n)) > 0) then 1 else 0
