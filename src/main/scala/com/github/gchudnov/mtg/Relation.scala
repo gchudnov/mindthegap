@@ -39,7 +39,7 @@ package com.github.gchudnov.mtg
 /**
  * Relation
  *
- * An encoded overlapping relation between two intervals
+ * An encoded overlapping relation between two intervals AA, BB
  */
 final case class Relation(repr: Byte)
 
