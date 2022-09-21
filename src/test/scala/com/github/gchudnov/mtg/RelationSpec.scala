@@ -71,8 +71,8 @@ final class RelationSpec extends TestSpec:
           val r = Relation.make(ab._1, ab._2)
           bit0(r.repr) mustBe (expectedBit0)
           bit1(r.repr) mustBe (expectedBit1)
-        // bit2(r.repr) mustBe (expectedBit2)
-        // bit3(r.repr) mustBe (expectedBit3)
+          bit2(r.repr) mustBe (expectedBit2)
+          bit3(r.repr) mustBe (expectedBit3)
         }
       }
 

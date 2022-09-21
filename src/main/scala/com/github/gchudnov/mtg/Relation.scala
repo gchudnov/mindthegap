@@ -38,7 +38,7 @@ package com.github.gchudnov.mtg
 
 /**
  * Relation
- * 
+ *
  * An encoded overlapping relation between two intervals
  */
 final case class Relation(repr: Byte)
@@ -51,17 +51,26 @@ object Relation:
   def make[T: Ordering: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Relation =
     if a.isEmpty || b.isEmpty then Relation(0)
     else
-      // TODO: IMPL IT
+      // ((a- != b-) && (a+ != b+)) -- used as the right subexpression in r1 and r2
+      val rx = (!bOrd.equiv(a.left, b.left) && !bOrd.equiv(a.right, b.right))
 
-      val r1: Byte = 0 // TODO: impl it
+      // (a- != b-) ^ ( ((a+ <= b-) || (a- > b+)) && ((a- != b-) && (a+ != b+)) )
+      val r1: Byte =
+        val lhs: Byte = if !bOrd.equiv(a.left, b.left) then 1 else 0
+        val rhs: Byte = if ((bOrd.lteq(a.right, b.left) || bOrd.gt(a.left, b.right)) && rx) then 1 else 0
+        (lhs ^ rhs).toByte
 
-      val r2: Byte = 0  // TODO: impl it
+      // (a+ != b+) ^ ( ((a+ < b-) || (a- >= b+)) && ((a- != b-) && (a+ != b+)) )
+      val r2: Byte =
+        val lhs: Byte = if !bOrd.equiv(a.right, b.right) then 1 else 0
+        val rhs: Byte = if ((bOrd.lt(a.right, b.left) || bOrd.gteq(a.left, b.right)) && rx) then 1 else 0
+        (lhs ^ rhs).toByte
 
       // (a- >= b-)
       val r3: Byte = if bOrd.gteq(a.left, b.left) then 1 else 0
 
       // (a+ <= b+)
-      val r4: Byte = if bOrd.lteq(a.right, b.right) then 1 else 0 
+      val r4: Byte = if bOrd.lteq(a.right, b.right) then 1 else 0
 
       val r = (r1 << 3 | r2 << 2 | r3 << 1 | r4)
 
