@@ -19,11 +19,215 @@ final class RelationSpec extends TestSpec:
 
     "make" should {
 
-      "set bits in 'before' with auto check" in {
-        // TODO: impl it
+      "before auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.before(yy)) {
+            bit0(r.repr) mustBe (1)
+            bit1(r.repr) mustBe (0)
+            bit2(r.repr) mustBe (0)
+            bit3(r.repr) mustBe (0)
+          }
+        }
       }
 
-      "set bits in 'before' with manual check" in {
+      "after auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.after(yy)) {
+            bit0(r.repr) mustBe (0)
+            bit1(r.repr) mustBe (1)
+            bit2(r.repr) mustBe (0)
+            bit3(r.repr) mustBe (0)
+          }
+        }
+      }
+
+      "meets auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.meets(yy)) {
+            bit0(r.repr) mustBe (1)
+            bit1(r.repr) mustBe (0)
+            bit2(r.repr) mustBe (1)
+            bit3(r.repr) mustBe (0)
+          }
+        }
+      }
+
+      "isMetBy auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.isMetBy(yy)) {
+            bit0(r.repr) mustBe (0)
+            bit1(r.repr) mustBe (1)
+            bit2(r.repr) mustBe (0)
+            bit3(r.repr) mustBe (1)
+          }
+        }
+      }
+
+      "overlaps auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.overlaps(yy)) {
+            bit0(r.repr) mustBe (1)
+            bit1(r.repr) mustBe (0)
+            bit2(r.repr) mustBe (1)
+            bit3(r.repr) mustBe (1)
+          }
+        }
+      }
+
+      "isOverlapedBy auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.isOverlapedBy(yy)) {
+            bit0(r.repr) mustBe (0)
+            bit1(r.repr) mustBe (1)
+            bit2(r.repr) mustBe (1)
+            bit3(r.repr) mustBe (1)
+          }
+        }
+      }
+
+      "starts auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.starts(yy)) {
+            bit0(r.repr) mustBe (1)
+            bit1(r.repr) mustBe (1)
+            bit2(r.repr) mustBe (1)
+            bit3(r.repr) mustBe (0)
+          }
+        }
+      }
+
+      "isStartedBy auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.isStartedBy(yy)) {
+            bit0(r.repr) mustBe (0)
+            bit1(r.repr) mustBe (1)
+            bit2(r.repr) mustBe (1)
+            bit3(r.repr) mustBe (0)
+          }
+        }
+      }
+
+      "during auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.during(yy)) {
+            bit0(r.repr) mustBe (1)
+            bit1(r.repr) mustBe (1)
+            bit2(r.repr) mustBe (1)
+            bit3(r.repr) mustBe (1)
+          }
+        }
+      }
+
+      "contains auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.contains(yy)) {
+            bit0(r.repr) mustBe (0)
+            bit1(r.repr) mustBe (0)
+            bit2(r.repr) mustBe (1)
+            bit3(r.repr) mustBe (1)
+          }
+        }
+      }
+
+      "finishes auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.finishes(yy)) {
+            bit0(r.repr) mustBe (1)
+            bit1(r.repr) mustBe (1)
+            bit2(r.repr) mustBe (0)
+            bit3(r.repr) mustBe (1)
+          }
+        }
+      }
+
+      "isFinishedBy auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.isFinishedBy(yy)) {
+            bit0(r.repr) mustBe (1)
+            bit1(r.repr) mustBe (0)
+            bit2(r.repr) mustBe (0)
+            bit3(r.repr) mustBe (1)
+          }
+        }
+      }
+
+      "equalsTo auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val r = Relation.make(xx, yy)
+
+          whenever(xx.equalsTo(yy)) {
+            bit0(r.repr) mustBe (1)
+            bit1(r.repr) mustBe (1)
+            bit2(r.repr) mustBe (0)
+            bit3(r.repr) mustBe (0)
+          }
+        }
+      }
+
+      "manual check" in {
         val t = Table(
           ("ab", "bit3", "bit2", "bit1", "bit0"),
           // before
@@ -42,7 +246,7 @@ final class RelationSpec extends TestSpec:
           ((Interval.closed(5, 10), Interval.closed(3, 5)), 1, 0, 1, 0), // [5, 10]  [3, 5]
           // overlaps
           ((Interval.closed(3, 7), Interval.closed(5, 10)), 1, 1, 0, 1), // [3, 7]  [5, 10]
-          // overlapped-by
+          // is-overlapped-by
           ((Interval.closed(5, 10), Interval.closed(3, 7)), 1, 1, 1, 0), // [5, 10]  [3, 7]
           // starts
           ((Interval.closed(3, 5), Interval.closed(3, 10)), 0, 1, 1, 1), // [3, 5]  [3, 10]
@@ -63,8 +267,12 @@ final class RelationSpec extends TestSpec:
           ((Interval.closed(3, 10), Interval.closed(5, 10)), 1, 0, 0, 1), // [3, 10]  [5, 10]
           ((Interval.closed(1, 5), Interval.degenerate(5)), 1, 0, 0, 1),  // [1, 5]  {5}
           // equals
-          ((Interval.closed(3, 5), Interval.closed(3, 5)), 0, 0, 1, 1),  // [3, 5]  [3, 5]
-          ((Interval.degenerate(5), Interval.degenerate(5)), 0, 0, 1, 1) // {5}  {5}
+          ((Interval.closed(3, 5), Interval.closed(3, 5)), 0, 0, 1, 1),   // [3, 5]  [3, 5]
+          ((Interval.degenerate(5), Interval.degenerate(5)), 0, 0, 1, 1), // {5}  {5}
+
+          // empty relations
+          ((Interval.degenerate(5), Interval.empty[Int]), 0, 0, 0, 0), // {5}  {}
+          ((Interval.empty[Int], Interval.empty[Int]), 0, 0, 0, 0)     // {}  {}
         )
 
         forAll(t) { case (ab, expectedBit3, expectedBit2, expectedBit1, expectedBit0) =>
