@@ -438,3 +438,14 @@ object Relation:
      */
     def equalsTo(b: Interval[T]): Boolean =
       a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
+
+    /**
+     * Check whether A is a subset of B
+     *
+     *   - A starts B
+     *   - A during B
+     *   - A finishes B
+     *   - A equals B
+     */
+    def isSubset(b: Interval[T]): Boolean =
+      a.starts(b) || a.during(b) || a.finishes(b) || a.equalsTo(b)

@@ -865,6 +865,19 @@ final class RelationSpec extends TestSpec:
       }
     }
 
+    "isSubset" should {
+      "auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          whenever(xx.isSubset(yy)) {
+            assertAnyRelation(Set("s", "d", "f", "e"), xx, yy)
+          }
+        }
+      }
+    }
+
     "satisfy" should {
       "one relation only" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
@@ -887,21 +900,43 @@ final class RelationSpec extends TestSpec:
 
   private def makeRelations[T: Ordering: Domain](using bOrd: Ordering[Boundary[T]]) =
     Map(
-      "b" -> ((ab: Interval[T], cd: Interval[T]) => ab.preceeds(cd)),
-      "B" -> ((ab: Interval[T], cd: Interval[T]) => ab.isPreceededBy(cd)),
-      "m" -> ((ab: Interval[T], cd: Interval[T]) => ab.meets(cd)),
-      "M" -> ((ab: Interval[T], cd: Interval[T]) => ab.isMetBy(cd)),
-      "o" -> ((ab: Interval[T], cd: Interval[T]) => ab.overlaps(cd)),
-      "O" -> ((ab: Interval[T], cd: Interval[T]) => ab.isOverlapedBy(cd)),
-      "d" -> ((ab: Interval[T], cd: Interval[T]) => ab.during(cd)),
-      "D" -> ((ab: Interval[T], cd: Interval[T]) => ab.contains(cd)),
-      "s" -> ((ab: Interval[T], cd: Interval[T]) => ab.starts(cd)),
-      "S" -> ((ab: Interval[T], cd: Interval[T]) => ab.isStartedBy(cd)),
-      "f" -> ((ab: Interval[T], cd: Interval[T]) => ab.finishes(cd)),
-      "F" -> ((ab: Interval[T], cd: Interval[T]) => ab.isFinishedBy(cd)),
-      "e" -> ((ab: Interval[T], cd: Interval[T]) => ab.equalsTo(cd)),
-      "E" -> ((ab: Interval[T], cd: Interval[T]) => ab.equalsTo(cd))
+      "b" -> ((xx: Interval[T], yy: Interval[T]) => xx.preceeds(yy)),
+      "B" -> ((xx: Interval[T], yy: Interval[T]) => xx.isPreceededBy(yy)),
+      "m" -> ((xx: Interval[T], yy: Interval[T]) => xx.meets(yy)),
+      "M" -> ((xx: Interval[T], yy: Interval[T]) => xx.isMetBy(yy)),
+      "o" -> ((xx: Interval[T], yy: Interval[T]) => xx.overlaps(yy)),
+      "O" -> ((xx: Interval[T], yy: Interval[T]) => xx.isOverlapedBy(yy)),
+      "d" -> ((xx: Interval[T], yy: Interval[T]) => xx.during(yy)),
+      "D" -> ((xx: Interval[T], yy: Interval[T]) => xx.contains(yy)),
+      "s" -> ((xx: Interval[T], yy: Interval[T]) => xx.starts(yy)),
+      "S" -> ((xx: Interval[T], yy: Interval[T]) => xx.isStartedBy(yy)),
+      "f" -> ((xx: Interval[T], yy: Interval[T]) => xx.finishes(yy)),
+      "F" -> ((xx: Interval[T], yy: Interval[T]) => xx.isFinishedBy(yy)),
+      "e" -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy)),
+      "E" -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy))
     )
+
+  /**
+   * Finds name of the relations two itervals are satisfying
+   *
+   *   - A ? B
+   */
+  private def findSatisfyRelations[T: Ordering: Domain](xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Set[String] =
+    val relations = makeRelations[T]
+    val satisfied = relations.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>
+      val res = fn(xx, yy)
+      if res then acc + k
+      else acc
+    }
+    satisfied
+
+  private def assertAnyRelation[T: Ordering: Domain](rs: Set[String], xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
+    val trues = findSatisfyRelations(xx, yy) - "E" // "E" is a duplicate of "e"
+
+    if trues.size != 1 || !rs.contains(trues.head) then
+      fail(
+        s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| should satisfy one of ${rs.mkString("[", ",", "]")} relations, however it satisfies ${trues.mkString("[", ",", "]")} instead"
+      )
 
   private def assertRelation[T: Ordering: Domain](r: String, xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
     val relations = makeRelations[T]
@@ -923,21 +958,13 @@ final class RelationSpec extends TestSpec:
     }
 
   private def assertOneRelation[T: Ordering: Domain](xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
-    val relations = makeRelations[T]
-
-    val trues = relations.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>
-      val res = fn(xx, yy)
-      if res then acc + k
-      else acc
-    }
+    val trues = findSatisfyRelations(xx, yy) - "E" // "E" is a duplicate of "e"
 
     val isNonEmpty = !(xx.isEmpty || yy.isEmpty)
 
     if isNonEmpty then
       // it is OK if xx, yy satisfy both [e, E]
-      val expectedSize = if trues.contains("e") || trues.contains("E") then 2 else 1
-      if trues.size != expectedSize then
-        fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected: ${expectedSize}")
+      if trues.size != 1 then fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected: 1")
 
   private def bit0(value: Byte): Int =
     bitN(0, value)
