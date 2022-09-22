@@ -39,9 +39,38 @@ package com.github.gchudnov.mtg
 /**
  * Relation
  *
- * An encoded overlapping relation between two intervals AA, BB
+ * An encoded overlapping relation between two intervals A and B
+ *
+ * (r1, r2, r3, r4) <=> (bit3, bit2, bit1, bit0)
  */
-final case class Relation(repr: Byte)
+final case class Relation(repr: Byte):
+
+  /**
+   * Returns whether A is a subset of B:
+   *
+   *   - A starts B
+   *   - A during B
+   *   - A finishes B
+   *   - A equals B
+   *
+   * A ⊆ B <=> r3 ∧ r4
+   */
+  def isSubset: Boolean =
+    if (r3 & r4) > 0 then true else false
+
+  @inline private def r1: Int =
+    (repr >> 3) & 1
+
+  @inline private def r2: Int =
+    (repr >> 2) & 1
+
+  @inline private def r3: Int =
+    (repr >> 1) & 1
+
+  @inline private def r4: Int =
+    repr & 1
+
+// TODO: add tests ^^^
 
 // TODO: impl set relations
 
@@ -59,22 +88,22 @@ object Relation:
       val rx = (t1 && t2)
 
       // (a- != b-) ^ ( ((a+ <= b-) || (a- > b+)) && ((a- != b-) && (a+ != b+)) )
-      val r1: Byte =
-        val lhs: Byte = if t1 then 1 else 0
-        val rhs: Byte = if ((bOrd.lteq(a.right, b.left) || bOrd.gt(a.left, b.right)) && rx) then 1 else 0
-        (lhs ^ rhs).toByte
+      val r1: Int =
+        val lhs: Int = if t1 then 1 else 0
+        val rhs: Int = if ((bOrd.lteq(a.right, b.left) || bOrd.gt(a.left, b.right)) && rx) then 1 else 0
+        (lhs ^ rhs)
 
       // (a+ != b+) ^ ( ((a+ < b-) || (a- >= b+)) && ((a- != b-) && (a+ != b+)) )
-      val r2: Byte =
-        val lhs: Byte = if t2 then 1 else 0
-        val rhs: Byte = if ((bOrd.lt(a.right, b.left) || bOrd.gteq(a.left, b.right)) && rx) then 1 else 0
-        (lhs ^ rhs).toByte
+      val r2: Int =
+        val lhs: Int = if t2 then 1 else 0
+        val rhs: Int = if ((bOrd.lt(a.right, b.left) || bOrd.gteq(a.left, b.right)) && rx) then 1 else 0
+        (lhs ^ rhs)
 
       // (a- >= b-)
-      val r3: Byte = if bOrd.gteq(a.left, b.left) then 1 else 0
+      val r3: Int = if bOrd.gteq(a.left, b.left) then 1 else 0
 
       // (a+ <= b+)
-      val r4: Byte = if bOrd.lteq(a.right, b.right) then 1 else 0
+      val r4: Int = if bOrd.lteq(a.right, b.right) then 1 else 0
 
       val r = (r1 << 3 | r2 << 2 | r3 << 1 | r4)
 
