@@ -25,9 +25,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.before(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (1)
               bit1(r.repr) mustBe (0)
               bit2(r.repr) mustBe (0)
@@ -43,9 +43,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.after(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (0)
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (0)
@@ -61,9 +61,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.meets(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (1)
               bit1(r.repr) mustBe (0)
               bit2(r.repr) mustBe (1)
@@ -79,9 +79,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.isMetBy(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (0)
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (0)
@@ -97,9 +97,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.overlaps(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (1)
               bit1(r.repr) mustBe (0)
               bit2(r.repr) mustBe (1)
@@ -115,9 +115,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.isOverlapedBy(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (0)
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (1)
@@ -133,9 +133,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.starts(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (1)
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (1)
@@ -151,9 +151,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.isStartedBy(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (0)
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (1)
@@ -169,9 +169,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.during(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (1)
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (1)
@@ -187,9 +187,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.contains(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (0)
               bit1(r.repr) mustBe (0)
               bit2(r.repr) mustBe (1)
@@ -205,9 +205,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.finishes(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (1)
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (0)
@@ -223,9 +223,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.isFinishedBy(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (1)
               bit1(r.repr) mustBe (0)
               bit2(r.repr) mustBe (0)
@@ -241,9 +241,9 @@ final class RelationSpec extends TestSpec:
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            val r = Relation.make(xx, yy)
-
             whenever(xx.equalsTo(yy)) {
+              val r = Relation.make(xx, yy)
+
               bit0(r.repr) mustBe (1)
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (0)
@@ -307,6 +307,60 @@ final class RelationSpec extends TestSpec:
           bit1(r.repr) mustBe (expectedBit1)
           bit2(r.repr) mustBe (expectedBit2)
           bit3(r.repr) mustBe (expectedBit3)
+        }
+      }
+
+      "isSubset" should {
+        "auto check for starts" in {
+          forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+            val xx = Interval.make(ox1, ox2, ix1, ix2)
+            val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+            whenever(xx.starts(yy)) {
+              val r = Relation.make(xx, yy)
+
+              r.isSubset mustBe (true)
+            }
+          }
+        }
+
+        "auto check for during" in {
+          forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+            val xx = Interval.make(ox1, ox2, ix1, ix2)
+            val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+            whenever(xx.during(yy)) {
+              val r = Relation.make(xx, yy)
+
+              r.isSubset mustBe (true)
+            }
+          }
+        }
+
+        "auto check for finishes" in {
+          forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+            val xx = Interval.make(ox1, ox2, ix1, ix2)
+            val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+            whenever(xx.finishes(yy)) {
+              val r = Relation.make(xx, yy)
+
+              r.isSubset mustBe (true)
+            }
+          }
+        }
+
+        "auto check for equals" in {
+          forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+            val xx = Interval.make(ox1, ox2, ix1, ix2)
+            val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+            whenever(xx.equalsTo(yy)) {
+              val r = Relation.make(xx, yy)
+
+              r.isSubset mustBe (true)
+            }
+          }
         }
       }
     }
