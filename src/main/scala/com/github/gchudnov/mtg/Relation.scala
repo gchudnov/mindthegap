@@ -72,6 +72,8 @@ final case class Relation(repr: Byte):
 
 // TODO: add tests ^^^
 
+// TODO: ADD normal relation checks: contains, etc...
+
 // TODO: impl set relations
 
 object Relation:
