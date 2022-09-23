@@ -58,6 +58,58 @@ final case class Relation(repr: Byte):
   def isSubset: Boolean =
     if (r3 & r4) > 0 then true else false
 
+  def isBefore: Boolean =
+    // 0 0 0 1
+    repr == 0x1
+
+  def isAfter: Boolean =
+    // 0 0 1 0
+    repr == 0x2
+
+  def isMeets: Boolean =
+    // 0 1 0 1
+    repr == 0x5
+
+  def isMetBy: Boolean =
+    // 1 0 1 0
+    repr == 0xa
+
+  def isOverlaps: Boolean =
+    // 1 1 0 1
+    repr == 0xd
+
+  def isOverlapedBy: Boolean =
+    // 1 1 1 0
+    repr == 0xe
+
+  def isDuring: Boolean =
+    // 1 1 1 1
+    repr == 0xf
+
+  def isContains: Boolean =
+    // 1 1 0 0
+    repr == 0xc
+
+  def isStarts: Boolean =
+    // 0 1 1 1
+    repr == 0x7
+
+  def isStartedBy: Boolean =
+    // 0 1 1 0
+    repr == 0x6
+
+  def isFinishes: Boolean =
+    // 1 0 1 1
+    repr == 0xb
+
+  def isFinishedBy: Boolean =
+    // 1 0 0 1
+    repr == 0x9
+
+  def isEqualsTo: Boolean =
+    // 0 0 1 1
+    repr == 0x3
+
   @inline private def r1: Int =
     (repr >> 3) & 1
 
@@ -69,10 +121,6 @@ final case class Relation(repr: Byte):
 
   @inline private def r4: Int =
     repr & 1
-
-// TODO: add tests ^^^
-
-// TODO: ADD normal relation checks: contains, etc...
 
 // TODO: impl set relations
 

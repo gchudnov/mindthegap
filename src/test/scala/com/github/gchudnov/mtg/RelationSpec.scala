@@ -32,6 +32,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (0)
               bit2(r.repr) mustBe (0)
               bit3(r.repr) mustBe (0)
+
+              assertOne("b", r)
             }
           }
         }
@@ -50,6 +52,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (0)
               bit3(r.repr) mustBe (0)
+
+              assertOne("B", r)
             }
           }
         }
@@ -68,6 +72,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (0)
               bit2(r.repr) mustBe (1)
               bit3(r.repr) mustBe (0)
+
+              assertOne("m", r)
             }
           }
         }
@@ -86,6 +92,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (0)
               bit3(r.repr) mustBe (1)
+
+              assertOne("M", r)
             }
           }
         }
@@ -104,6 +112,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (0)
               bit2(r.repr) mustBe (1)
               bit3(r.repr) mustBe (1)
+
+              assertOne("o", r)
             }
           }
         }
@@ -122,6 +132,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (1)
               bit3(r.repr) mustBe (1)
+
+              assertOne("O", r)
             }
           }
         }
@@ -140,6 +152,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (1)
               bit3(r.repr) mustBe (0)
+
+              assertOne("s", r)
             }
           }
         }
@@ -158,6 +172,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (1)
               bit3(r.repr) mustBe (0)
+
+              assertOne("S", r)
             }
           }
         }
@@ -176,6 +192,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (1)
               bit3(r.repr) mustBe (1)
+
+              assertOne("d", r)
             }
           }
         }
@@ -194,6 +212,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (0)
               bit2(r.repr) mustBe (1)
               bit3(r.repr) mustBe (1)
+
+              assertOne("D", r)
             }
           }
         }
@@ -212,6 +232,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (0)
               bit3(r.repr) mustBe (1)
+
+              assertOne("f", r)
             }
           }
         }
@@ -230,6 +252,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (0)
               bit2(r.repr) mustBe (0)
               bit3(r.repr) mustBe (1)
+
+              assertOne("F", r)
             }
           }
         }
@@ -248,6 +272,8 @@ final class RelationSpec extends TestSpec:
               bit1(r.repr) mustBe (1)
               bit2(r.repr) mustBe (0)
               bit3(r.repr) mustBe (0)
+
+              assertOne("e", r)
             }
           }
         }
@@ -380,8 +406,7 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.preceeds(yy)) {
-            assertRelation("b", xx, yy)
-            assertOneRelation(xx, yy)
+            assertFwdBck("b", xx, yy)
           }
         }
       }
@@ -452,8 +477,7 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.meets(yy)) {
-            assertRelation("m", xx, yy)
-            assertOneRelation(xx, yy)
+            assertFwdBck("m", xx, yy)
           }
         }
       }
@@ -518,8 +542,7 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.overlaps(yy)) {
-            assertRelation("o", xx, yy)
-            assertOneRelation(xx, yy)
+            assertFwdBck("o", xx, yy)
           }
         }
       }
@@ -635,8 +658,7 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.during(yy)) {
-            assertRelation("d", xx, yy)
-            assertOneRelation(xx, yy)
+            assertFwdBck("d", xx, yy)
           }
         }
       }
@@ -704,8 +726,7 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.starts(yy)) {
-            assertRelation("s", xx, yy)
-            assertOneRelation(xx, yy)
+            assertFwdBck("s", xx, yy)
           }
         }
       }
@@ -769,8 +790,7 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.finishes(yy)) {
-            assertRelation("f", xx, yy)
-            assertOneRelation(xx, yy)
+            assertFwdBck("f", xx, yy)
           }
         }
       }
@@ -827,8 +847,7 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.equalsTo(yy)) {
-            assertRelation("e", xx, yy)
-            assertOneRelation(xx, yy)
+            assertFwdBck("e", xx, yy)
           }
         }
       }
@@ -872,7 +891,7 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.isSubset(yy)) {
-            assertAnyRelation(Set("s", "d", "f", "e"), xx, yy)
+            assertOneOf(Set("s", "d", "f", "e"), xx, yy)
           }
         }
       }
@@ -884,7 +903,7 @@ final class RelationSpec extends TestSpec:
           val xx = Interval.make(ox1, ox2, ix1, ix2)
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-          assertOneRelation(xx, yy)
+          assertAnySingle(xx, yy)
         }
       }
 
@@ -893,12 +912,12 @@ final class RelationSpec extends TestSpec:
           (Interval.rightOpen(5), Interval.rightOpen(5))
         )
 
-        intervals.foreach { case (xx, yy) => assertOneRelation(xx, yy) }
+        intervals.foreach { case (xx, yy) => assertAnySingle(xx, yy) }
       }
     }
   }
 
-  private def makeRelations[T: Ordering: Domain](using bOrd: Ordering[Boundary[T]]) =
+  private def makeIntervalRelationsCheckMap[T: Ordering: Domain](using bOrd: Ordering[Boundary[T]]) =
     Map(
       "b" -> ((xx: Interval[T], yy: Interval[T]) => xx.preceeds(yy)),
       "B" -> ((xx: Interval[T], yy: Interval[T]) => xx.isPreceededBy(yy)),
@@ -916,13 +935,31 @@ final class RelationSpec extends TestSpec:
       "E" -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy))
     )
 
+  private val relationsCheckMap =
+    Map(
+      "b" -> ((r: Relation) => r.isBefore),
+      "B" -> ((r: Relation) => r.isAfter),
+      "m" -> ((r: Relation) => r.isMeets),
+      "M" -> ((r: Relation) => r.isMetBy),
+      "o" -> ((r: Relation) => r.isOverlaps),
+      "O" -> ((r: Relation) => r.isOverlapedBy),
+      "d" -> ((r: Relation) => r.isDuring),
+      "D" -> ((r: Relation) => r.isContains),
+      "s" -> ((r: Relation) => r.isStarts),
+      "S" -> ((r: Relation) => r.isStartedBy),
+      "f" -> ((r: Relation) => r.isFinishes),
+      "F" -> ((r: Relation) => r.isFinishedBy),
+      "e" -> ((r: Relation) => r.isEqualsTo),
+      "E" -> ((r: Relation) => r.isEqualsTo)
+    )
+
   /**
    * Finds name of the relations two itervals are satisfying
    *
    *   - A ? B
    */
   private def findSatisfyRelations[T: Ordering: Domain](xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Set[String] =
-    val relations = makeRelations[T]
+    val relations = makeIntervalRelationsCheckMap[T]
     val satisfied = relations.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>
       val res = fn(xx, yy)
       if res then acc + k
@@ -930,7 +967,15 @@ final class RelationSpec extends TestSpec:
     }
     satisfied
 
-  private def assertAnyRelation[T: Ordering: Domain](rs: Set[String], xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
+  private def findSatisfyRelations(x: Relation): Set[String] =
+    val satisfied = relationsCheckMap.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>
+      val res = fn(x)
+      if res then acc + k
+      else acc
+    }
+    satisfied
+
+  private def assertOneOf[T: Ordering: Domain](rs: Set[String], xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
     val trues = findSatisfyRelations(xx, yy) - "E" // "E" is a duplicate of "e"
 
     if trues.size != 1 || !rs.contains(trues.head) then
@@ -938,8 +983,16 @@ final class RelationSpec extends TestSpec:
         s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| should satisfy one of ${rs.mkString("[", ",", "]")} relations, however it satisfies ${trues.mkString("[", ",", "]")} instead"
       )
 
-  private def assertRelation[T: Ordering: Domain](r: String, xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
-    val relations = makeRelations[T]
+  private def assertOne(k: String, r: Relation): Unit =
+    val trues = findSatisfyRelations(r) - "E" // "E" is a duplicate of "e"
+
+    if trues.size != 1 || !trues.contains(k) then
+      fail(
+        s"r: ${r} should satisfy only [${k}] relation, however it satisfies ${trues.mkString("[", ",", "]")} instead"
+      )
+
+  private def assertFwdBck[T: Ordering: Domain](r: String, xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
+    val relations = makeIntervalRelationsCheckMap[T]
 
     val fk = r
     val bk = r.map(_.toUpper)
@@ -957,14 +1010,12 @@ final class RelationSpec extends TestSpec:
       if fn(yy, xx) then fail(s"xx: ${xx}, yy: ${yy}: ${fk}|${xx.show}, ${yy.show}| == true; ${k}|${yy.show}, ${xx.show}| mustBe false, got true")
     }
 
-  private def assertOneRelation[T: Ordering: Domain](xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
+  private def assertAnySingle[T: Ordering: Domain](xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
     val trues = findSatisfyRelations(xx, yy) - "E" // "E" is a duplicate of "e"
 
     val isNonEmpty = !(xx.isEmpty || yy.isEmpty)
-
-    if isNonEmpty then
-      // it is OK if xx, yy satisfy both [e, E]
-      if trues.size != 1 then fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected: 1")
+    if isNonEmpty && trues.size != 1 then
+      fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected only one relation")
 
   private def bit0(value: Byte): Int =
     bitN(0, value)
