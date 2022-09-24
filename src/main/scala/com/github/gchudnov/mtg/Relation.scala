@@ -148,8 +148,6 @@ final case class Relation(repr: Byte):
   def isGreater: Boolean =
     isAfter
 
-// TODO: impl set relations
-
   def isBefore: Boolean =
     // 0 0 0 1
     repr == 0x1
@@ -668,3 +666,15 @@ object Relation:
      */
     def isGreater(b: Interval[T]): Boolean =
       a.after(b)
+
+    /**
+      * Intersection
+      * 
+      * {{{
+      * 
+      * }}}
+      */
+    def intersection(b: Interval[T]): Interval[T] =
+      ???
+
+      // TODO: impl it
