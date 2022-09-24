@@ -48,15 +48,34 @@ final case class Relation(repr: Byte):
   /**
    * Returns whether A is a subset of B:
    *
-   *   - A starts B
-   *   - A during B
-   *   - A finishes B
-   *   - A equals B
+   * {{{
+   *   - A starts B   | s
+   *   - A during B   | d
+   *   - A finishes B | f
+   *   - A equals B   | e
+   * }}}
    *
    * A ⊆ B <=> r3 ∧ r4
    */
   def isSubset: Boolean =
     if (r3 & r4) > 0 then true else false
+
+  /**
+   * Returns whether A is a superset of B
+   *
+   * {{{
+   *   - A is-started-by B  | S
+   *   - A contains B       | D
+   *   - A is-finished-by B | F
+   *   - A equals B         | e
+   * }}}
+   *
+   * A ⊇ B <=> (r1 ⊕ r3 ) ∧ (r2 ⊕ r4 )
+   */
+  def isSuperset: Boolean =
+    if ((r1 ^ r3) & (r2 ^ r4)) > 0 then true else false
+
+// TODO: impl set relations
 
   def isBefore: Boolean =
     // 0 0 0 1
@@ -121,8 +140,6 @@ final case class Relation(repr: Byte):
 
   @inline private def r4: Int =
     repr & 1
-
-// TODO: impl set relations
 
 object Relation:
 

@@ -337,54 +337,30 @@ final class RelationSpec extends TestSpec:
       }
 
       "isSubset" should {
-        "auto check for starts" in {
+        "auto check" in {
           forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            whenever(xx.starts(yy)) {
-              val r = Relation.make(xx, yy)
+            val r = Relation.make(xx, yy)
 
-              r.isSubset mustBe (true)
+            whenever(r.isSubset) {
+              assertOneOf(Set("s", "d", "f", "e"), r)
             }
           }
         }
+      }
 
-        "auto check for during" in {
+      "isSuperset" should {
+        "auto check" in {
           forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
             val xx = Interval.make(ox1, ox2, ix1, ix2)
             val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-            whenever(xx.during(yy)) {
-              val r = Relation.make(xx, yy)
+            val r = Relation.make(xx, yy)
 
-              r.isSubset mustBe (true)
-            }
-          }
-        }
-
-        "auto check for finishes" in {
-          forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-            val xx = Interval.make(ox1, ox2, ix1, ix2)
-            val yy = Interval.make(oy1, oy2, iy1, iy2)
-
-            whenever(xx.finishes(yy)) {
-              val r = Relation.make(xx, yy)
-
-              r.isSubset mustBe (true)
-            }
-          }
-        }
-
-        "auto check for equals" in {
-          forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-            val xx = Interval.make(ox1, ox2, ix1, ix2)
-            val yy = Interval.make(oy1, oy2, iy1, iy2)
-
-            whenever(xx.equalsTo(yy)) {
-              val r = Relation.make(xx, yy)
-
-              r.isSubset mustBe (true)
+            whenever(r.isSuperset) {
+              assertOneOf(Set("S", "D", "F", "e"), r)
             }
           }
         }
@@ -981,6 +957,14 @@ final class RelationSpec extends TestSpec:
     if trues.size != 1 || !rs.contains(trues.head) then
       fail(
         s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| should satisfy one of ${rs.mkString("[", ",", "]")} relations, however it satisfies ${trues.mkString("[", ",", "]")} instead"
+      )
+
+  private def assertOneOf(rs: Set[String], r: Relation): Unit =
+    val trues = findSatisfyRelations(r) - "E" // "E" is a duplicate of "e"
+
+    if trues.size != 1 || !rs.contains(trues.head) then
+      fail(
+        s"r: ${r} should satisfy one of ${rs.mkString("[", ",", "]")} relations, however it satisfies ${trues.mkString("[", ",", "]")} instead"
       )
 
   private def assertOne(k: String, r: Relation): Unit =
