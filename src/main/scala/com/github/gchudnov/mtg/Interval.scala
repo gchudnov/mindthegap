@@ -79,6 +79,9 @@ case object Empty extends Interval[Nothing]:
   override def right: RightBoundary[Nothing] =
     RightBoundary(None, false)
 
+  // TODO: None, None in boundaries is incorrect, fix it
+  // we need some value: [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
+
   override def isEmpty: Boolean     = true
   override def isDegenrate: Boolean = false
   override def isProper: Boolean    = false
