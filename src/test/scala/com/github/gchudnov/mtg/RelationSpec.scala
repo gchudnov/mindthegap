@@ -380,6 +380,21 @@ final class RelationSpec extends TestSpec:
           }
         }
       }
+
+      "isLessEqual" should {
+        "auto check" in {
+          forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+            val xx = Interval.make(ox1, ox2, ix1, ix2)
+            val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+            val r = Relation.make(xx, yy)
+
+            whenever(r.isLessEqual) {
+              assertOneOf(Set("b", "m", "o", "s", "f", "F", "e"), r)
+            }
+          }
+        }
+      }
     }
 
     /**
@@ -909,6 +924,19 @@ final class RelationSpec extends TestSpec:
 
           whenever(xx.isDisjoint(yy)) {
             assertOneOf(Set("b", "B"), xx, yy)
+          }
+        }
+      }
+    }
+
+    "isLessEqual" should {
+      "auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          whenever(xx.isLessEqual(yy)) {
+            assertOneOf(Set("b", "m", "o", "s", "f", "F", "e"), xx, yy)
           }
         }
       }

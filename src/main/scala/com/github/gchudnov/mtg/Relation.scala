@@ -90,6 +90,24 @@ final case class Relation(repr: Byte):
   def isDisjoint: Boolean =
     (~r1 & ~r2 & (r3 ^ r4)) == 1
 
+  /**
+   * Checks whether A is less-or-equal to B
+   *
+   * {{{
+   *   - before         | b
+   *   - meets          | m
+   *   - overlaps       | o
+   *   - starts         | s
+   *   - finishes       | f
+   *   - is-finished-by | F
+   *   - equal          | e
+   * }}}
+   *
+   * A ≤ B <=> r4 ∧ (¬r1 ∨ ¬r3)
+   */
+  def isLessEqual: Boolean =
+    (r4 & (~r1 | ~r3)) == 1
+
 // TODO: impl set relations
 
   def isBefore: Boolean =
@@ -165,7 +183,7 @@ object Relation:
    * Calculate the overlapping relation between two intervals
    */
   def make[T: Ordering: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Relation =
-    if a.isEmpty || b.isEmpty then Relation(0)
+    if a.isEmpty || b.isEmpty then Relation(0) // (0 0 0 0)
     else
       // ((a- != b-) && (a+ != b+))
       val t1 = !bOrd.equiv(a.left, b.left)
@@ -560,3 +578,21 @@ object Relation:
      */
     def isDisjoint(b: Interval[T]): Boolean =
       a.before(b) || a.after(b)
+
+    /**
+     * Checks whether A is less-or-equal to B
+     *
+     * {{{
+     *   - before         | b
+     *   - meets          | m
+     *   - overlaps       | o
+     *   - starts         | s
+     *   - finishes       | f
+     *   - is-finished-by | F
+     *   - equal          | e
+     * }}}
+     *
+     * A ≤ B <=> r4 ∧ (¬r1 ∨ ¬r3)
+     */
+    def isLessEqual(b: Interval[T]): Boolean =
+      a.before(b) || a.meets(b) || a.overlaps(b) || a.starts(b) || a.finishes(b) || a.isFinishedBy(b) || a.equalsTo(b)
