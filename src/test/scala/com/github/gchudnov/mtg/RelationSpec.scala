@@ -546,6 +546,34 @@ final class RelationSpec extends TestSpec:
       }
     }
 
+    "intersection" should {
+      "empty" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val zz = Relation.intersection(xx, yy)
+
+          whenever(zz.isEmpty) {
+            assertOneOf(Set("b", "B"), xx, yy)
+          }
+        }
+      }
+
+      "[a-, a+]" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          val zz = Relation.intersection(xx, yy)
+
+          whenever(xx.nonEmpty && yy.nonEmpty && (zz.left == xx.left) && (zz.right == xx.right)) {
+            assertOneOf(Set("s", "d", "f", "e"), xx, yy)
+          }
+        }
+      }
+    }
+
     /**
      * Before, After (Preceeds, IsPreceededBy)
      *

@@ -250,6 +250,34 @@ object Relation:
 
       Relation(r.toByte)
 
+  /**
+   * Intersection
+   *
+   * The intersection A ∩ B
+   *
+   * {{{
+   *          | ∅        if ¬r1 ∧ ¬r2 ∧ ¬(r3 ∧ r4)  | b, B
+   *          | [a-, a+] if r3 ∧ r4                 | s, d, f, e
+   * A ∩ B := | [a-, b+] if r3 ∧ ¬r4                | O, M, S
+   *          | [b-, a+] if ¬r3 ∧ r4                | m, o, F
+   *          | [b-, b+] if ¬r3 ∧ ¬r4               | D
+   * }}}
+   */
+  def intersection[T: Ordering: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+    val r = make(a, b)
+
+    if (~r.r1 & ~r.r2 & ~(r.r3 & r.r4)) == 1 then Interval.empty[T]
+    else
+      (r.r3, r.r4) match
+        case (1, 1) =>
+          Interval.make(a.left, a.right)
+        case (1, 0) =>
+          Interval.make(a.left, b.right)
+        case (0, 1) =>
+          Interval.make(b.left, a.right)
+        case (0, 0) =>
+          Interval.make(b.left, b.right)
+
   extension [T: Ordering: Domain](a: Interval[T])(using bOrd: Ordering[Boundary[T]])
 
     /**
@@ -668,13 +696,7 @@ object Relation:
       a.after(b)
 
     /**
-      * Intersection
-      * 
-      * {{{
-      * 
-      * }}}
-      */
+     * Intersection of two intervals
+     */
     def intersection(b: Interval[T]): Interval[T] =
-      ???
-
-      // TODO: impl it
+      Relation.intersection(a, b)

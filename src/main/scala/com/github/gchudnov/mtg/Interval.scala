@@ -22,7 +22,7 @@ import com.github.gchudnov.mtg.Domains.nothingDomain
  *     - RightClosed                    | (-∞, b] = {x | x < b}
  *   - Unbounded                        | (-∞, +∞) = R
  * }}}
- * 
+ *
  * NOTE: Degenerate -- other names are Point, Singleton.
  *
  * {{{
@@ -54,7 +54,7 @@ sealed trait Interval[+T: Ordering: Domain]:
   def isEmpty: Boolean
   def isDegenrate: Boolean
   def isProper: Boolean
-  
+
   def isUnbounded: Boolean
 
   def nonEmpty: Boolean =
@@ -263,11 +263,19 @@ object Interval:
   def make[T: Ordering: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     val ba = LeftBoundary(a, isIncludeA)
     val bb = RightBoundary(b, isIncludeB)
+    make(ba, bb)
 
-    (a, b) match
+  def make[T: Ordering: Domain](ba: LeftBoundary[T], bb: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+    (ba.value, bb.value) match
       case (Some(x), Some(y)) =>
         if bOrd.equiv(ba, bb) then degenerate(x)
         else if bOrd.lt(bb, ba) then empty[T]
-        else proper(a, b, isIncludeA, isIncludeB)
+        else proper(ba.value, bb.value, ba.isInclude, bb.isInclude)
       case _ =>
-        proper(a, b, isIncludeA, isIncludeB)
+        proper(ba.value, bb.value, ba.isInclude, bb.isInclude)
+
+  /**
+   * Intersection
+   */
+  def intersection[T: Ordering: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+    Relation.intersection(a, b)
