@@ -40,6 +40,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (true)
               r.isLessEqual mustBe (true)
               r.isLess mustBe (true)
+              r.isGreaterEqual mustBe (false)
+              r.isGreater mustBe (false)
             }
           }
         }
@@ -66,6 +68,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (true)
               r.isLessEqual mustBe (false)
               r.isLess mustBe (false)
+              r.isGreaterEqual mustBe (true)
+              r.isGreater mustBe (true)
             }
           }
         }
@@ -92,6 +96,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (true)
               r.isLess mustBe (false)
+              r.isGreaterEqual mustBe (false)
+              r.isGreater mustBe (false)
             }
           }
         }
@@ -118,6 +124,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (false)
               r.isLess mustBe (false)
+              r.isGreaterEqual mustBe (true)
+              r.isGreater mustBe (false)
             }
           }
         }
@@ -144,6 +152,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (true)
               r.isLess mustBe (false)
+              r.isGreaterEqual mustBe (false)
+              r.isGreater mustBe (false)
             }
           }
         }
@@ -170,6 +180,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (false)
               r.isLess mustBe (false)
+              r.isGreaterEqual mustBe (true)
+              r.isGreater mustBe (false)
             }
           }
         }
@@ -196,6 +208,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (true)
               r.isLess mustBe (false)
+              r.isGreaterEqual mustBe (false)
+              r.isGreater mustBe (false)
             }
           }
         }
@@ -222,6 +236,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (false)
               r.isLess mustBe (false)
+              r.isGreaterEqual mustBe (true)
+              r.isGreater mustBe (false)
             }
           }
         }
@@ -248,6 +264,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (false)
               r.isLess mustBe (false)
+              r.isGreaterEqual mustBe (false)
+              r.isGreater mustBe (false)
             }
           }
         }
@@ -274,6 +292,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (false)
               r.isLess mustBe (false)
+              r.isGreaterEqual mustBe (false)
+              r.isGreater mustBe (false)
             }
           }
         }
@@ -300,6 +320,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (false)
               r.isLess mustBe (false)
+              r.isGreaterEqual mustBe (true)
+              r.isGreater mustBe (false)
             }
           }
         }
@@ -326,6 +348,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (true)
               r.isLess mustBe (false)
+              r.isGreaterEqual mustBe (false)
+              r.isGreater mustBe (false)
             }
           }
         }
@@ -352,6 +376,8 @@ final class RelationSpec extends TestSpec:
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (true)
               r.isLess mustBe (false)
+              r.isGreaterEqual mustBe (true)
+              r.isGreater mustBe (false)
             }
           }
         }
@@ -484,6 +510,36 @@ final class RelationSpec extends TestSpec:
 
             whenever(r.isLess) {
               assertOneOf(Set("b"), r)
+            }
+          }
+        }
+      }
+
+      "isGreaterEqual" should {
+        "auto check" in {
+          forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+            val xx = Interval.make(ox1, ox2, ix1, ix2)
+            val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+            val r = Relation.make(xx, yy)
+
+            whenever(r.isGreaterEqual) {
+              assertOneOf(Set("B", "f", "O", "M", "S", "e"), r)
+            }
+          }
+        }
+      }
+
+      "isGreater" should {
+        "auto check" in {
+          forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+            val xx = Interval.make(ox1, ox2, ix1, ix2)
+            val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+            val r = Relation.make(xx, yy)
+
+            whenever(r.isGreater) {
+              assertOneOf(Set("B"), r)
             }
           }
         }
@@ -1043,6 +1099,32 @@ final class RelationSpec extends TestSpec:
 
           whenever(xx.isLess(yy)) {
             assertOneOf(Set("b"), xx, yy)
+          }
+        }
+      }
+    }
+
+    "isGreaterEqual" should {
+      "auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          whenever(xx.isGreaterEqual(yy)) {
+            assertOneOf(Set("B", "f", "O", "M", "S", "e"), xx, yy)
+          }
+        }
+      }
+    }
+
+    "isGreater" should {
+      "auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          whenever(xx.isGreater(yy)) {
+            assertOneOf(Set("B"), xx, yy)
           }
         }
       }
