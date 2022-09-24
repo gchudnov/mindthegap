@@ -46,7 +46,7 @@ package com.github.gchudnov.mtg
 final case class Relation(repr: Byte):
 
   /**
-   * Checks whether A is a subset of B
+   * Checks whether A is a subset of B (Set Relation)
    *
    * {{{
    *   - A starts B   | s
@@ -61,7 +61,7 @@ final case class Relation(repr: Byte):
     (r3 & r4) == 1
 
   /**
-   * Checks whether A is a superset of B
+   * Checks whether A is a superset of B (Set Relation)
    *
    * {{{
    *   - A is-started-by B  | S
@@ -76,7 +76,7 @@ final case class Relation(repr: Byte):
     ((r1 ^ r3) & (r2 ^ r4)) == 1
 
   /**
-   * Checks if there A and B are disjoint.
+   * Checks if there A and B are disjoint (Set Relation)
    *
    * A and B are disjoint if A does not intersect B.
    *
@@ -91,7 +91,7 @@ final case class Relation(repr: Byte):
     (~r1 & ~r2 & (r3 ^ r4)) == 1
 
   /**
-   * Checks whether A is less-or-equal to B
+   * Checks whether A is less-than-or-equal-to B (Order Relation)
    *
    * {{{
    *   - before         | b
@@ -106,6 +106,47 @@ final case class Relation(repr: Byte):
    */
   def isLessEqual: Boolean =
     (r4 & (~r1 | ~r3)) == 1
+
+  /**
+   * Checks whether A precedes B (Order Relation)
+   *
+   * {{{
+   *   - before | b
+   * }}}
+   *
+   * A ≺ B <=> ¬r1 ∧ ¬r2 ∧ ¬r3 ∧ r4
+   */
+  def isLess: Boolean =
+    isBefore
+
+  /**
+   * Checks whether A greater-than-or-equal-to B (Order Relation)
+   *
+   * {{{
+   *   - after            | B
+   *   - finishes         | f
+   *   - is-overlapped-by | O
+   *   - is-met-by        | M
+   *   - is-started-by    | S
+   *   - equal            | e
+   * }}}
+   *
+   * A ≥ B <=> r3 ∧ (¬r2 ∨ ¬r4)
+   */
+  def isGreaterEqual: Boolean =
+    (r3 & (~r2 | ~r4)) == 1
+
+  /**
+   * Checks whether A succeeds B (Order Relation)
+   *
+   * {{{
+   *   - after | B
+   * }}}
+   *
+   * A ≻ B <=> ¬r1 ∧ ¬r2 ∧ r3 ∧ ¬r4
+   */
+  def isGreater: Boolean =
+    isAfter
 
 // TODO: impl set relations
 
@@ -592,3 +633,38 @@ object Relation:
      */
     def isLessEqual(b: Interval[T]): Boolean =
       a.before(b) || a.meets(b) || a.overlaps(b) || a.starts(b) || a.isFinishedBy(b) || a.equalsTo(b)
+
+    /**
+     * Checks whether A precedes B (Order Relation)
+     *
+     * {{{
+     *   - before | b
+     * }}}
+     */
+    def isLess(b: Interval[T]): Boolean =
+      a.before(b)
+
+    /**
+     * Checks whether A greater-than-or-equal-to B (Order Relation)
+     *
+     * {{{
+     *   - after            | B
+     *   - finishes         | f
+     *   - is-overlapped-by | O
+     *   - is-met-by        | M
+     *   - is-started-by    | S
+     *   - equal            | e
+     * }}}
+     */
+    def isGreaterEqual(b: Interval[T]): Boolean =
+      a.after(b) || a.finishes(b) || a.isOverlapedBy(b) || a.isMetBy(b) || a.isStartedBy(b) || a.equalsTo(b)
+
+    /**
+     * Checks whether A succeeds B (Order Relation)
+     *
+     * {{{
+     *   - after | B
+     * }}}
+     */
+    def isGreater(b: Interval[T]): Boolean =
+      a.after(b)

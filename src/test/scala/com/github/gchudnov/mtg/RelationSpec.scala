@@ -39,6 +39,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (false)
               r.isDisjoint mustBe (true)
               r.isLessEqual mustBe (true)
+              r.isLess mustBe (true)
             }
           }
         }
@@ -64,6 +65,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (false)
               r.isDisjoint mustBe (true)
               r.isLessEqual mustBe (false)
+              r.isLess mustBe (false)
             }
           }
         }
@@ -89,6 +91,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (false)
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (true)
+              r.isLess mustBe (false)
             }
           }
         }
@@ -114,6 +117,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (false)
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (false)
+              r.isLess mustBe (false)
             }
           }
         }
@@ -139,6 +143,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (false)
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (true)
+              r.isLess mustBe (false)
             }
           }
         }
@@ -164,6 +169,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (false)
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (false)
+              r.isLess mustBe (false)
             }
           }
         }
@@ -189,6 +195,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (false)
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (true)
+              r.isLess mustBe (false)
             }
           }
         }
@@ -214,6 +221,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (true)
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (false)
+              r.isLess mustBe (false)
             }
           }
         }
@@ -239,6 +247,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (false)
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (false)
+              r.isLess mustBe (false)
             }
           }
         }
@@ -264,6 +273,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (true)
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (false)
+              r.isLess mustBe (false)
             }
           }
         }
@@ -289,6 +299,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (false)
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (false)
+              r.isLess mustBe (false)
             }
           }
         }
@@ -314,6 +325,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (true)
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (true)
+              r.isLess mustBe (false)
             }
           }
         }
@@ -339,6 +351,7 @@ final class RelationSpec extends TestSpec:
               r.isSuperset mustBe (true)
               r.isDisjoint mustBe (false)
               r.isLessEqual mustBe (true)
+              r.isLess mustBe (false)
             }
           }
         }
@@ -456,6 +469,21 @@ final class RelationSpec extends TestSpec:
 
             whenever(r.isLessEqual) {
               assertOneOf(Set("b", "m", "o", "s", "F", "e"), r)
+            }
+          }
+        }
+      }
+
+      "isLess" should {
+        "auto check" in {
+          forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+            val xx = Interval.make(ox1, ox2, ix1, ix2)
+            val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+            val r = Relation.make(xx, yy)
+
+            whenever(r.isLess) {
+              assertOneOf(Set("b"), r)
             }
           }
         }
@@ -1002,6 +1030,19 @@ final class RelationSpec extends TestSpec:
 
           whenever(xx.isLessEqual(yy)) {
             assertOneOf(Set("b", "m", "o", "s", "F", "e"), xx, yy)
+          }
+        }
+      }
+    }
+
+    "isLess" should {
+      "auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          whenever(xx.isLess(yy)) {
+            assertOneOf(Set("b"), xx, yy)
           }
         }
       }
