@@ -34,6 +34,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (0)
 
               assertOne("b", r)
+
+              r.isSubset mustBe (false)
+              r.isSuperset mustBe (false)
+              r.isDisjoint mustBe (true)
+              r.isLessEqual mustBe (true)
             }
           }
         }
@@ -54,6 +59,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (0)
 
               assertOne("B", r)
+
+              r.isSubset mustBe (false)
+              r.isSuperset mustBe (false)
+              r.isDisjoint mustBe (true)
+              r.isLessEqual mustBe (false)
             }
           }
         }
@@ -74,6 +84,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (0)
 
               assertOne("m", r)
+
+              r.isSubset mustBe (false)
+              r.isSuperset mustBe (false)
+              r.isDisjoint mustBe (false)
+              r.isLessEqual mustBe (true)
             }
           }
         }
@@ -94,6 +109,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (1)
 
               assertOne("M", r)
+
+              r.isSubset mustBe (false)
+              r.isSuperset mustBe (false)
+              r.isDisjoint mustBe (false)
+              r.isLessEqual mustBe (false)
             }
           }
         }
@@ -114,6 +134,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (1)
 
               assertOne("o", r)
+
+              r.isSubset mustBe (false)
+              r.isSuperset mustBe (false)
+              r.isDisjoint mustBe (false)
+              r.isLessEqual mustBe (true)
             }
           }
         }
@@ -134,6 +159,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (1)
 
               assertOne("O", r)
+
+              r.isSubset mustBe (false)
+              r.isSuperset mustBe (false)
+              r.isDisjoint mustBe (false)
+              r.isLessEqual mustBe (false)
             }
           }
         }
@@ -154,6 +184,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (0)
 
               assertOne("s", r)
+
+              r.isSubset mustBe (true)
+              r.isSuperset mustBe (false)
+              r.isDisjoint mustBe (false)
+              r.isLessEqual mustBe (true)
             }
           }
         }
@@ -174,6 +209,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (0)
 
               assertOne("S", r)
+
+              r.isSubset mustBe (false)
+              r.isSuperset mustBe (true)
+              r.isDisjoint mustBe (false)
+              r.isLessEqual mustBe (false)
             }
           }
         }
@@ -194,6 +234,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (1)
 
               assertOne("d", r)
+
+              r.isSubset mustBe (true)
+              r.isSuperset mustBe (false)
+              r.isDisjoint mustBe (false)
+              r.isLessEqual mustBe (false)
             }
           }
         }
@@ -214,6 +259,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (1)
 
               assertOne("D", r)
+
+              r.isSubset mustBe (false)
+              r.isSuperset mustBe (true)
+              r.isDisjoint mustBe (false)
+              r.isLessEqual mustBe (false)
             }
           }
         }
@@ -234,6 +284,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (1)
 
               assertOne("f", r)
+
+              r.isSubset mustBe (true)
+              r.isSuperset mustBe (false)
+              r.isDisjoint mustBe (false)
+              r.isLessEqual mustBe (false)
             }
           }
         }
@@ -254,6 +309,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (1)
 
               assertOne("F", r)
+
+              r.isSubset mustBe (false)
+              r.isSuperset mustBe (true)
+              r.isDisjoint mustBe (false)
+              r.isLessEqual mustBe (true)
             }
           }
         }
@@ -274,6 +334,11 @@ final class RelationSpec extends TestSpec:
               bit3(r.repr) mustBe (0)
 
               assertOne("e", r)
+
+              r.isSubset mustBe (true)
+              r.isSuperset mustBe (true)
+              r.isDisjoint mustBe (false)
+              r.isLessEqual mustBe (true)
             }
           }
         }
@@ -390,7 +455,7 @@ final class RelationSpec extends TestSpec:
             val r = Relation.make(xx, yy)
 
             whenever(r.isLessEqual) {
-              assertOneOf(Set("b", "m", "o", "s", "f", "F", "e"), r)
+              assertOneOf(Set("b", "m", "o", "s", "F", "e"), r)
             }
           }
         }
@@ -936,7 +1001,7 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.isLessEqual(yy)) {
-            assertOneOf(Set("b", "m", "o", "s", "f", "F", "e"), xx, yy)
+            assertOneOf(Set("b", "m", "o", "s", "F", "e"), xx, yy)
           }
         }
       }

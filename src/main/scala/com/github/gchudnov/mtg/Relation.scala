@@ -98,7 +98,6 @@ final case class Relation(repr: Byte):
    *   - meets          | m
    *   - overlaps       | o
    *   - starts         | s
-   *   - finishes       | f
    *   - is-finished-by | F
    *   - equal          | e
    * }}}
@@ -587,12 +586,9 @@ object Relation:
      *   - meets          | m
      *   - overlaps       | o
      *   - starts         | s
-     *   - finishes       | f
      *   - is-finished-by | F
      *   - equal          | e
      * }}}
-     *
-     * A ≤ B <=> r4 ∧ (¬r1 ∨ ¬r3)
      */
     def isLessEqual(b: Interval[T]): Boolean =
-      a.before(b) || a.meets(b) || a.overlaps(b) || a.starts(b) || a.finishes(b) || a.isFinishedBy(b) || a.equalsTo(b)
+      a.before(b) || a.meets(b) || a.overlaps(b) || a.starts(b) || a.isFinishedBy(b) || a.equalsTo(b)
