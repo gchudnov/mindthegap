@@ -505,12 +505,27 @@ object Relation:
       a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
 
     /**
-     * Check whether A is a subset of B
+     * Returns whether A is a subset of B:
      *
-     *   - A starts B
-     *   - A during B
-     *   - A finishes B
-     *   - A equals B
+     * {{{
+     *   - A starts B   | s
+     *   - A during B   | d
+     *   - A finishes B | f
+     *   - A equals B   | e
+     * }}}
      */
     def isSubset(b: Interval[T]): Boolean =
       a.starts(b) || a.during(b) || a.finishes(b) || a.equalsTo(b)
+
+    /**
+     * Returns whether A is a superset of B
+     *
+     * {{{
+     *   - A is-started-by B  | S
+     *   - A contains B       | D
+     *   - A is-finished-by B | F
+     *   - A equals B         | e
+     * }}}
+     */
+    def isSuperset(b: Interval[T]): Boolean =
+      a.isStartedBy(b) || a.contains(b) || a.isFinishedBy(b) || a.equalsTo(b)

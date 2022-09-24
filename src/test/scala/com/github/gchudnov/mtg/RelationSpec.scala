@@ -873,6 +873,19 @@ final class RelationSpec extends TestSpec:
       }
     }
 
+    "isSuperset" should {
+      "auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          whenever(xx.isSuperset(yy)) {
+            assertOneOf(Set("S", "D", "F", "e"), xx, yy)
+          }
+        }
+      }      
+    }
+
     "satisfy" should {
       "one relation only" in {
         forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
