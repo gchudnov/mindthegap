@@ -46,7 +46,7 @@ package com.github.gchudnov.mtg
 final case class Relation(repr: Byte):
 
   /**
-   * Returns whether A is a subset of B:
+   * Checks whether A is a subset of B
    *
    * {{{
    *   - A starts B   | s
@@ -58,10 +58,10 @@ final case class Relation(repr: Byte):
    * A ⊆ B <=> r3 ∧ r4
    */
   def isSubset: Boolean =
-    if (r3 & r4) > 0 then true else false
+    (r3 & r4) == 1
 
   /**
-   * Returns whether A is a superset of B
+   * Checks whether A is a superset of B
    *
    * {{{
    *   - A is-started-by B  | S
@@ -73,7 +73,22 @@ final case class Relation(repr: Byte):
    * A ⊇ B <=> (r1 ⊕ r3 ) ∧ (r2 ⊕ r4 )
    */
   def isSuperset: Boolean =
-    if ((r1 ^ r3) & (r2 ^ r4)) > 0 then true else false
+    ((r1 ^ r3) & (r2 ^ r4)) == 1
+
+  /**
+   * Checks if there A and B are disjoint.
+   *
+   * A and B are disjoint if A does not intersect B.
+   *
+   * {{{
+   *    before | b
+   *    after  | B
+   * }}}
+   *
+   * A ∩ B = ∅ <=> ¬r1 ∧ ¬r2 ∧ (r3 ⊕ r4 )
+   */
+  def isDisjoint: Boolean =
+    (~r1 & ~r2 & (r3 ^ r4)) == 1
 
 // TODO: impl set relations
 
@@ -125,6 +140,9 @@ final case class Relation(repr: Byte):
     // 1 0 0 1
     repr == 0x9
 
+  /**
+   * A = B <=> ¬r1 ∧ ¬r2 ∧ r3 ∧ r4
+   */
   def isEqualsTo: Boolean =
     // 0 0 1 1
     repr == 0x3
@@ -505,7 +523,7 @@ object Relation:
       a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
 
     /**
-     * Returns whether A is a subset of B:
+     * Checks whether A is a subset of B
      *
      * {{{
      *   - A starts B   | s
@@ -518,7 +536,7 @@ object Relation:
       a.starts(b) || a.during(b) || a.finishes(b) || a.equalsTo(b)
 
     /**
-     * Returns whether A is a superset of B
+     * Checks whether A is a superset of B
      *
      * {{{
      *   - A is-started-by B  | S
@@ -529,3 +547,16 @@ object Relation:
      */
     def isSuperset(b: Interval[T]): Boolean =
       a.isStartedBy(b) || a.contains(b) || a.isFinishedBy(b) || a.equalsTo(b)
+
+    /**
+     * Checks if there A and B are disjoint.
+     *
+     * A and B are disjoint if A does not intersect B.
+     *
+     * {{{
+     *    before | b
+     *    after  | B
+     * }}}
+     */
+    def isDisjoint(b: Interval[T]): Boolean =
+      a.before(b) || a.after(b)

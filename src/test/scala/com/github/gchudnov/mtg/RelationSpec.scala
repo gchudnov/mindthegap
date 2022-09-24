@@ -365,6 +365,21 @@ final class RelationSpec extends TestSpec:
           }
         }
       }
+
+      "isDisjoint" should {
+        "auto check" in {
+          forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+            val xx = Interval.make(ox1, ox2, ix1, ix2)
+            val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+            val r = Relation.make(xx, yy)
+
+            whenever(r.isDisjoint) {
+              assertOneOf(Set("b", "B"), r)
+            }
+          }
+        }
+      }
     }
 
     /**
@@ -883,7 +898,20 @@ final class RelationSpec extends TestSpec:
             assertOneOf(Set("S", "D", "F", "e"), xx, yy)
           }
         }
-      }      
+      }
+    }
+
+    "isDisjoint" should {
+      "auto check" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ox2, ix1, ix2)
+          val yy = Interval.make(oy1, oy2, iy1, iy2)
+
+          whenever(xx.isDisjoint(yy)) {
+            assertOneOf(Set("b", "B"), xx, yy)
+          }
+        }
+      }
     }
 
     "satisfy" should {
