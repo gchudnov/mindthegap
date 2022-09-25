@@ -524,7 +524,7 @@ final class RelationSpec extends TestSpec:
             val r = Relation.make(xx, yy)
 
             whenever(r.isGreaterEqual) {
-              assertOneOf(Set("B", "f", "O", "M", "S", "e"), r)
+              assertOneOf(Set("B", "M", "O", "f", "S", "e"), r)
             }
           }
         }
@@ -1198,7 +1198,7 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.isGreaterEqual(yy)) {
-            assertOneOf(Set("B", "f", "O", "M", "S", "e"), xx, yy)
+            assertOneOf(Set("B", "M", "O", "f", "S", "e"), xx, yy)
           }
         }
       }

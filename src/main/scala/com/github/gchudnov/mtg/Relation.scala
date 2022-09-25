@@ -73,13 +73,15 @@ final case class Relation(repr: Byte):
    * A ⊇ B
    *
    * {{{
+   *   A ⊇ B <=> (r1 ⊕ r3 ) ∧ (r2 ⊕ r4 )
+   * }}}
+   *
+   * {{{
    *   - A is-started-by B  | S
    *   - A contains B       | D
    *   - A is-finished-by B | F
    *   - A equals B         | e
    * }}}
-   *
-   * A ⊇ B <=> (r1 ⊕ r3 ) ∧ (r2 ⊕ r4 )
    */
   def isSuperset: Boolean =
     ((r1 ^ r3) & (r2 ^ r4)) == 1
@@ -92,11 +94,13 @@ final case class Relation(repr: Byte):
    * A and B are disjoint if A does not intersect B.
    *
    * {{{
-   *    before | b
-   *    after  | B
+   *   A ∩ B = ∅ <=> ¬r1 ∧ ¬r2 ∧ (r3 ⊕ r4 )
    * }}}
    *
-   * A ∩ B = ∅ <=> ¬r1 ∧ ¬r2 ∧ (r3 ⊕ r4 )
+   * {{{
+   *   - before | b
+   *   - after  | B
+   * }}}
    */
   def isDisjoint: Boolean =
     (~r1 & ~r2 & (r3 ^ r4)) == 1
@@ -154,19 +158,20 @@ final case class Relation(repr: Byte):
    * A ≥ B
    *
    * {{{
+   *   a- >= b-
+   *   a+ >= b+
    *
+   *   A ≥ B <=> r3 ∧ (¬r2 ∨ ¬r4)
    * }}}
    *
    * {{{
    *   - after            | B
-   *   - finishes         | f
-   *   - is-overlapped-by | O
    *   - is-met-by        | M
+   *   - is-overlapped-by | O
+   *   - finishes         | f
    *   - is-started-by    | S
    *   - equal            | e
    * }}}
-   *
-   * A ≥ B <=> r3 ∧ (¬r2 ∨ ¬r4)
    */
   def isGreaterEqual: Boolean =
     (r3 & (~r2 | ~r4)) == 1
@@ -177,13 +182,16 @@ final case class Relation(repr: Byte):
    * A ≻ B
    *
    * {{{
-   *   - after | B
+   *   ???
+   *   A ≻ B <=> ¬r1 ∧ ¬r2 ∧ r3 ∧ ¬r4
    * }}}
    *
-   * A ≻ B <=> ¬r1 ∧ ¬r2 ∧ r3 ∧ ¬r4
+   * {{{
+   *   - after | B
+   * }}}
    */
   def isGreater: Boolean =
-    isAfter
+    isAfter // TODO: not correct
 
   /**
    * Preceeds (Before)
@@ -259,6 +267,20 @@ final case class Relation(repr: Byte):
   def isEqualsTo: Boolean =
     // 0 0 1 1
     repr == 0x3
+
+  /**
+   * Precedes or IsEqual
+   *
+   * A ≼ B
+   *
+   * {{{
+   *   a+ <= b-
+   *
+   *   A ≼ B <=> ¬r1 ∧ r4 ∧ (¬r3 ∨ (r3 ∧ isDegenerate(A)))
+   * }}}
+   */
+  def isBeforeEqual: Boolean =
+    ??? // TODO: IMPL IT
 
   @inline private def r1: Int =
     (repr >> 3) & 1
@@ -759,27 +781,50 @@ object Relation:
     /**
      * Checks whether A greater-than-or-equal-to B (Order Relation)
      *
+     * A ≥ B
+     *
+     * {{{
+     *   a- >= b-
+     *   a+ >= b+
+     *
+     *   A ≥ B <=> r3 ∧ (¬r2 ∨ ¬r4)
+     * }}}
+     *
      * {{{
      *   - after            | B
-     *   - finishes         | f
-     *   - is-overlapped-by | O
      *   - is-met-by        | M
+     *   - is-overlapped-by | O
+     *   - finishes         | f
      *   - is-started-by    | S
      *   - equal            | e
      * }}}
      */
     def isGreaterEqual(b: Interval[T]): Boolean =
-      a.after(b) || a.finishes(b) || a.isOverlapedBy(b) || a.isMetBy(b) || a.isStartedBy(b) || a.equalsTo(b)
+      a.nonEmpty && b.nonEmpty && bOrd.gteq(a.left, b.left) && bOrd.gteq(a.right, b.right)
 
     /**
      * Checks whether A succeeds B (Order Relation)
+     *
+     * A > B
      *
      * {{{
      *   - after | B
      * }}}
      */
     def isGreater(b: Interval[T]): Boolean =
-      a.after(b)
+      a.after(b) // TODO: incorrect
+
+    /**
+     * Precedes or IsEqual
+     *
+     * A ≼ B
+     *
+     * {{{
+     *   a+ <= b-
+     * }}}
+     */
+    def isBeforeEqual(b: Interval[T]): Boolean =
+      a.nonEmpty && b.nonEmpty && bOrd.lt(a.right, b.left)
 
     /**
      * Intersection of two intervals
