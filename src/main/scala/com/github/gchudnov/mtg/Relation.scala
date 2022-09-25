@@ -40,8 +40,17 @@ package com.github.gchudnov.mtg
  * Relation
  *
  * An encoded overlapping relation between two intervals A and B
+ * 
+ * {{{
+ *   r1 =
+ *   r2 =
+ *   r3 =
+ *   r4 = 
+ * 
+ *   (r1, r2, r3, r4) <=> (bit3, bit2, bit1, bit0)
+ * }}}
  *
- * (r1, r2, r3, r4) <=> (bit3, bit2, bit1, bit0)
+ *
  */
 final case class Relation(repr: Byte):
 
