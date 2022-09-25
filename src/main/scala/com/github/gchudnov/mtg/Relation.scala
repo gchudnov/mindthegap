@@ -345,10 +345,12 @@ object Relation:
       val t1 = !bOrd.equiv(a.left, b.left)
       val t2 = !bOrd.equiv(a.right, b.right)
       val t3 = (t1 && t2)
+
       val t4 = bOrd.lteq(a.right, b.left)
       val t5 = bOrd.gt(a.left, b.right)
       val t6 = bOrd.lt(a.right, b.left)
       val t7 = bOrd.gteq(a.left, b.right)
+      
       val t8 = bOrd.gteq(a.left, b.left)
       val t9 = bOrd.lteq(a.right, b.right)
 
@@ -412,15 +414,15 @@ object Relation:
      * After (B), IsPreceededBy (P)
      *
      * {{{
-     *   PP (Point-Point relations):
+     *   PP (Point-Point):
      *   {p}; {q}
      *   p < q
      *
-     *   PI (Point-Interval relations):
+     *   PI (Point-Interval):
      *   {p}; {i-, i+}
      *   p < i-
      *
-     *   II (Interval-Interval relations):
+     *   II (Interval-Interval):
      *   {a-, a+}; {b-, b+}
      *   a- < b-
      *   a- < b+
@@ -480,7 +482,7 @@ object Relation:
      * IsMetBy (M)
      *
      * {{{
-     *   II (Interval-Interval relations):
+     *   II (Interval-Interval):
      *   {a-, a+}; {b-; b+}
      *   a- < b-
      *   a- < b+
@@ -519,7 +521,7 @@ object Relation:
      *   - If any of the intervals is Empty, there is no overlapping.
      *
      * {{{
-     *   II (Interval-Interval relations):
+     *   II (Interval-Interval):
      *   {a-, a+}; {b-; b+}
      *   a- < b-
      *   a- < b+
@@ -556,11 +558,11 @@ object Relation:
      * Contains (D), Includes (I)
      *
      * {{{
-     *   PI (Point-Interval relations):
+     *   PI (Point-Interval):
      *   {p}; {i-, i+}
      *   i- < p < i+
      *
-     *   II (Interval-Interval relations):
+     *   II (Interval-Interval):
      *   {a-, a+}; {b-; b+}
      *   a- > b-
      *   a- < b+
@@ -604,11 +606,11 @@ object Relation:
      * IsStartedBy (S)
      *
      * {{{
-     *   PI (Point-Interval relations):
+     *   PI (Point-Interval):
      *   {p}; {i-, i+}
      *   p = i-
      *
-     *   II (Interval-Interval relations):
+     *   II (Interval-Interval):
      *   {a-, a+}; {b-; b+}
      *   a- = b-
      *   a- < b+
@@ -654,11 +656,11 @@ object Relation:
      * IsFinishedBy (F)
      *
      * {{{
-     *   PI (Point-Interval relations):
+     *   PI (Point-Interval):
      *   {p}; {i-, i+}
      *   p = i+
      *
-     *   II (Interval-Interval relations):
+     *   II (Interval-Interval):
      *   {a-, a+}; {b-; b+}
      *   a- > b-
      *   a- < b+
@@ -704,11 +706,11 @@ object Relation:
      * A = B
      *
      * {{{
-     *   PP (Point-Point relations):
+     *   PP (Point-Point):
      *   {p}; {q}
      *   p = q
      *
-     *   II (Interval-Interval relations):
+     *   II (Interval-Interval):
      *   {a-, a+}; {b-; b+}
      *   a- = b-
      *   a- < b+
