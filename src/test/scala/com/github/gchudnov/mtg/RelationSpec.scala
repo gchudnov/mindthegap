@@ -125,7 +125,7 @@ final class RelationSpec extends TestSpec:
               r.isLessEqual mustBe (false)
               r.isLess mustBe (false)
               r.isGreaterEqual mustBe (true)
-              r.isGreater mustBe (false)
+              r.isGreater mustBe (true)
             }
           }
         }
@@ -181,7 +181,7 @@ final class RelationSpec extends TestSpec:
               r.isLessEqual mustBe (false)
               r.isLess mustBe (false)
               r.isGreaterEqual mustBe (true)
-              r.isGreater mustBe (false)
+              r.isGreater mustBe (true)
             }
           }
         }
@@ -539,7 +539,7 @@ final class RelationSpec extends TestSpec:
             val r = Relation.make(xx, yy)
 
             whenever(r.isGreater) {
-              assertOneOf(Set("B"), r)
+              assertOneOf(Set("B", "M", "O"), r)
             }
           }
         }
@@ -1211,7 +1211,7 @@ final class RelationSpec extends TestSpec:
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
           whenever(xx.isGreater(yy)) {
-            assertOneOf(Set("B"), xx, yy)
+            assertOneOf(Set("B", "M", "O"), xx, yy)
           }
         }
       }

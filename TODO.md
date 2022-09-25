@@ -6,6 +6,7 @@ TODO: impl bits from this paper:
 - [Parallel Detection of Interval Overlapping](10.1.1.1004.9901.pdf) - encode interval overlappings
 
 
+TODO: write the meaning of r1 ... r4
 
 
 https://leetcode.com/problems/interval-list-intersections/

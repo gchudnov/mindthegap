@@ -179,19 +179,23 @@ final case class Relation(repr: Byte):
   /**
    * Checks whether A succeeds B (Order Relation)
    *
-   * A ≻ B
+   * A > B
    *
    * {{{
-   *   ???
-   *   A ≻ B <=> ¬r1 ∧ ¬r2 ∧ r3 ∧ ¬r4
+   *   a- > b-
+   *   a+ > b+
+   *
+   *   A > B <=>
    * }}}
    *
    * {{{
-   *   - after | B
+   *   - after            | B
+   *   - is-met-by        | M
+   *   - is-overlapped-by | O
    * }}}
    */
   def isGreater: Boolean =
-    isAfter // TODO: not correct
+    ((r1 | ~r2) & r3 & (~r4)) == 1
 
   /**
    * Preceeds (Before)
@@ -812,7 +816,7 @@ object Relation:
      * }}}
      */
     def isGreater(b: Interval[T]): Boolean =
-      a.after(b) // TODO: incorrect
+      a.nonEmpty && b.nonEmpty && bOrd.gt(a.left, b.left) && bOrd.gt(a.right, b.right)
 
     /**
      * Precedes or IsEqual
