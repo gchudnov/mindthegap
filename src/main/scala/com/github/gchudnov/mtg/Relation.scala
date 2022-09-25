@@ -33,16 +33,16 @@ package com.github.gchudnov.mtg
  *  starts(a,b)      s|S      BBBBBBBBB
  *  during(a,b)      d|D    BBBBBBBBB
  *  finishes(a,b)    f|F  BBBBBBBBB
+ *  equals(a, b)     e        BBBBB
  *
  *
  * =======================
  *  A subset-of B (A ⊆ B):
- *
- *  starts     AAAAA   :
- *  during     : AAAAA :
- *  finishes   :   AAAAA
- *  equals     AAAAAAAAA
- *             BBBBBBBBB
+ *                            AAAAA
+ *  starts(a,b)      s        BBBBBBBBB
+ *  during(a,b)      d      BBBBBBBBB
+ *  finishes(a,b)    f    BBBBBBBBB
+ *  equals(a, b)     e        BBBBB
  *
  *
  *
@@ -350,7 +350,7 @@ object Relation:
       val t5 = bOrd.gt(a.left, b.right)
       val t6 = bOrd.lt(a.right, b.left)
       val t7 = bOrd.gteq(a.left, b.right)
-      
+
       val t8 = bOrd.gteq(a.left, b.left)
       val t9 = bOrd.lteq(a.right, b.right)
 
