@@ -48,20 +48,29 @@ final case class Relation(repr: Byte):
   /**
    * Checks whether A is a subset of B (Set Relation)
    *
+   * A ⊆ B
+   *
+   * {{{
+   *   a- >= b-
+   *   a+ <= b+
+   * 
+   *   A ⊆ B <=> r3 ∧ r4
+   * }}}
+   *
    * {{{
    *   - A starts B   | s
    *   - A during B   | d
    *   - A finishes B | f
    *   - A equals B   | e
    * }}}
-   *
-   * A ⊆ B <=> r3 ∧ r4
    */
   def isSubset: Boolean =
     (r3 & r4) == 1
 
   /**
    * Checks whether A is a superset of B (Set Relation)
+   * 
+   * A ⊇ B
    *
    * {{{
    *   - A is-started-by B  | S
@@ -77,6 +86,8 @@ final case class Relation(repr: Byte):
 
   /**
    * Checks if there A and B are disjoint (Set Relation)
+   * 
+   * A ∩ B
    *
    * A and B are disjoint if A does not intersect B.
    *
@@ -93,6 +104,15 @@ final case class Relation(repr: Byte):
   /**
    * Checks whether A is less-than-or-equal-to B (Order Relation)
    *
+   * A ≤ B
+   *
+   * {{{
+   *   a- <= b-
+   *   a+ <= b+
+   * 
+   *   A ≤ B <=> r4 ∧ (¬r1 ∨ ¬r3)
+   * }}}
+   *
    * {{{
    *   - before         | b
    *   - meets          | m
@@ -101,14 +121,18 @@ final case class Relation(repr: Byte):
    *   - is-finished-by | F
    *   - equal          | e
    * }}}
-   *
-   * A ≤ B <=> r4 ∧ (¬r1 ∨ ¬r3)
    */
   def isLessEqual: Boolean =
     (r4 & (~r1 | ~r3)) == 1
 
   /**
    * Checks whether A precedes B (Order Relation)
+   * 
+   * A ≺ B
+   * 
+   * {{{
+   * 
+   * }}}
    *
    * {{{
    *   - before | b
@@ -121,6 +145,8 @@ final case class Relation(repr: Byte):
 
   /**
    * Checks whether A greater-than-or-equal-to B (Order Relation)
+   * 
+   * A ≥ B
    *
    * {{{
    *   - after            | B
@@ -138,6 +164,8 @@ final case class Relation(repr: Byte):
 
   /**
    * Checks whether A succeeds B (Order Relation)
+   * 
+   * A ≻ B
    *
    * {{{
    *   - after | B
@@ -659,6 +687,13 @@ object Relation:
     /**
      * Checks whether A is less-or-equal to B
      *
+     * A ≤ B
+     *
+     * {{{
+     *   a- <= b-
+     *   a+ <= b+
+     * }}}
+     *
      * {{{
      *   - before         | b
      *   - meets          | m
@@ -669,7 +704,7 @@ object Relation:
      * }}}
      */
     def isLessEqual(b: Interval[T]): Boolean =
-      a.before(b) || a.meets(b) || a.overlaps(b) || a.starts(b) || a.isFinishedBy(b) || a.equalsTo(b)
+      a.nonEmpty && b.nonEmpty && bOrd.lteq(a.left, b.left) && bOrd.lteq(a.right, b.right)
 
     /**
      * Checks whether A precedes B (Order Relation)
