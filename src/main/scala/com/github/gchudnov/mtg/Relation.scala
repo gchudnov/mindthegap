@@ -33,6 +33,20 @@ package com.github.gchudnov.mtg
  *  starts(a,b)      s|S      BBBBBBBBB
  *  during(a,b)      d|D    BBBBBBBBB
  *  finishes(a,b)    f|F  BBBBBBBBB
+ *
+ *
+ * =======================
+ *  A subset-of B (A ⊆ B):
+ *
+ *  starts     AAAAA   :
+ *  during     : AAAAA :
+ *  finishes   :   AAAAA
+ *  equals     AAAAAAAAA
+ *             BBBBBBBBB
+ *
+ *
+ *
+ *
  * }}}
  */
 
@@ -40,22 +54,34 @@ package com.github.gchudnov.mtg
  * Relation
  *
  * An encoded overlapping relation between two intervals A and B
- * 
+ *
  * {{{
- *   r1 =
- *   r2 =
- *   r3 =
- *   r4 = 
- * 
+ *   r1 = (a- != b-)
+ *   r2 = (a+ != b+)
+ *   r3 = (a- >= b-)
+ *   r4 = (a+ <= b+)
+ *
  *   (r1, r2, r3, r4) <=> (bit3, bit2, bit1, bit0)
+ *
+ *   r1:
+ *
+ *
+ *   r2:
+ *
+ *
+ *   r3:      a- |////////
+ *       \\\\\\\\| b-
+ *
+ *   r4: ////////| a+
+ *            b+ |\\\\\\\\
  * }}}
- *
- *
  */
 final case class Relation(repr: Byte):
 
   /**
    * Checks whether A is a subset of B (Set Relation)
+   *
+   * A is a subset of a set B if all elements of A are also elements of B. if they are unequal, then A is a proper subset of B.
    *
    * A ⊆ B
    *
@@ -293,7 +319,7 @@ final case class Relation(repr: Byte):
    * }}}
    */
   def isBeforeEqual: Boolean =
-    ??? // TODO: IMPL IT
+    ??? // TODO: IMPL IT; + THERE ARE NO TESTS
 
   @inline private def r1: Int =
     (repr >> 3) & 1
@@ -318,25 +344,31 @@ object Relation:
       // ((a- != b-) && (a+ != b+))
       val t1 = !bOrd.equiv(a.left, b.left)
       val t2 = !bOrd.equiv(a.right, b.right)
-      val rx = (t1 && t2)
+      val t3 = (t1 && t2)
+      val t4 = bOrd.lteq(a.right, b.left)
+      val t5 = bOrd.gt(a.left, b.right)
+      val t6 = bOrd.lt(a.right, b.left)
+      val t7 = bOrd.gteq(a.left, b.right)
+      val t8 = bOrd.gteq(a.left, b.left)
+      val t9 = bOrd.lteq(a.right, b.right)
 
       // (a- != b-) ^ ( ((a+ <= b-) || (a- > b+)) && ((a- != b-) && (a+ != b+)) )
       val r1: Int =
         val lhs: Int = if t1 then 1 else 0
-        val rhs: Int = if ((bOrd.lteq(a.right, b.left) || bOrd.gt(a.left, b.right)) && rx) then 1 else 0
+        val rhs: Int = if ((t4 || t5) && t3) then 1 else 0
         (lhs ^ rhs)
 
       // (a+ != b+) ^ ( ((a+ < b-) || (a- >= b+)) && ((a- != b-) && (a+ != b+)) )
       val r2: Int =
         val lhs: Int = if t2 then 1 else 0
-        val rhs: Int = if ((bOrd.lt(a.right, b.left) || bOrd.gteq(a.left, b.right)) && rx) then 1 else 0
+        val rhs: Int = if ((t6 || t7) && t3) then 1 else 0
         (lhs ^ rhs)
 
       // (a- >= b-)
-      val r3: Int = if bOrd.gteq(a.left, b.left) then 1 else 0
+      val r3: Int = if t8 then 1 else 0
 
       // (a+ <= b+)
-      val r4: Int = if bOrd.lteq(a.right, b.right) then 1 else 0
+      val r4: Int = if t9 then 1 else 0
 
       val r = (r1 << 3 | r2 << 2 | r3 << 1 | r4)
 
@@ -838,6 +870,8 @@ object Relation:
      */
     def isBeforeEqual(b: Interval[T]): Boolean =
       a.nonEmpty && b.nonEmpty && bOrd.lt(a.right, b.left)
+
+      // TODO: THERE ARE NO TESTS
 
     /**
      * Intersection of two intervals
