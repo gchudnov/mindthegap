@@ -577,6 +577,8 @@ object Relation:
     /**
      * Equals (e)
      *
+     * A = B
+     *
      * {{{
      *   PP (Point-Point relations):
      *   {p}; {q}
@@ -611,6 +613,13 @@ object Relation:
     /**
      * Checks whether A is a subset of B
      *
+     * A ⊆ B
+     *
+     * {{{
+     *   a- >= b-
+     *   a+ <= b+
+     * }}}
+     *
      * {{{
      *   - A starts B   | s
      *   - A during B   | d
@@ -619,7 +628,7 @@ object Relation:
      * }}}
      */
     def isSubset(b: Interval[T]): Boolean =
-      a.starts(b) || a.during(b) || a.finishes(b) || a.equalsTo(b)
+      a.nonEmpty && b.nonEmpty && bOrd.gteq(a.left, b.left) && bOrd.lteq(a.right, b.right)
 
     /**
      * Checks whether A is a superset of B
