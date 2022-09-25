@@ -4,26 +4,26 @@ package com.github.gchudnov.mtg
  * Relations
  *
  * {{{
- *   AAA              | A before (preceeds) B            | (b)
- *        BBB         | B after  (is-predeeded-by) A     | (B)
+ *   AAA              | A before (preceeds) B                   (A ≺ B) | (b)
+ *        BBB         | B after  (succeeds, is-predeeded-by) A  (B ≻ A) | (B)
  *
- *   AAAA             | A meets B                        | (m)
- *      BBBB          | B is-met-by A                    | (M)
+ *   AAAA             | A meets B                                       | (m)
+ *      BBBB          | B is-met-by A                                   | (M)
  *
- *   AAAA             | A overlaps B                     | (o)
- *     BBBB           | B is-overlapped-by A             | (O)
+ *   AAAA             | A overlaps B                                    | (o)
+ *     BBBB           | B is-overlapped-by A                            | (O)
  *
- *     AA             | A during B                       | (d)
- *   BBBBBB           | B contains A                     | (D)
+ *     AA             | A during B                                      | (d)
+ *   BBBBBB           | B contains A                                    | (D)
  *
- *   AAA              | A starts B                       | (s)
- *   BBBBBB           | B is-started-by A                | (S)
+ *   AAA              | A starts B                                      | (s)
+ *   BBBBBB           | B is-started-by A                               | (S)
  *
- *      AAA           | A finishes B                     | (f)
- *   BBBBBB           | B is-finished-by A               | (F)
+ *      AAA           | A finishes B                                    | (f)
+ *   BBBBBB           | B is-finished-by A                              | (F)
  *
- *   AAA              | A equals B                       | (e)
- *   BBB              | B equals A                       | (E)
+ *   AAA              | A equals B                                      | (e)
+ *   BBB              | B equals A                                      | (E)
  *
  *
  *  Relation         Abbr.    AAAAA
@@ -37,7 +37,7 @@ package com.github.gchudnov.mtg
  *
  *
  * =======================
- *  A subset-of B (A ⊆ B):
+ *  A is-a-subset-of B (A ⊆ B):
  *                            AAAAA
  *  starts(a,b)      s        BBBBBBBBB
  *  during(a,b)      d      BBBBBBBBB
@@ -56,17 +56,17 @@ package com.github.gchudnov.mtg
  * An encoded overlapping relation between two intervals A and B
  *
  * {{{
- *   r1 = (a- != b-)
- *   r2 = (a+ != b+)
+ *   r1 = (a- != b-) ⊕ ( ((a+ ≤ b-) ∨ (a- > b+)) ∧ ((a- != b-) ∧ (a+ != b+)) )
+ *   r2 = (a+ != b+) ⊕ ( ((a+ < b-) ∨ (a- ≥ b+)) ∧ ((a- != b-) ∧ (a+ != b+)) )
  *   r3 = (a- >= b-)
  *   r4 = (a+ <= b+)
  *
  *   (r1, r2, r3, r4) <=> (bit3, bit2, bit1, bit0)
  *
- *   r1:
+ *   r1: TODO: ADD EXPLANATION
  *
  *
- *   r2:
+ *   r2: TODO: ADD EXPLANATION
  *
  *
  *   r3:      a- |////////
@@ -79,7 +79,7 @@ package com.github.gchudnov.mtg
 final case class Relation(repr: Byte):
 
   /**
-   * Checks whether A is a subset of B (Set Relation)
+   * Checks whether A is-a-subset-of B (Set Relation)
    *
    * A is a subset of a set B if all elements of A are also elements of B. if they are unequal, then A is a proper subset of B.
    *
@@ -341,9 +341,8 @@ object Relation:
   def make[T: Ordering: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Relation =
     if a.isEmpty || b.isEmpty then Relation(0) // (0 0 0 0)
     else
-      // ((a- != b-) && (a+ != b+))
-      val t1 = !bOrd.equiv(a.left, b.left)
-      val t2 = !bOrd.equiv(a.right, b.right)
+      val t1 = !bOrd.equiv(a.left, b.left)   // (a- != b-)
+      val t2 = !bOrd.equiv(a.right, b.right) // (a+ != b+)
       val t3 = (t1 && t2)
 
       val t4 = bOrd.lteq(a.right, b.left)
