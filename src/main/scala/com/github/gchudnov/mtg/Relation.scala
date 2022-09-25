@@ -225,7 +225,16 @@ final case class Relation(repr: Byte):
     repr == 0x9
 
   /**
-   * A = B <=> ¬r1 ∧ ¬r2 ∧ r3 ∧ r4
+   * EqualsTo
+   * 
+   * A = B
+   * 
+   * {{{
+   *   a- = b-
+   *   a+ = b+
+   * 
+   *   A = B <=> ¬r1 ∧ ¬r2 ∧ r3 ∧ r4
+   * }}}
    */
   def isEqualsTo: Boolean =
     // 0 0 1 1
