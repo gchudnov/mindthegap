@@ -264,19 +264,21 @@ object Relation:
    * }}}
    */
   def intersection[T: Ordering: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    val r = make(a, b)
-
-    if (~r.r1 & ~r.r2 & ~(r.r3 & r.r4)) == 1 then Interval.empty[T]
+    if a.isEmpty || b.isEmpty then Interval.empty[T]
     else
-      (r.r3, r.r4) match
-        case (1, 1) =>
-          Interval.make(a.left, a.right)
-        case (1, 0) =>
-          Interval.make(a.left, b.right)
-        case (0, 1) =>
-          Interval.make(b.left, a.right)
-        case (0, 0) =>
-          Interval.make(b.left, b.right)
+      val r = make(a, b)
+
+      if (~r.r1 & ~r.r2 & ~(r.r3 & r.r4)) == 1 then Interval.empty[T]
+      else
+        (r.r3, r.r4) match
+          case (1, 1) =>
+            Interval.make(a.left, a.right)
+          case (1, 0) =>
+            Interval.make(a.left, b.right)
+          case (0, 1) =>
+            Interval.make(b.left, a.right)
+          case (0, 0) =>
+            Interval.make(b.left, b.right)
 
   extension [T: Ordering: Domain](a: Interval[T])(using bOrd: Ordering[Boundary[T]])
 

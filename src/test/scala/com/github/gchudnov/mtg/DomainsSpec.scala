@@ -43,7 +43,7 @@ final class DomainsSpec extends TestSpec:
     "Double" should {
       "get predecessor and successor values" in {
         given doubleEq: Equality[Double] = TolerantNumerics.tolerantDoubleEquality(0.001)
-        given valT: Domain[Double]        = fractionalDomain(0.001)
+        given valT: Domain[Double]       = fractionalDomain(0.001)
 
         val x: Double = 10.0
 

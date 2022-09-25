@@ -39,21 +39,21 @@ final class IntervalSpec extends TestSpec:
               actual.isDegenrate mustBe (false)
               actual.isProper mustBe (false)
 
-              bOrd.gt(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe(true)
+              bOrd.gt(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe (true)
 
             case ab @ Degenerate(_) =>
               actual.isEmpty mustBe (false)
               actual.isDegenrate mustBe (true)
               actual.isProper mustBe (false)
 
-              bOrd.equiv(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe(true)              
+              bOrd.equiv(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe (true)
 
             case Proper(_, _) =>
               actual.isEmpty mustBe (false)
               actual.isDegenrate mustBe (false)
               actual.isProper mustBe (true)
 
-              bOrd.lt(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe(true)
+              bOrd.lt(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe (true)
         }
       }
 

@@ -167,5 +167,5 @@ final class BoundaryOrderingSpec extends TestSpec:
         ord.compare(RightBoundary[Int](None, isInclude = false), LeftBoundary[Int](None, isInclude = true)) mustBe (1)
         ord.compare(RightBoundary[Int](None, isInclude = false), LeftBoundary[Int](None, isInclude = false)) mustBe (1)
       }
-    }    
+    }
   }

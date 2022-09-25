@@ -74,13 +74,10 @@ sealed trait Interval[+T: Ordering: Domain]:
  */
 case object Empty extends Interval[Nothing]:
   override def left: LeftBoundary[Nothing] =
-    LeftBoundary(None, false)
+    throw new NoSuchElementException("Empty.left")
 
   override def right: RightBoundary[Nothing] =
-    RightBoundary(None, false)
-
-  // TODO: None, None in boundaries is incorrect, fix it
-  // we need some value: [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
+    throw new NoSuchElementException("Empty.right")
 
   override def isEmpty: Boolean     = true
   override def isDegenrate: Boolean = false

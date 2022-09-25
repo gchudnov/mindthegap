@@ -556,7 +556,7 @@ final class RelationSpec extends TestSpec:
             val zz = Relation.intersection(xx, yy)
 
             whenever(zz.isEmpty) {
-              assertOneOf(Set("b", "B"), xx, yy)
+              if xx.nonEmpty && yy.nonEmpty then assertOneOf(Set("b", "B"), xx, yy)
             }
           }
         }
@@ -570,7 +570,7 @@ final class RelationSpec extends TestSpec:
 
             val zz = Relation.intersection(xx, yy)
 
-            whenever(xx.nonEmpty && yy.nonEmpty && (zz.left == xx.left) && (zz.right == xx.right)) {
+            whenever(xx.nonEmpty && yy.nonEmpty && zz.nonEmpty && (zz.left == xx.left) && (zz.right == xx.right)) {
               assertOneOf(Set("s", "d", "f", "e"), xx, yy)
             }
           }
@@ -585,7 +585,7 @@ final class RelationSpec extends TestSpec:
 
             val zz = Relation.intersection(xx, yy)
 
-            whenever(xx.nonEmpty && yy.nonEmpty && (zz.left == xx.left) && (zz.right == yy.right)) {
+            whenever(xx.nonEmpty && yy.nonEmpty && zz.nonEmpty && (zz.left == xx.left) && (zz.right == yy.right)) {
               assertOneOf(Set("O", "M", "S", "f", "e"), xx, yy)
             }
           }
@@ -602,18 +602,6 @@ final class RelationSpec extends TestSpec:
         }
       }
 
-      /*
-[info]   - should [a-, b+] *** FAILED ***
-[info]     TestFailedException was thrown during property evaluation.
-[info]       Message: xx: Proper(LeftBoundary(None,false),RightBoundary(Some(0),false)), yy: Proper(LeftBoundary(Some(0),true),RightBoundary(None,false)): |(-∞,0), [0,+∞)| should satisfy one of [e,f,M,O,S] relations, however it satisfies [b] instead
-[info]       Location: (RelationSpec.scala:1282)
-[info]       Occurred when passed generated values (
-[info]         arg0 = ((None,Some(0)),false,false), // 2 shrinks
-[info]         arg1 = ((Some(0),None),true,false) // 3 shrinks
-[info]       )
-[info]     Init Seed: -3648163775539563283
-       */
-
       "[b-, a+]" should {
         "auto check" in {
           forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
@@ -622,7 +610,7 @@ final class RelationSpec extends TestSpec:
 
             val zz = Relation.intersection(xx, yy)
 
-            whenever(xx.nonEmpty && yy.nonEmpty && (zz.left == yy.left) && (zz.right == xx.right)) {
+            whenever(xx.nonEmpty && yy.nonEmpty && zz.nonEmpty && (zz.left == yy.left) && (zz.right == xx.right)) {
               assertOneOf(Set("m", "o", "F", "s", "e"), xx, yy)
             }
           }
@@ -637,7 +625,7 @@ final class RelationSpec extends TestSpec:
 
             val zz = Relation.intersection(xx, yy)
 
-            whenever(xx.nonEmpty && yy.nonEmpty && (zz.left == yy.left) && (zz.right == yy.right)) {
+            whenever(xx.nonEmpty && yy.nonEmpty && zz.nonEmpty && (zz.left == yy.left) && (zz.right == yy.right)) {
               assertOneOf(Set("D", "F", "S", "e"), xx, yy)
             }
           }
