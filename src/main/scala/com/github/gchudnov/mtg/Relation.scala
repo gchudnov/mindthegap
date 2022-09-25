@@ -53,7 +53,7 @@ final case class Relation(repr: Byte):
    * {{{
    *   a- >= b-
    *   a+ <= b+
-   * 
+   *
    *   A ⊆ B <=> r3 ∧ r4
    * }}}
    *
@@ -69,7 +69,7 @@ final case class Relation(repr: Byte):
 
   /**
    * Checks whether A is a superset of B (Set Relation)
-   * 
+   *
    * A ⊇ B
    *
    * {{{
@@ -86,7 +86,7 @@ final case class Relation(repr: Byte):
 
   /**
    * Checks if there A and B are disjoint (Set Relation)
-   * 
+   *
    * A ∩ B
    *
    * A and B are disjoint if A does not intersect B.
@@ -109,7 +109,7 @@ final case class Relation(repr: Byte):
    * {{{
    *   a- <= b-
    *   a+ <= b+
-   * 
+   *
    *   A ≤ B <=> r4 ∧ (¬r1 ∨ ¬r3)
    * }}}
    *
@@ -126,27 +126,36 @@ final case class Relation(repr: Byte):
     (r4 & (~r1 | ~r3)) == 1
 
   /**
-   * Checks whether A precedes B (Order Relation)
-   * 
-   * A ≺ B
-   * 
+   * Less
+   *
+   * Checks whether A less-than B (Order Relation)
+   *
+   * A < B
+   *
    * {{{
-   * 
+   *   a- < b-
+   *   a+ < b+
+   *
+   *   A < B <=> (¬r1 ∨ r2) ∧ ¬r3 ∧ r4
    * }}}
    *
    * {{{
-   *   - before | b
+   *   - before         | b
+   *   - meets          | m
+   *   - overlaps       | o
    * }}}
-   *
-   * A ≺ B <=> ¬r1 ∧ ¬r2 ∧ ¬r3 ∧ r4
    */
   def isLess: Boolean =
-    isBefore
+    ((~r1 | r2) & (~r3) & r4) == 1
 
   /**
    * Checks whether A greater-than-or-equal-to B (Order Relation)
-   * 
+   *
    * A ≥ B
+   *
+   * {{{
+   *
+   * }}}
    *
    * {{{
    *   - after            | B
@@ -164,7 +173,7 @@ final case class Relation(repr: Byte):
 
   /**
    * Checks whether A succeeds B (Order Relation)
-   * 
+   *
    * A ≻ B
    *
    * {{{
@@ -176,6 +185,17 @@ final case class Relation(repr: Byte):
   def isGreater: Boolean =
     isAfter
 
+  /**
+   * Preceeds (Before)
+   *
+   * A ≺ B
+   *
+   * {{{
+   *   a+ < b-
+   *
+   *   A ≺ B <=> ¬r1 ∧ ¬r2 ∧ ¬r3 ∧ r4
+   * }}}
+   */
   def isBefore: Boolean =
     // 0 0 0 1
     repr == 0x1
@@ -226,13 +246,13 @@ final case class Relation(repr: Byte):
 
   /**
    * EqualsTo
-   * 
+   *
    * A = B
-   * 
+   *
    * {{{
    *   a- = b-
    *   a+ = b+
-   * 
+   *
    *   A = B <=> ¬r1 ∧ ¬r2 ∧ r3 ∧ r4
    * }}}
    */
@@ -716,14 +736,25 @@ object Relation:
       a.nonEmpty && b.nonEmpty && bOrd.lteq(a.left, b.left) && bOrd.lteq(a.right, b.right)
 
     /**
-     * Checks whether A precedes B (Order Relation)
+     * Less
+     *
+     * Checks whether A less-than B (Order Relation)
+     *
+     * A < B
      *
      * {{{
-     *   - before | b
+     *   a- < b-
+     *   a+ < b+
+     * }}}
+     *
+     * {{{
+     *   - before         | b
+     *   - meets          | m
+     *   - overlaps       | o
      * }}}
      */
     def isLess(b: Interval[T]): Boolean =
-      a.before(b)
+      a.nonEmpty && b.nonEmpty && bOrd.lt(a.left, b.left) && bOrd.lt(a.right, b.right)
 
     /**
      * Checks whether A greater-than-or-equal-to B (Order Relation)
