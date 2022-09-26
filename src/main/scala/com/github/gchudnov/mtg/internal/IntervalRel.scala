@@ -125,10 +125,10 @@ trait IntervalRel[+T: Ordering: Domain]:
    *     BBBB
    * }}}
    */
-  def overlaps[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def overlaps[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.isProper && b.isProper && bOrd.lt(a.left, b.left) && bOrd.lt(b.left, a.right) && bOrd.lt(a.right, b.right)
 
-  def isOverlapedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isOverlapedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.overlaps(a)
 
   /**
@@ -164,10 +164,10 @@ trait IntervalRel[+T: Ordering: Domain]:
    *   BBBBBB
    * }}}
    */
-  def during[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def during[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.isProper && bOrd.lt(b.left, a.left) && bOrd.lt(a.right, b.right)
 
-  def contains[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def contains[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.during(a)
 
   /**
@@ -203,7 +203,7 @@ trait IntervalRel[+T: Ordering: Domain]:
    *   BBBBBB
    * }}}
    */
-  def starts[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def starts[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     (a, b) match
       case (Degenerate(_), Proper(_, _)) =>
         bOrd.equiv(a.left, b.left)
@@ -212,7 +212,7 @@ trait IntervalRel[+T: Ordering: Domain]:
       case (_, _) =>
         false
 
-  def isStartedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isStartedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.starts(a)
 
   /**
@@ -248,7 +248,7 @@ trait IntervalRel[+T: Ordering: Domain]:
    *   BBBBBB
    * }}}
    */
-  def finishes[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def finishes[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     (a, b) match
       case (Degenerate(_), Proper(_, _)) =>
         bOrd.equiv(a.right, b.right)
@@ -257,7 +257,7 @@ trait IntervalRel[+T: Ordering: Domain]:
       case (_, _) =>
         false
 
-  def isFinishedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isFinishedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.finishes(a)
 
   /**
@@ -293,7 +293,7 @@ trait IntervalRel[+T: Ordering: Domain]:
    *   BBBB
    * }}}
    */
-  def equalsTo[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def equalsTo[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
 
   /**
@@ -313,7 +313,7 @@ trait IntervalRel[+T: Ordering: Domain]:
    *   - A equals B   | e
    * }}}
    */
-  def isSubset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isSubset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.gteq(a.left, b.left) && bOrd.lteq(a.right, b.right)
 
   /**
@@ -326,7 +326,7 @@ trait IntervalRel[+T: Ordering: Domain]:
    *   - A equals B         | e
    * }}}
    */
-  def isSuperset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isSuperset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.isStartedBy(b) || a.contains(b) || a.isFinishedBy(b) || a.equalsTo(b)
 
   /**
@@ -339,7 +339,7 @@ trait IntervalRel[+T: Ordering: Domain]:
    *    after  | B
    * }}}
    */
-  def isDisjoint[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isDisjoint[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.before(b) || a.after(b)
 
   /**
@@ -361,7 +361,7 @@ trait IntervalRel[+T: Ordering: Domain]:
    *   - equal          | e
    * }}}
    */
-  def isLessEqual[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isLessEqual[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.lteq(a.left, b.left) && bOrd.lteq(a.right, b.right)
 
   /**
@@ -382,7 +382,7 @@ trait IntervalRel[+T: Ordering: Domain]:
    *   - overlaps       | o
    * }}}
    */
-  def isLess[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isLess[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.lt(a.left, b.left) && bOrd.lt(a.right, b.right)
 
   /**
@@ -406,7 +406,7 @@ trait IntervalRel[+T: Ordering: Domain]:
    *   - equal            | e
    * }}}
    */
-  def isGreaterEqual[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isGreaterEqual[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.gteq(a.left, b.left) && bOrd.gteq(a.right, b.right)
 
   /**
@@ -418,7 +418,7 @@ trait IntervalRel[+T: Ordering: Domain]:
    *   - after | B
    * }}}
    */
-  def isGreater[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isGreater[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.gt(a.left, b.left) && bOrd.gt(a.right, b.right)
 
   /**
@@ -432,5 +432,5 @@ trait IntervalRel[+T: Ordering: Domain]:
    *   a+ <= b-
    * }}}
    */
-  def isBeforeEqual[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isBeforeEqual[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.lt(a.right, b.left)

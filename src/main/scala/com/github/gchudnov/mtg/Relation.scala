@@ -392,7 +392,6 @@ object Relation:
     if a.isEmpty || b.isEmpty then Interval.empty[T]
     else
       val r = make(a, b)
-
       if (~r.r1 & ~r.r2 & ~(r.r3 & r.r4)) == 1 then Interval.empty[T]
       else
         (r.r3, r.r4) match
@@ -404,17 +403,3 @@ object Relation:
             Interval.make(b.left, a.right)
           case (0, 0) =>
             Interval.make(b.left, b.right)
-
-
-  // -------------------------------------------------
-  // TODO: see below, extract it to IntervalRel class
-
-  extension [T: Ordering: Domain](a: Interval[T])(using bOrd: Ordering[Boundary[T]])
-
-      // TODO: ^^ THERE ARE NO TESTS
-
-    /**
-     * Intersection of two intervals
-     */
-    def intersection(b: Interval[T]): Interval[T] =
-      Relation.intersection(a, b)
