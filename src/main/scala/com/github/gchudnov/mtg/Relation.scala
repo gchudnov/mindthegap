@@ -406,8 +406,8 @@ object Relation:
             Interval.make(b.left, b.right)
 
 
-
-  // TODO: see below
+  // -------------------------------------------------
+  // TODO: see below, extract it to IntervalRel class
 
   extension [T: Ordering: Domain](a: Interval[T])(using bOrd: Ordering[Boundary[T]])
 

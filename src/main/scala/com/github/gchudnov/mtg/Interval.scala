@@ -1,6 +1,7 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Domains.nothingDomain
+import com.github.gchudnov.mtg.internal.IntervalRel
 
 /**
  * Generic Interval Representation
@@ -47,7 +48,7 @@ import com.github.gchudnov.mtg.Domains.nothingDomain
  *   Unbounded            - Unbounded at both ends; (-∞, +∞) = R
  * }}}
  */
-sealed trait Interval[+T: Ordering: Domain]:
+sealed trait Interval[+T: Ordering: Domain] extends IntervalRel[T]:
   def left: LeftBoundary[T]
   def right: RightBoundary[T]
 
