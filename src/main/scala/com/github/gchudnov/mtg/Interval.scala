@@ -49,7 +49,7 @@ import com.github.gchudnov.mtg.internal.IntervalAlg
  *   Unbounded            - Unbounded at both ends; (-∞, +∞) = R
  * }}}
  */
-sealed trait Interval[+T: Ordering: Domain] extends IntervalRel[T] with IntervalAlg[T]:
+sealed trait Interval[+T] extends IntervalRel[T] with IntervalAlg[T]:
   def left: LeftBoundary[T]
   def right: RightBoundary[T]
 
@@ -89,7 +89,7 @@ case object Empty extends Interval[Nothing]:
 /**
  * Degenerate Interval
  */
-final case class Degenerate[T: Ordering: Domain](a: T) extends Interval[T]:
+final case class Degenerate[T: Domain](a: T) extends Interval[T]:
   override final def left: LeftBoundary[T] =
     LeftBoundary(Some(a), true)
 
@@ -104,7 +104,7 @@ final case class Degenerate[T: Ordering: Domain](a: T) extends Interval[T]:
 /**
  * Proper Interval
  */
-final case class Proper[T: Ordering: Domain](left: LeftBoundary[T], right: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]) extends Interval[T]:
+final case class Proper[T: Domain](left: LeftBoundary[T], right: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]) extends Interval[T]:
   import com.github.gchudnov.mtg.Show.*
 
   // The endpoint relation left (a-) < right (a+) is required for a proper interval
@@ -120,13 +120,13 @@ object Interval:
   /**
    * ∅
    */
-  def empty[T: Ordering: Domain]: Interval[T] =
+  def empty[T]: Interval[T] =
     Empty
 
   /**
    * (-∞, +∞)
    */
-  def unbounded[T: Ordering: Domain](using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def unbounded[T: Domain](using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper[T](LeftBoundary[T](None, false), RightBoundary[T](None, false))
 
   /**
@@ -137,7 +137,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def degenerate[T: Ordering: Domain](a: T): Interval[T] =
+  def degenerate[T: Domain](a: T): Interval[T] =
     Degenerate(a)
 
   /**

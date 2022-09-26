@@ -10,7 +10,7 @@ import com.github.gchudnov.mtg.Proper
 /**
  * Interval Algorithms
  */
-trait IntervalAlg[+T: Ordering: Domain]:
+trait IntervalAlg[+T]:
   a: Interval[T] =>
 
   /**

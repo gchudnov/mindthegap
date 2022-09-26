@@ -10,7 +10,7 @@ import com.github.gchudnov.mtg.Proper
 /**
   * Interval Relations
   */
-trait IntervalRel[+T: Ordering: Domain]:
+trait IntervalRel[+T]:
   a: Interval[T] =>
 
   /**
