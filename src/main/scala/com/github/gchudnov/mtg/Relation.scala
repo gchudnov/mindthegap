@@ -63,7 +63,7 @@ package com.github.gchudnov.mtg
  *
  *   (r1, r2, r3, r4) <=> (bit3, bit2, bit1, bit0)
  *
- *   r1: TODO: ADD EXPLANATION
+ *   r1: TODO: ADD EXPLANATION ;; what is XOR?
  *
  *
  *   r2: TODO: ADD EXPLANATION
@@ -404,6 +404,10 @@ object Relation:
             Interval.make(b.left, a.right)
           case (0, 0) =>
             Interval.make(b.left, b.right)
+
+
+
+  // TODO: see below
 
   extension [T: Ordering: Domain](a: Interval[T])(using bOrd: Ordering[Boundary[T]])
 
@@ -872,7 +876,7 @@ object Relation:
     def isBeforeEqual(b: Interval[T]): Boolean =
       a.nonEmpty && b.nonEmpty && bOrd.lt(a.right, b.left)
 
-      // TODO: THERE ARE NO TESTS
+      // TODO: ^^ THERE ARE NO TESTS
 
     /**
      * Intersection of two intervals

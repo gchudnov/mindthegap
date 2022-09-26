@@ -1,5 +1,7 @@
 # TODO
 
+TODO: decouple Interval Ops and Relation
+
 TODO: impl bits from this paper:
 
 - [The Interval Overlapping Relation as Basic Tool for Defining Interval Comparisons](10.1.1.184.440.pdf) - encode interval overlappings
@@ -7,6 +9,12 @@ TODO: impl bits from this paper:
 
 
 TODO: write the meaning of r1 ... r4
+
+https://www.baeldung.com/cs/finding-all-overlapping-intervals
+
+https://www.geeksforgeeks.org/check-if-any-two-intervals-overlap-among-a-given-set-of-intervals/
+
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6188649/
 
 
 https://leetcode.com/problems/interval-list-intersections/
