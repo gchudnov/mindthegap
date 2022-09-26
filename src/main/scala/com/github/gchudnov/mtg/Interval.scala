@@ -74,25 +74,25 @@ sealed trait Interval[+T: Ordering: Domain] extends IntervalRel[T]:
  * Empty Interval
  */
 case object Empty extends Interval[Nothing]:
-  override def left: LeftBoundary[Nothing] =
+  override final def left: LeftBoundary[Nothing] =
     throw new NoSuchElementException("Empty.left")
 
-  override def right: RightBoundary[Nothing] =
+  override final def right: RightBoundary[Nothing] =
     throw new NoSuchElementException("Empty.right")
 
-  override def isEmpty: Boolean     = true
-  override def isDegenrate: Boolean = false
-  override def isProper: Boolean    = false
-  override def isUnbounded: Boolean = false
+  override final def isEmpty: Boolean     = true
+  override final def isDegenrate: Boolean = false
+  override final def isProper: Boolean    = false
+  override final def isUnbounded: Boolean = false
 
 /**
  * Degenerate Interval
  */
 final case class Degenerate[T: Ordering: Domain](a: T) extends Interval[T]:
-  override def left: LeftBoundary[T] =
+  override final def left: LeftBoundary[T] =
     LeftBoundary(Some(a), true)
 
-  override def right: RightBoundary[T] =
+  override final def right: RightBoundary[T] =
     RightBoundary(Some(a), true)
 
   override val isEmpty: Boolean     = false

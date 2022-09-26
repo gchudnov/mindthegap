@@ -647,7 +647,7 @@ final class RelationSpec extends TestSpec:
           val xx = Interval.make(ox1, ox2, ix1, ix2)
           val yy = Interval.make(oy1, oy2, iy1, iy2)
 
-          whenever(xx.preceeds(yy)) {
+          whenever(xx.before(yy)) {
             assertFwdBck("b", xx, yy)
           }
         }
@@ -681,10 +681,10 @@ final class RelationSpec extends TestSpec:
         // Proper
         Interval.open(4, 7).before(Interval.open(4, 7)) mustBe (false)
         Interval.open(1, 4).before(Interval.empty[Int]) mustBe (false)
-        Interval.open(1, 4).preceeds(Interval.open(5, 8)) mustBe (true)
-        Interval.open(5, 8).isPreceededBy(Interval.open(1, 4)) mustBe (true)
-        Interval.open(1, 4).preceeds(Interval.open(3, 6)) mustBe (true)
-        Interval.open(1, 4).preceeds(Interval.closed(5, 6)) mustBe (true)
+        Interval.open(1, 4).before(Interval.open(5, 8)) mustBe (true)
+        Interval.open(5, 8).after(Interval.open(1, 4)) mustBe (true)
+        Interval.open(1, 4).before(Interval.open(3, 6)) mustBe (true)
+        Interval.open(1, 4).before(Interval.closed(5, 6)) mustBe (true)
 
         // Infinity
         // (1, 4)  (3, +inf)
@@ -1239,8 +1239,8 @@ final class RelationSpec extends TestSpec:
 
   private def makeIntervalRelationsCheckMap[T: Ordering: Domain](using bOrd: Ordering[Boundary[T]]) =
     Map(
-      "b" -> ((xx: Interval[T], yy: Interval[T]) => xx.preceeds(yy)),
-      "B" -> ((xx: Interval[T], yy: Interval[T]) => xx.isPreceededBy(yy)),
+      "b" -> ((xx: Interval[T], yy: Interval[T]) => xx.before(yy)),
+      "B" -> ((xx: Interval[T], yy: Interval[T]) => xx.after(yy)),
       "m" -> ((xx: Interval[T], yy: Interval[T]) => xx.meets(yy)),
       "M" -> ((xx: Interval[T], yy: Interval[T]) => xx.isMetBy(yy)),
       "o" -> ((xx: Interval[T], yy: Interval[T]) => xx.overlaps(yy)),
