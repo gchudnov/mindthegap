@@ -104,11 +104,11 @@ final case class Degenerate[T: Domain](a: T) extends Interval[T]:
 /**
  * Proper Interval
  */
-final case class Proper[T: Domain](left: LeftBoundary[T], right: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]) extends Interval[T]:
+final case class Proper[T](left: LeftBoundary[T], right: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]) extends Interval[T]:
   import com.github.gchudnov.mtg.Show.*
 
   // The endpoint relation left (a-) < right (a+) is required for a proper interval
-  require(bOrd.lt(left, right), s"${left.show},${right.show}: left boundary must be less than the right boundary by definition")
+  require(bOrd.lt(left, right), s"${left.show},${right.show}: left boundary must be less than the right boundary")
 
   override val isEmpty: Boolean     = false
   override val isDegenrate: Boolean = false
@@ -156,6 +156,8 @@ object Interval:
    */
   def proper[T: Ordering: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary(a, isIncludeA), RightBoundary(b, isIncludeB))
+
+  // TODO: FIX TYPE PARAMS
 
   /**
    * (a, b) = {x | a < x < b}
