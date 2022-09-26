@@ -5,7 +5,7 @@ import com.github.gchudnov.mtg.internal.IntervalRel
 import com.github.gchudnov.mtg.internal.IntervalAlg
 
 /**
- * Generic Interval Representation
+ * An Interval
  *
  * Classification of Intervals:
  * {{{
@@ -280,4 +280,4 @@ object Interval:
    * Intersection
    */
   def intersection[T: Ordering: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    Relation.intersection(a, b)
+    a.intersection(b)

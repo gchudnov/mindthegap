@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Domain
 
-sealed trait Boundary[+T: Domain]:
+sealed trait Boundary[+T]:
   def value: Option[T]
   def isInclude: Boolean
 
