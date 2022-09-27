@@ -14,6 +14,8 @@ Keywords: interval arithmetic, interval relations, hardware unit
 
 ## Relations
 
+![relations.png](res/relations.png)
+
 - Before (b) / After (B)
 - Meets / IsMetBy
 - Overlaps / IsOverlappedBy
@@ -47,13 +49,6 @@ Keywords: interval arithmetic, interval relations, hardware unit
 
 
 
-
-### 
-
-
-
-
-
 | Relation   |   | Boundaries |
 |------------|---|------------|
 | p before q |   | p < q      |
@@ -64,14 +59,6 @@ Keywords: interval arithmetic, interval relations, hardware unit
 | B after A  |   |            |
 
 
-
-
-
-| Relation   | Formula |   | Example | Boundaries |
-|------------|---------|---|---------|------------|
-| p before q |         | b | <pre>p   <br>   q</pre> | p < q      |
-| q after p  |         | B |         |            |
-|            |         |   |         |            |
 
 
 ```
@@ -90,25 +77,6 @@ A before B                      b        AAA             a+ < b-
 B after A                       B             BBB
 ```
 
-### 
-
-
-### 
-
-
-### 
-
-
-### 
-
-
-### 
-
-
-### 
-
-
-### 
 
 
 TODO: update the readme
