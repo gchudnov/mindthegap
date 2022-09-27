@@ -1,10 +1,10 @@
 package com.github.gchudnov.mtg.internal
 
-import com.github.gchudnov.mtg.Domain
-import com.github.gchudnov.mtg.BoundaryOrdering
-import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Boundary
+import com.github.gchudnov.mtg.BoundaryOrdering
 import com.github.gchudnov.mtg.Degenerate
+import com.github.gchudnov.mtg.Domain
+import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Proper
 
 /**

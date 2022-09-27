@@ -1,16 +1,15 @@
 package com.github.gchudnov.mtg.internal
 
-import com.github.gchudnov.mtg.Domains.given
-
-import com.github.gchudnov.mtg.TestSpec
-import com.github.gchudnov.mtg.Interval
-import com.github.gchudnov.mtg.BoundaryOrdering
-import com.github.gchudnov.mtg.Boundary
 import com.github.gchudnov.mtg.Arbitraries.*
-import com.github.gchudnov.mtg.Show.*
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Boundary
+import com.github.gchudnov.mtg.BoundaryOrdering
+import com.github.gchudnov.mtg.Domains.given
+import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.LeftBoundary
 import com.github.gchudnov.mtg.RightBoundary
+import com.github.gchudnov.mtg.Show.*
+import com.github.gchudnov.mtg.TestSpec
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
 final class IntervalAlgSpec extends TestSpec with IntervalRelAssert:
 

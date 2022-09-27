@@ -11,7 +11,7 @@ Keywords: interval arithmetic, interval relations, hardware unit
 - **Interval-Interval (II)** relations that between a pair of intervals.
 
 ```text
-Relation                      Example        Endpoints
+Relation                      Example        Boundaries
 
 p before q            b        p               p < q
                                    q
