@@ -14,6 +14,15 @@ Keywords: interval arithmetic, interval relations, hardware unit
 
 ## Relations
 
+- Before (b) / After (B)
+- Meets / IsMetBy
+- Overlaps / IsOverlappedBy
+- During / Contains
+- Starts / IsStartedBy
+- Finishes / IsFinishedBy
+- Equals
+
+
 ```text
   Relation                  AAAAA
   before(a,b)      b|B      :   : BBBBBBBBB
@@ -25,7 +34,21 @@ Keywords: interval arithmetic, interval relations, hardware unit
   equals(a, b)     e        BBBBB
 ```
 
-### Before (b) / After (B)
+- IsSubset
+
+```text
+                            AAAAA
+  starts(a,b)      s        BBBBBBBBB
+  during(a,b)      d      BBBBBBBBB
+  finishes(a,b)    f    BBBBBBBBB
+  equals(a, b)     e        BBBBB
+```
+
+
+
+
+
+### 
 
 
 
@@ -67,25 +90,25 @@ A before B                      b        AAA             a+ < b-
 B after A                       B             BBB
 ```
 
-### Meets / IsMetBy
+### 
 
 
-### Overlaps / IsOverlappedBy
+### 
 
 
-### During / Contains
+### 
 
 
-### Starts / IsStartedBy
+### 
 
 
-### Finishes / IsFinishedBy
+### 
 
 
-### Equals
+### 
 
 
-### IsSubset
+### 
 
 
 TODO: update the readme
