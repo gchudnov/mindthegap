@@ -27,7 +27,7 @@ Keywords: interval arithmetic, interval relations, hardware unit
 
 ```text
   Relation                  AAAAA
-  before(a,b)      b|B      :   : BBBBBBBBB  |
+  before(a,b)      b|B      :   : BBBBBBBBB  |  a+ < b-
   meets(a,b)       m|M      :   BBBBBBBBB    |  a+ = b-
   overlaps(a,b)    o|O      : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
   starts(a,b)      s|S      BBBBBBBBB        |  a- = b- ; a+ < b+
