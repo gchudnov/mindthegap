@@ -154,10 +154,8 @@ object Interval:
    * @return
    *   a new interval
    */
-  def proper[T: Ordering: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def proper[T: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary(a, isIncludeA), RightBoundary(b, isIncludeB))
-
-  // TODO: FIX TYPE PARAMS
 
   /**
    * (a, b) = {x | a < x < b}
@@ -169,7 +167,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def open[T: Ordering: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def open[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary(Some(a), false), RightBoundary(Some(b), false))
 
   /**
@@ -182,7 +180,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def closed[T: Ordering: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def closed[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary(Some(a), true), RightBoundary(Some(b), true))
 
   /**
@@ -193,7 +191,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftOpen[T: Ordering: Domain](a: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def leftOpen[T: Domain](a: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary(Some(a), false), RightBoundary[T](None, false))
 
   /**
@@ -204,7 +202,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftClosed[T: Ordering: Domain](a: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def leftClosed[T: Domain](a: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary(Some(a), true), RightBoundary[T](None, false))
 
   /**
@@ -215,7 +213,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def rightOpen[T: Ordering: Domain](b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def rightOpen[T: Domain](b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary[T](None, false), RightBoundary(Some(b), false))
 
   /**
@@ -226,7 +224,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def rightClosed[T: Ordering: Domain](b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def rightClosed[T: Domain](b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary[T](None, false), RightBoundary(Some(b), true))
 
   /**
@@ -237,7 +235,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftClosedRightOpen[T: Ordering: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def leftClosedRightOpen[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     proper(Some(a), Some(b), isIncludeA = true, isIncludeB = false)
 
   /**
@@ -248,7 +246,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftOpenRightClosed[T: Ordering: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def leftOpenRightClosed[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     proper(Some(a), Some(b), isIncludeA = false, isIncludeB = true)
 
   /**
@@ -264,12 +262,12 @@ object Interval:
    *   whether to include right boundary in the interval or not
    * @return
    */
-  def make[T: Ordering: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def make[T: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     val ba = LeftBoundary(a, isIncludeA)
     val bb = RightBoundary(b, isIncludeB)
     make(ba, bb)
 
-  def make[T: Ordering: Domain](ba: LeftBoundary[T], bb: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def make[T: Domain](ba: LeftBoundary[T], bb: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     (ba.value, bb.value) match
       case (Some(x), Some(y)) =>
         if bOrd.equiv(ba, bb) then degenerate(x)
@@ -281,5 +279,5 @@ object Interval:
   /**
    * Intersection
    */
-  def intersection[T: Ordering: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def intersection[T: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     a.intersection(b)
