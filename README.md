@@ -1,9 +1,5 @@
 # mindthegap
 
-Keywords: Allen’s Interval Algebra, Infinite Temporal Intervals, Temporal Knowledge Representation and Reasoning -- add them to git
-Keywords: interval arithmetic, interval relations, hardware unit
-
-
 > Intervals, Relations and Algorithms
 
 - **Point-Point (PP)** relations between a pair of points.
@@ -54,6 +50,9 @@ Keywords: interval arithmetic, interval relations, hardware unit
 
 - [Allen's Interval Algebra](https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html)
 
+## Keywords
+
+Allen’s Interval Algebra, Interval Arithmetic, Interval Relations, Infinite Temporal Intervals, Temporal Algorithms
 
 ## Contact
 
