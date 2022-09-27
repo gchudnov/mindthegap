@@ -11,6 +11,9 @@ import com.github.gchudnov.mtg.Show.*
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
+// TODO: UPDATE TESTS for algorithms -- add manual tests 
+
+
 final class IntervalAlgSpec extends TestSpec with IntervalRelAssert:
 
   given intRange: IntRange = intRange5

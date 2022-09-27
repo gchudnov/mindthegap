@@ -7,6 +7,8 @@ import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Proper
 
+// TODO: review the file, extract useful portions to readme, check if we need to import something from Relation.scala
+
 /**
  * Interval Relations
  */

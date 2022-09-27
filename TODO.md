@@ -1,6 +1,7 @@
 # TODO
 
-TODO: update the readme with current relations
+TODO: UPDATE TESTS for algorithms -- add manual tests 
+
 TODO: ADD remaining relations from papers
 
 TODO: impl bits from this paper:
