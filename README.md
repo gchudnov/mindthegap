@@ -50,6 +50,9 @@ Keywords: interval arithmetic, interval relations, hardware unit
 ## Algorithms
 
 
+## Links
+
+- [Allen's Interval Algebra](https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html)
 
 
 ## Contact
