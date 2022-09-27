@@ -10,6 +10,8 @@ Keywords: interval arithmetic, interval relations, hardware unit
 - **Point-Interval (PI)** relations that between a point and an interval.
 - **Interval-Interval (II)** relations that between a pair of intervals.
 
+## Relations
+
 ```text
 Relation                      Example        Boundaries
 
