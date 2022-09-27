@@ -8,8 +8,8 @@ import com.github.gchudnov.mtg.Degenerate
 import com.github.gchudnov.mtg.Proper
 
 /**
-  * Interval Relations
-  */
+ * Interval Relations
+ */
 trait IntervalRel[+T]:
   a: Interval[T] =>
 
