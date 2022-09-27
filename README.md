@@ -4,7 +4,7 @@ Keywords: Allen’s Interval Algebra, Infinite Temporal Intervals, Temporal Know
 Keywords: interval arithmetic, interval relations, hardware unit
 
 
-> Express intervals and relations between them.
+> Intervals, Relations and Algorithms
 
 - **Point-Point (PP)** relations between a pair of points.
 - **Point-Interval (PI)** relations that between a point and an interval.
@@ -17,12 +17,12 @@ Keywords: interval arithmetic, interval relations, hardware unit
 ![relations.png](res/relations.png)
 
 - Before (b) / After (B)
-- Meets / IsMetBy
-- Overlaps / IsOverlappedBy
-- During / Contains
-- Starts / IsStartedBy
-- Finishes / IsFinishedBy
-- Equals
+- Meets (m) / IsMetBy (M)
+- Overlaps (o) / IsOverlappedBy (O)
+- During (d) / Contains (D)
+- Starts (s) / IsStartedBy (S)
+- Finishes (f) / IsFinishedBy (F)
+- Equals (e)
 
 
 ```text
@@ -37,6 +37,8 @@ Keywords: interval arithmetic, interval relations, hardware unit
 ```
 
 - IsSubset
+  - `a- >= b-`
+  - `a+ <= b+`
 
 ```text
                             AAAAA
@@ -46,36 +48,7 @@ Keywords: interval arithmetic, interval relations, hardware unit
   equals(a, b)     e        BBBBB
 ```
 
-
-
-
-| Relation   |   | Boundaries |
-|------------|---|------------|
-| p before q |   | p < q      |
-| q after p  |   |            |
-| p before A |   | p < a-     |
-| p after A  |   | p > a+     |
-| A before B |   | a+ < b-    |
-| B after A  |   |            |
-
-
-
-
-```
-Relation                                 Example        Boundaries
-
-p before q                      b        p               p < q
-q after p                       B           q
-        
-p before A                      b        p               p < a-
-                                           AAA
-        
-p after A                       B            p           p > a+
-                                         AAA
-
-A before B                      b        AAA             a+ < b-
-B after A                       B             BBB
-```
+## Algorithms
 
 
 
