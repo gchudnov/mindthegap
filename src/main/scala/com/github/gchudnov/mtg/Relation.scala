@@ -338,7 +338,7 @@ object Relation:
   /**
    * Calculate the overlapping relation between two intervals
    */
-  def make[T: Ordering: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Relation =
+  def make[T: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Relation =
     if a.isEmpty || b.isEmpty then Relation(0) // (0 0 0 0)
     else
       val t1 = !bOrd.equiv(a.left, b.left)   // (a- != b-)
@@ -388,7 +388,7 @@ object Relation:
    *          | [b-, b+] if ¬r3 ∧ ¬r4               | D
    * }}}
    */
-  def intersection[T: Ordering: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def intersection[T: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     if a.isEmpty || b.isEmpty then Interval.empty[T]
     else
       val r = make(a, b)
