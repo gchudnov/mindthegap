@@ -1,6 +1,7 @@
 # TODO
 
-TODO: decouple Interval Ops and Relation
+TODO: update the readme with current relations
+TODO: ADD remaining relations from papers
 
 TODO: impl bits from this paper:
 

@@ -13,51 +13,56 @@ Keywords: interval arithmetic, interval relations, hardware unit
 ## Relations
 
 ```text
-Relation                      Example        Boundaries
+Relation                        Example        Boundaries
 
-p before q            b        p               p < q
+p before q              b        p               p < q
+                                     q
+
+p after q               B        q               q < p
+                                     p
+
+p equal q               e          p             p = q
                                    q
 
-p after q             a        q               q < p
-                                   p
+p before A              b        p               p < a-
+                                   AAA
 
-p equal q             e          p             p = q
-                                 q
+p after A               B            p           p > a+
+                                 AAA
 
-p before I            b        p               p < i-
-                                 III
+p starts A              s        p               p = a-
+                                 AAA
 
-p after I             a            p           p > i+
-                               III
+                                  p              a- < p < a+
+p during A              d        AAA
 
-p starts I            s        p               p = i-
-                               III
-
-                                p              i- < p < i+
-p during I            d        III
-
-p finishes I          f          p             p = i+
-                               III
+p finishes A            f          p             p = a+
+                                 AAA
 
 
-I before J            b        III             i+ < j-
-J after I             a             JJJ
+A before B              b        AAA             a+ < b-
+B after A               B             BBB
 
-I meets J             m        IIII            i+ = j-
-J met by I            M            JJJJ
+A meets B               m        AAAA            a+ = b-
+B met-by A              M            BBBB
 
-I overlaps J          o        IIII            i- < j- < i+
-J overlapped by I     O          JJJJ          i+ < j+
+A overlaps B            o        AAAA            a- < b- < a+
+B overlapped-by A       O          BBBB          a+ < b+
 
-I during J            d          III           i- > j-
-J includes I          D        JJJJJJJ         i+ < j+
+A during B              d          AAA           a- > b-
+B contains A            D        BBBBBBB         a+ < b+
 
-I starts J            s        III             i- = j-
-J started by I        S        JJJJJJJ         i+ < j+
+A starts B              s        AAA             a- = b-
+B started-by A          S        BBBBBBB         a+ < b+
 
-I finishes J          f            III         i+ = j+
-J finished by I       F        JJJJJJJ         i- > j-
+A finishes B            f            AAA         a+ = b+
+B finished-by A         F        BBBBBBB         a- > b-
 
-I equals J            e         IIII           i- = j-
-                                JJJJ           i+ = j+
+A equals B              e         AAAA           a- = b-
+                                  BBBB           a+ = b+
+
+A is-subset B (A ⊆ B)                            a- >= b-
+                                s, d, f, e       a+ <= b+
+
+
 ```
