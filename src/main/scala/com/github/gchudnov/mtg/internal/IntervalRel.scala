@@ -14,9 +14,7 @@ trait IntervalRel[+T]:
   a: Interval[T] =>
 
   /**
-   * Before / Preceeds (b)
-   *
-   * After / IsPreceededBy (B)
+   * Before, Preceeds (b)
    *
    * {{{
    *   PP (Point-Point):
@@ -24,8 +22,8 @@ trait IntervalRel[+T]:
    *   p < q
    *
    *   PI (Point-Interval):
-   *   {p}; {i-, i+}
-   *   p < i-
+   *   {p}; {a-, a+}
+   *   p < a-
    *
    *   II (Interval-Interval):
    *   {a-, a+}; {b-, b+}
@@ -35,21 +33,6 @@ trait IntervalRel[+T]:
    *   a+ < b+
    *
    *   a- < a+ < b- < b+
-   * }}}
-   *
-   * {{{
-   *   A before B
-   *   B after A
-   * }}}
-   *
-   * {{{
-   *   p    q
-   * ----------------
-   *   p
-   *        III
-   * ----------------
-   *   AAA
-   *        BBB
    * }}}
    */
   final def before[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
@@ -65,13 +48,14 @@ trait IntervalRel[+T]:
       case (_, _) =>
         false
 
+  /**
+    * After, IsPreceededBy (B)
+    */
   final def after[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.before(a)
 
   /**
    * Meets (m)
-   *
-   * IsMetBy (M)
    *
    * {{{
    *   II (Interval-Interval):
@@ -83,20 +67,13 @@ trait IntervalRel[+T]:
    *
    *   a- < a+ = b- < b+
    * }}}
-   *
-   * {{{
-   *   A meets B
-   *   B is-met-by A
-   * }}}
-   *
-   * {{{
-   *   AAAA
-   *      BBBB
-   * }}}
    */
   final def meets[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.isProper && b.isProper && bOrd.equiv(a.right, b.left)
 
+  /**
+    * IsMetBy (M)
+    */
   final def isMetBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.meets(a)
 
@@ -141,8 +118,8 @@ trait IntervalRel[+T]:
    *
    * {{{
    *   PI (Point-Interval):
-   *   {p}; {i-, i+}
-   *   i- < p < i+
+   *   {p}; {a-, a+}
+   *   a- < p < a+
    *
    *   II (Interval-Interval):
    *   {a-, a+}; {b-; b+}
@@ -180,8 +157,8 @@ trait IntervalRel[+T]:
    *
    * {{{
    *   PI (Point-Interval):
-   *   {p}; {i-, i+}
-   *   p = i-
+   *   {p}; {a-, a+}
+   *   p = a-
    *
    *   II (Interval-Interval):
    *   {a-, a+}; {b-; b+}
@@ -225,8 +202,8 @@ trait IntervalRel[+T]:
    *
    * {{{
    *   PI (Point-Interval):
-   *   {p}; {i-, i+}
-   *   p = i+
+   *   {p}; {a-, a+}
+   *   p = a+
    *
    *   II (Interval-Interval):
    *   {a-, a+}; {b-; b+}
