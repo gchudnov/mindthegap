@@ -2,6 +2,8 @@
 
 TODO: UPDATE TESTS for algorithms -- add manual tests 
 
+TODO: ADD CODE TO DRAW INTERVALS, USE IT IN THE README
+
 TODO: ADD remaining relations from papers
 
 TODO: impl bits from this paper:
