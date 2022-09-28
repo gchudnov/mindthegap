@@ -8,6 +8,8 @@
 
 ## Intervals
 
+TODO: fill this section
+
 ## Relations
 
 ![relations.png](res/relations.png)
@@ -45,6 +47,7 @@
 
 ## Algorithms
 
+TODO: fill this section
 
 ## Links
 
