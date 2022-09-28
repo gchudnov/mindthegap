@@ -41,3 +41,6 @@ object Show:
           s"{${a.toString()}}"
         case Proper(left, right) =>
           s"${left.show},${right.show}"
+
+  def prepare[T](xs: List[Interval[T]], width: Int = 80)(using bOrd: Ordering[Boundary[T]]): List[String] =
+    List("aaaa", "bbbb")

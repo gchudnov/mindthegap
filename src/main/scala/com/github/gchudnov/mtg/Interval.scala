@@ -115,7 +115,7 @@ final case class Proper[T](left: LeftBoundary[T], right: RightBoundary[T])(using
   override val isProper: Boolean    = true
   override def isUnbounded: Boolean = left.value.isEmpty && right.value.isEmpty
 
-object Interval:
+object Interval extends Algorithm:
 
   /**
    * ∅
@@ -275,9 +275,3 @@ object Interval:
         else proper(ba.value, bb.value, ba.isInclude, bb.isInclude)
       case _ =>
         proper(ba.value, bb.value, ba.isInclude, bb.isInclude)
-
-  /**
-   * Intersection
-   */
-  def intersection[T: Domain](a: Interval[T], b: Interval[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    a.intersection(b)

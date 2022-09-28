@@ -16,7 +16,7 @@ final class ShowSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
 
-  given ord: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
+  given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
 
   "Show" when {
 
@@ -63,6 +63,17 @@ final class ShowSpec extends TestSpec:
           val actual = x.show
           actual mustBe expected
         }
+      }
+    }
+
+    "prepare" should {
+      "prepare intervals for rendering" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(5, 10)
+
+        val data = Show.prepare(List(a, b))
+
+        data mustBe List("....", ".....")
       }
     }
   }
