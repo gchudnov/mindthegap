@@ -82,10 +82,6 @@ trait IntervalRel[+T]:
   /**
    * Overlaps (o)
    *
-   * IsOverlapedBy (O)
-   *
-   *   - If any of the intervals is Empty, there is no overlapping.
-   *
    * {{{
    *   II (Interval-Interval):
    *   {a-, a+}; {b-; b+}
@@ -96,27 +92,18 @@ trait IntervalRel[+T]:
    *
    *   a- < b- < a+ < b+
    * }}}
-   *
-   * {{{
-   *   A overlaps B
-   *   B is-overlapped-by A
-   * }}}
-   *
-   * {{{
-   *   AAAA
-   *     BBBB
-   * }}}
    */
   final def overlaps[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.isProper && b.isProper && bOrd.lt(a.left, b.left) && bOrd.lt(b.left, a.right) && bOrd.lt(a.right, b.right)
 
+  /**
+   * IsOverlapedBy (O)
+   */
   final def isOverlapedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.overlaps(a)
 
   /**
    * During (d)
-   *
-   * Contains / Includes (D)
    *
    * {{{
    *   PI (Point-Interval):
@@ -132,30 +119,18 @@ trait IntervalRel[+T]:
    *
    *   b- < a- < a+ < b+
    * }}}
-   *
-   * {{{
-   *   A during B
-   *   B contains A
-   * }}}
-   *
-   * {{{
-   *     p
-   *    III
-   * ----------------
-   *     AA
-   *   BBBBBB
-   * }}}
    */
   final def during[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.isProper && bOrd.lt(b.left, a.left) && bOrd.lt(a.right, b.right)
 
+  /**
+    * Contains (D)
+    */
   final def contains[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.during(a)
 
   /**
    * Starts (s)
-   *
-   * IsStartedBy (S)
    *
    * {{{
    *   PI (Point-Interval):
@@ -171,19 +146,6 @@ trait IntervalRel[+T]:
    *
    *   a- = b- < a+ < b+
    * }}}
-   *
-   * {{{
-   *   A starts B
-   *   B is-started-by A
-   * }}}
-   *
-   * {{{
-   *   p
-   *   III
-   * ----------------
-   *   AAA
-   *   BBBBBB
-   * }}}
    */
   final def starts[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     (a, b) match
@@ -194,13 +156,14 @@ trait IntervalRel[+T]:
       case (_, _) =>
         false
 
+  /**
+    * IsStartedBy (S)
+    */
   final def isStartedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.starts(a)
 
   /**
    * Finishes (f)
-   *
-   * IsFinishedBy (F)
    *
    * {{{
    *   PI (Point-Interval):
@@ -216,19 +179,6 @@ trait IntervalRel[+T]:
    *
    *   b- < a- < a+ = b+
    * }}}
-   *
-   * {{{
-   *   A finishes B
-   *   B is-finished-by A
-   * }}}
-   *
-   * {{{
-   *     p
-   *   III
-   * ----------------
-   *      AAA
-   *   BBBBBB
-   * }}}
    */
   final def finishes[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     (a, b) match
@@ -239,6 +189,9 @@ trait IntervalRel[+T]:
       case (_, _) =>
         false
 
+  /**
+    * IsFinishedBy (F)
+    */
   final def isFinishedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.finishes(a)
 
@@ -261,24 +214,13 @@ trait IntervalRel[+T]:
    *
    *   a- = b- < a+ = b+
    * }}}
-   *
-   * {{{
-   *   A equalsTo B
-   * }}}
-   *
-   * {{{
-   *   A <e> B
-   * }}}
-   *
-   * {{{
-   *   AAAA
-   *   BBBB
-   * }}}
    */
   final def equalsTo[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
 
   /**
+   * IsSubset
+   * 
    * Checks whether A is a subset of B
    *
    * A ⊆ B
