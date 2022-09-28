@@ -8,6 +8,12 @@ sealed trait Boundary[+T]:
 
   def effectiveValue: Option[T]
 
+  def isBounded: Boolean =
+    value.nonEmpty
+
+  def isUnbounded: Boolean =
+    value.nonEmpty
+
 /**
  * Left Boundary of an Interval
  *

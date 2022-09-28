@@ -43,4 +43,20 @@ object Show:
           s"${left.show},${right.show}"
 
   def prepare[T](xs: List[Interval[T]], width: Int = 80)(using bOrd: Ordering[Boundary[T]]): List[String] =
+    val ys = xs.filter(_.nonEmpty)
+
+    if ys.isEmpty then
+      List.empty[String]
+    else
+      val bs = ys.flatMap(it => List(it.left, it.right))
+      val xMin = bs.min // might be -inf
+      val xMax = bs.max // might be +inf
+
+      val bounds = bs.filter(_.isBounded)
+      val optXmin = bounds.minOption // cannot be -inf
+      val optXmax = bounds.maxOption // cannot be +inf
+
+      println((xMin, xMax))
+      println((optXmin, optXmax))
+
     List("aaaa", "bbbb")
