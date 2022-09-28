@@ -32,7 +32,7 @@ object Show:
           val rv = rightValue(value)
           s"${rv}${rb}"
 
-  extension [T: Ordering](ab: Interval[T])
+  extension [T](ab: Interval[T])
     def show: String =
       ab match
         case Empty =>
