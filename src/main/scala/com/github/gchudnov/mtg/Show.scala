@@ -42,21 +42,41 @@ object Show:
         case Proper(left, right) =>
           s"${left.show},${right.show}"
 
-  def prepare[T](xs: List[Interval[T]], width: Int = 80)(using bOrd: Ordering[Boundary[T]]): List[String] =
-    val ys = xs.filter(_.nonEmpty)
+  def prepare[T](intervals: List[Interval[T]], width: Int = 80)(using bOrd: Ordering[Boundary[T]]): List[List[Char]] =
+    val xs = intervals.filter(_.nonEmpty)
 
-    if ys.isEmpty then
+    if xs.isEmpty then
       List.empty[String]
     else
-      val bs = ys.flatMap(it => List(it.left, it.right))
-      val xMin = bs.min // might be -inf
-      val xMax = bs.max // might be +inf
+      val bs = xs.flatMap(it => List(it.left, it.right))
+      val (ls, rs) = bs.partition(_.isInstanceOf[LeftBoundary[?]])
 
-      val bounds = bs.filter(_.isBounded)
-      val optXmin = bounds.minOption // cannot be -inf
-      val optXmax = bounds.maxOption // cannot be +inf
+      val bMin = ls.min // might be -inf
+      val bMax = rs.max // might be +inf
 
-      println((xMin, xMax))
-      println((optXmin, optXmax))
+      val fMin = ls.filter(_.isBounded).minOption // != -inf
+      val fMax = rs.filter(_.isBounded).maxOption // != +inf
 
-    List("aaaa", "bbbb")
+
+      
+      ///////////////////
+      val padding = 2
+      val cxMin = 0 + padding
+      val cxMax = width - padding
+
+
+
+
+
+    List("aaaa".toList, "bbbb".toList)
+
+
+  /**
+    * Span to use when drawing the interval
+    *
+    * @param x0 starting x-coordinate
+    * @param x1 ending x-coordinate
+    * @param y y-coordinate
+    * @param style style to use
+    */
+  final case class Span(x0: Int, x1: Int, y: Int, style: Char)
