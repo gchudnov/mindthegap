@@ -44,7 +44,26 @@ final class DiagramSpec extends TestSpec:
         diagram mustBe Diagram(40, 1, List(Span(2, 39, 0, false, false)), List(Label(2, 2, "5"), Label(39, 38, "+∞")))
       }
 
-      // Diagram(40,1,List(Span(0,39,0,false,false)),List(Label(0,0,5), Label(39,38,+∞)))
+      "prepare a leftClosed interval" in {
+        val a       = Interval.leftClosed(5) // [5, +∞)
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+
+        diagram mustBe Diagram(40, 1, List(Span(2, 39, 0, true, false)), List(Label(2, 2, "5"), Label(39, 38, "+∞")))
+      }
+
+      "prepare a rightOpen interval" in {
+        val a       = Interval.rightOpen(5) // (-∞, 5)
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+
+        diagram mustBe Diagram(40, 1, List(Span(0, 37, 0, false, false)), List(Label(0, 0, "-∞"), Label(37, 37, "5")))
+      }
+
+      "prepare a rightClosed interval" in {
+        val a       = Interval.rightClosed(5) // (-∞, 5]
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+
+        diagram mustBe Diagram(40, 1, List(Span(0, 37, 0, false, true)), List(Label(0, 0, "-∞"), Label(37, 37, "5")))
+      }
 
       // TODO: FIX THIS
 
@@ -95,6 +114,45 @@ final class DiagramSpec extends TestSpec:
           "  (************************************)",
           "--+------------------------------------+",
           "  5                                   +∞"
+        )
+      }
+
+      "display a leftClosed interval" in {
+        val a       = Interval.leftClosed(5) // [5, +∞)
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+
+        val data = Diagram.render(diagram, theme)
+
+        data mustBe List(
+          "  [************************************)",
+          "--+------------------------------------+",
+          "  5                                   +∞"
+        )
+      }
+
+      "display a rightOpen interval" in {
+        val a       = Interval.rightOpen(5) // (-∞, 5)
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+
+        val data = Diagram.render(diagram, theme)
+
+        data mustBe List(
+          "(************************************)  ",
+          "+------------------------------------+--",
+          "-∞                                   5  "
+        )
+      }
+
+      "display a rightClosed interval" in {
+        val a       = Interval.rightClosed(5) // (-∞, 5]
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+
+        val data = Diagram.render(diagram, theme)
+
+        data mustBe List(
+          "(************************************]  ",
+          "+------------------------------------+--",
+          "-∞                                   5  "
         )
       }
     }
