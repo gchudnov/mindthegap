@@ -73,13 +73,22 @@ object Diagram:
       val cxMin    = cxMinInf + padding
       val cxMax    = cxMaxInf - padding
 
-      val cw  = cxMax - cxMin
-      val ofw = ofMin.flatMap(fMin => ofMax.map(fMax => tNum.minus(fMax.value.get, fMin.value.get)))
-      val ok  = ofw.map(fw => cw.toDouble / tNum.toDouble(fw))
+      val cw = cxMax - cxMin
+      val ofw = for
+        fMin <- ofMin
+        fMax <- ofMax
+        r    <- fMax.value
+        l    <- fMin.value
+        dx   <- if !tNum.equiv(r, l) then Some(tNum.minus(r, l)) else None
+      yield dx
+      val ok = ofw.map(fw => cw.toDouble / tNum.toDouble(fw))
 
-      println(cw)
-      println(ofw)
-      println(ok)
+      println(("ofMin", ofMin))
+      println(("ofMax", ofMax))
+
+      println(("cw", cw))
+      println(("ofw", ofw))
+      println(("ok", ok))
 
       // translates the coordindate into position on the canvas
       def translateX(value: Option[T], isLeft: Boolean): Int =

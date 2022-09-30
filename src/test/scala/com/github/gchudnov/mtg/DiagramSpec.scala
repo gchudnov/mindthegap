@@ -24,19 +24,29 @@ final class DiagramSpec extends TestSpec:
     "prepare" should {
 
       "prepare a closed interval" in {
-        val a       = Interval.closed[Int](5, 10)
+        val a       = Interval.closed[Int](5, 10) // [5, 10]
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
 
         diagram mustBe Diagram(40, 1, List(Span(2, 37, 0, true, true)), List(Label(2, 2, "5"), Label(37, 36, "10")))
       }
 
       "prepare unbounded interval" in {
-        val a = Interval.unbounded[Int]
-
+        val a       = Interval.unbounded[Int] // (-∞, +∞)
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
 
         diagram mustBe Diagram(width = 40, height = 1, spans = List(Span(0, 39, 0, false, false)), List(Label(0, 0, "-∞"), Label(39, 38, "+∞")))
       }
+
+      "prepare a leftOpen interval" in {
+        val a       = Interval.leftOpen(5) // (5, +∞)
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+
+        diagram mustBe Diagram(40, 1, List(Span(2, 39, 0, false, false)), List(Label(2, 2, "5"), Label(39, 38, "+∞")))
+      }
+
+      // Diagram(40,1,List(Span(0,39,0,false,false)),List(Label(0,0,5), Label(39,38,+∞)))
+
+      // TODO: FIX THIS
 
       // "make spans for several intervals" in {
       //   val a = Interval.closed(1, 5)
