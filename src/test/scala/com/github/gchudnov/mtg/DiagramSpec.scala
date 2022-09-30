@@ -30,6 +30,13 @@ final class DiagramSpec extends TestSpec:
         diagram mustBe Diagram(40, 1, List(Span(2, 37, 0, true, true)), List(Label(2, 2, "5"), Label(37, 36, "10")))
       }
 
+      "prepare a closed interval with a negative boundary" in {
+        val a       = Interval.closed[Int](-5, 10) // [-5, 10]
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+
+        diagram mustBe Diagram(40, 1, List(Span(2, 37, 0, true, true)), List(Label(2, 1, "-5"), Label(37, 36, "10")))
+      }
+
       "prepare unbounded interval" in {
         val a       = Interval.unbounded[Int] // (-∞, +∞)
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
