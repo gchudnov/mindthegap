@@ -1,6 +1,7 @@
 package com.github.gchudnov.mtg
 
 import Diagram.*
+import scala.collection.mutable.ArrayBuffer
 
 final case class Diagram(
   width: Int,
@@ -13,26 +14,30 @@ object Diagram:
 
   final case class Theme(
     padding: Int,
-    sep: Char
+    sep: Char,
+    axis: Char,
+    tick: Char
   )
 
   object Theme:
     val default: Theme =
       Theme(
         padding = 2,
-        sep = '*'
+        sep = '*',
+        axis = '-',
+        tick = '+'
       )
 
   final case class Label(tick: Int, pos: Int, value: String)
 
-  final case class SpanStyle(start: Char, sep: Char, end: Char)
+  final case class SpanStyle(start: Char, end: Char)
 
   final case class Span(x0: Int, x1: Int, y: Int, style: SpanStyle)
 
   val empty: Diagram =
     Diagram(width = 0, height = 0, spans = List.empty[Span], labels = List.empty[Label])
 
-  def prepare[T: Numeric](intervals: List[Interval[T]], width: Int, theme: Theme)(using bOrd: Ordering[Boundary[T]]): Diagram =
+  def prepare[T: Numeric](intervals: List[Interval[T]], width: Int, padding: Int)(using bOrd: Ordering[Boundary[T]]): Diagram =
     val tNum = summon[Numeric[T]]
 
     val xs = intervals.filter(_.nonEmpty)
@@ -47,7 +52,6 @@ object Diagram:
       val optfMin = bs.filter(_.isBounded).minOption // != -inf
       val optfMax = bs.filter(_.isBounded).maxOption // != +inf
 
-      val padding  = theme.padding
       val cxMinInf = 0
       val cxMaxInf = width - 1
       val cxMin    = cxMinInf + padding
@@ -62,7 +66,7 @@ object Diagram:
         value.fold(bound.fold(_ => cxMinInf, _ => cxMaxInf))(x => ok.fold(bound.fold(_ => cxMin, _ => cxMax))(k => (k * tNum.toDouble(x) + cxMin).toInt))
 
       def toStyle[T](i: Interval[T]): SpanStyle =
-        SpanStyle(start = Show.leftBound(i.left.isInclude), sep = theme.sep, end = Show.rightBound(i.right.isInclude))
+        SpanStyle(start = Show.leftBound(i.left.isInclude), end = Show.rightBound(i.right.isInclude))
 
       def toLabelPos(x: Int, text: String): Int =
         val p = x - (text.size / 2)
@@ -93,5 +97,17 @@ object Diagram:
 
       diagram.copy(width = width)
 
-  def render(d: Diagram): List[String] =
-    List("...")
+  def render(d: Diagram, theme: Theme): List[String] =
+    val w = d.width
+    val h = d.height + 2 // axis, labels
+
+    val arr: Array[Array[Char]] = Array.ofDim[Char](h, w)
+
+    // separator
+    Range(0, d.width).foreach(i => arr(d.height)(i) = '-')
+
+    // ticks
+    // d.labels.forall(l => arr(d.height)(l.tick) = theme.tick)
+
+    arr.map(_.toList.mkString).toList
+

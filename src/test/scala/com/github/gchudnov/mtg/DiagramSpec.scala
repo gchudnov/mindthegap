@@ -18,6 +18,7 @@ final class DiagramSpec extends TestSpec:
   given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
 
   private val canvasWidth: Int = 40
+  private val padding: Int = 2
   private val theme: Theme     = Theme.default
 
   "Diagram" when {
@@ -25,9 +26,9 @@ final class DiagramSpec extends TestSpec:
       "make spans for unbounded interval" in {
         val a = Interval.unbounded[Int]
 
-        val diagram = Diagram.prepare(List(a), canvasWidth, theme)
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
 
-        diagram mustBe Diagram(width = 40, height = 1, spans = List(Span(0, 39, 0, SpanStyle('(', '*', ')'))), List(Label(0, 0, "-∞"), Label(39, 38, "+∞")))
+        diagram mustBe Diagram(width = 40, height = 1, spans = List(Span(0, 39, 0, SpanStyle('(', ')'))), List(Label(0, 0, "-∞"), Label(39, 38, "+∞")))
       }
 
       // "make spans for several intervals" in {
@@ -45,8 +46,8 @@ final class DiagramSpec extends TestSpec:
     "render" should {
       "display an unbounded interval" in {
         val a       = Interval.unbounded[Int]
-        val diagram = Diagram.prepare(List(a), canvasWidth, theme)
-        val data    = Diagram.render(diagram)
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val data    = Diagram.render(diagram, theme)
 
         data mustBe List("...")
       }
