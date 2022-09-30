@@ -92,6 +92,18 @@ final class DiagramSpec extends TestSpec:
         )
       }
 
+      "display a closed interval with negative boundary" in {
+        val a       = Interval.closed[Int](-5, 10)
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val data    = Diagram.render(diagram, theme)
+
+        data mustBe List(
+          "  [**********************************]  ",
+          "--+----------------------------------+--",
+          " -5                                 10  "
+        )
+      }
+
       "display an unbounded interval" in {
         val a       = Interval.unbounded[Int]
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
