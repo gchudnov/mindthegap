@@ -101,13 +101,23 @@ object Diagram:
     val w = d.width
     val h = d.height + 2 // axis, labels
 
-    val arr: Array[Array[Char]] = Array.ofDim[Char](h, w)
+    val arr: Array[Array[Char]] = Array.fill[Char](h, w)(' ')
+
+    // spans
+    
 
     // separator
     Range(0, d.width).foreach(i => arr(d.height)(i) = '-')
 
     // ticks
-    // d.labels.forall(l => arr(d.height)(l.tick) = theme.tick)
+    d.labels.foreach(l => arr(d.height)(l.tick) = theme.tick)
+
+    // labels
+    d.labels.foreach(l => {
+      l.value.toList.zipWithIndex.foreach({
+        case (ch, i) => arr(d.height + 1)(l.pos + i) = ch
+      })
+    })
 
     arr.map(_.toList.mkString).toList
 
