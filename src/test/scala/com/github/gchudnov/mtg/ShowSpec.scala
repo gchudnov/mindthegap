@@ -65,25 +65,4 @@ final class ShowSpec extends TestSpec:
         }
       }
     }
-
-    "prepare" should {
-      "prepare bounded and unbounded intervals for rendering" in {
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(5, 10)
-        val c = Interval.rightClosed(15)
-        val d = Interval.leftOpen(2)
-
-        val data = Show.prepare(List(a, b, c, d))
-
-        data mustBe List("....", ".....")
-      }
-
-      "prepare unbounded interval for rendering" in {
-        val a = Interval.unbounded[Int]
-
-        val data = Show.prepare(List(a))
-
-        data mustBe List("....", ".....")
-      }      
-    }
   }

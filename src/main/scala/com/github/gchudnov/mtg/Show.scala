@@ -1,17 +1,17 @@
 package com.github.gchudnov.mtg
 
 object Show:
-  private val infinite = "∞"
+  private val infinite = '∞'
 
-  private val leftOpen    = "("
-  private val leftClosed  = "["
-  private val rightOpen   = ")"
-  private val rightClosed = "]"
+  private val leftOpen    = '('
+  private val leftClosed  = '['
+  private val rightOpen   = ')'
+  private val rightClosed = ']'
 
-  private def leftBound(isInclude: Boolean): String =
+  private[mtg] def leftBound(isInclude: Boolean): Char =
     if isInclude then leftClosed else leftOpen
 
-  private def rightBound(isInclude: Boolean): String =
+  private[mtg] def rightBound(isInclude: Boolean): Char =
     if isInclude then rightClosed else rightOpen
 
   private def leftValue(x: Option[?]): String =
@@ -41,42 +41,3 @@ object Show:
           s"{${a.toString()}}"
         case Proper(left, right) =>
           s"${left.show},${right.show}"
-
-  def prepare[T](intervals: List[Interval[T]], width: Int = 80)(using bOrd: Ordering[Boundary[T]]): List[List[Char]] =
-    val xs = intervals.filter(_.nonEmpty)
-
-    if xs.isEmpty then
-      List.empty[String]
-    else
-      val bs = xs.flatMap(it => List(it.left, it.right))
-      val (ls, rs) = bs.partition(_.isInstanceOf[LeftBoundary[?]])
-
-      val bMin = ls.min // might be -inf
-      val bMax = rs.max // might be +inf
-
-      val fMin = ls.filter(_.isBounded).minOption // != -inf
-      val fMax = rs.filter(_.isBounded).maxOption // != +inf
-
-
-      
-      ///////////////////
-      val padding = 2
-      val cxMin = 0 + padding
-      val cxMax = width - padding
-
-
-
-
-
-    List("aaaa".toList, "bbbb".toList)
-
-
-  /**
-    * Span to use when drawing the interval
-    *
-    * @param x0 starting x-coordinate
-    * @param x1 ending x-coordinate
-    * @param y y-coordinate
-    * @param style style to use
-    */
-  final case class Span(x0: Int, x1: Int, y: Int, style: Char)
