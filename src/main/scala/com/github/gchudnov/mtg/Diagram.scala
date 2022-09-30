@@ -1,5 +1,19 @@
 package com.github.gchudnov.mtg
 
+final case class Theme(
+  padding: Int,
+  sep: Char
+)
+
+object Theme:
+  val default: Theme =
+    Theme(
+      padding = 2,
+      sep = '*'
+    )
+
+final case class Label(pos: Int, value: String)
+
 final case class SpanStyle(start: Char, sep: Char, end: Char)
 
 final case class Span(x0: Int, x1: Int, y: Int, style: SpanStyle)
@@ -15,7 +29,7 @@ object Diagram:
   val empty: Diagram =
     Diagram(width = 0, height = 0, spans = List.empty[Span])
 
-  def prepare[T: Numeric](intervals: List[Interval[T]], width: Int = 80)(using bOrd: Ordering[Boundary[T]]): Diagram =
+  def prepare[T: Numeric](intervals: List[Interval[T]], width: Int, theme: Theme)(using bOrd: Ordering[Boundary[T]]): Diagram =
     val tNum = summon[Numeric[T]]
 
     val xs = intervals.filter(_.nonEmpty)
@@ -30,8 +44,7 @@ object Diagram:
       val optfMin = bs.filter(_.isBounded).minOption // != -inf
       val optfMax = bs.filter(_.isBounded).maxOption // != +inf
 
-      ///////////////////
-      val padding  = 2
+      val padding  = theme.padding
       val cxMinInf = 0
       val cxMaxInf = width - 1
       val cxMin    = cxMinInf + padding
@@ -46,23 +59,20 @@ object Diagram:
         value.fold(bound.fold(_ => cxMinInf, _ => cxMaxInf))(x => ok.fold(bound.fold(_ => cxMin, _ => cxMax))(k => (k * tNum.toDouble(x) + cxMin).toInt))
 
       def toStyle[T](i: Interval[T]): SpanStyle =
-        SpanStyle(start = Show.leftBound(i.left.isInclude), sep = '*', end = Show.rightBound(i.right.isInclude))
+        SpanStyle(start = Show.leftBound(i.left.isInclude), sep = theme.sep, end = Show.rightBound(i.right.isInclude))
 
-      // spans
-      val (yh, spans) = xs.foldLeft((0, List.empty[Span])) { case (acc, i) =>
-        val (y, ss) = acc
+      val diagram = xs.foldLeft(Diagram.empty) { case (acc, i) =>
+        val y = acc.height
 
         val x0 = translateX(i.left.value, Left(()))
         val x1 = translateX(i.right.value, Right(()))
 
-        (y + 1, ss :+ Span(x0 = x0, x1 = x1, y = y, style = toStyle(i)))
+        val spans = acc.spans :+ Span(x0 = x0, x1 = x1, y = y, style = toStyle(i))
+
+        acc.copy(height = y + 1, spans = spans)
       }
 
-      // labels
-
-      // ticks
-
-      Diagram(width = width, height = yh, spans = spans)
+      diagram.copy(width = width)
 
   def render(d: Diagram): List[String] =
-    List("aaa")
+    List("...")
