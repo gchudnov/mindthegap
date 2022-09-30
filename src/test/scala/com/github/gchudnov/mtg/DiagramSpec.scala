@@ -6,7 +6,6 @@ import com.github.gchudnov.mtg.Show.*
 import com.github.gchudnov.mtg.Diagram.Theme
 import com.github.gchudnov.mtg.Diagram.Span
 import com.github.gchudnov.mtg.Diagram.Label
-import com.github.gchudnov.mtg.Diagram.SpanStyle
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
@@ -18,7 +17,7 @@ final class DiagramSpec extends TestSpec:
   given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
 
   private val canvasWidth: Int = 40
-  private val padding: Int = 2
+  private val padding: Int     = 2
   private val theme: Theme     = Theme.default
 
   "Diagram" when {
@@ -28,7 +27,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
 
-        diagram mustBe Diagram(width = 40, height = 1, spans = List(Span(0, 39, 0, SpanStyle('(', ')'))), List(Label(0, 0, "-∞"), Label(39, 38, "+∞")))
+        diagram mustBe Diagram(width = 40, height = 1, spans = List(Span(0, 39, 0, false, false)), List(Label(0, 0, "-∞"), Label(39, 38, "+∞")))
       }
 
       // "make spans for several intervals" in {

@@ -51,8 +51,8 @@ trait IntervalRel[+T]:
         false
 
   /**
-    * After, IsPreceededBy (B)
-    */
+   * After, IsPreceededBy (B)
+   */
   final def after[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.before(a)
 
@@ -74,8 +74,8 @@ trait IntervalRel[+T]:
     a.isProper && b.isProper && bOrd.equiv(a.right, b.left)
 
   /**
-    * IsMetBy (M)
-    */
+   * IsMetBy (M)
+   */
   final def isMetBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.meets(a)
 
@@ -124,8 +124,8 @@ trait IntervalRel[+T]:
     a.nonEmpty && b.isProper && bOrd.lt(b.left, a.left) && bOrd.lt(a.right, b.right)
 
   /**
-    * Contains (D)
-    */
+   * Contains (D)
+   */
   final def contains[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.during(a)
 
@@ -157,8 +157,8 @@ trait IntervalRel[+T]:
         false
 
   /**
-    * IsStartedBy (S)
-    */
+   * IsStartedBy (S)
+   */
   final def isStartedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.starts(a)
 
@@ -190,8 +190,8 @@ trait IntervalRel[+T]:
         false
 
   /**
-    * IsFinishedBy (F)
-    */
+   * IsFinishedBy (F)
+   */
   final def isFinishedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.finishes(a)
 
@@ -220,7 +220,7 @@ trait IntervalRel[+T]:
 
   /**
    * IsSubset
-   * 
+   *
    * Checks whether A is a subset of B
    *
    * A ⊆ B

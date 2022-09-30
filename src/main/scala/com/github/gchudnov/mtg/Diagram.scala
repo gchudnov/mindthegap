@@ -14,25 +14,38 @@ object Diagram:
 
   final case class Theme(
     padding: Int,
-    sep: Char,
+    fill: Char,
+    leftOpen: Char,
+    leftClosed: Char,
+    rightOpen: Char,
+    rightClosed: Char,
     axis: Char,
     tick: Char
-  )
+  ):
+    def leftBound(isInclude: Boolean): Char =
+      if isInclude then leftClosed else leftOpen
+
+    def rightBound(isInclude: Boolean): Char =
+      if isInclude then rightClosed else rightOpen
 
   object Theme:
     val default: Theme =
       Theme(
         padding = 2,
-        sep = '*',
+        fill = '*',
+        leftOpen = '(',
+        leftClosed = '[',
+        rightOpen = ')',
+        rightClosed = ']',
         axis = '-',
         tick = '+'
       )
 
   final case class Label(tick: Int, pos: Int, value: String)
 
-  final case class SpanStyle(start: Char, end: Char)
-
-  final case class Span(x0: Int, x1: Int, y: Int, style: SpanStyle)
+  final case class Span(x0: Int, x1: Int, y: Int, includeX0: Boolean, includeX1: Boolean):
+    def size: Int =
+      x1 - x0
 
   val empty: Diagram =
     Diagram(width = 0, height = 0, spans = List.empty[Span], labels = List.empty[Label])
@@ -65,9 +78,6 @@ object Diagram:
       def translateX(value: Option[T], bound: Either[Unit, Unit]): Int =
         value.fold(bound.fold(_ => cxMinInf, _ => cxMaxInf))(x => ok.fold(bound.fold(_ => cxMin, _ => cxMax))(k => (k * tNum.toDouble(x) + cxMin).toInt))
 
-      def toStyle[T](i: Interval[T]): SpanStyle =
-        SpanStyle(start = Show.leftBound(i.left.isInclude), end = Show.rightBound(i.right.isInclude))
-
       def toLabelPos(x: Int, text: String): Int =
         val p = x - (text.size / 2)
         if p < 0 then 0
@@ -80,7 +90,7 @@ object Diagram:
         // spans
         val x0    = translateX(i.left.value, Left(()))
         val x1    = translateX(i.right.value, Right(()))
-        val spans = acc.spans :+ Span(x0 = x0, x1 = x1, y = y, style = toStyle(i))
+        val spans = acc.spans :+ Span(x0 = x0, x1 = x1, y = y, includeX0 = i.left.isInclude, includeX1 = i.right.isInclude)
 
         // labels
         val x0Text = Show.leftValue(i.left.value)
@@ -104,7 +114,13 @@ object Diagram:
     val arr: Array[Array[Char]] = Array.fill[Char](h, w)(' ')
 
     // spans
-    
+    d.spans.foreach(s =>
+      if s.size > 1 then
+        Range(s.x0 + 1, s.x1).foreach(i => arr(s.y)(i) = theme.fill)
+        arr(s.y)(s.x0) = theme.leftBound(s.includeX0)
+        arr(s.y)(s.x1) = theme.rightBound(s.includeX1)
+      else arr(s.y)(s.x0) = theme.fill
+    )
 
     // separator
     Range(0, d.width).foreach(i => arr(d.height)(i) = '-')
@@ -113,11 +129,10 @@ object Diagram:
     d.labels.foreach(l => arr(d.height)(l.tick) = theme.tick)
 
     // labels
-    d.labels.foreach(l => {
-      l.value.toList.zipWithIndex.foreach({
-        case (ch, i) => arr(d.height + 1)(l.pos + i) = ch
-      })
-    })
+    d.labels.foreach(l =>
+      l.value.toList.zipWithIndex.foreach { case (ch, i) =>
+        arr(d.height + 1)(l.pos + i) = ch
+      }
+    )
 
     arr.map(_.toList.mkString).toList
-
