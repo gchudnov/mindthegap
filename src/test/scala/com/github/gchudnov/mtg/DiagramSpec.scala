@@ -11,11 +11,6 @@ import java.time.Instant
 
 final class DiagramSpec extends TestSpec:
 
-  given intRange: IntRange = intRange5
-  given intProb: IntProb   = intProb226
-
-  given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
-
   given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
 
   private val canvasWidth = 40
@@ -27,7 +22,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.prepare(List(a), canvasWidth)
 
-        diagram mustBe Diagram(List(Span(0, 39, 0, SpanStyle('(', '*', ')'))))
+        diagram mustBe Diagram(width = canvasWidth, height = 1, spans = List(Span(0, 39, 0, SpanStyle('(', '*', ')'))))
       }
 
       // "make spans for several intervals" in {
@@ -40,5 +35,15 @@ final class DiagramSpec extends TestSpec:
 
       //   data mustBe List("....", ".....")
       // }
+    }
+
+    "render" should {
+      "display an unbounded interval" in {
+        val a = Interval.unbounded[Int]
+        val diagram = Diagram.prepare(List(a), canvasWidth)
+        val data = Diagram.render(diagram)
+
+        data mustBe List("...")
+      }
     }
   }

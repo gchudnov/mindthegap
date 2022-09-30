@@ -4,12 +4,16 @@ final case class SpanStyle(start: Char, sep: Char, end: Char)
 
 final case class Span(x0: Int, x1: Int, y: Int, style: SpanStyle)
 
-final case class Diagram(spans: List[Span])
+final case class Diagram(
+  width: Int,
+  height: Int,
+  spans: List[Span]
+)
 
 object Diagram:
 
   val empty: Diagram =
-    Diagram(spans = List.empty[Span])
+    Diagram(width = 0, height = 0, spans = List.empty[Span])
 
   def prepare[T: Numeric](intervals: List[Interval[T]], width: Int = 80)(using bOrd: Ordering[Boundary[T]]): Diagram =
     val tNum = summon[Numeric[T]]
@@ -44,7 +48,8 @@ object Diagram:
       def toStyle[T](i: Interval[T]): SpanStyle =
         SpanStyle(start = Show.leftBound(i.left.isInclude), sep = '*', end = Show.rightBound(i.right.isInclude))
 
-      val (_, spans) = xs.foldLeft((0, List.empty[Span])) { case (acc, i) =>
+      // spans
+      val (yh, spans) = xs.foldLeft((0, List.empty[Span])) { case (acc, i) =>
         val (y, ss) = acc
 
         val x0 = translateX(i.left.value, Left(()))
@@ -53,4 +58,11 @@ object Diagram:
         (y + 1, ss :+ Span(x0 = x0, x1 = x1, y = y, style = toStyle(i)))
       }
 
-      Diagram(spans = spans)
+      // labels
+
+      // ticks
+
+      Diagram(width = width, height = yh, spans = spans)
+
+  def render(d: Diagram): List[String] =
+    List("aaa")
