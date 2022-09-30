@@ -12,6 +12,9 @@ final case class Diagram(
 
 object Diagram:
 
+  // TODO: ADD SETTING TO SKIP LABELS OR MOVE THEM TO THE NEXT LINE
+  // TODO: ADD NO-SCALE MODE WHEN WE PAINT IN THE GIVEN WIDTH
+
   final case class Theme(
     padding: Int,
     fill: Char,
@@ -62,21 +65,37 @@ object Diagram:
       val bMin = bs.min // might be -inf
       val bMax = bs.max // might be +inf
 
-      val optfMin = bs.filter(_.isBounded).minOption // != -inf
-      val optfMax = bs.filter(_.isBounded).maxOption // != +inf
+      val ofMin = bs.filter(_.isBounded).minOption // != -inf
+      val ofMax = bs.filter(_.isBounded).maxOption // != +inf
 
       val cxMinInf = 0
       val cxMaxInf = width - 1
       val cxMin    = cxMinInf + padding
       val cxMax    = cxMaxInf - padding
 
-      val cw = cxMax - cxMin
-      val fw = optfMin.flatMap(fMin => optfMax.map(fMax => tNum.minus(fMax.value.get, fMin.value.get)))
-      val ok = fw.map(w => cw.toDouble / tNum.toDouble(w))
+      val cw  = cxMax - cxMin
+      val ofw = ofMin.flatMap(fMin => ofMax.map(fMax => tNum.minus(fMax.value.get, fMin.value.get)))
+      val ok  = ofw.map(fw => cw.toDouble / tNum.toDouble(fw))
+
+      println(cw)
+      println(ofw)
+      println(ok)
 
       // translates the coordindate into position on the canvas
-      def translateX(value: Option[T], bound: Either[Unit, Unit]): Int =
-        value.fold(bound.fold(_ => cxMinInf, _ => cxMaxInf))(x => ok.fold(bound.fold(_ => cxMin, _ => cxMax))(k => (k * tNum.toDouble(x) + cxMin).toInt))
+      def translateX(value: Option[T], isLeft: Boolean): Int =
+        value match
+          case None =>
+            // -inf or +inf
+            if isLeft then cxMinInf else cxMaxInf
+          case Some(x) =>
+            ok match
+              case None =>
+                // one of the boundaries is inf
+                if isLeft then cxMin else cxMax
+              case Some(k) =>
+                // finite boundaries
+                val dx = tNum.toDouble(x) - tNum.toDouble(ofMin.flatMap(_.value).get)
+                (k * dx + cxMin).toInt
 
       def toLabelPos(x: Int, text: String): Int =
         val p = x - (text.size / 2)
@@ -88,8 +107,8 @@ object Diagram:
         val y = acc.height
 
         // spans
-        val x0    = translateX(i.left.value, Left(()))
-        val x1    = translateX(i.right.value, Right(()))
+        val x0    = translateX(i.left.value, isLeft = true)
+        val x1    = translateX(i.right.value, isLeft = false)
         val spans = acc.spans :+ Span(x0 = x0, x1 = x1, y = y, includeX0 = i.left.isInclude, includeX1 = i.right.isInclude)
 
         // labels
@@ -101,9 +120,6 @@ object Diagram:
 
         acc.copy(height = y + 1, spans = spans, labels = labels)
       }
-
-      // remove overlapping and invisible spans
-      // TODO: do it
 
       diagram.copy(width = width)
 

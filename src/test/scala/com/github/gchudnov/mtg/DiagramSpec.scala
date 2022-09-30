@@ -22,7 +22,15 @@ final class DiagramSpec extends TestSpec:
 
   "Diagram" when {
     "prepare" should {
-      "make spans for unbounded interval" in {
+
+      "prepare a closed interval" in {
+        val a       = Interval.closed[Int](5, 10)
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+
+        diagram mustBe Diagram(40, 1, List(Span(2, 37, 0, true, true)), List(Label(2, 2, "5"), Label(37, 36, "10")))
+      }
+
+      "prepare unbounded interval" in {
         val a = Interval.unbounded[Int]
 
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
@@ -43,12 +51,28 @@ final class DiagramSpec extends TestSpec:
     }
 
     "render" should {
+      "display a closed interval" in {
+        val a       = Interval.closed[Int](5, 10)
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val data    = Diagram.render(diagram, theme)
+
+        data mustBe List(
+          "  [**********************************]  ",
+          "--+----------------------------------+--",
+          "  5                                 10  "
+        )
+      }
       "display an unbounded interval" in {
         val a       = Interval.unbounded[Int]
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
         val data    = Diagram.render(diagram, theme)
 
-        data mustBe List("...")
+        data mustBe List(
+          "(**************************************)",
+          "+--------------------------------------+",
+          "-∞                                    +∞"
+        )
       }
     }
+
   }
