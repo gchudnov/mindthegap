@@ -1,33 +1,36 @@
 package com.github.gchudnov.mtg
 
-final case class Theme(
-  padding: Int,
-  sep: Char
-)
-
-object Theme:
-  val default: Theme =
-    Theme(
-      padding = 2,
-      sep = '*'
-    )
-
-final case class Label(pos: Int, value: String)
-
-final case class SpanStyle(start: Char, sep: Char, end: Char)
-
-final case class Span(x0: Int, x1: Int, y: Int, style: SpanStyle)
+import Diagram.*
 
 final case class Diagram(
   width: Int,
   height: Int,
-  spans: List[Span]
+  spans: List[Span],
+  labels: List[Label]
 )
 
 object Diagram:
 
+  final case class Theme(
+    padding: Int,
+    sep: Char
+  )
+
+  object Theme:
+    val default: Theme =
+      Theme(
+        padding = 2,
+        sep = '*'
+      )
+
+  final case class Label(tick: Int, pos: Int, value: String)
+
+  final case class SpanStyle(start: Char, sep: Char, end: Char)
+
+  final case class Span(x0: Int, x1: Int, y: Int, style: SpanStyle)
+
   val empty: Diagram =
-    Diagram(width = 0, height = 0, spans = List.empty[Span])
+    Diagram(width = 0, height = 0, spans = List.empty[Span], labels = List.empty[Label])
 
   def prepare[T: Numeric](intervals: List[Interval[T]], width: Int, theme: Theme)(using bOrd: Ordering[Boundary[T]]): Diagram =
     val tNum = summon[Numeric[T]]
@@ -61,16 +64,32 @@ object Diagram:
       def toStyle[T](i: Interval[T]): SpanStyle =
         SpanStyle(start = Show.leftBound(i.left.isInclude), sep = theme.sep, end = Show.rightBound(i.right.isInclude))
 
+      def toLabelPos(x: Int, text: String): Int =
+        val p = x - (text.size / 2)
+        if p < 0 then 0
+        else if p + text.size - 1 > width then width - text.size
+        else p
+
       val diagram = xs.foldLeft(Diagram.empty) { case (acc, i) =>
         val y = acc.height
 
-        val x0 = translateX(i.left.value, Left(()))
-        val x1 = translateX(i.right.value, Right(()))
-
+        // spans
+        val x0    = translateX(i.left.value, Left(()))
+        val x1    = translateX(i.right.value, Right(()))
         val spans = acc.spans :+ Span(x0 = x0, x1 = x1, y = y, style = toStyle(i))
 
-        acc.copy(height = y + 1, spans = spans)
+        // labels
+        val x0Text = Show.leftValue(i.left.value)
+        val x0Pos  = toLabelPos(x0, x0Text)
+        val x1Text = Show.rightValue(i.right.value)
+        val x1Pos  = toLabelPos(x1, x1Text)
+        val labels = acc.labels ++ List(Label(tick = x0, pos = x0Pos, value = x0Text), Label(tick = x1, pos = x1Pos, value = x1Text))
+
+        acc.copy(height = y + 1, spans = spans, labels = labels)
       }
+
+      // remove overlapping and invisible spans
+      // TODO: do it
 
       diagram.copy(width = width)
 

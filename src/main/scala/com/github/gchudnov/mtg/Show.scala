@@ -14,10 +14,10 @@ object Show:
   private[mtg] def rightBound(isInclude: Boolean): Char =
     if isInclude then rightClosed else rightOpen
 
-  private def leftValue(x: Option[?]): String =
+  private[mtg] def leftValue(x: Option[?]): String =
     x.fold(s"-${infinite}")(_.toString())
 
-  private def rightValue(x: Option[?]): String =
+  private[mtg] def rightValue(x: Option[?]): String =
     x.fold(s"+${infinite}")(_.toString())
 
   extension [T](b: Boundary[T])
