@@ -72,6 +72,7 @@ final class DiagramSpec extends TestSpec:
           "  5                                 10  "
         )
       }
+
       "display an unbounded interval" in {
         val a       = Interval.unbounded[Int]
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
@@ -81,6 +82,19 @@ final class DiagramSpec extends TestSpec:
           "(**************************************)",
           "+--------------------------------------+",
           "-∞                                    +∞"
+        )
+      }
+
+      "display a leftOpen interval" in {
+        val a       = Interval.leftOpen(5) // (5, +∞)
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+
+        val data = Diagram.render(diagram, theme)
+
+        data mustBe List(
+          "  (************************************)",
+          "--+------------------------------------+",
+          "  5                                   +∞"
         )
       }
     }
