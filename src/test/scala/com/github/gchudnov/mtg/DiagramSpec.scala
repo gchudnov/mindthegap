@@ -11,6 +11,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 
 import java.time.Instant
+import com.github.gchudnov.mtg.Diagram.LabelTheme
 
 final class DiagramSpec extends TestSpec:
 
@@ -322,7 +323,7 @@ final class DiagramSpec extends TestSpec:
         )
       }
 
-      "display overlapping intervals with overlapping labels" in {
+      "display overlapping intervals with overlapping labels (LabelTheme.None)" in {
         val a = Interval.closed(100, 500)
         val b = Interval.closed(150, 600)
         val c = Interval.closed(200, 700)
@@ -332,18 +333,42 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvasWidth, padding)
 
-        val data = Diagram.render(diagram, theme.copy(legend = true))
+        val data = Diagram.render(diagram, theme.copy(label = LabelTheme.None))
 
         data mustBe List(
-          "  [***************]                      | [100,500]", 
-          "    [****************]                   | [150,600]", 
-          "      [******************]               | [200,700]", 
-          "        [********************]           | [250,800]", 
-          "          [**********************]       | [300,900]", 
-          "                     [***************]   | [600,1000]", 
-          "--+-+-+-+-+-------+--+---+---+---+---+-- |", 
-          " 10152025300     500600 700 800 9001000  |"
-        )        
+          "  [***************]                     ",
+          "    [****************]                  ",
+          "      [******************]              ",
+          "        [********************]          ",
+          "          [**********************]      ",
+          "                     [***************]  ",
+          "--+-+-+-+-+-------+--+---+---+---+---+--",
+          " 10152025300     500600 700 800 9001000 "
+        )
+      }
+
+      "display overlapping intervals with overlapping labels (LabelTheme.NoOverlap)" in {
+        val a = Interval.closed(100, 500)
+        val b = Interval.closed(150, 600)
+        val c = Interval.closed(200, 700)
+        val d = Interval.closed(250, 800)
+        val e = Interval.closed(300, 900)
+        val f = Interval.closed(600, 1000)
+
+        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvasWidth, padding)
+
+        val data = Diagram.render(diagram, theme.copy(label = LabelTheme.NoOverlap))
+
+        data mustBe List(
+          "  [***************]                     ",
+          "    [****************]                  ",
+          "      [******************]              ",
+          "        [********************]          ",
+          "          [**********************]      ",
+          "                     [***************]  ",
+          "--+---+---+-------+------+---+---+------",
+          " 100 200 300     500    700 800 900     "
+        )
       }
     }
 

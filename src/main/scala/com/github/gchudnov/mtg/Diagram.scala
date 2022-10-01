@@ -21,11 +21,12 @@ object Diagram:
 
   object LabelTheme:
     case object None      extends LabelTheme // draw labels as-is on one line
-    case object NoOverlap extends LabelTheme // draw sorted labels that are non-overlapping
+    case object NoOverlap extends LabelTheme // draw sorted labels that are non-overlapping: next label should be separated by space from the prev one
     case object Stacked   extends LabelTheme // draw all labels, but stack them onto multiple lines
 
   final case class Theme(
     padding: Int,
+    space: Char,
     fill: Char,
     leftOpen: Char,
     leftClosed: Char,
@@ -46,6 +47,7 @@ object Diagram:
     val default: Theme =
       Theme(
         padding = 2,
+        space = ' ',
         fill = '*',
         leftOpen = '(',
         leftClosed = '[',
@@ -65,6 +67,9 @@ object Diagram:
 
   val empty: Diagram =
     Diagram(width = 0, height = 0, spans = List.empty[Span], labels = List.empty[Label], legend = List.empty[String])
+
+  private def align(value: Double): Int =
+    value.round.toInt
 
   def prepare[T: Numeric](intervals: List[Interval[T]], width: Int, padding: Int)(using bOrd: Ordering[Boundary[T]]): Diagram =
     val tNum = summon[Numeric[T]]
@@ -106,9 +111,6 @@ object Diagram:
       println(("ok", ok))
 
       println("---------------")
-
-      def align(value: Double): Int =
-        value.round.toInt
 
       // translates the coordindate into position on the canvas
       def translateX(value: Option[T], isLeft: Boolean): Int =
@@ -159,10 +161,22 @@ object Diagram:
       diagram.copy(width = width, labels = diagram.labels.distinct)
 
   def render(d: Diagram, theme: Theme): List[String] =
-    val w = d.width
-    val h = d.height + 2 // axis, labels
+    // axis height
+    val ah = 1
 
-    val arr: Array[Array[Char]] = Array.fill[Char](h, w)(' ')
+    // height of labels
+    val lh = theme.label match
+      case LabelTheme.None =>
+        1
+      case LabelTheme.NoOverlap =>
+        1
+      case LabelTheme.Stacked =>
+        ???
+
+    val w = d.width
+    val h = d.height + ah + lh // axis, labels
+
+    val arr: Array[Array[Char]] = Array.fill[Char](h, w)(theme.space)
 
     // spans
     d.spans.foreach(s =>
@@ -174,22 +188,42 @@ object Diagram:
     )
 
     // separator
-    Range(0, d.width).foreach(i => arr(d.height)(i) = '-')
+    Range(0, d.width).foreach(i => arr(d.height)(i) = theme.axis)
 
-    // ticks
-    d.labels.foreach(l => arr(d.height)(l.tick) = theme.tick)
+    def drawTick(l: Label): Unit =
+      arr(d.height)(l.tick) = theme.tick
 
-    // labels
-    d.labels.foreach(l =>
+    def drawLabel(l: Label): Unit =
       l.value.toList.zipWithIndex.foreach { case (ch, i) =>
         arr(d.height + 1)(l.pos + i) = ch
       }
-    )
+
+    def isOverlap(l: Label): Boolean =
+      if l.pos > 0 then arr(d.height + 1)(l.pos - 1) != theme.space
+      else false
+
+    // ticks, labels
+    theme.label match
+      case LabelTheme.None =>
+        d.labels.foreach(l =>
+          drawTick(l)
+          drawLabel(l)
+        )
+      case LabelTheme.NoOverlap =>
+        d.labels
+          .sortBy(_.tick)
+          .foreach(l =>
+            if !isOverlap(l) then
+              drawTick(l)
+              drawLabel(l)
+          )
+      case LabelTheme.Stacked =>
+        ???
 
     val chart  = arr.map(_.toList.mkString).toList
     val legend = d.legend ++ List.fill[String](chart.size - d.legend.size)("")
 
-    val result = if theme.legend then chart.zip(legend).map { case (line, text) => s"${line} |${if text.nonEmpty then " " else ""}${text}" }
+    val result = if theme.legend then chart.zip(legend).map { case (line, text) => s"${line}${theme.space}|${if text.nonEmpty then theme.space.toString else ""}${text}" }
     else chart
 
     result
