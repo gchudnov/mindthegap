@@ -98,6 +98,9 @@ object Diagram:
 
       println("---------------")
 
+      def align(value: Double): Int =
+        value.round.toInt
+
       // translates the coordindate into position on the canvas
       def translateX(value: Option[T], isLeft: Boolean): Int =
         value match
@@ -112,13 +115,13 @@ object Diagram:
               case Some(k) =>
                 // finite boundaries
                 val dx = tNum.toDouble(x) - tNum.toDouble(ofMin.flatMap(_.value).get)
-                (k * dx + cxMin).toInt
+                align((k * dx) + cxMin)
 
       def centerX(value: Option[T]): Int =
-        cxMin + (cw / 2)
+        align(cxMin + (cw / 2.0))
 
       def toLabelPos(x: Int, text: String): Int =
-        val p = x - (text.size / 2)
+        val p = align(x - (text.size / 2.0))
         if p < 0 then 0
         else if p + text.size - 1 > width then width - text.size
         else p
