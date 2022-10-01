@@ -3,6 +3,8 @@ package com.github.gchudnov.mtg
 object Show:
   private val infinite = '∞'
 
+  private val empty = '∅'
+
   private val leftOpen    = '('
   private val leftClosed  = '['
   private val rightOpen   = ')'
@@ -36,7 +38,7 @@ object Show:
     def show: String =
       ab match
         case Empty =>
-          "∅"
+          s"${empty}"
         case Degenerate(a) =>
           s"{${a.toString()}}"
         case Proper(left, right) =>

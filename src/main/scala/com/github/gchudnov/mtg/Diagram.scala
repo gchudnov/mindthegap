@@ -17,6 +17,13 @@ object Diagram:
   // TODO: ADD SETTING TO SKIP LABELS OR MOVE THEM TO THE NEXT LINE
   // TODO: ADD NO-SCALE MODE WHEN WE PAINT IN THE GIVEN WIDTH
 
+  sealed trait LabelTheme
+
+  object LabelTheme:
+    case object None      extends LabelTheme // draw labels as-is on one line
+    case object NoOverlap extends LabelTheme // draw sorted labels that are non-overlapping
+    case object Stacked   extends LabelTheme // draw all labels, but stack them onto multiple lines
+
   final case class Theme(
     padding: Int,
     fill: Char,
@@ -26,7 +33,8 @@ object Diagram:
     rightClosed: Char,
     axis: Char,
     tick: Char,
-    legend: Boolean
+    legend: Boolean,
+    label: LabelTheme
   ):
     def leftBound(isInclude: Boolean): Char =
       if isInclude then leftClosed else leftOpen
@@ -45,7 +53,8 @@ object Diagram:
         rightClosed = ']',
         axis = '-',
         tick = '+',
-        legend = false
+        legend = false,
+        label = LabelTheme.None
       )
 
   final case class Label(tick: Int, pos: Int, value: String)
