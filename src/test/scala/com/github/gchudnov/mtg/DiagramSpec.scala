@@ -321,6 +321,30 @@ final class DiagramSpec extends TestSpec:
           "  1   2   3   4   5  6   7   8   9  10   |"
         )
       }
+
+      "display overlapping intervals with overlapping labels" in {
+        val a = Interval.closed(100, 500)
+        val b = Interval.closed(150, 600)
+        val c = Interval.closed(200, 700)
+        val d = Interval.closed(250, 800)
+        val e = Interval.closed(300, 900)
+        val f = Interval.closed(600, 1000)
+
+        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvasWidth, padding)
+
+        val data = Diagram.render(diagram, theme.copy(legend = true))
+
+        data mustBe List(
+          "  [***************]                      | [100,500]", 
+          "    [****************]                   | [150,600]", 
+          "      [******************]               | [200,700]", 
+          "        [********************]           | [250,800]", 
+          "          [**********************]       | [300,900]", 
+          "                     [***************]   | [600,1000]", 
+          "--+-+-+-+-+-------+--+---+---+---+---+-- |", 
+          " 10152025300     500600 700 800 9001000  |"
+        )        
+      }
     }
 
   }
