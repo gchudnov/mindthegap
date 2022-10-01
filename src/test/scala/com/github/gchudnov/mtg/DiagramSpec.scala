@@ -384,9 +384,8 @@ final class DiagramSpec extends TestSpec:
         val data = Diagram.render(diagram, theme.copy(label = LabelTheme.Stacked))
 
         data mustBe List(
-
         )
-      }      
+      }
     }
 
   }

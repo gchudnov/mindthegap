@@ -204,7 +204,7 @@ object Diagram:
         val larr: Array[Array[Char]] = Array.fill[Char](lh, w)(theme.space)
         d.labels.foreach(l => drawTick(l, theme, arr(d.height)))
         drawStacked(d.labels, theme, larr)
-        // copy back
+        larr.zipWithIndex.foreach { case (a, i) => a.copyToArray(arr(d.height + ah + i)) }
 
     val chart  = arr.map(_.toList.mkString).toList
     val legend = d.legend ++ List.fill[String](chart.size - d.legend.size)("")
@@ -254,18 +254,22 @@ object Diagram:
    * Draw Stacked Labels
    */
   private def drawStacked(ls: List[Label], theme: Theme, view: Array[Array[Char]]): Unit =
-    // val width = arr(0).size
-    // val height = arr.size
+    val width  = view(0).size
+    val height = view.size
 
-    // ls.sortBy(_.tick).foreach(l =>
-    //   val first = l.pos
-    //   val last  = l.pos + l.size
+    ls.sortBy(_.tick)
+      .foreach(l =>
+        val first = l.pos
+        val last  = l.pos + l.size
 
-    //   val row = Range(0, height).find(i =>
-    //     if arr(i)(first) == theme.space && last <= width then true
-    //     else false
-    //   )
+        val prev = if first > 0 then first - 1 else 0
 
-    //   arr(row)(l.pos)
-    // )
-    ()
+        val row = view.indices.find(i =>
+          if view(i)(prev) == theme.space && last <= width then true
+          else false
+        )
+
+        row match
+          case None    => require(false, "labels were incorrectly measured")
+          case Some(x) => drawLabel(l, view(x))
+      )
