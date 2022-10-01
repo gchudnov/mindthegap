@@ -111,6 +111,19 @@ final class DiagramSpec extends TestSpec:
           List("[1,5]", "[5,10]", "(-∞,15]", "(2,+∞)")
         )
       }
+
+      "prepare overlapping intervals" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(2, 6)
+        val c = Interval.closed(3, 7)
+        val d = Interval.closed(4, 8)
+        val e = Interval.closed(5, 9)
+        val f = Interval.closed(6, 10)
+
+        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvasWidth, padding)
+
+        diagram mustBe Diagram.empty
+      }
     }
 
     "render" should {
@@ -266,6 +279,30 @@ final class DiagramSpec extends TestSpec:
           "    (**********************************) | (2,+∞)",
           "+-+-+-------+-----------+------------+-+ |",
           "-∞1 2       5          10           15+∞ |"
+        )
+      }
+
+      "display overlapping intervals" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(2, 6)
+        val c = Interval.closed(3, 7)
+        val d = Interval.closed(4, 8)
+        val e = Interval.closed(5, 9)
+        val f = Interval.closed(6, 10)
+
+        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvasWidth, padding)
+
+        val data = Diagram.render(diagram, theme.copy(legend = true))
+
+        data mustBe List(
+          "  [**************]                       | [1,5]",
+          "     [***************]                   | [2,6]",
+          "         [***************]               | [3,7]",
+          "             [***************]           | [4,8]",
+          "                 [***************]       | [5,9]",
+          "                     [***************]   | [6,10]",
+          "--+--+---+---+---+---+---+---+---+---+-- |",
+          "  1  2   3   4   5   6   7   8   9  10   |"
         )
       }
     }
