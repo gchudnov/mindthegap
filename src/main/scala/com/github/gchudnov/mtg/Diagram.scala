@@ -1,13 +1,15 @@
 package com.github.gchudnov.mtg
 
 import Diagram.*
+import Show.*
 import scala.collection.mutable.ArrayBuffer
 
 final case class Diagram(
   width: Int,
   height: Int,
   spans: List[Span],
-  labels: List[Label]
+  labels: List[Label],
+  legend: List[String]
 )
 
 object Diagram:
@@ -23,7 +25,8 @@ object Diagram:
     rightOpen: Char,
     rightClosed: Char,
     axis: Char,
-    tick: Char
+    tick: Char,
+    legend: Boolean
   ):
     def leftBound(isInclude: Boolean): Char =
       if isInclude then leftClosed else leftOpen
@@ -41,7 +44,8 @@ object Diagram:
         rightOpen = ')',
         rightClosed = ']',
         axis = '-',
-        tick = '+'
+        tick = '+',
+        legend = false
       )
 
   final case class Label(tick: Int, pos: Int, value: String)
@@ -51,7 +55,7 @@ object Diagram:
       x1 - x0
 
   val empty: Diagram =
-    Diagram(width = 0, height = 0, spans = List.empty[Span], labels = List.empty[Label])
+    Diagram(width = 0, height = 0, spans = List.empty[Span], labels = List.empty[Label], legend = List.empty[String])
 
   def prepare[T: Numeric](intervals: List[Interval[T]], width: Int, padding: Int)(using bOrd: Ordering[Boundary[T]]): Diagram =
     val tNum = summon[Numeric[T]]
@@ -134,7 +138,10 @@ object Diagram:
         val x1Pos  = toLabelPos(x1, x1Text)
         val labels = List(Label(tick = x0, pos = x0Pos, value = x0Text), Label(tick = x1, pos = x1Pos, value = x1Text))
 
-        acc.copy(height = y + 1, spans = acc.spans :+ span, labels = acc.labels ++ labels)
+        // legend
+        val iLegend = i.show
+
+        acc.copy(height = y + 1, spans = acc.spans :+ span, labels = acc.labels ++ labels, legend = acc.legend :+ iLegend)
       }
 
       diagram.copy(width = width, labels = diagram.labels.distinct)

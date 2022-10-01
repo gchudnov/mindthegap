@@ -27,7 +27,7 @@ final class DiagramSpec extends TestSpec:
         val a       = Interval.degenerate[Int](5) // [5]
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
 
-        diagram mustBe Diagram(40, 1, List(Span(2, 2, 0, true, true)), List(Label(2, 2, "5")))
+        diagram mustBe Diagram(40, 1, List(Span(2, 2, 0, true, true)), List(Label(2, 2, "5")), List("{5}"))
       }
 
       "prepare two points" in {
@@ -35,56 +35,56 @@ final class DiagramSpec extends TestSpec:
         val b       = Interval.degenerate[Int](10) // [10]
         val diagram = Diagram.prepare(List(a, b), canvasWidth, padding)
 
-        diagram mustBe Diagram(40, 2, List(Span(2, 2, 0, true, true), Span(37, 37, 1, true, true)), List(Label(2, 2, "5"), Label(37, 36, "10")))
+        diagram mustBe Diagram(40, 2, List(Span(2, 2, 0, true, true), Span(37, 37, 1, true, true)), List(Label(2, 2, "5"), Label(37, 36, "10")), List("{5}", "{10}"))
       }
 
       "prepare a closed interval" in {
         val a       = Interval.closed[Int](5, 10) // [5, 10]
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
 
-        diagram mustBe Diagram(40, 1, List(Span(2, 37, 0, true, true)), List(Label(2, 2, "5"), Label(37, 36, "10")))
+        diagram mustBe Diagram(40, 1, List(Span(2, 37, 0, true, true)), List(Label(2, 2, "5"), Label(37, 36, "10")), List("[5,10]"))
       }
 
       "prepare a closed interval with a negative boundary" in {
         val a       = Interval.closed[Int](-5, 10) // [-5, 10]
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
 
-        diagram mustBe Diagram(40, 1, List(Span(2, 37, 0, true, true)), List(Label(2, 1, "-5"), Label(37, 36, "10")))
+        diagram mustBe Diagram(40, 1, List(Span(2, 37, 0, true, true)), List(Label(2, 1, "-5"), Label(37, 36, "10")), List("[-5,10]"))
       }
 
       "prepare unbounded interval" in {
         val a       = Interval.unbounded[Int] // (-∞, +∞)
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
 
-        diagram mustBe Diagram(width = 40, height = 1, spans = List(Span(0, 39, 0, false, false)), List(Label(0, 0, "-∞"), Label(39, 38, "+∞")))
+        diagram mustBe Diagram(width = 40, height = 1, spans = List(Span(0, 39, 0, false, false)), List(Label(0, 0, "-∞"), Label(39, 38, "+∞")), List("(-∞,+∞)"))
       }
 
       "prepare a leftOpen interval" in {
         val a       = Interval.leftOpen(5) // (5, +∞)
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
 
-        diagram mustBe Diagram(40, 1, List(Span(2, 39, 0, false, false)), List(Label(2, 2, "5"), Label(39, 38, "+∞")))
+        diagram mustBe Diagram(40, 1, List(Span(2, 39, 0, false, false)), List(Label(2, 2, "5"), Label(39, 38, "+∞")), List("(5,+∞)"))
       }
 
       "prepare a leftClosed interval" in {
         val a       = Interval.leftClosed(5) // [5, +∞)
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
 
-        diagram mustBe Diagram(40, 1, List(Span(2, 39, 0, true, false)), List(Label(2, 2, "5"), Label(39, 38, "+∞")))
+        diagram mustBe Diagram(40, 1, List(Span(2, 39, 0, true, false)), List(Label(2, 2, "5"), Label(39, 38, "+∞")), List("[5,+∞)"))
       }
 
       "prepare a rightOpen interval" in {
         val a       = Interval.rightOpen(5) // (-∞, 5)
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
 
-        diagram mustBe Diagram(40, 1, List(Span(0, 37, 0, false, false)), List(Label(0, 0, "-∞"), Label(37, 37, "5")))
+        diagram mustBe Diagram(40, 1, List(Span(0, 37, 0, false, false)), List(Label(0, 0, "-∞"), Label(37, 37, "5")), List("(-∞,5)"))
       }
 
       "prepare a rightClosed interval" in {
         val a       = Interval.rightClosed(5) // (-∞, 5]
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
 
-        diagram mustBe Diagram(40, 1, List(Span(0, 37, 0, false, true)), List(Label(0, 0, "-∞"), Label(37, 37, "5")))
+        diagram mustBe Diagram(40, 1, List(Span(0, 37, 0, false, true)), List(Label(0, 0, "-∞"), Label(37, 37, "5")), List("(-∞,5]"))
       }
 
       "prepare several intervals" in {
@@ -107,7 +107,8 @@ final class DiagramSpec extends TestSpec:
             Label(37, 36, "15"),
             Label(4, 4, "2"),
             Label(39, 38, "+∞")
-          )
+          ),
+          List("[1,5]", "[5,10]", "(-∞,15]", "(2,+∞)")
         )
       }
     }
