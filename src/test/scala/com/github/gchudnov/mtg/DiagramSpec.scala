@@ -87,18 +87,29 @@ final class DiagramSpec extends TestSpec:
         diagram mustBe Diagram(40, 1, List(Span(0, 37, 0, false, true)), List(Label(0, 0, "-∞"), Label(37, 37, "5")))
       }
 
-      // TODO: FIX THIS
+      "prepare several intervals" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(5, 10)
+        val c = Interval.rightClosed(15)
+        val d = Interval.leftOpen(2)
 
-      // "make spans for several intervals" in {
-      //   val a = Interval.closed(1, 5)
-      //   val b = Interval.closed(5, 10)
-      //   val c = Interval.rightClosed(15)
-      //   val d = Interval.leftOpen(2)
+        val diagram = Diagram.prepare(List(a, b, c, d), canvasWidth, padding)
 
-      //   val data = Show.prepare(List(a, b, c, d), canvasWidth)
-
-      //   data mustBe List("....", ".....")
-      // }
+        diagram mustBe Diagram(
+          40,
+          4,
+          List(Span(2, 12, 0, true, true), Span(12, 24, 1, true, true), Span(0, 37, 2, false, true), Span(4, 39, 3, false, false)),
+          List(
+            Label(2, 2, "1"),
+            Label(12, 12, "5"),
+            Label(24, 23, "10"),
+            Label(0, 0, "-∞"),
+            Label(37, 36, "15"),
+            Label(4, 4, "2"),
+            Label(39, 38, "+∞")
+          )
+        )
+      }
     }
 
     "render" should {
@@ -214,6 +225,26 @@ final class DiagramSpec extends TestSpec:
           "(************************************]  ",
           "+------------------------------------+--",
           "-∞                                   5  "
+        )
+      }
+
+      "display several intervals" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(5, 10)
+        val c = Interval.rightClosed(15)
+        val d = Interval.leftOpen(2)
+
+        val diagram = Diagram.prepare(List(a, b, c, d), canvasWidth, padding)
+
+        val data = Diagram.render(diagram, theme)
+
+        data mustBe List(
+          "  [*********]                           ",
+          "            [***********]               ",
+          "(************************************]  ",
+          "    (**********************************)",
+          "+-+-+-------+-----------+------------+-+",
+          "-∞1 2       5          10           15+∞"
         )
       }
     }
