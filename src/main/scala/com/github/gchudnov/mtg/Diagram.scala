@@ -83,12 +83,16 @@ object Diagram:
       yield dx
       val ok = ofw.map(fw => cw.toDouble / tNum.toDouble(fw))
 
+      println(("intervals", intervals))
+
       println(("ofMin", ofMin))
       println(("ofMax", ofMax))
 
       println(("cw", cw))
       println(("ofw", ofw))
       println(("ok", ok))
+
+      println("---------------")
 
       // translates the coordindate into position on the canvas
       def translateX(value: Option[T], isLeft: Boolean): Int =
@@ -106,6 +110,9 @@ object Diagram:
                 val dx = tNum.toDouble(x) - tNum.toDouble(ofMin.flatMap(_.value).get)
                 (k * dx + cxMin).toInt
 
+      def centerX(value: Option[T]): Int =
+        cxMin + (cw / 2)
+
       def toLabelPos(x: Int, text: String): Int =
         val p = x - (text.size / 2)
         if p < 0 then 0
@@ -116,21 +123,21 @@ object Diagram:
         val y = acc.height
 
         // spans
-        val x0    = translateX(i.left.value, isLeft = true)
-        val x1    = translateX(i.right.value, isLeft = false)
-        val spans = acc.spans :+ Span(x0 = x0, x1 = x1, y = y, includeX0 = i.left.isInclude, includeX1 = i.right.isInclude)
+        val x0   = translateX(i.left.value, isLeft = true)
+        val x1   = if i.isProper then translateX(i.right.value, isLeft = false) else x0
+        val span = Span(x0 = x0, x1 = x1, y = y, includeX0 = i.left.isInclude, includeX1 = i.right.isInclude)
 
         // labels
         val x0Text = Show.leftValue(i.left.value)
         val x0Pos  = toLabelPos(x0, x0Text)
         val x1Text = Show.rightValue(i.right.value)
         val x1Pos  = toLabelPos(x1, x1Text)
-        val labels = acc.labels ++ List(Label(tick = x0, pos = x0Pos, value = x0Text), Label(tick = x1, pos = x1Pos, value = x1Text))
+        val labels = List(Label(tick = x0, pos = x0Pos, value = x0Text), Label(tick = x1, pos = x1Pos, value = x1Text))
 
-        acc.copy(height = y + 1, spans = spans, labels = labels)
+        acc.copy(height = y + 1, spans = acc.spans :+ span, labels = acc.labels ++ labels)
       }
 
-      diagram.copy(width = width)
+      diagram.copy(width = width, labels = diagram.labels.distinct)
 
   def render(d: Diagram, theme: Theme): List[String] =
     val w = d.width

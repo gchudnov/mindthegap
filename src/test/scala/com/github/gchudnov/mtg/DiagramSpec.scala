@@ -23,6 +23,21 @@ final class DiagramSpec extends TestSpec:
   "Diagram" when {
     "prepare" should {
 
+      "prepare a point" in {
+        val a       = Interval.degenerate[Int](5) // [5]
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+
+        diagram mustBe Diagram(40, 1, List(Span(2, 2, 0, true, true)), List(Label(2, 2, "5")))
+      }
+
+      "prepare two points" in {
+        val a       = Interval.degenerate[Int](5)  // [5]
+        val b       = Interval.degenerate[Int](10) // [10]
+        val diagram = Diagram.prepare(List(a, b), canvasWidth, padding)
+
+        diagram mustBe Diagram(40, 2, List(Span(2, 2, 0, true, true), Span(37, 37, 1, true, true)), List(Label(2, 2, "5"), Label(37, 36, "10")))
+      }
+
       "prepare a closed interval" in {
         val a       = Interval.closed[Int](5, 10) // [5, 10]
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
@@ -87,6 +102,33 @@ final class DiagramSpec extends TestSpec:
     }
 
     "render" should {
+      "display a point" in {
+        val a       = Interval.degenerate[Int](5) // [5]
+        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val data    = Diagram.render(diagram, theme)
+
+        data mustBe List(
+          "  *                                     ",
+          "--+-------------------------------------",
+          "  5                                     "
+        )
+      }
+
+      "display two points" in {
+        val a       = Interval.degenerate[Int](5)  // [5]
+        val b       = Interval.degenerate[Int](10) // [10]
+        val diagram = Diagram.prepare(List(a, b), canvasWidth, padding)
+
+        val data = Diagram.render(diagram, theme)
+
+        data mustBe List(
+          "  *                                     ",
+          "                                     *  ",
+          "--+----------------------------------+--",
+          "  5                                 10  "
+        )
+      }
+
       "display a closed interval" in {
         val a       = Interval.closed[Int](5, 10)
         val diagram = Diagram.prepare(List(a), canvasWidth, padding)
