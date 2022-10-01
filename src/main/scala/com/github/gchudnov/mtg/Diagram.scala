@@ -3,6 +3,7 @@ package com.github.gchudnov.mtg
 import Diagram.*
 import Show.*
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.ListBuffer
 
 final case class Diagram(
   width: Int,
@@ -59,7 +60,9 @@ object Diagram:
         label = LabelTheme.None
       )
 
-  final case class Label(tick: Int, pos: Int, value: String)
+  final case class Label(tick: Int, pos: Int, value: String):
+    def size: Int =
+      value.size
 
   final case class Span(x0: Int, x1: Int, y: Int, includeX0: Boolean, includeX1: Boolean):
     def size: Int =
@@ -68,9 +71,9 @@ object Diagram:
   val empty: Diagram =
     Diagram(width = 0, height = 0, spans = List.empty[Span], labels = List.empty[Label], legend = List.empty[String])
 
-  private def align(value: Double): Int =
-    value.round.toInt
-
+  /**
+   * Prepare intervals for the rendering
+   */
   def prepare[T: Numeric](intervals: List[Interval[T]], width: Int, padding: Int)(using bOrd: Ordering[Boundary[T]]): Diagram =
     val tNum = summon[Numeric[T]]
 
@@ -100,17 +103,6 @@ object Diagram:
         dx   <- if !tNum.equiv(r, l) then Some(tNum.minus(r, l)) else None
       yield dx
       val ok = ofw.map(fw => cw.toDouble / tNum.toDouble(fw))
-
-      println(("intervals", intervals))
-
-      println(("ofMin", ofMin))
-      println(("ofMax", ofMax))
-
-      println(("cw", cw))
-      println(("ofw", ofw))
-      println(("ok", ok))
-
-      println("---------------")
 
       // translates the coordindate into position on the canvas
       def translateX(value: Option[T], isLeft: Boolean): Int =
@@ -160,18 +152,17 @@ object Diagram:
 
       diagram.copy(width = width, labels = diagram.labels.distinct)
 
+  /**
+   * Render the provided Diagram
+   */
   def render(d: Diagram, theme: Theme): List[String] =
     // axis height
     val ah = 1
 
     // height of labels
     val lh = theme.label match
-      case LabelTheme.None =>
-        1
-      case LabelTheme.NoOverlap =>
-        1
-      case LabelTheme.Stacked =>
-        ???
+      case LabelTheme.None | LabelTheme.NoOverlap => 1
+      case LabelTheme.Stacked                     => measure(d.labels, d.width)
 
     val w = d.width
     val h = d.height + ah + lh // axis, labels
@@ -190,14 +181,6 @@ object Diagram:
     // separator
     Range(0, d.width).foreach(i => arr(d.height)(i) = theme.axis)
 
-    def drawTick(l: Label): Unit =
-      arr(d.height)(l.tick) = theme.tick
-
-    def drawLabel(l: Label): Unit =
-      l.value.toList.zipWithIndex.foreach { case (ch, i) =>
-        arr(d.height + 1)(l.pos + i) = ch
-      }
-
     def isOverlap(l: Label): Boolean =
       if l.pos > 0 then arr(d.height + 1)(l.pos - 1) != theme.space
       else false
@@ -206,19 +189,22 @@ object Diagram:
     theme.label match
       case LabelTheme.None =>
         d.labels.foreach(l =>
-          drawTick(l)
-          drawLabel(l)
+          drawTick(l, theme, arr(d.height))
+          drawLabel(l, arr(d.height + 1))
         )
       case LabelTheme.NoOverlap =>
         d.labels
           .sortBy(_.tick)
           .foreach(l =>
             if !isOverlap(l) then
-              drawTick(l)
-              drawLabel(l)
+              drawTick(l, theme, arr(d.height))
+              drawLabel(l, arr(d.height + 1))
           )
       case LabelTheme.Stacked =>
-        ???
+        val larr: Array[Array[Char]] = Array.fill[Char](lh, w)(theme.space)
+        d.labels.foreach(l => drawTick(l, theme, arr(d.height)))
+        drawStacked(d.labels, theme, larr)
+        // copy back
 
     val chart  = arr.map(_.toList.mkString).toList
     val legend = d.legend ++ List.fill[String](chart.size - d.legend.size)("")
@@ -227,3 +213,59 @@ object Diagram:
     else chart
 
     result
+
+  /**
+   * Align value to the grid
+   */
+  private def align(value: Double): Int =
+    value.round.toInt
+
+  /**
+   * Measure the number of lines required to draw all labels
+   */
+  private def measure(ls: List[Label], width: Int): Int =
+    val res = ls.sortBy(_.tick).foldLeft(ListBuffer[Int](0)) { case (acc, l) =>
+      val first = l.pos
+      val last  = l.pos + l.size
+
+      val row = acc.indices.find(i =>
+        if first > acc(i) && last <= width then true
+        else false
+      )
+
+      row match
+        case None =>
+          acc.addOne(last)
+        case Some(i) =>
+          acc(i) = last
+          acc
+    }
+    res.size
+
+  private def drawTick(l: Label, theme: Theme, view: Array[Char]): Unit =
+    view(l.tick) = theme.tick
+
+  private def drawLabel(l: Label, view: Array[Char]): Unit =
+    l.value.toList.zipWithIndex.foreach { case (ch, i) =>
+      view(l.pos + i) = ch
+    }
+
+  /**
+   * Draw Stacked Labels
+   */
+  private def drawStacked(ls: List[Label], theme: Theme, view: Array[Array[Char]]): Unit =
+    // val width = arr(0).size
+    // val height = arr.size
+
+    // ls.sortBy(_.tick).foreach(l =>
+    //   val first = l.pos
+    //   val last  = l.pos + l.size
+
+    //   val row = Range(0, height).find(i =>
+    //     if arr(i)(first) == theme.space && last <= width then true
+    //     else false
+    //   )
+
+    //   arr(row)(l.pos)
+    // )
+    ()

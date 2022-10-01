@@ -370,6 +370,23 @@ final class DiagramSpec extends TestSpec:
           " 100 200 300     500    700 800 900     "
         )
       }
+
+      "display overlapping intervals with overlapping labels (LabelTheme.Stacked)" in {
+        val a = Interval.closed(100, 500)
+        val b = Interval.closed(150, 600)
+        val c = Interval.closed(200, 700)
+        val d = Interval.closed(250, 800)
+        val e = Interval.closed(300, 900)
+        val f = Interval.closed(600, 1000)
+
+        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvasWidth, padding)
+
+        val data = Diagram.render(diagram, theme.copy(label = LabelTheme.Stacked))
+
+        data mustBe List(
+
+        )
+      }      
     }
 
   }
