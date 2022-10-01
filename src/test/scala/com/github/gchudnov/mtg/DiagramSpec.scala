@@ -12,21 +12,21 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 
 import java.time.Instant
 import com.github.gchudnov.mtg.Diagram.LabelTheme
+import com.github.gchudnov.mtg.Diagram.Canvas
 
 final class DiagramSpec extends TestSpec:
 
   given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
 
-  private val canvasWidth: Int = 40
-  private val padding: Int     = 2
-  private val theme: Theme     = Theme.default
+  private val canvas: Canvas[Int] = Canvas.small
+  private val theme: Theme        = Theme.default
 
   "Diagram" when {
     "prepare" should {
 
       "prepare a point" in {
         val a       = Interval.degenerate[Int](5) // [5]
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
 
         diagram mustBe Diagram(40, 1, List(Span(2, 2, 0, true, true)), List(Label(2, 2, "5")), List("{5}"))
       }
@@ -34,56 +34,56 @@ final class DiagramSpec extends TestSpec:
       "prepare two points" in {
         val a       = Interval.degenerate[Int](5)  // [5]
         val b       = Interval.degenerate[Int](10) // [10]
-        val diagram = Diagram.prepare(List(a, b), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a, b), canvas)
 
         diagram mustBe Diagram(40, 2, List(Span(2, 2, 0, true, true), Span(37, 37, 1, true, true)), List(Label(2, 2, "5"), Label(37, 36, "10")), List("{5}", "{10}"))
       }
 
       "prepare a closed interval" in {
         val a       = Interval.closed[Int](5, 10) // [5, 10]
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
 
         diagram mustBe Diagram(40, 1, List(Span(2, 37, 0, true, true)), List(Label(2, 2, "5"), Label(37, 36, "10")), List("[5,10]"))
       }
 
       "prepare a closed interval with a negative boundary" in {
         val a       = Interval.closed[Int](-5, 10) // [-5, 10]
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
 
         diagram mustBe Diagram(40, 1, List(Span(2, 37, 0, true, true)), List(Label(2, 1, "-5"), Label(37, 36, "10")), List("[-5,10]"))
       }
 
       "prepare unbounded interval" in {
         val a       = Interval.unbounded[Int] // (-∞, +∞)
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
 
         diagram mustBe Diagram(width = 40, height = 1, spans = List(Span(0, 39, 0, false, false)), List(Label(0, 0, "-∞"), Label(39, 38, "+∞")), List("(-∞,+∞)"))
       }
 
       "prepare a leftOpen interval" in {
         val a       = Interval.leftOpen(5) // (5, +∞)
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
 
         diagram mustBe Diagram(40, 1, List(Span(2, 39, 0, false, false)), List(Label(2, 2, "5"), Label(39, 38, "+∞")), List("(5,+∞)"))
       }
 
       "prepare a leftClosed interval" in {
         val a       = Interval.leftClosed(5) // [5, +∞)
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
 
         diagram mustBe Diagram(40, 1, List(Span(2, 39, 0, true, false)), List(Label(2, 2, "5"), Label(39, 38, "+∞")), List("[5,+∞)"))
       }
 
       "prepare a rightOpen interval" in {
         val a       = Interval.rightOpen(5) // (-∞, 5)
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
 
         diagram mustBe Diagram(40, 1, List(Span(0, 37, 0, false, false)), List(Label(0, 0, "-∞"), Label(37, 37, "5")), List("(-∞,5)"))
       }
 
       "prepare a rightClosed interval" in {
         val a       = Interval.rightClosed(5) // (-∞, 5]
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
 
         diagram mustBe Diagram(40, 1, List(Span(0, 37, 0, false, true)), List(Label(0, 0, "-∞"), Label(37, 37, "5")), List("(-∞,5]"))
       }
@@ -94,7 +94,7 @@ final class DiagramSpec extends TestSpec:
         val c = Interval.rightClosed(15)
         val d = Interval.leftOpen(2)
 
-        val diagram = Diagram.prepare(List(a, b, c, d), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a, b, c, d), canvas)
 
         diagram mustBe Diagram(
           40,
@@ -113,7 +113,7 @@ final class DiagramSpec extends TestSpec:
         val e = Interval.closed(5, 9)
         val f = Interval.closed(6, 10)
 
-        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvas)
 
         diagram mustBe Diagram(
           40,
@@ -146,7 +146,7 @@ final class DiagramSpec extends TestSpec:
     "render" should {
       "display a point" in {
         val a       = Interval.degenerate[Int](5) // [5]
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
         val data    = Diagram.render(diagram, theme)
 
         data mustBe List(
@@ -159,7 +159,7 @@ final class DiagramSpec extends TestSpec:
       "display two points" in {
         val a       = Interval.degenerate[Int](5)  // [5]
         val b       = Interval.degenerate[Int](10) // [10]
-        val diagram = Diagram.prepare(List(a, b), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a, b), canvas)
 
         val data = Diagram.render(diagram, theme)
 
@@ -173,7 +173,7 @@ final class DiagramSpec extends TestSpec:
 
       "display a closed interval" in {
         val a       = Interval.closed[Int](5, 10)
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
         val data    = Diagram.render(diagram, theme)
 
         data mustBe List(
@@ -183,9 +183,11 @@ final class DiagramSpec extends TestSpec:
         )
       }
 
+      // TODO: display with the specified canvas left and right
+
       "display a closed interval with negative boundary" in {
         val a       = Interval.closed[Int](-5, 10)
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
         val data    = Diagram.render(diagram, theme)
 
         data mustBe List(
@@ -197,7 +199,7 @@ final class DiagramSpec extends TestSpec:
 
       "display an unbounded interval" in {
         val a       = Interval.unbounded[Int]
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
         val data    = Diagram.render(diagram, theme)
 
         data mustBe List(
@@ -209,7 +211,7 @@ final class DiagramSpec extends TestSpec:
 
       "display a leftOpen interval" in {
         val a       = Interval.leftOpen(5) // (5, +∞)
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
 
         val data = Diagram.render(diagram, theme)
 
@@ -222,7 +224,7 @@ final class DiagramSpec extends TestSpec:
 
       "display a leftClosed interval" in {
         val a       = Interval.leftClosed(5) // [5, +∞)
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
 
         val data = Diagram.render(diagram, theme)
 
@@ -235,7 +237,7 @@ final class DiagramSpec extends TestSpec:
 
       "display a rightOpen interval" in {
         val a       = Interval.rightOpen(5) // (-∞, 5)
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
 
         val data = Diagram.render(diagram, theme)
 
@@ -248,7 +250,7 @@ final class DiagramSpec extends TestSpec:
 
       "display a rightClosed interval" in {
         val a       = Interval.rightClosed(5) // (-∞, 5]
-        val diagram = Diagram.prepare(List(a), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a), canvas)
 
         val data = Diagram.render(diagram, theme)
 
@@ -265,7 +267,7 @@ final class DiagramSpec extends TestSpec:
         val c = Interval.rightClosed(15)
         val d = Interval.leftOpen(2)
 
-        val diagram = Diagram.prepare(List(a, b, c, d), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a, b, c, d), canvas)
 
         val data = Diagram.render(diagram, theme)
 
@@ -285,7 +287,7 @@ final class DiagramSpec extends TestSpec:
         val c = Interval.rightClosed(15)
         val d = Interval.leftOpen(2)
 
-        val diagram = Diagram.prepare(List(a, b, c, d), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a, b, c, d), canvas)
 
         val data = Diagram.render(diagram, theme.copy(legend = true))
 
@@ -307,7 +309,7 @@ final class DiagramSpec extends TestSpec:
         val e = Interval.closed(5, 9)
         val f = Interval.closed(6, 10)
 
-        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvas)
 
         val data = Diagram.render(diagram, theme.copy(legend = true))
 
@@ -331,7 +333,7 @@ final class DiagramSpec extends TestSpec:
         val e = Interval.closed(300, 900)
         val f = Interval.closed(600, 1000)
 
-        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvas)
 
         val data = Diagram.render(diagram, theme.copy(label = LabelTheme.None))
 
@@ -355,7 +357,7 @@ final class DiagramSpec extends TestSpec:
         val e = Interval.closed(300, 900)
         val f = Interval.closed(600, 1000)
 
-        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvas)
 
         val data = Diagram.render(diagram, theme.copy(label = LabelTheme.NoOverlap))
 
@@ -379,7 +381,7 @@ final class DiagramSpec extends TestSpec:
         val e = Interval.closed(300, 900)
         val f = Interval.closed(600, 1000)
 
-        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvasWidth, padding)
+        val diagram = Diagram.prepare(List(a, b, c, d, e, f), canvas)
 
         val data = Diagram.render(diagram, theme.copy(label = LabelTheme.Stacked))
 

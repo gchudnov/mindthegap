@@ -25,7 +25,6 @@ object Diagram:
     case object Stacked   extends LabelTheme // draw all labels, but stack them onto multiple lines
 
   final case class Theme(
-    padding: Int,
     space: Char,
     fill: Char,
     leftOpen: Char,
@@ -46,7 +45,6 @@ object Diagram:
   object Theme:
     val default: Theme =
       Theme(
-        padding = 2,
         space = ' ',
         fill = '*',
         leftOpen = '(',
@@ -58,6 +56,17 @@ object Diagram:
         legend = false,
         label = LabelTheme.None
       )
+
+  final case class Canvas[+T](
+    width: Int,
+    padding: Int,
+    left: Option[T], // left boundary
+    right: Option[T] // right boundary
+  )
+
+  object Canvas:
+    def small: Canvas[Nothing] =
+      Canvas[Nothing](width = 40, padding = 2, left = None, right = None)
 
   final case class Label(tick: Int, pos: Int, value: String):
     def size: Int =
@@ -73,7 +82,7 @@ object Diagram:
   /**
    * Prepare intervals for the rendering
    */
-  def prepare[T: Numeric](intervals: List[Interval[T]], width: Int, padding: Int)(using bOrd: Ordering[Boundary[T]]): Diagram =
+  def prepare[T: Numeric](intervals: List[Interval[T]], canvas: Canvas[T])(using bOrd: Ordering[Boundary[T]]): Diagram =
     val tNum = summon[Numeric[T]]
 
     val xs = intervals.filter(_.nonEmpty)
@@ -89,9 +98,9 @@ object Diagram:
       val ofMax = bs.filter(_.isBounded).maxOption // != +inf
 
       val cxMinInf = 0
-      val cxMaxInf = width - 1
-      val cxMin    = cxMinInf + padding
-      val cxMax    = cxMaxInf - padding
+      val cxMaxInf = canvas.width - 1
+      val cxMin    = cxMinInf + canvas.padding
+      val cxMax    = cxMaxInf - canvas.padding
 
       val cw = cxMax - cxMin
       val ofw = for
@@ -125,7 +134,7 @@ object Diagram:
       def toLabelPos(x: Int, text: String): Int =
         val p = align(x - (text.size / 2.0))
         if p < 0 then 0
-        else if p + text.size - 1 > width then width - text.size
+        else if p + text.size - 1 > canvas.width then canvas.width - text.size
         else p
 
       val diagram = xs.foldLeft(Diagram.empty) { case (acc, i) =>
@@ -149,7 +158,7 @@ object Diagram:
         acc.copy(height = y + 1, spans = acc.spans :+ span, labels = acc.labels ++ labels, legend = acc.legend :+ iLegend)
       }
 
-      diagram.copy(width = width, labels = diagram.labels.distinct)
+      diagram.copy(width = canvas.width, labels = diagram.labels.distinct)
 
   /**
    * Render the provided Diagram
