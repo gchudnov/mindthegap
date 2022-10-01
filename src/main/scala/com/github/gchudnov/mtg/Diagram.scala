@@ -174,4 +174,10 @@ object Diagram:
       }
     )
 
-    arr.map(_.toList.mkString).toList
+    val chart  = arr.map(_.toList.mkString).toList
+    val legend = d.legend ++ List.fill[String](chart.size - d.legend.size)("")
+
+    val result = if theme.legend then chart.zip(legend).map { case (line, text) => s"${line} |${if text.nonEmpty then " " else ""}${text}" }
+    else chart
+
+    result

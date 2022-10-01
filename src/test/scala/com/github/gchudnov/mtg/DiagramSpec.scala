@@ -248,6 +248,26 @@ final class DiagramSpec extends TestSpec:
           "-∞1 2       5          10           15+∞"
         )
       }
+
+      "display several intervals with legend" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(5, 10)
+        val c = Interval.rightClosed(15)
+        val d = Interval.leftOpen(2)
+
+        val diagram = Diagram.prepare(List(a, b, c, d), canvasWidth, padding)
+
+        val data = Diagram.render(diagram, theme.copy(legend = true))
+
+        data mustBe List(
+          "  [*********]                            | [1,5]",
+          "            [***********]                | [5,10]",
+          "(************************************]   | (-∞,15]",
+          "    (**********************************) | (2,+∞)",
+          "+-+-+-------+-----------+------------+-+ |",
+          "-∞1 2       5          10           15+∞ |"
+        )
+      }
     }
 
   }
