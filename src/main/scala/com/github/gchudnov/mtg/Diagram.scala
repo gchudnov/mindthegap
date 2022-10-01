@@ -15,7 +15,6 @@ final case class Diagram(
 
 object Diagram:
 
-  // TODO: ADD SETTING TO SKIP LABELS OR MOVE THEM TO THE NEXT LINE
   // TODO: ADD NO-SCALE MODE WHEN WE PAINT IN THE GIVEN WIDTH
 
   sealed trait LabelTheme
