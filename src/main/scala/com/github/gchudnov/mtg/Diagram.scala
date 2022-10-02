@@ -135,12 +135,11 @@ object Diagram:
        * Calculate Label position; Try to align only if close to ends of the canvas
        */
       def toLabelPos(x: Int, text: String): Int =
-        val hz = (text.size / 2.0)
-        val p  = align(x - hz)
-        val q  = p + text.size
+        val p = align(x - (text.size / 2.0))
+        val q = p + text.size
 
-        if (p < 0 && p >= -hz.ceil.toInt) then 0
-        else if (q >= canvas.width && q <= canvas.width + hz.ceil.toInt) then canvas.width - text.size
+        if (p < 0 && (x >= 0 && x < canvas.width)) then 0
+        else if (q >= canvas.width && (x >= 0 && x < canvas.width)) then canvas.width - text.size
         else p
 
       val diagram = xs.foldLeft(Diagram.empty) { case (acc, i) =>
