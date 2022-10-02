@@ -131,10 +131,16 @@ object Diagram:
       def centerX(value: Option[T]): Int =
         align(cxMin + (cw / 2.0))
 
+      /**
+       * Calculate Label position; Try to align only if close to ends of the canvas
+       */
       def toLabelPos(x: Int, text: String): Int =
-        val p = align(x - (text.size / 2.0))
-        if p < 0 then 0
-        else if p + text.size - 1 > canvas.width then canvas.width - text.size
+        val hz = (text.size / 2.0)
+        val p  = align(x - hz)
+        val q  = p + text.size
+
+        if (p < 0 && p >= -hz.ceil.toInt) then 0
+        else if (q >= canvas.width && q <= canvas.width + hz.ceil.toInt) then canvas.width - text.size
         else p
 
       val diagram = xs.foldLeft(Diagram.empty) { case (acc, i) =>

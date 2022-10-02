@@ -201,11 +201,11 @@ final class DiagramSpec extends TestSpec:
         val data    = Diagram.render(diagram, theme)
 
         data mustBe List(
-          "                           [************", 
-          "---------------------------+------------", 
-          "                           5          10"
+          "                           [************",
+          "---------------------------+------------",
+          "                           5            "
         )
-      }      
+      }
 
       "display a closed interval with negative boundary" in {
         val a       = Interval.closed[Int](-5, 10)
