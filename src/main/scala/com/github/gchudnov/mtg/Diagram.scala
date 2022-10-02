@@ -97,17 +97,18 @@ object Diagram:
       val ofMin = canvas.left.fold(bs.filter(_.isBounded).minOption.flatMap(_.value))(x => Some(x))  // != -inf
       val ofMax = canvas.right.fold(bs.filter(_.isBounded).maxOption.flatMap(_.value))(x => Some(x)) // != +inf
 
-      val cxMinInf = 0
-      val cxMaxInf = canvas.width - 1
-      val cxMin    = cxMinInf + canvas.padding
-      val cxMax    = cxMaxInf - canvas.padding
+      val cxFirst = 0                // position for -inf
+      val cxLast  = canvas.width - 1 // position for +inf
+      val cxMin   = cxFirst + canvas.padding
+      val cxMax   = cxLast - canvas.padding
+      val cw      = cxMax - cxMin
 
-      val cw = cxMax - cxMin
       val ofw = for
         fMin <- ofMin
         fMax <- ofMax
         dx   <- if !tNum.equiv(fMax, fMin) then Some(tNum.minus(fMax, fMin)) else None
       yield dx
+
       val ok = ofw.map(fw => cw.toDouble / tNum.toDouble(fw))
 
       // translates the coordindate into position on the canvas
@@ -115,7 +116,7 @@ object Diagram:
         value match
           case None =>
             // -inf or +inf
-            if isLeft then cxMinInf else cxMaxInf
+            if isLeft then cxFirst else cxLast
           case Some(x) =>
             ok match
               case None =>
