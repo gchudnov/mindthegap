@@ -123,8 +123,13 @@ object Diagram:
                 if isLeft then cxMin else cxMax
               case Some(k) =>
                 // finite boundaries
-                val dx = tNum.toDouble(x) - tNum.toDouble(ofMin.get)
-                align((k * dx) + cxMin)
+                val fMin = ofMin.get
+
+                val df = if (tNum.gt(x, fMin)) then tNum.minus(x, fMin) else tNum.zero
+                val dx = tNum.toDouble(df)
+
+                val newValue = (k * dx) + cxMin
+                align(newValue)
 
       def centerX(value: Option[T]): Int =
         align(cxMin + (cw / 2.0))
@@ -219,6 +224,9 @@ object Diagram:
     else chart
 
     result
+
+  private def clap(value: Double, minValue: Double, maxValue: Double): Double =
+    if value < minValue then minValue else if value > maxValue then maxValue else value
 
   /**
    * Align value to the grid
