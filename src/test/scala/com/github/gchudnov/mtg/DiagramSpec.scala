@@ -213,13 +213,11 @@ final class DiagramSpec extends TestSpec:
         val data    = Diagram.render(diagram, theme)
 
         data mustBe List(
-          "  [************]                        ",
-          "--+------------+------------------------",
-          "  5           10                        "
+          "***************]                        ",
+          "---------------+------------------------",
+          "              10                        "
         )
       }
-
-      // TODO: ^^^ WRONG
 
       "display middle part of a closed interval" in {
         val a       = Interval.closed[Int](5, 10)
@@ -227,13 +225,11 @@ final class DiagramSpec extends TestSpec:
         val data    = Diagram.render(diagram, theme)
 
         data mustBe List(
-          "  [*************************************",
-          "--+-------------------------------------",
-          "  5                                     "
+          "****************************************", 
+          "----------------------------------------", 
+          "                                        "
         )
       }
-
-      // TODO: wrong ^^^
 
       "display a closed interval with negative boundary" in {
         val a       = Interval.closed[Int](-5, 10)

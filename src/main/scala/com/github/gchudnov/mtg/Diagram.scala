@@ -125,7 +125,7 @@ object Diagram:
               case Some(k) =>
                 // finite boundaries
                 val fMin = ofMin.get
-                val df   = if (tNum.gt(x, fMin)) then tNum.minus(x, fMin) else tNum.zero
+                val df   = tNum.minus(x, fMin)
                 val dd   = tNum.toDouble(df)
                 align((k * dd) + cxMin)
 
