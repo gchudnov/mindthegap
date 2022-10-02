@@ -1,18 +1,18 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Arbitraries.*
+import com.github.gchudnov.mtg.Diagram.Canvas
+import com.github.gchudnov.mtg.Diagram.Label
+import com.github.gchudnov.mtg.Diagram.LabelTheme
+import com.github.gchudnov.mtg.Diagram.Span
+import com.github.gchudnov.mtg.Diagram.Theme
 import com.github.gchudnov.mtg.Domains.given
 import com.github.gchudnov.mtg.Show.*
-import com.github.gchudnov.mtg.Diagram.Theme
-import com.github.gchudnov.mtg.Diagram.Span
-import com.github.gchudnov.mtg.Diagram.Label
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 
 import java.time.Instant
-import com.github.gchudnov.mtg.Diagram.LabelTheme
-import com.github.gchudnov.mtg.Diagram.Canvas
 
 final class DiagramSpec extends TestSpec:
 
@@ -183,7 +183,17 @@ final class DiagramSpec extends TestSpec:
         )
       }
 
-      // TODO: display with the specified canvas left and right
+      "display a closed interval on a custom canvas" in {
+        val a       = Interval.closed[Int](5, 10)
+        val diagram = Diagram.prepare(List(a), canvas.copy(left = Some(0), right = Some(20)))
+        val data    = Diagram.render(diagram, theme)
+
+        data mustBe List(
+          "           [********]                   ",
+          "-----------+--------+-------------------",
+          "           5       10                   "
+        )
+      }
 
       "display a closed interval with negative boundary" in {
         val a       = Interval.closed[Int](-5, 10)

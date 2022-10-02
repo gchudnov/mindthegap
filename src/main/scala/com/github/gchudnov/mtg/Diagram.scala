@@ -94,8 +94,8 @@ object Diagram:
       val bMin = bs.min // might be -inf
       val bMax = bs.max // might be +inf
 
-      val ofMin = bs.filter(_.isBounded).minOption // != -inf
-      val ofMax = bs.filter(_.isBounded).maxOption // != +inf
+      val ofMin = canvas.left.fold(bs.filter(_.isBounded).minOption.flatMap(_.value))(x => Some(x))  // != -inf
+      val ofMax = canvas.right.fold(bs.filter(_.isBounded).maxOption.flatMap(_.value))(x => Some(x)) // != +inf
 
       val cxMinInf = 0
       val cxMaxInf = canvas.width - 1
@@ -106,9 +106,7 @@ object Diagram:
       val ofw = for
         fMin <- ofMin
         fMax <- ofMax
-        r    <- fMax.value
-        l    <- fMin.value
-        dx   <- if !tNum.equiv(r, l) then Some(tNum.minus(r, l)) else None
+        dx   <- if !tNum.equiv(fMax, fMin) then Some(tNum.minus(fMax, fMin)) else None
       yield dx
       val ok = ofw.map(fw => cw.toDouble / tNum.toDouble(fw))
 
@@ -125,7 +123,7 @@ object Diagram:
                 if isLeft then cxMin else cxMax
               case Some(k) =>
                 // finite boundaries
-                val dx = tNum.toDouble(x) - tNum.toDouble(ofMin.flatMap(_.value).get)
+                val dx = tNum.toDouble(x) - tNum.toDouble(ofMin.get)
                 align((k * dx) + cxMin)
 
       def centerX(value: Option[T]): Int =
