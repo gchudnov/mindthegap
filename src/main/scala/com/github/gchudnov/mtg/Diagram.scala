@@ -124,12 +124,9 @@ object Diagram:
               case Some(k) =>
                 // finite boundaries
                 val fMin = ofMin.get
-
-                val df = if (tNum.gt(x, fMin)) then tNum.minus(x, fMin) else tNum.zero
-                val dx = tNum.toDouble(df)
-
-                val newValue = (k * dx) + cxMin
-                align(newValue)
+                val df   = if (tNum.gt(x, fMin)) then tNum.minus(x, fMin) else tNum.zero
+                val dx   = tNum.toDouble(df)
+                align((k * dx) + cxMin)
 
       def centerX(value: Option[T]): Int =
         align(cxMin + (cw / 2.0))
@@ -183,10 +180,14 @@ object Diagram:
     // spans
     d.spans.foreach(s =>
       if s.size > 1 then
-        Range(s.x0 + 1, s.x1).foreach(i => arr(s.y)(i) = theme.fill)
-        arr(s.y)(s.x0) = theme.leftBound(s.includeX0)
-        arr(s.y)(s.x1) = theme.rightBound(s.includeX1)
-      else arr(s.y)(s.x0) = theme.fill
+        val s0 = math.max(s.x0, 0)
+        val s1 = math.min(s.x1, w)
+
+        Range(s0, s1).foreach(i => arr(s.y)(i) = theme.fill)
+
+        if (s.x0 >= 0 && s.x0 < w) then arr(s.y)(s.x0) = theme.leftBound(s.includeX0)
+        if (s.x1 >= 0 && s.x1 < w) then arr(s.y)(s.x1) = theme.rightBound(s.includeX1)
+      else if (s.x0 >= 0 && s.x0 < w) then arr(s.y)(s.x0) = theme.fill
     )
 
     // separator
@@ -257,11 +258,12 @@ object Diagram:
     res.size
 
   private def drawTick(l: Label, theme: Theme, view: Array[Char]): Unit =
-    view(l.tick) = theme.tick
+    if ((l.tick >= 0) && (l.tick < view.size)) then view(l.tick) = theme.tick
 
   private def drawLabel(l: Label, view: Array[Char]): Unit =
     l.value.toList.zipWithIndex.foreach { case (ch, i) =>
-      view(l.pos + i) = ch
+      val p = l.pos + i
+      if (p >= 0 && p < view.size) then view(p) = ch
     }
 
   /**

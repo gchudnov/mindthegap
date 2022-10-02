@@ -195,12 +195,15 @@ final class DiagramSpec extends TestSpec:
         )
       }
 
-      "display a closed interval on a custom canvas partially (left part)" in {
+      "display left part of a closed interval" in {
         val a       = Interval.closed[Int](5, 10)
         val diagram = Diagram.prepare(List(a), canvas.copy(left = Some(0), right = Some(7)))
         val data    = Diagram.render(diagram, theme)
 
         data mustBe List(
+          "                           [************", 
+          "---------------------------+------------", 
+          "                           5          10"
         )
       }      
 
