@@ -207,6 +207,34 @@ final class DiagramSpec extends TestSpec:
         )
       }
 
+      "display right part of a closed interval" in {
+        val a       = Interval.closed[Int](5, 10)
+        val diagram = Diagram.prepare(List(a), canvas.copy(left = Some(7), right = Some(15)))
+        val data    = Diagram.render(diagram, theme)
+
+        data mustBe List(
+          "  [************]                        ",
+          "--+------------+------------------------",
+          "  5           10                        "
+        )
+      }
+
+      // TODO: ^^^ WRONG
+
+      "display middle part of a closed interval" in {
+        val a       = Interval.closed[Int](5, 10)
+        val diagram = Diagram.prepare(List(a), canvas.copy(left = Some(7), right = Some(8)))
+        val data    = Diagram.render(diagram, theme)
+
+        data mustBe List(
+          "  [*************************************",
+          "--+-------------------------------------",
+          "  5                                     "
+        )
+      }
+
+      // TODO: wrong ^^^
+
       "display a closed interval with negative boundary" in {
         val a       = Interval.closed[Int](-5, 10)
         val diagram = Diagram.prepare(List(a), canvas)
