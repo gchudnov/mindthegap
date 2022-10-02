@@ -1,2 +1,66 @@
 # mindthegap
-Operations on intervals
+
+> Intervals, Relations and Algorithms
+
+- **Point-Point (PP)** relations between a pair of points.
+- **Point-Interval (PI)** relations that between a point and an interval.
+- **Interval-Interval (II)** relations that between a pair of intervals.
+
+## Intervals
+
+TODO: fill this section
+
+## Relations
+
+![relations.png](res/relations.png)
+
+- Before (b) / After (B)
+- Meets (m) / IsMetBy (M)
+- Overlaps (o) / IsOverlappedBy (O)
+- During (d) / Contains (D)
+- Starts (s) / IsStartedBy (S)
+- Finishes (f) / IsFinishedBy (F)
+- Equals (e)
+
+
+```text
+  Relation                  AAAAA
+  before(a,b)      b|B      :   : BBBBBBBBB  |  a+ < b-
+  meets(a,b)       m|M      :   BBBBBBBBB    |  a+ = b-
+  overlaps(a,b)    o|O      : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
+  starts(a,b)      s|S      BBBBBBBBB        |  a- = b- ; a+ < b+
+  during(a,b)      d|D    BBBBBBBBB          |  a- > b- ; a+ < b+
+  finishes(a,b)    f|F  BBBBBBBBB            |  a+ = b+ ; a- > b-
+  equals(a, b)     e        BBBBB            |  a- = b- ; a+ = b+
+```
+
+- IsSubset
+
+```text
+  is-subset                 AAAAA            |  a- >= b- ; a+ <= b+
+                            :   :
+  starts(a,b)      s        BBBBBBBBB
+  during(a,b)      d      BBBBBBBBB
+  finishes(a,b)    f    BBBBBBBBB
+  equals(a, b)     e        BBBBB
+```
+
+## Algorithms
+
+TODO: fill this section
+
+## Links
+
+- [Allen's Interval Algebra](https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html)
+
+## Keywords
+
+Allen’s Interval Algebra, Interval Arithmetic, Interval Relations, Infinite Temporal Intervals, Temporal Algorithms
+
+## Contact
+
+[Grigorii Chudnov](mailto:g.chudnov@gmail.com)
+
+## License
+
+Distributed under the [The MIT License (MIT)](LICENSE).
