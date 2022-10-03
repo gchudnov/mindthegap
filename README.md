@@ -2,6 +2,10 @@
 
 > Intervals, Relations and Algorithms
 
+[![Build](https://github.com/gchudnov/mindthegap/actions/workflows/ci.yml/badge.svg)](https://github.com/gchudnov/mindthegap/actions/workflows/ci.yml)
+
+<br clear="right" /><!-- Turn off the wrapping for the logo image. -->
+
 ## Intervals
 
 - Empty | `[b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅`
