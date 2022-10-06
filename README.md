@@ -139,6 +139,20 @@ Interval.rightClosed(5)
 Interval.unbounded[Int]
 ```
 
+## Ordering
+
+Intervals can be ordered.
+
+```scala
+given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
+given iOrd: Ordering[Interval[Int]] = IntervalOrdering.intervalOrdering[Int]
+
+val a = Interval.closed(0, 10)
+val b = Interval.closed(20, 30)
+
+List(b, a).sorted // List(a, b)
+```
+
 ## Links
 
 - [Allen's Interval Algebra](https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html)
