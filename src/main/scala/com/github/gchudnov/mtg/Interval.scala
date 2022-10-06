@@ -1,5 +1,7 @@
 package com.github.gchudnov.mtg
 
+import com.github.gchudnov.mtg.Domains.nothingDomain
+
 /**
  * An Interval
  *
@@ -85,7 +87,7 @@ case object Empty extends Interval[Nothing]:
 /**
  * Degenerate Interval
  */
-final case class Degenerate[T](a: T) extends Interval[T]:
+final case class Degenerate[T: Domain](a: T) extends Interval[T]:
   override final def left: LeftBoundary[T] =
     LeftBoundary(Some(a), true)
 
@@ -100,7 +102,9 @@ final case class Degenerate[T](a: T) extends Interval[T]:
 /**
  * Proper Interval
  */
-final case class Proper[T](left: LeftBoundary[T], right: RightBoundary[T]) extends Interval[T]:
+final case class Proper[T](left: LeftBoundary[T], right: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]) extends Interval[T]:
+  // The endpoint relation left (a-) < right (a+) is required for a proper interval
+  require(bOrd.lt(left, right), s"${left},${right}: left boundary must be less than the right boundary")
 
   override val isEmpty: Boolean     = false
   override val isDegenrate: Boolean = false
@@ -118,7 +122,7 @@ object Interval:
   /**
    * (-∞, +∞)
    */
-  def unbounded[T]: Interval[T] =
+  def unbounded[T: Domain](using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper[T](LeftBoundary[T](None, false), RightBoundary[T](None, false))
 
   /**
@@ -129,7 +133,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def degenerate[T](a: T): Interval[T] =
+  def degenerate[T: Domain](a: T): Interval[T] =
     Degenerate(a)
 
   /**
@@ -146,7 +150,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def proper[T](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean): Interval[T] =
+  def proper[T: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary(a, isIncludeA), RightBoundary(b, isIncludeB))
 
   /**
@@ -159,7 +163,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def open[T](a: T, b: T): Interval[T] =
+  def open[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary(Some(a), false), RightBoundary(Some(b), false))
 
   /**
@@ -172,7 +176,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def closed[T](a: T, b: T): Interval[T] =
+  def closed[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary(Some(a), true), RightBoundary(Some(b), true))
 
   /**
@@ -183,7 +187,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftOpen[T](a: T): Interval[T] =
+  def leftOpen[T: Domain](a: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary(Some(a), false), RightBoundary[T](None, false))
 
   /**
@@ -194,7 +198,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftClosed[T](a: T): Interval[T] =
+  def leftClosed[T: Domain](a: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary(Some(a), true), RightBoundary[T](None, false))
 
   /**
@@ -205,7 +209,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def rightOpen[T](b: T): Interval[T] =
+  def rightOpen[T: Domain](b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary[T](None, false), RightBoundary(Some(b), false))
 
   /**
@@ -216,7 +220,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def rightClosed[T](b: T): Interval[T] =
+  def rightClosed[T: Domain](b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     Proper(LeftBoundary[T](None, false), RightBoundary(Some(b), true))
 
   /**
@@ -227,7 +231,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftClosedRightOpen[T](a: T, b: T): Interval[T] =
+  def leftClosedRightOpen[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     proper(Some(a), Some(b), isIncludeA = true, isIncludeB = false)
 
   /**
@@ -238,5 +242,32 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftOpenRightClosed[T](a: T, b: T): Interval[T] =
+  def leftOpenRightClosed[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     proper(Some(a), Some(b), isIncludeA = false, isIncludeB = true)
+
+  /**
+   * Make an arbitraty interval
+   *
+   * @param a
+   *   left boundary
+   * @param b
+   *   right boundary
+   * @param isIncludeA
+   *   whether to include left boundary in the interval or not
+   * @param isIncludeB
+   *   whether to include right boundary in the interval or not
+   * @return
+   */
+  def make[T: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+    val ba = LeftBoundary(a, isIncludeA)
+    val bb = RightBoundary(b, isIncludeB)
+    make(ba, bb)
+
+  def make[T: Domain](ba: LeftBoundary[T], bb: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+    (ba.value, bb.value) match
+      case (Some(x), Some(y)) =>
+        if bOrd.equiv(ba, bb) then degenerate(x)
+        else if bOrd.lt(bb, ba) then empty[T]
+        else proper(ba.value, bb.value, ba.isInclude, bb.isInclude)
+      case _ =>
+        proper(ba.value, bb.value, ba.isInclude, bb.isInclude)

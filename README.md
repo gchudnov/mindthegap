@@ -2,6 +2,10 @@
 
 > Intervals, Relations and Algorithms
 
+[![Build](https://github.com/gchudnov/mindthegap/actions/workflows/ci.yml/badge.svg)](https://github.com/gchudnov/mindthegap/actions/workflows/ci.yml)
+
+<br clear="right" /><!-- Turn off the wrapping for the logo image. -->
+
 ## Intervals
 
 - Empty | `[b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅`
@@ -133,6 +137,20 @@ Interval.rightClosed(5)
 
 ```scala
 Interval.unbounded[Int]
+```
+
+## Ordering
+
+Intervals can be ordered.
+
+```scala
+given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
+given iOrd: Ordering[Interval[Int]] = IntervalOrdering.intervalOrdering[Int]
+
+val a = Interval.closed(0, 10)
+val b = Interval.closed(20, 30)
+
+List(b, a).sorted // List(a, b)
 ```
 
 ## Links
