@@ -11,9 +11,9 @@ import java.time.temporal.ChronoUnit
 final class BoundarySpec extends TestSpec:
   import Domains.integralDomain
 
-  given domainDouble: Domain[Double]                 = Domains.fractionalDomain[Double](0.01)
-  given domainOffsetDateTime: Domain[OffsetDateTime] = Domains.offsetDateTimeDomain(ChronoUnit.MINUTES)
-  given domainInstant: Domain[Instant]               = Domains.instantDomain(ChronoUnit.MINUTES)
+  given domainDouble: Domain[Double]                 = Domains.makeFractionalDomain[Double](0.01)
+  given domainOffsetDateTime: Domain[OffsetDateTime] = Domains.makeOffsetDateTimeDomain(ChronoUnit.MINUTES)
+  given domainInstant: Domain[Instant]               = Domains.makeInstantDomain(ChronoUnit.MINUTES)
 
   "Boundary" when {
     "LeftBoundary" should {

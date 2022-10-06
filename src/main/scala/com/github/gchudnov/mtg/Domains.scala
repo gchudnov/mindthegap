@@ -3,6 +3,7 @@ package com.github.gchudnov.mtg
 import java.time.OffsetDateTime
 import java.time.temporal.TemporalUnit
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 object Domains:
 
@@ -71,11 +72,17 @@ object Domains:
   given integralDomain[T: Integral]: Domain[T] =
     new IntegralDomain()
 
-  def fractionalDomain[T: Fractional](unit: T): Domain[T] =
-    new FractionalDomain(unit)
+  given offsetDateTimeDomain: Domain[OffsetDateTime] =
+    new OffsetDateTimeDomain(ChronoUnit.NANOS)
 
-  def offsetDateTimeDomain(unit: TemporalUnit): Domain[OffsetDateTime] =
+  given instantDomain: Domain[Instant] =
+    new InstantDomain(ChronoUnit.NANOS)
+
+  def makeOffsetDateTimeDomain(unit: TemporalUnit): Domain[OffsetDateTime] =
     new OffsetDateTimeDomain(unit)
 
-  def instantDomain(unit: TemporalUnit): Domain[Instant] =
+  def makeInstantDomain(unit: TemporalUnit): Domain[Instant] =
     new InstantDomain(unit)
+
+  def makeFractionalDomain[T: Fractional](unit: T): Domain[T] =
+    new FractionalDomain(unit)

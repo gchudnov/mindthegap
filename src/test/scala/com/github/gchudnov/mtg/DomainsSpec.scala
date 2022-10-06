@@ -43,7 +43,7 @@ final class DomainsSpec extends TestSpec:
     "Double" should {
       "calc predecessor and successor values" in {
         given doubleEq: Equality[Double] = TolerantNumerics.tolerantDoubleEquality(0.001)
-        given valT: Domain[Double]       = fractionalDomain(0.001)
+        given valT: Domain[Double]       = makeFractionalDomain(0.001)
 
         val x: Double = 10.0
 
@@ -57,7 +57,7 @@ final class DomainsSpec extends TestSpec:
 
     "OffsetDateTime" should {
       "calc predecessor and successor values" in {
-        val valT: Domain[OffsetDateTime] = offsetDateTimeDomain(ChronoUnit.DAYS)
+        val valT: Domain[OffsetDateTime] = makeOffsetDateTimeDomain(ChronoUnit.DAYS)
 
         val x: OffsetDateTime = OffsetDateTime.parse("2017-07-03T17:05:29.771Z").truncatedTo(ChronoUnit.DAYS)
 
@@ -71,7 +71,7 @@ final class DomainsSpec extends TestSpec:
 
     "Instant" should {
       "calc predecessor and successor values" in {
-        val valT: Domain[Instant] = instantDomain(ChronoUnit.DAYS)
+        val valT: Domain[Instant] = makeInstantDomain(ChronoUnit.DAYS)
 
         val x: Instant = Instant.parse("2017-07-03T17:05:29Z").truncatedTo(ChronoUnit.DAYS)
 
