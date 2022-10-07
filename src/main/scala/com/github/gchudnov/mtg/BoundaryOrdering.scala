@@ -52,6 +52,10 @@ private final class BoundaryOrdering[T: Ordering: Domain] extends Ordering[Bound
             1
 
 object BoundaryOrdering:
+  import Domains.given
 
-  def boundaryOrdering[T: Ordering: Domain]: Ordering[Boundary[T]] =
+  given boundaryOrdering[T: Ordering: Domain]: Ordering[Boundary[T]] =
+    new BoundaryOrdering[T]
+
+  def makeBoundaryOrdering[T: Ordering: Domain]: Ordering[Boundary[T]] =
     new BoundaryOrdering[T]

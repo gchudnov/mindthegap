@@ -14,7 +14,7 @@ final class IntervalSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
 
-  given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
+  given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.makeBoundaryOrdering[Int]
 
   "Interval" when {
 

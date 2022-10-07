@@ -9,8 +9,12 @@ private final class IntervalOrdering[T](using bOrd: Ordering[Boundary[T]]) exten
     else 1
 
 object IntervalOrdering:
+  import BoundaryOrdering.given
 
-  def intervalOrdering[T](using bOrd: Ordering[Boundary[T]]): Ordering[Interval[T]] =
+  given intervalOrdering[T](using bOrd: Ordering[Boundary[T]]): Ordering[Interval[T]] =
+    new IntervalOrdering[T]
+
+  def makeIntervalOrdering[T](using bOrd: Ordering[Boundary[T]]): Ordering[Interval[T]] =
     new IntervalOrdering[T]
 
   /**

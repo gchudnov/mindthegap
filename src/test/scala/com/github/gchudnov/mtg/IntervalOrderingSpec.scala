@@ -5,9 +5,10 @@ import com.github.gchudnov.mtg.TestSpec
 
 final class IntervalOrderingSpec extends TestSpec:
   import Domains.integralDomain
+  import IntervalOrdering.given
 
-  given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
-  given iOrd: Ordering[Interval[Int]] = IntervalOrdering.intervalOrdering[Int]
+  // given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.makeBoundaryOrdering[Int]
+  // given iOrd: Ordering[Interval[Int]] = IntervalOrdering.makeIntervalOrdering[Int]
 
   "IntervalOrdering" when {
     "two intervals with before (b) relation" should {

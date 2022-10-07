@@ -6,7 +6,7 @@ import com.github.gchudnov.mtg.TestSpec
 final class BoundaryOrderingSpec extends TestSpec:
   import Domains.integralDomain
 
-  given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
+  given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.makeBoundaryOrdering[Int]
 
   "BoundaryOrdering" when {
     "(LeftBoundary, LeftBoundary)" should {

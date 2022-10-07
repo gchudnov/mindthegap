@@ -144,13 +144,19 @@ Interval.unbounded[Int]
 Intervals can be ordered.
 
 ```scala
-given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
-given iOrd: Ordering[Interval[Int]] = IntervalOrdering.intervalOrdering[Int]
+import IntervalOrdering.given
 
 val a = Interval.closed(0, 10)
 val b = Interval.closed(20, 30)
 
 List(b, a).sorted // List(a, b)
+```
+
+if intervals with custom data types need to be ordered, a custom `Ordering` needs to be defined:
+
+```scala
+given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.makeBoundaryOrdering[Int]
+given iOrd: Ordering[Interval[Int]] = IntervalOrdering.makeIntervalOrdering[Int]
 ```
 
 ## Links
