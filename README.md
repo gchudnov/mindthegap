@@ -144,6 +144,8 @@ Interval.unbounded[Int]
 Intervals can be ordered.
 
 ```scala
+import Domains.given
+import BoundaryOrdering.given
 import IntervalOrdering.given
 
 val a = Interval.closed(0, 10)
