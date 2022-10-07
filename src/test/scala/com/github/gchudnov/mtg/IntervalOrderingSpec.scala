@@ -4,11 +4,9 @@ import com.github.gchudnov.mtg.Domains
 import com.github.gchudnov.mtg.TestSpec
 
 final class IntervalOrderingSpec extends TestSpec:
-  import Domains.integralDomain
+  import Domains.given
+  import BoundaryOrdering.given
   import IntervalOrdering.given
-
-  // given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.makeBoundaryOrdering[Int]
-  // given iOrd: Ordering[Interval[Int]] = IntervalOrdering.makeIntervalOrdering[Int]
 
   "IntervalOrdering" when {
     "two intervals with before (b) relation" should {
@@ -40,6 +38,8 @@ final class IntervalOrderingSpec extends TestSpec:
 
     "empty and non-empty intervals" should {
       "be compared" in {
+        val iOrd: Ordering[Interval[Int]] = summon[Ordering[Interval[Int]]]
+
         val a = Interval.closed(0, 10)
         val b = Interval.empty[Int]
 
