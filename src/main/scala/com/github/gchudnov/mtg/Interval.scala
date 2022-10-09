@@ -1,6 +1,11 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Domains.nothingDomain
+import com.github.gchudnov.mtg.internal.IntervalRel
+
+import Domains.given
+import BoundaryOrdering.given
+
 
 /**
  * An Interval
@@ -47,7 +52,7 @@ import com.github.gchudnov.mtg.Domains.nothingDomain
  *   Unbounded            - Unbounded at both ends; (-∞, +∞) = R
  * }}}
  */
-sealed trait Interval[+T]:
+sealed trait Interval[+T] extends IntervalRel[T]:
   def left: LeftBoundary[T]
   def right: RightBoundary[T]
 
@@ -103,8 +108,12 @@ final case class Degenerate[T: Domain](a: T) extends Interval[T]:
  * Proper Interval
  */
 final case class Proper[T](left: LeftBoundary[T], right: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]) extends Interval[T]:
+  import com.github.gchudnov.mtg.Show.*
+
+  // TODO: make the constructor private and extract the require ???
+
   // The endpoint relation left (a-) < right (a+) is required for a proper interval
-  require(bOrd.lt(left, right), s"${left},${right}: left boundary must be less than the right boundary")
+  require(bOrd.lt(left, right), s"${left.show},${right.show}: left boundary must be less than the right boundary")
 
   override val isEmpty: Boolean     = false
   override val isDegenrate: Boolean = false

@@ -139,6 +139,20 @@ Interval.rightClosed(5)
 Interval.unbounded[Int]
 ```
 
+## Show
+
+To display an interval, `Show` can be used:
+
+```scala
+import com.github.gchudnov.mtg.Show.*
+
+val a = Interval.proper(None, Some(2), true, true)
+val e = Interval.empty[Int]
+
+a.show // [-∞,2]
+e.show // ∅
+```
+
 ## Ordering
 
 Intervals can be ordered.

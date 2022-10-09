@@ -1,6 +1,7 @@
 package com.github.gchudnov.mtg
+
+import com.github.gchudnov.mtg.*
 import com.github.gchudnov.mtg.Arbitraries.*
-import com.github.gchudnov.mtg.Domains.given
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
@@ -14,6 +15,7 @@ final class IntervalSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
 
+  import com.github.gchudnov.mtg.Domains.given
   given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.makeBoundaryOrdering[Int]
 
   "Interval" when {
@@ -30,6 +32,9 @@ final class IntervalSpec extends TestSpec:
        * }}}
        */
       "create intervals" in {
+        import com.github.gchudnov.mtg.Domains.given
+        given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.makeBoundaryOrdering[Int]
+
         forAll(genOneIntTuple) { case ((ox, oy), ix, iy) =>
           val actual = Interval.make(ox, oy, ix, iy)
 
