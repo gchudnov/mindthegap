@@ -51,6 +51,9 @@ private final class BoundaryOrdering[T: Ordering: Domain] extends Ordering[Bound
           case (None, None) =>
             1
 
+
+
+            
 object BoundaryOrdering:
   import Domains.given
 
