@@ -31,30 +31,30 @@ final class ShowSpec extends TestSpec:
       }
 
       "represent a Proper interval" in {
-        // val t = Table(
-        //   ("x", "expected"),
-        //   (Interval.proper(Some(1), Some(2), true, true), "[1,2]"),
-        //   (Interval.proper(Some(1), Some(3), true, false), "[1,3)"),
-        //   (Interval.proper(Some(1), Some(3), false, true), "(1,3]"),
-        //   (Interval.proper(Some(1), Some(4), false, false), "(1,4)"),
-        //   (Interval.proper(None, Some(2), true, true), "[-∞,2]"),
-        //   (Interval.proper(None, Some(2), true, false), "[-∞,2)"),
-        //   (Interval.proper(None, Some(2), false, true), "(-∞,2]"),
-        //   (Interval.proper(None, Some(2), false, false), "(-∞,2)"),
-        //   (Interval.proper(Some(1), None, true, true), "[1,+∞]"),
-        //   (Interval.proper(Some(1), None, true, false), "[1,+∞)"),
-        //   (Interval.proper(Some(1), None, false, true), "(1,+∞]"),
-        //   (Interval.proper(Some(1), None, false, false), "(1,+∞)"),
-        //   (Interval.proper[Int](None, None, true, true), "[-∞,+∞]"),
-        //   (Interval.proper[Int](None, None, true, false), "[-∞,+∞)"),
-        //   (Interval.proper[Int](None, None, false, true), "(-∞,+∞]"),
-        //   (Interval.proper[Int](None, None, false, false), "(-∞,+∞)")
-        // )
+        val t = Table(
+          ("x", "expected"),
+          (Interval.proper(Some(1), true, Some(2), true), "[1,2]"),
+          (Interval.proper(Some(1), true, Some(3), false), "[1,3)"),
+          (Interval.proper(Some(1), false, Some(3), true), "(1,3]"),
+          (Interval.proper(Some(1), false, Some(4), false), "(1,4)"),
+          (Interval.proper(None, true, Some(2), true), "[-∞,2]"),
+          (Interval.proper(None, true, Some(2), false), "[-∞,2)"),
+          (Interval.proper(None, false, Some(2), true), "(-∞,2]"),
+          (Interval.proper(None, false, Some(2), false), "(-∞,2)"),
+          (Interval.proper(Some(1), true, None, true), "[1,+∞]"),
+          (Interval.proper(Some(1), true, None, false), "[1,+∞)"),
+          (Interval.proper(Some(1), false, None, true), "(1,+∞]"),
+          (Interval.proper(Some(1), false, None, false), "(1,+∞)"),
+          (Interval.proper[Int](None, true, None, true), "[-∞,+∞]"),
+          (Interval.proper[Int](None, true, None, false), "[-∞,+∞)"),
+          (Interval.proper[Int](None, false, None, true), "(-∞,+∞]"),
+          (Interval.proper[Int](None, false, None, false), "(-∞,+∞)")
+        )
 
-        // forAll(t) { (x, expected) =>
-        //   val actual = x.show
-        //   actual mustBe expected
-        // }
+        forAll(t) { (x, expected) =>
+          val actual = x.show
+          actual mustBe expected
+        }
       }
     }
   }

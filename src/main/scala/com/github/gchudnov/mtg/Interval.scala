@@ -139,9 +139,22 @@ object Interval:
    *   a new interval
    */
   def proper[A: Domain](a: Option[A], isIncludeA: Boolean, b: Option[A], isIncludeB: Boolean)(using bOrd: Ordering[Boundary[A]]): Interval[A] =
-    ???
-    // Proper(LeftBoundary(a, isIncludeA), RightBoundary(b, isIncludeB))
+    proper(Boundary.Left(a, isIncludeA), Boundary.Right(b, isIncludeB))
 
+  /**
+   * {a, b}
+   *
+   * @param ba
+   *   left boundary
+   * @param bb
+   *   right boundary
+   * @return
+   *   a new interval
+   */
+  def proper[A: Domain](ba: Boundary.Left[A], bb: Boundary.Right[A])(using bOrd: Ordering[Boundary[A]]): Interval[A] =
+    import Show.given
+    require(bOrd.lt(ba, bb), s"${ba.show},${bb.show}: left boundary must be less than the right boundary")
+    Proper(ba, bb)
 
   // /**
   //  * (-∞, +∞)

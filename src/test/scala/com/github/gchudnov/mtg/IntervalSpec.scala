@@ -140,6 +140,48 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (false)
       }
 
+      "construct a proper interval" in {
+        val a = Interval.proper(Some(1), false, Some(5), false)
+
+        a.isEmpty mustBe (false)
+        a.isDegenrate mustBe (false)
+        a.isProper mustBe (true)
+
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (true)
+        a.isUnbounded mustBe (false)
+
+        a.left.isBounded mustBe (true)
+        a.left.isUnbounded mustBe (false)
+
+        a.right.isBounded mustBe (true)
+        a.right.isUnbounded mustBe (false)
+      }
+
+      "construct a proper interval with left and right boundaries" in {
+        val a = Interval.proper(Boundary.Left(Some(1), true), Boundary.Right(Some(5), true))
+
+        a.isEmpty mustBe (false)
+        a.isDegenrate mustBe (false)
+        a.isProper mustBe (true)
+
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (true)
+        a.isUnbounded mustBe (false)
+
+        a.left.isBounded mustBe (true)
+        a.left.isUnbounded mustBe (false)
+
+        a.right.isBounded mustBe (true)
+        a.right.isUnbounded mustBe (false)
+      }
+
       //   "construct an unbounded interval" in {
       //     val a = Interval.unbounded[Int]
 
@@ -154,22 +196,6 @@ final class IntervalSpec extends TestSpec:
 
       //     a.right.isBounded mustBe (false)
       //     a.right.isUnbounded mustBe (true)
-      //   }
-
-      //   "construct a proper interval" in {
-      //     val a = Interval.proper(Some(1), Some(5), false, false)
-
-      //     a.isEmpty mustBe (false)
-      //     a.isDegenrate mustBe (false)
-      //     a.isProper mustBe (true)
-
-      //     a.isUnbounded mustBe (false)
-
-      //     a.left.isBounded mustBe (true)
-      //     a.left.isUnbounded mustBe (false)
-
-      //     a.right.isBounded mustBe (true)
-      //     a.right.isUnbounded mustBe (false)
       //   }
 
       //   "construct an open interval" in {

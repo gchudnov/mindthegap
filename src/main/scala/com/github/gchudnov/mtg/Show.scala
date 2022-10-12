@@ -32,7 +32,7 @@ object Show:
     extension (b: Boundary[?])
       def show: String =
         if b.isLeft then s"${leftBound(b.isInclude)}${leftValue(b.value)}"
-        else s"${rightBound(b.isInclude)}${rightValue(b.value)}"
+        else s"${rightValue(b.value)}${rightBound(b.isInclude)}"
 
   given Show[Interval[?]] with
     extension (i: Interval[?])
