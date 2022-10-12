@@ -224,117 +224,152 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (false)
       }
 
-      //   "construct a closed interval" in {
-      //     val a = Interval.closed(1, 5)
+      "construct a closed interval" in {
+        val a = Interval.closed(1, 5)
 
-      //     a.isEmpty mustBe (false)
-      //     a.isDegenrate mustBe (false)
-      //     a.isProper mustBe (true)
+        a.isEmpty mustBe (false)
+        a.isDegenrate mustBe (false)
+        a.isProper mustBe (true)
 
-      //     a.isUnbounded mustBe (false)
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
 
-      //     a.left.isBounded mustBe (true)
-      //     a.left.isUnbounded mustBe (false)
+        a.isBounded mustBe (true)
+        a.isUnbounded mustBe (false)
 
-      //     a.right.isBounded mustBe (true)
-      //     a.right.isUnbounded mustBe (false)
-      //   }
+        a.left.isBounded mustBe (true)
+        a.left.isUnbounded mustBe (false)
 
-      //   "construct a leftOpen interval" in {
-      //     val a = Interval.leftOpen(1)
+        a.right.isBounded mustBe (true)
+        a.right.isUnbounded mustBe (false)
+      }
 
-      //     a.isEmpty mustBe (false)
-      //     a.isDegenrate mustBe (false)
-      //     a.isProper mustBe (true)
+      "construct a leftOpen interval" in {
+        val a = Interval.leftOpen(1)
 
-      //     a.isUnbounded mustBe (false)
+        a.isEmpty mustBe (false)
+        a.isDegenrate mustBe (false)
+        a.isProper mustBe (true)
 
-      //     a.left.isBounded mustBe (true)
-      //     a.left.isUnbounded mustBe (false)
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
 
-      //     a.right.isBounded mustBe (false)
-      //     a.right.isUnbounded mustBe (true)
-      //   }
+        a.isBounded mustBe (false)
+        a.isUnbounded mustBe (false)
 
-      //   "construct a leftClosed interval" in {
-      //     val a = Interval.leftClosed(5)
+        a.left.isBounded mustBe (true)
+        a.left.isUnbounded mustBe (false)
 
-      //     a.isEmpty mustBe (false)
-      //     a.isDegenrate mustBe (false)
-      //     a.isProper mustBe (true)
+        a.right.isBounded mustBe (false)
+        a.right.isUnbounded mustBe (true)
+      }
 
-      //     a.isUnbounded mustBe (false)
+      "construct a leftClosed interval" in {
+        val a = Interval.leftClosed(5)
 
-      //     a.left.isBounded mustBe (true)
-      //     a.left.isUnbounded mustBe (false)
+        a.isEmpty mustBe (false)
+        a.isDegenrate mustBe (false)
+        a.isProper mustBe (true)
 
-      //     a.right.isBounded mustBe (false)
-      //     a.right.isUnbounded mustBe (true)
-      //   }
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
 
-      //   "construct a rightOpen interval" in {
-      //     val a = Interval.rightOpen(1)
+        a.isBounded mustBe (false)
+        a.isUnbounded mustBe (false)
 
-      //     a.isEmpty mustBe (false)
-      //     a.isDegenrate mustBe (false)
-      //     a.isProper mustBe (true)
+        a.left.isBounded mustBe (true)
+        a.left.isUnbounded mustBe (false)
 
-      //     a.isUnbounded mustBe (false)
+        a.right.isBounded mustBe (false)
+        a.right.isUnbounded mustBe (true)
+      }
 
-      //     a.left.isBounded mustBe (false)
-      //     a.left.isUnbounded mustBe (true)
+      "construct a rightOpen interval" in {
+        val a = Interval.rightOpen(1)
 
-      //     a.right.isBounded mustBe (true)
-      //     a.right.isUnbounded mustBe (false)
-      //   }
+        a.isEmpty mustBe (false)
+        a.isDegenrate mustBe (false)
+        a.isProper mustBe (true)
 
-      //   "construct a rightClosed interval" in {
-      //     val a = Interval.rightClosed(5)
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
 
-      //     a.isEmpty mustBe (false)
-      //     a.isDegenrate mustBe (false)
-      //     a.isProper mustBe (true)
+        a.isBounded mustBe (false)
+        a.isUnbounded mustBe (false)
 
-      //     a.isUnbounded mustBe (false)
+        a.left.isBounded mustBe (false)
+        a.left.isUnbounded mustBe (true)
 
-      //     a.left.isBounded mustBe (false)
-      //     a.left.isUnbounded mustBe (true)
+        a.right.isBounded mustBe (true)
+        a.right.isUnbounded mustBe (false)
+      }
 
-      //     a.right.isBounded mustBe (true)
-      //     a.right.isUnbounded mustBe (false)
-      //   }
+      "construct a rightClosed interval" in {
+        val a = Interval.rightClosed(5)
 
-      //   "construct a leftClosedRightOpen interval" in {
-      //     val a = Interval.leftClosedRightOpen(1, 10)
+        a.isEmpty mustBe (false)
+        a.isDegenrate mustBe (false)
+        a.isProper mustBe (true)
 
-      //     a.isEmpty mustBe (false)
-      //     a.isDegenrate mustBe (false)
-      //     a.isProper mustBe (true)
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
 
-      //     a.isUnbounded mustBe (false)
+        a.isBounded mustBe (false)
+        a.isUnbounded mustBe (false)
 
-      //     a.left.isBounded mustBe (true)
-      //     a.left.isUnbounded mustBe (false)
+        a.left.isBounded mustBe (false)
+        a.left.isUnbounded mustBe (true)
 
-      //     a.right.isBounded mustBe (true)
-      //     a.right.isUnbounded mustBe (false)
-      //   }
+        a.right.isBounded mustBe (true)
+        a.right.isUnbounded mustBe (false)
+      }
 
-      //   "construct a leftOpenRightClosed interval" in {
-      //     val a = Interval.leftOpenRightClosed(1, 10)
+      "construct a leftClosedRightOpen interval" in {
+        val a = Interval.leftClosedRightOpen(1, 10)
 
-      //     a.isEmpty mustBe (false)
-      //     a.isDegenrate mustBe (false)
-      //     a.isProper mustBe (true)
+        a.isEmpty mustBe (false)
+        a.isDegenrate mustBe (false)
+        a.isProper mustBe (true)
 
-      //     a.isUnbounded mustBe (false)
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
 
-      //     a.left.isBounded mustBe (true)
-      //     a.left.isUnbounded mustBe (false)
+        a.isBounded mustBe (true)
+        a.isUnbounded mustBe (false)
 
-      //     a.right.isBounded mustBe (true)
-      //     a.right.isUnbounded mustBe (false)
-      // }
+        a.left.isBounded mustBe (true)
+        a.left.isUnbounded mustBe (false)
+
+        a.right.isBounded mustBe (true)
+        a.right.isUnbounded mustBe (false)
+      }
+
+      "construct a leftOpenRightClosed interval" in {
+        val a = Interval.leftOpenRightClosed(1, 10)
+
+        a.isEmpty mustBe (false)
+        a.isDegenrate mustBe (false)
+        a.isProper mustBe (true)
+
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (true)
+        a.isUnbounded mustBe (false)
+
+        a.left.isBounded mustBe (true)
+        a.left.isUnbounded mustBe (false)
+
+        a.right.isBounded mustBe (true)
+        a.right.isUnbounded mustBe (false)
+      }
 
     }
 
