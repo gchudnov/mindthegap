@@ -1,5 +1,8 @@
 package com.github.gchudnov.mtg
 
+trait Show[T]:
+  extension (t: T) def show: String
+
 object Show:
   private val infinite = '∞'
 
@@ -9,6 +12,9 @@ object Show:
   private val leftClosed  = '['
   private val rightOpen   = ')'
   private val rightClosed = ']'
+
+  private val leftPoint  = '{'
+  private val rightPoint = '}'
 
   private[mtg] def leftBound(isInclude: Boolean): Char =
     if isInclude then leftClosed else leftOpen
@@ -22,24 +28,19 @@ object Show:
   private[mtg] def rightValue(x: Option[?]): String =
     x.fold(s"+${infinite}")(_.toString())
 
-  extension [T](b: Boundary[T])
-    def show: String =
-      b match
-        case LeftBoundary(value, isInclude) =>
-          val lb = leftBound(isInclude)
-          val lv = leftValue(value)
-          s"${lb}${lv}"
-        case RightBoundary(value, isInclude) =>
-          val rb = rightBound(isInclude)
-          val rv = rightValue(value)
-          s"${rv}${rb}"
+  given Show[Boundary[?]] with
+    extension (b: Boundary[?])
+      def show: String =
+        if b.isLeft then s"${leftBound(b.isInclude)}${leftValue(b.value)}"
+        else s"${rightBound(b.isInclude)}${rightValue(b.value)}"
 
-  extension [T](ab: Interval[T])
-    def show: String =
-      ab match
-        case Empty =>
-          s"${empty}"
-        case Degenerate(a) =>
-          s"{${a.toString()}}"
-        case Proper(left, right) =>
-          s"${left.show},${right.show}"
+  given Show[Interval[?]] with
+    extension (i: Interval[?])
+      def show: String =
+        i match
+          case Interval.Empty =>
+            s"${empty}"
+          case Interval.Degenerate(a) =>
+            s"${leftPoint}${a.toString()}${rightPoint}"
+          case Interval.Proper(l, r) =>
+            s"${l.show},${r.show}"

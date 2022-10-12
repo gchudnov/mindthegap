@@ -1,85 +1,87 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.Domains.*
-import com.github.gchudnov.mtg.Domains.given
-import org.scalactic.TolerantNumerics
-import org.scalactic.Equality
-import java.time.OffsetDateTime
-import java.time.temporal.ChronoUnit
-import java.time.Instant
+// import com.github.gchudnov.mtg.Domains.*
+// import com.github.gchudnov.mtg.Domains.given
+// import org.scalactic.TolerantNumerics
+// import org.scalactic.Equality
+// import java.time.OffsetDateTime
+// import java.time.temporal.ChronoUnit
+// import java.time.Instant
 
-final class DomainsSpec extends TestSpec:
+object D1 {}
 
-  "Domains" when {
+// final class DomainsSpec extends TestSpec:
 
-    "Int" should {
-      "calc predecessor and successor values" in {
-        val valT: Domain[Int] = summon[Domain[Int]]
+//   "Domains" when {
 
-        val x: Int = 10
+//     "Int" should {
+//       "calc predecessor and successor values" in {
+//         val valT: Domain[Int] = summon[Domain[Int]]
 
-        val xp = valT.pred(x)
-        val xn = valT.succ(x)
+//         val x: Int = 10
 
-        xp mustEqual (9)
-        xn mustEqual (11)
-      }
-    }
+//         val xp = valT.pred(x)
+//         val xn = valT.succ(x)
 
-    "Long" should {
-      "calc predecessor and successor values" in {
-        val valT: Domain[Long] = summon[Domain[Long]]
+//         xp mustEqual (9)
+//         xn mustEqual (11)
+//       }
+//     }
 
-        val x: Long = 10L
+//     "Long" should {
+//       "calc predecessor and successor values" in {
+//         val valT: Domain[Long] = summon[Domain[Long]]
 
-        val xp = valT.pred(x)
-        val xn = valT.succ(x)
+//         val x: Long = 10L
 
-        xp mustEqual (9L)
-        xn mustEqual (11L)
-      }
-    }
+//         val xp = valT.pred(x)
+//         val xn = valT.succ(x)
 
-    "Double" should {
-      "calc predecessor and successor values" in {
-        given doubleEq: Equality[Double] = TolerantNumerics.tolerantDoubleEquality(0.001)
-        given valT: Domain[Double]       = makeFractionalDomain(0.001)
+//         xp mustEqual (9L)
+//         xn mustEqual (11L)
+//       }
+//     }
 
-        val x: Double = 10.0
+//     "Double" should {
+//       "calc predecessor and successor values" in {
+//         given doubleEq: Equality[Double] = TolerantNumerics.tolerantDoubleEquality(0.001)
+//         given valT: Domain[Double]       = makeFractionalDomain(0.001)
 
-        val xp = valT.pred(x)
-        val xn = valT.succ(x)
+//         val x: Double = 10.0
 
-        assert(xp === 9.999)
-        assert(xn === 10.001)
-      }
-    }
+//         val xp = valT.pred(x)
+//         val xn = valT.succ(x)
 
-    "OffsetDateTime" should {
-      "calc predecessor and successor values" in {
-        val valT: Domain[OffsetDateTime] = makeOffsetDateTimeDomain(ChronoUnit.DAYS)
+//         assert(xp === 9.999)
+//         assert(xn === 10.001)
+//       }
+//     }
 
-        val x: OffsetDateTime = OffsetDateTime.parse("2017-07-03T17:05:29.771Z").truncatedTo(ChronoUnit.DAYS)
+//     "OffsetDateTime" should {
+//       "calc predecessor and successor values" in {
+//         val valT: Domain[OffsetDateTime] = makeOffsetDateTimeDomain(ChronoUnit.DAYS)
 
-        val xp = valT.pred(x)
-        val xn = valT.succ(x)
+//         val x: OffsetDateTime = OffsetDateTime.parse("2017-07-03T17:05:29.771Z").truncatedTo(ChronoUnit.DAYS)
 
-        xp mustEqual (OffsetDateTime.parse("2017-07-02T00:00Z"))
-        xn mustEqual (OffsetDateTime.parse("2017-07-04T00:00Z"))
-      }
-    }
+//         val xp = valT.pred(x)
+//         val xn = valT.succ(x)
 
-    "Instant" should {
-      "calc predecessor and successor values" in {
-        val valT: Domain[Instant] = makeInstantDomain(ChronoUnit.DAYS)
+//         xp mustEqual (OffsetDateTime.parse("2017-07-02T00:00Z"))
+//         xn mustEqual (OffsetDateTime.parse("2017-07-04T00:00Z"))
+//       }
+//     }
 
-        val x: Instant = Instant.parse("2017-07-03T17:05:29Z").truncatedTo(ChronoUnit.DAYS)
+//     "Instant" should {
+//       "calc predecessor and successor values" in {
+//         val valT: Domain[Instant] = makeInstantDomain(ChronoUnit.DAYS)
 
-        val xp = valT.pred(x)
-        val xn = valT.succ(x)
+//         val x: Instant = Instant.parse("2017-07-03T17:05:29Z").truncatedTo(ChronoUnit.DAYS)
 
-        xp mustEqual (Instant.parse("2017-07-02T00:00:00Z"))
-        xn mustEqual (Instant.parse("2017-07-04T00:00:00Z"))
-      }
-    }
-  }
+//         val xp = valT.pred(x)
+//         val xn = valT.succ(x)
+
+//         xp mustEqual (Instant.parse("2017-07-02T00:00:00Z"))
+//         xn mustEqual (Instant.parse("2017-07-04T00:00:00Z"))
+//       }
+//     }
+//   }

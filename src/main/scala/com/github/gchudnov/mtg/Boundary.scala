@@ -2,11 +2,33 @@ package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.Domain
 
-sealed trait Boundary[+T]:
-  def value: Option[T]
-  def isInclude: Boolean
+/**
+ * Left or Right boundary of an interval
+ *
+ * {{{
+ * left (a):
+ *   (-inf,
+ *   [0,
+ *
+ * right (b):
+ *   +inf)
+ *   0]
+ * }}}
+ *
+ * @param value
+ *   point value
+ * @param isInclude
+ *   whether the given point is included or not
+ */
+enum Boundary[T](val value: Option[T], val isInclude: Boolean):
+  case Left(a: Option[T], includeA: Boolean)  extends Boundary(a, includeA)
+  case Right(b: Option[T], includeB: Boolean) extends Boundary(b, includeB)
 
-  def effectiveValue: Option[T]
+  def isLeft: Boolean =
+    this.ordinal == 0
+
+  def isRight: Boolean =
+    !isLeft
 
   def isBounded: Boolean =
     value.nonEmpty
@@ -14,38 +36,10 @@ sealed trait Boundary[+T]:
   def isUnbounded: Boolean =
     value.isEmpty
 
-/**
- * Left Boundary of an Interval
- *
- * {{{
- *   (-inf,
- *   [0,
- * }}}
- *
- * @param value
- *   point value
- * @param isInclude
- *   specifies whether the given point is inclusive or exclusive
- */
-final case class LeftBoundary[+T: Domain](value: Option[T], isInclude: Boolean) extends Boundary[T]:
+  def effectiveValue(using d: Domain[T]): Option[T] =
+    if isInclude then value else value.map(x => if isLeft then d.succ(x) else d.pred(x))
 
-  override def effectiveValue: Option[T] =
-    if isInclude then value else value.map(x => summon[Domain[T]].succ(x))
+object Boundary:
 
-/**
- * Right Boundary of an Interval
- *
- * {{{
- *   , +inf)
- *   , 0]
- * }}}
- *
- * @param value
- *   point value
- * @param isInclude
- *   specifies whether the given point is inclusive or exclusive
- */
-final case class RightBoundary[+T: Domain](value: Option[T], isInclude: Boolean) extends Boundary[T]:
-
-  override def effectiveValue: Option[T] =
-    if isInclude then value else value.map(x => summon[Domain[T]].pred(x))
+  given boundaryOrdering[T: Ordering: Domain]: Ordering[Boundary[T]] =
+    new BoundaryOrdering

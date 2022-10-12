@@ -1,11 +1,6 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.Domains.nothingDomain
-import com.github.gchudnov.mtg.internal.IntervalRel
-
-import Domains.given
-import BoundaryOrdering.given
-
+// import com.github.gchudnov.mtg.internal.IntervalRel
 
 /**
  * An Interval
@@ -52,15 +47,20 @@ import BoundaryOrdering.given
  *   Unbounded            - Unbounded at both ends; (-∞, +∞) = R
  * }}}
  */
-sealed trait Interval[+T] extends IntervalRel[T]:
-  def left: LeftBoundary[T]
-  def right: RightBoundary[T]
 
-  def isEmpty: Boolean
-  def isDegenrate: Boolean
-  def isProper: Boolean
+enum Interval[A]:
+  case Empty extends Interval[Nothing]
+  case Degenerate(a: A)
+  case Proper(l: Boundary.Left[A], r: Boundary.Right[A])
 
-  def isUnbounded: Boolean
+  def isEmpty: Boolean =
+    this.ordinal == 0
+
+  def isDegenrate: Boolean =
+    this.ordinal == 1
+
+  def isProper: Boolean =
+    this.ordinal == 2
 
   def nonEmpty: Boolean =
     !isEmpty
@@ -71,68 +71,47 @@ sealed trait Interval[+T] extends IntervalRel[T]:
   def nonProper: Boolean =
     !isProper
 
-  def nonUnbounded: Boolean =
-    !isUnbounded
+  def isUnbounded: Boolean =
+    this match
+      case Interval.Proper(l, r) =>
+        l.isUnbounded && r.isUnbounded
+      case _ =>
+        false
 
-/**
- * Empty Interval
- */
-case object Empty extends Interval[Nothing]:
-  override final def left: LeftBoundary[Nothing] =
-    throw new NoSuchElementException("Empty.left")
+  def isBounded: Boolean =
+    this match
+      case Interval.Proper(l, r) =>
+        l.isBounded && r.isBounded
+      case Interval.Degenerate(_) =>
+        true
+      case _ =>
+        false
 
-  override final def right: RightBoundary[Nothing] =
-    throw new NoSuchElementException("Empty.right")
+  def left: Boundary.Left[A] =
+    this match
+      case Interval.Empty =>
+        throw new NoSuchElementException("Empty.left")
+      case Interval.Degenerate(a) =>
+        Boundary.Left(Some(a), true)
+      case Interval.Proper(l, _) =>
+        l
 
-  override final def isEmpty: Boolean     = true
-  override final def isDegenrate: Boolean = false
-  override final def isProper: Boolean    = false
-  override final def isUnbounded: Boolean = false
-
-/**
- * Degenerate Interval
- */
-final case class Degenerate[T: Domain](a: T) extends Interval[T]:
-  override final def left: LeftBoundary[T] =
-    LeftBoundary(Some(a), true)
-
-  override final def right: RightBoundary[T] =
-    RightBoundary(Some(a), true)
-
-  override val isEmpty: Boolean     = false
-  override val isDegenrate: Boolean = true
-  override val isProper: Boolean    = false
-  override val isUnbounded: Boolean = false
-
-/**
- * Proper Interval
- */
-final case class Proper[T](left: LeftBoundary[T], right: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]) extends Interval[T]:
-  import com.github.gchudnov.mtg.Show.*
-
-  // TODO: make the constructor private and extract the require ???
-
-  // The endpoint relation left (a-) < right (a+) is required for a proper interval
-  require(bOrd.lt(left, right), s"${left.show},${right.show}: left boundary must be less than the right boundary")
-
-  override val isEmpty: Boolean     = false
-  override val isDegenrate: Boolean = false
-  override val isProper: Boolean    = true
-  override def isUnbounded: Boolean = left.value.isEmpty && right.value.isEmpty
+  def right: Boundary.Right[A] =
+    this match
+      case Interval.Empty =>
+        throw new NoSuchElementException("Empty.right")
+      case Interval.Degenerate(a) =>
+        Boundary.Right(Some(a), true)
+      case Interval.Proper(_, r) =>
+        r
 
 object Interval:
 
   /**
    * ∅
    */
-  def empty[T]: Interval[T] =
-    Empty
-
-  /**
-   * (-∞, +∞)
-   */
-  def unbounded[T: Domain](using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    Proper[T](LeftBoundary[T](None, false), RightBoundary[T](None, false))
+  def empty[A]: Interval[Nothing] =
+    Interval.Empty
 
   /**
    * [a, a] = {a}
@@ -142,141 +121,156 @@ object Interval:
    * @return
    *   a new interval
    */
-  def degenerate[T: Domain](a: T): Interval[T] =
-    Degenerate(a)
+  def degenerate[A](a: A): Interval[A] =
+    Interval.Degenerate(a)
 
   /**
    * {a, b}
    *
    * @param a
    *   left boundary
-   * @param b
-   *   right boundary
    * @param isIncludeA
    *   whether to include left boundary in the interval or not
+   * @param b
+   *   right boundary
    * @param isIncludeB
    *   whether to include right boundary in the interval or not
    * @return
    *   a new interval
    */
-  def proper[T: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    Proper(LeftBoundary(a, isIncludeA), RightBoundary(b, isIncludeB))
+  def proper[A: Domain](a: Option[A], isIncludeA: Boolean, b: Option[A], isIncludeB: Boolean)(using bOrd: Ordering[Boundary[A]]): Interval[A] =
+    ???
+    // Proper(LeftBoundary(a, isIncludeA), RightBoundary(b, isIncludeB))
 
-  /**
-   * (a, b) = {x | a < x < b}
-   *
-   * @param a
-   *   left boundary
-   * @param b
-   *   right boundary
-   * @return
-   *   a new interval
-   */
-  def open[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    Proper(LeftBoundary(Some(a), false), RightBoundary(Some(b), false))
 
-  /**
-   * [a, b] = {x | a <= x <= b}
-   *
-   * @param a
-   *   left boundary
-   * @param b
-   *   right boundary
-   * @return
-   *   a new interval
-   */
-  def closed[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    Proper(LeftBoundary(Some(a), true), RightBoundary(Some(b), true))
+  // /**
+  //  * (-∞, +∞)
+  //  */
+  // def unbounded[T: Domain](using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  //   Proper[T](LeftBoundary[T](None, false), RightBoundary[T](None, false))
 
-  /**
-   * (a, +∞) = {x | x > a}
-   *
-   * @param a
-   *   left boundary
-   * @return
-   *   a new interval
-   */
-  def leftOpen[T: Domain](a: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    Proper(LeftBoundary(Some(a), false), RightBoundary[T](None, false))
+  // /**
+  //  * (a, b) = {x | a < x < b}
+  //  *
+  //  * @param a
+  //  *   left boundary
+  //  * @param b
+  //  *   right boundary
+  //  * @return
+  //  *   a new interval
+  //  */
+  // def open[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  //   Proper(LeftBoundary(Some(a), false), RightBoundary(Some(b), false))
 
-  /**
-   * [a, +∞) = {x | x >= a}
-   *
-   * @param a
-   *   left boundary
-   * @return
-   *   a new interval
-   */
-  def leftClosed[T: Domain](a: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    Proper(LeftBoundary(Some(a), true), RightBoundary[T](None, false))
+  // /**
+  //  * [a, b] = {x | a <= x <= b}
+  //  *
+  //  * @param a
+  //  *   left boundary
+  //  * @param b
+  //  *   right boundary
+  //  * @return
+  //  *   a new interval
+  //  */
+  // def closed[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  //   Proper(LeftBoundary(Some(a), true), RightBoundary(Some(b), true))
 
-  /**
-   * (-∞, b) = {x | x < b}
-   *
-   * @param a
-   *   right boundary
-   * @return
-   *   a new interval
-   */
-  def rightOpen[T: Domain](b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    Proper(LeftBoundary[T](None, false), RightBoundary(Some(b), false))
+  // /**
+  //  * (a, +∞) = {x | x > a}
+  //  *
+  //  * @param a
+  //  *   left boundary
+  //  * @return
+  //  *   a new interval
+  //  */
+  // def leftOpen[T: Domain](a: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  //   Proper(LeftBoundary(Some(a), false), RightBoundary[T](None, false))
 
-  /**
-   * (-∞, b] = {x | x < b}
-   *
-   * @param a
-   *   right boundary
-   * @return
-   *   a new interval
-   */
-  def rightClosed[T: Domain](b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    Proper(LeftBoundary[T](None, false), RightBoundary(Some(b), true))
+  // /**
+  //  * [a, +∞) = {x | x >= a}
+  //  *
+  //  * @param a
+  //  *   left boundary
+  //  * @return
+  //  *   a new interval
+  //  */
+  // def leftClosed[T: Domain](a: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  //   Proper(LeftBoundary(Some(a), true), RightBoundary[T](None, false))
 
-  /**
-   * [a, b) = {x | a <= x < b}
-   *
-   * @param a
-   *   right boundary
-   * @return
-   *   a new interval
-   */
-  def leftClosedRightOpen[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    proper(Some(a), Some(b), isIncludeA = true, isIncludeB = false)
+  // /**
+  //  * (-∞, b) = {x | x < b}
+  //  *
+  //  * @param a
+  //  *   right boundary
+  //  * @return
+  //  *   a new interval
+  //  */
+  // def rightOpen[T: Domain](b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  //   Proper(LeftBoundary[T](None, false), RightBoundary(Some(b), false))
 
-  /**
-   * (a, b] = {x | a < x <= b}
-   *
-   * @param a
-   *   right boundary
-   * @return
-   *   a new interval
-   */
-  def leftOpenRightClosed[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    proper(Some(a), Some(b), isIncludeA = false, isIncludeB = true)
+  // /**
+  //  * (-∞, b] = {x | x < b}
+  //  *
+  //  * @param a
+  //  *   right boundary
+  //  * @return
+  //  *   a new interval
+  //  */
+  // def rightClosed[T: Domain](b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  //   Proper(LeftBoundary[T](None, false), RightBoundary(Some(b), true))
 
-  /**
-   * Make an arbitraty interval
-   *
-   * @param a
-   *   left boundary
-   * @param b
-   *   right boundary
-   * @param isIncludeA
-   *   whether to include left boundary in the interval or not
-   * @param isIncludeB
-   *   whether to include right boundary in the interval or not
-   * @return
-   */
-  def make[T: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    val ba = LeftBoundary(a, isIncludeA)
-    val bb = RightBoundary(b, isIncludeB)
-    make(ba, bb)
+  // /**
+  //  * [a, b) = {x | a <= x < b}
+  //  *
+  //  * @param a
+  //  *   right boundary
+  //  * @return
+  //  *   a new interval
+  //  */
+  // def leftClosedRightOpen[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  //   proper(Some(a), Some(b), isIncludeA = true, isIncludeB = false)
 
-  def make[T: Domain](ba: LeftBoundary[T], bb: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    (ba.value, bb.value) match
-      case (Some(x), Some(y)) =>
-        if bOrd.equiv(ba, bb) then degenerate(x)
-        else if bOrd.lt(bb, ba) then empty[T]
-        else proper(ba.value, bb.value, ba.isInclude, bb.isInclude)
-      case _ =>
-        proper(ba.value, bb.value, ba.isInclude, bb.isInclude)
+  // /**
+  //  * (a, b] = {x | a < x <= b}
+  //  *
+  //  * @param a
+  //  *   right boundary
+  //  * @return
+  //  *   a new interval
+  //  */
+  // def leftOpenRightClosed[T: Domain](a: T, b: T)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  //   proper(Some(a), Some(b), isIncludeA = false, isIncludeB = true)
+
+  // /**
+  //  * Make an arbitraty interval
+  //  *
+  //  * @param a
+  //  *   left boundary
+  //  * @param b
+  //  *   right boundary
+  //  * @param isIncludeA
+  //  *   whether to include left boundary in the interval or not
+  //  * @param isIncludeB
+  //  *   whether to include right boundary in the interval or not
+  //  * @return
+  //  */
+  // def make[T: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  //   val ba = LeftBoundary(a, isIncludeA)
+  //   val bb = RightBoundary(b, isIncludeB)
+  //   make(ba, bb)
+
+  // def make[T: Domain](ba: LeftBoundary[T], bb: RightBoundary[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  //   (ba.value, bb.value) match
+  //     case (Some(x), Some(y)) =>
+  //       if bOrd.equiv(ba, bb) then degenerate(x)
+  //       else if bOrd.lt(bb, ba) then empty[T]
+  //       else proper(ba.value, bb.value, ba.isInclude, bb.isInclude)
+  //     case _ =>
+  //       proper(ba.value, bb.value, ba.isInclude, bb.isInclude)
+
+//     // import com.github.gchudnov.mtg.Show.*
+
+//     // // TODO: make the constructor private and extract the require ???
+
+//     // // The endpoint relation left (a-) < right (a+) is required for a proper interval
+//     // // require(bOrd.lt(left, right), s"${left.show},${right.show}: left boundary must be less than the right boundary")
