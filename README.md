@@ -144,7 +144,7 @@ Interval.unbounded[Int]
 To display an interval, `Show` can be used:
 
 ```scala
-import com.github.gchudnov.mtg.Show.*
+import com.github.gchudnov.mtg.Show.given
 
 val a = Interval.proper(None, Some(2), true, true)
 val e = Interval.empty[Int]
@@ -158,21 +158,22 @@ e.show // ∅
 Intervals can be ordered.
 
 ```scala
-import Domains.given
-import BoundaryOrdering.given
-import IntervalOrdering.given
-
 val a = Interval.closed(0, 10)
 val b = Interval.closed(20, 30)
 
 List(b, a).sorted // List(a, b)
 ```
 
-if intervals with custom data types need to be ordered, a custom `Ordering` needs to be defined:
+if intervals with custom data types need to be ordered, a custom `Domain` needs to be defined:
 
 ```scala
-given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.makeBoundaryOrdering[Int]
-given iOrd: Ordering[Interval[Int]] = IntervalOrdering.makeIntervalOrdering[Int]
+given domainDouble: Domain[Double]                 = Domain.makeFractional(0.01)
+given domainOffsetDateTime: Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.MINUTES)
+given domainInstant: Domain[Instant]               = Domain.makeInstant(ChronoUnit.MINUTES)
+
+val a = Interval.closed(0.0, 10.0)
+val b = Interval.open(OffsetDateTime.parse("2017-07-02T00:00Z"), OffsetDateTime.parse("2017-07-04T00:00Z"))
+val c = Interval.closed(Instant.parse("2017-07-02T00:00:00Z"), Instant.parse("2017-07-04T00:00:00Z"))
 ```
 
 ## Links
