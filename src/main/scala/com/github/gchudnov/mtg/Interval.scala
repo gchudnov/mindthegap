@@ -156,11 +156,11 @@ object Interval:
     require(bOrd.lt(ba, bb), s"${ba.show},${bb.show}: left boundary must be less than the right boundary")
     Proper(ba, bb)
 
-  // /**
-  //  * (-∞, +∞)
-  //  */
-  // def unbounded[T: Domain](using bOrd: Ordering[Boundary[T]]): Interval[T] =
-  //   Proper[T](LeftBoundary[T](None, false), RightBoundary[T](None, false))
+  /**
+   * (-∞, +∞)
+   */
+  def unbounded[A: Domain](using bOrd: Ordering[Boundary[A]]): Interval[A] =
+    proper[A](Boundary.Left(None, false), Boundary.Right(None, false))
 
   // /**
   //  * (a, b) = {x | a < x < b}

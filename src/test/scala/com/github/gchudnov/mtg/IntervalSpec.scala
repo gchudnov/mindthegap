@@ -182,21 +182,26 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (false)
       }
 
-      //   "construct an unbounded interval" in {
-      //     val a = Interval.unbounded[Int]
+      "construct an unbounded interval" in {
+        val a = Interval.unbounded[Int]
 
-      //     a.isEmpty mustBe (false)
-      //     a.isDegenrate mustBe (false)
-      //     a.isProper mustBe (true)
+        a.isEmpty mustBe (false)
+        a.isDegenrate mustBe (false)
+        a.isProper mustBe (true)
 
-      //     a.isUnbounded mustBe (true)
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
 
-      //     a.left.isBounded mustBe (false)
-      //     a.left.isUnbounded mustBe (true)
+        a.isBounded mustBe (false)
+        a.isUnbounded mustBe (true)
 
-      //     a.right.isBounded mustBe (false)
-      //     a.right.isUnbounded mustBe (true)
-      //   }
+        a.left.isBounded mustBe (false)
+        a.left.isUnbounded mustBe (true)
+
+        a.right.isBounded mustBe (false)
+        a.right.isUnbounded mustBe (true)
+      }
 
       //   "construct an open interval" in {
       //     val a = Interval.open(1, 5)
