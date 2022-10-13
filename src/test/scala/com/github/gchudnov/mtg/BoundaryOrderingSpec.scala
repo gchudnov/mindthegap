@@ -1,6 +1,8 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.TestSpec
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 
 final class BoundaryOrderingSpec extends TestSpec:
 
@@ -167,15 +169,33 @@ final class BoundaryOrderingSpec extends TestSpec:
       }
     }
 
-    "equiv is tested" should {
-      "check" in {
-        val ab: Option[Int] = None
-        val bb: Option[Int] = None
+    "ordered" should {
+      "lt" in {
+        val t = Table(
+          ("ba", "bb", "expected"),
+          (Boundary.Left[Int](None, true), Boundary.Right[Int](None, true), true),
+          (Boundary.Left[Int](None, false), Boundary.Right[Int](None, false), true),
+          (Boundary.Left[Int](None, true), Boundary.Right[Int](None, false), true),
+          (Boundary.Left[Int](None, false), Boundary.Right[Int](None, true), true)
+        )
 
-        val ai = true
-        val bi = true
+        forAll(t) { (ba, bb, expected) =>
+          bOrd.lt(ba, bb) mustBe (expected)
+        }
+      }
 
-        bOrd.equiv(Boundary.Left(ab, ai), Boundary.Right(bb, bi)) mustBe (true)
+      "equiv" in {
+        val t = Table(
+          ("ba", "bb", "expected"),
+          (Boundary.Left[Int](Some(1), true), Boundary.Right[Int](Some(1), true), true),
+          (Boundary.Left[Int](Some(1), false), Boundary.Right[Int](Some(1), false), false),
+          (Boundary.Left[Int](Some(1), true), Boundary.Right[Int](Some(1), false), false),
+          (Boundary.Left[Int](Some(1), false), Boundary.Right[Int](Some(1), true), false)
+        )
+
+        forAll(t) { (ba, bb, expected) =>
+          bOrd.equiv(ba, bb) mustBe (expected)
+        }
       }
     }
   }

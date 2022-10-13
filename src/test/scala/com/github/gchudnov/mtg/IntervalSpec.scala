@@ -29,8 +29,6 @@ final class IntervalSpec extends TestSpec:
        * }}}
        */
       "create intervals" in {
-        // given bOrd: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
-
         forAll(genOneIntTuple) { case ((ox, oy), ix, iy) =>
           val actual = Interval.make(ox, ix, oy, iy)
 
@@ -51,7 +49,7 @@ final class IntervalSpec extends TestSpec:
               actual.isProper mustBe (false)
               actual.nonProper mustBe (true)
 
-              // bOrd.equiv(Boundary.Left(ox, ix), Boundary.Right(oy, iy)) mustBe (true)
+              summon[Ordering[Boundary[Int]]].equiv(Boundary.Left(ox, ix), Boundary.Right(oy, iy)) mustBe (true)
 
             case Interval.Proper(_, _) =>
               actual.isEmpty mustBe (false)
@@ -61,7 +59,7 @@ final class IntervalSpec extends TestSpec:
               actual.isProper mustBe (true)
               actual.nonProper mustBe (false)
 
-              // bOrd.lt(Boundary.Left(ox, ix), Boundary.Right(oy, iy)) mustBe (true)
+              summon[Ordering[Boundary[Int]]].lt(Boundary.Left(ox, ix), Boundary.Right(oy, iy)) mustBe (true)
         }
       }
 
