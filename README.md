@@ -6,6 +6,14 @@
 
 <br clear="right" /><!-- Turn off the wrapping for the logo image. -->
 
+## Usage
+
+Add the following dependency to your `build.sbt`:
+
+```scala
+libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "0.2.0"
+```
+
 ## Intervals
 
 - Empty | `[b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅`
@@ -25,13 +33,13 @@
 
 ## Relations
 
-## Usage
+The library support the following relations:
 
-Add the following dependency to your `build.sbt`:
+- **Point-Point (PP)** relations between a pair of points.
+- **Point-Interval (PI)** relations that between a point and an interval.
+- **Interval-Interval (II)** relations that between a pair of intervals.
 
-```scala
-libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "0.2.0"
-```
+![relations.png](res/relations.png)
 
 ## Interval Creation
 
@@ -136,6 +144,29 @@ Interval.rightClosed(5)
 ```scala
 // (-∞, +∞) = R
 Interval.unbounded[Int]
+```
+
+## Relation Check
+
+A relation between a pair of intervals can be checked.
+
+```text
+  Relation                  AAAAA
+  before(a,b)      b|B      :   : BBBBBBBBB  |  a+ < b-
+  meets(a,b)       m|M      :   BBBBBBBBB    |  a+ = b-
+  overlaps(a,b)    o|O      : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
+  starts(a,b)      s|S      BBBBBBBBB        |  a- = b- ; a+ < b+
+  during(a,b)      d|D    BBBBBBBBB          |  a- > b- ; a+ < b+
+  finishes(a,b)    f|F  BBBBBBBBB            |  a+ = b+ ; a- > b-
+  equals(a, b)     e        BBBBB            |  a- = b- ; a+ = b+
+```
+
+```scala
+// before
+Interval.open(1, 4).before(Interval.open(3, 6)) // true
+
+// after
+Interval.open(3, 6).after(Interval.open(1, 4)) // true
 ```
 
 ## Show
