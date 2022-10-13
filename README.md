@@ -23,17 +23,21 @@
   - RightClosed | `(-∞, b] = {x | x < b}`
 - Unbounded | `(-∞, +∞) = R`
 
+## Relations
+
 ## Usage
 
-```
-TODO: add imports
+Add the following dependency to your `build.sbt`:
+
+```scala
+libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "0.2.0"
 ```
 
-TODO: describe the need of `Domain`. create a section later that explains it.
+## Interval Creation
 
 ### Factory Method
 
-`Interval.make` is a universal method that can be used to create an *empty*, *degenerate* or a *proper* intervals.
+`Interval.make` is a universal method that can be used to create an _empty_, _degenerate_ or a _proper_ intervals.
 
 ```scala
 // empty ∅
@@ -150,6 +154,20 @@ b.show // {5}
 c.show // [-∞,2)
 ```
 
+## Domain
+
+The library can work and create intervals for a set of predefined types: ones that implement `Integral[T]` trait (e.g. `Int`, `Long`), `OffsetDateTime`, and `Instant`.
+
+To support intervals with other types a `given` instance of `Domain[T]` is needed. `Domain[T]` is defined as:
+
+```scala
+trait Domain[T]:
+  def succ(x: T): T
+  def pred(x: T): T
+```
+
+where `succ` and `pred` are used to get the next and the previous value for `x`.
+
 ## Ordering
 
 Intervals can be ordered.
@@ -159,18 +177,6 @@ val a = Interval.closed(0, 10)
 val b = Interval.closed(20, 30)
 
 List(b, a).sorted // List(a, b)
-```
-
-if intervals with custom data types need to be ordered, a custom `Domain` needs to be defined:
-
-```scala
-given domainDouble: Domain[Double]                 = Domain.makeFractional(0.01)
-given domainOffsetDateTime: Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.MINUTES)
-given domainInstant: Domain[Instant]               = Domain.makeInstant(ChronoUnit.MINUTES)
-
-val a = Interval.closed(0.0, 10.0)
-val b = Interval.open(OffsetDateTime.parse("2017-07-02T00:00Z"), OffsetDateTime.parse("2017-07-04T00:00Z"))
-val c = Interval.closed(Instant.parse("2017-07-02T00:00:00Z"), Instant.parse("2017-07-04T00:00:00Z"))
 ```
 
 ## Links
