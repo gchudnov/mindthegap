@@ -17,59 +17,62 @@ final class IntervalSpec extends TestSpec:
 
   "Interval" when {
 
-    // "make" should {
+    "make" should {
 
-    //   /**
-    //    * {{{
-    //    *   Given that a < b:
-    //    *
-    //    *   - Empty      | [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
-    //    *   - Degenerate | [a, a] = {a}
-    //    *   - Proper     | otherwise
-    //    * }}}
-    //    */
-    //   "create intervals" in {
-    //     import com.github.gchudnov.mtg.Domains.given
-    //     given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.makeBoundaryOrdering[Int]
+      /**
+       * {{{
+       *   Given that a < b:
+       *
+       *   - Empty      | [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
+       *   - Degenerate | [a, a] = {a}
+       *   - Proper     | otherwise
+       * }}}
+       */
+      "create intervals" in {
+        // given bOrd: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
 
-    //     forAll(genOneIntTuple) { case ((ox, oy), ix, iy) =>
-    //       val actual = Interval.make(ox, oy, ix, iy)
+        forAll(genOneIntTuple) { case ((ox, oy), ix, iy) =>
+          val actual = Interval.make(ox, ix, oy, iy)
 
-    //       actual match
-    //         case Empty =>
-    //           actual.isEmpty mustBe (true)
-    //           actual.nonEmpty mustBe (false)
-    //           actual.isDegenrate mustBe (false)
-    //           actual.nonDegenerate mustBe (true)
-    //           actual.isProper mustBe (false)
-    //           actual.nonProper mustBe (true)
+          actual match
+            case Interval.Empty =>
+              actual.isEmpty mustBe (true)
+              actual.nonEmpty mustBe (false)
+              actual.isDegenrate mustBe (false)
+              actual.nonDegenerate mustBe (true)
+              actual.isProper mustBe (false)
+              actual.nonProper mustBe (true)
 
-    //         case ab @ Degenerate(_) =>
-    //           actual.isEmpty mustBe (false)
-    //           actual.nonEmpty mustBe (true)
-    //           actual.isDegenrate mustBe (true)
-    //           actual.nonDegenerate mustBe (false)
-    //           actual.isProper mustBe (false)
-    //           actual.nonProper mustBe (true)
+            case Interval.Degenerate(_) =>
+              actual.isEmpty mustBe (false)
+              actual.nonEmpty mustBe (true)
+              actual.isDegenrate mustBe (true)
+              actual.nonDegenerate mustBe (false)
+              actual.isProper mustBe (false)
+              actual.nonProper mustBe (true)
 
-    //           bOrd.equiv(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe (true)
+              // bOrd.equiv(Boundary.Left(ox, ix), Boundary.Right(oy, iy)) mustBe (true)
 
-    //         case Proper(_, _) =>
-    //           actual.isEmpty mustBe (false)
-    //           actual.nonEmpty mustBe (true)
-    //           actual.isDegenrate mustBe (false)
-    //           actual.nonDegenerate mustBe (true)
-    //           actual.isProper mustBe (true)
-    //           actual.nonProper mustBe (false)
+            case Interval.Proper(_, _) =>
+              actual.isEmpty mustBe (false)
+              actual.nonEmpty mustBe (true)
+              actual.isDegenrate mustBe (false)
+              actual.nonDegenerate mustBe (true)
+              actual.isProper mustBe (true)
+              actual.nonProper mustBe (false)
 
-    //           bOrd.lt(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe (true)
-    //     }
-    //   }
+              // bOrd.lt(Boundary.Left(ox, ix), Boundary.Right(oy, iy)) mustBe (true)
+        }
+      }
 
-    //   "edge cases" in {
-    //     Interval.make(Some(0), Some(0), true, false).isEmpty mustBe (true)
-    //   }
-    // }
+      "handle edge cases" in {
+        // [0, 0)
+        Interval.make(Some(0), true, Some(0), false).isEmpty mustBe (true)
+
+        // [-inf, +inf]
+        Interval.make[Int](None, true, None, true).isEmpty mustBe (false)
+      }
+    }
 
     "factory methods" should {
 

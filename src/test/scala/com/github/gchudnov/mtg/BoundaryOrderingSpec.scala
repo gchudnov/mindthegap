@@ -166,4 +166,16 @@ final class BoundaryOrderingSpec extends TestSpec:
         bOrd.compare(Boundary.Right[Int](None, false), Boundary.Left[Int](None, false)) mustBe (1)
       }
     }
+
+    "equiv is tested" should {
+      "check" in {
+        val ab: Option[Int] = None
+        val bb: Option[Int] = None
+
+        val ai = true
+        val bi = true
+
+        bOrd.equiv(Boundary.Left(ab, ai), Boundary.Right(bb, bi)) mustBe (true)
+      }
+    }
   }

@@ -48,10 +48,10 @@ package com.github.gchudnov.mtg
  * }}}
  */
 
-enum Interval[T]:
+enum Interval[+T]:
   case Empty extends Interval[Nothing]
   case Degenerate(a: T)
-  case Proper(l: Boundary.Left[T], r: Boundary.Right[T])
+  case Proper[T](l: Boundary.Left[T], r: Boundary.Right[T]) extends Interval[T]
 
   def isEmpty: Boolean =
     this.ordinal == 0
@@ -87,23 +87,27 @@ enum Interval[T]:
       case _ =>
         false
 
-  def left: Boundary.Left[T] =
+  def left[U >: T]: Boundary.Left[U] =
     this match
       case Interval.Empty =>
         throw new NoSuchElementException("Empty.left")
       case Interval.Degenerate(a) =>
         Boundary.Left(Some(a), true)
-      case Interval.Proper(l, _) =>
+      case Interval.Proper[U](l, _) =>
         l
+      case _ =>
+        throw new ClassCastException("Specified type is not compatible with the type of the Interval")
 
-  def right: Boundary.Right[T] =
+  def right[U >: T]: Boundary.Right[U] =
     this match
       case Interval.Empty =>
         throw new NoSuchElementException("Empty.right")
       case Interval.Degenerate(a) =>
         Boundary.Right(Some(a), true)
-      case Interval.Proper(_, r) =>
+      case Interval.Proper[U](_, r) =>
         r
+      case _ =>
+        throw new ClassCastException("Specified type is not compatible with the type of the Interval")
 
 object Interval:
 
@@ -285,7 +289,7 @@ object Interval:
     (ba.value, bb.value) match
       case (Some(x), Some(y)) =>
         if bOrd.equiv(ba, bb) then degenerate(x)
-        else if bOrd.lt(bb, ba) then ??? // empty[T]
+        else if bOrd.lt(bb, ba) then empty[T]
         else proper(ba, bb)
       case _ =>
         proper(ba, bb)
