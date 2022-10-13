@@ -138,7 +138,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def proper[T: Domain](a: Option[T], isIncludeA: Boolean, b: Option[T], isIncludeB: Boolean)(using Ordering[Boundary[T]]): Interval[T] =
+  def proper[T](a: Option[T], isIncludeA: Boolean, b: Option[T], isIncludeB: Boolean)(using Ordering[Boundary[T]]): Interval[T] =
     proper(Boundary.Left(a, isIncludeA), Boundary.Right(b, isIncludeB))
 
   /**
@@ -151,7 +151,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def proper[T: Domain](ba: Boundary.Left[T], bb: Boundary.Right[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def proper[T](ba: Boundary.Left[T], bb: Boundary.Right[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     import Show.given
     require(bOrd.lt(ba, bb), s"${ba.show},${bb.show}: left boundary must be less than the right boundary")
     Proper(ba, bb)
@@ -159,7 +159,7 @@ object Interval:
   /**
    * (-∞, +∞)
    */
-  def unbounded[T: Domain](using Ordering[Boundary[T]]): Interval[T] =
+  def unbounded[T](using Ordering[Boundary[T]]): Interval[T] =
     proper[T](Boundary.Left(None, false), Boundary.Right(None, false))
 
   /**
@@ -172,7 +172,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def open[T: Domain](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
+  def open[T](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
     proper(Boundary.Left(Some(a), false), Boundary.Right(Some(b), false))
 
   /**
@@ -185,7 +185,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def closed[T: Domain](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
+  def closed[T](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
     proper(Boundary.Left(Some(a), true), Boundary.Right(Some(b), true))
 
   /**
@@ -196,7 +196,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftOpen[T: Domain](a: T)(using Ordering[Boundary[T]]): Interval[T] =
+  def leftOpen[T](a: T)(using Ordering[Boundary[T]]): Interval[T] =
     proper(Boundary.Left(Some(a), false), Boundary.Right[T](None, false))
 
   /**
@@ -207,7 +207,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftClosed[T: Domain](a: T)(using Ordering[Boundary[T]]): Interval[T] =
+  def leftClosed[T](a: T)(using Ordering[Boundary[T]]): Interval[T] =
     proper(Boundary.Left(Some(a), true), Boundary.Right[T](None, false))
 
   /**
@@ -218,7 +218,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def rightOpen[T: Domain](b: T)(using Ordering[Boundary[T]]): Interval[T] =
+  def rightOpen[T](b: T)(using Ordering[Boundary[T]]): Interval[T] =
     proper(Boundary.Left[T](None, false), Boundary.Right(Some(b), false))
 
   /**
@@ -229,7 +229,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def rightClosed[T: Domain](b: T)(using Ordering[Boundary[T]]): Interval[T] =
+  def rightClosed[T](b: T)(using Ordering[Boundary[T]]): Interval[T] =
     proper(Boundary.Left[T](None, false), Boundary.Right(Some(b), true))
 
   /**
@@ -240,7 +240,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftClosedRightOpen[T: Domain](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
+  def leftClosedRightOpen[T](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
     proper(Boundary.Left[T](Some(a), true), Boundary.Right(Some(b), false))
 
   /**
@@ -251,39 +251,41 @@ object Interval:
    * @return
    *   a new interval
    */
-  def leftOpenRightClosed[T: Domain](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
+  def leftOpenRightClosed[T](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
     proper(Boundary.Left[T](Some(a), false), Boundary.Right(Some(b), true))
 
-  // /**
-  //  * Make an arbitraty interval
-  //  *
-  //  * @param a
-  //  *   left boundary
-  //  * @param b
-  //  *   right boundary
-  //  * @param isIncludeA
-  //  *   whether to include left boundary in the interval or not
-  //  * @param isIncludeB
-  //  *   whether to include right boundary in the interval or not
-  //  * @return
-  //  */
-  // def make[T: Domain](a: Option[T], b: Option[T], isIncludeA: Boolean, isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-  //   val ba = Boundary.Left(a, isIncludeA)
-  //   val bb = Boundary.Right(b, isIncludeB)
-  //   make(ba, bb)
+  /**
+   * Make an arbitraty interval
+   *
+   * @param a
+   *   left boundary
+   * @param isIncludeA
+   *   whether to include left boundary in the interval or not
+   * @param b
+   *   right boundary
+   * @param isIncludeB
+   *   whether to include right boundary in the interval or not
+   * @return
+   *   a new interval
+   */
+  def make[T](a: Option[T], isIncludeA: Boolean, b: Option[T], isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+    make(Boundary.Left(a, isIncludeA), Boundary.Right(b, isIncludeB))
 
-  // def make[T: Domain](ba: Boundary.Left[T], bb: Boundary.Right[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-  //   (ba.value, bb.value) match
-  //     case (Some(x), Some(y)) =>
-  //       if bOrd.equiv(ba, bb) then degenerate(x)
-  //       else if bOrd.lt(bb, ba) then empty[T]
-  //       else proper(ba.value, bb.value, ba.isInclude, bb.isInclude)
-  //     case _ =>
-  //       proper(ba.value, bb.value, ba.isInclude, bb.isInclude)
-
-//     // import com.github.gchudnov.mtg.Show.*
-
-//     // // TODO: make the constructor private and extract the require ???
-
-//     // // The endpoint relation left (a-) < right (a+) is required for a proper interval
-//     // // require(bOrd.lt(left, right), s"${left.show},${right.show}: left boundary must be less than the right boundary")
+  /**
+   * Make an arbitraty interval
+   *
+   * @param a
+   *   left boundary
+   * @param b
+   *   right boundary
+   * @return
+   *   a new interval
+   */
+  def make[T](ba: Boundary.Left[T], bb: Boundary.Right[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+    (ba.value, bb.value) match
+      case (Some(x), Some(y)) =>
+        if bOrd.equiv(ba, bb) then degenerate(x)
+        else if bOrd.lt(bb, ba) then ??? // empty[T]
+        else proper(ba, bb)
+      case _ =>
+        proper(ba, bb)

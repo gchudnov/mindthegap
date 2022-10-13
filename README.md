@@ -23,6 +23,14 @@
   - RightClosed | `(-∞, b] = {x | x < b}`
 - Unbounded | `(-∞, +∞) = R`
 
+### Make Factory
+
+`Interval.make` can be used to create an empty, degenerate or a proper interval.
+
+```scala
+
+```
+
 ### Empty
 
 ```text
