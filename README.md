@@ -23,13 +23,25 @@
   - RightClosed | `(-∞, b] = {x | x < b}`
 - Unbounded | `(-∞, +∞) = R`
 
-### Make Factory
+### Factory Method
 
-`Interval.make` can be used to create an empty, degenerate or a proper interval.
+`Interval.make` is a universal method that can be used to create an *empty*, *degenerate* or a *proper* intervals.
 
 ```scala
+// empty ∅
+val a1 = Interval.make(5, true, 2, false)
+val a2 = Interval.make(Boundary.Left(5, true), Boundary.Right(2, false))
 
+// degenerate {5}
+val b1 = Interval.make(5, true, 5, true)
+val b2 = Interval.make(Boundary.Left(5, true), Boundary.Right(5, true))
+
+// proper [1, 5]
+val c1 = Interval.make(1, true, 5, true)
+val c2 = Interval.make(Boundary.Left(1, true), Boundary.Right(5, true))
 ```
+
+In addition, there are a number of specialized methods for interval creation.
 
 ### Empty
 
