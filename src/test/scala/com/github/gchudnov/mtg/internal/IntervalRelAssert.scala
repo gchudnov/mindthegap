@@ -6,25 +6,25 @@ import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Boundary
 import com.github.gchudnov.mtg.Interval
 
-trait IntervalRelAssert {}
+trait IntervalRelAssert:
 
-//   private def makeIntervalRelationsCheckMap[T: Domain](using bOrd: Ordering[Boundary[T]]) =
-//     Map(
-//       "b" -> ((xx: Interval[T], yy: Interval[T]) => xx.before(yy)),
-//       "B" -> ((xx: Interval[T], yy: Interval[T]) => xx.after(yy)),
-//       "m" -> ((xx: Interval[T], yy: Interval[T]) => xx.meets(yy)),
-//       "M" -> ((xx: Interval[T], yy: Interval[T]) => xx.isMetBy(yy)),
-//       "o" -> ((xx: Interval[T], yy: Interval[T]) => xx.overlaps(yy)),
-//       "O" -> ((xx: Interval[T], yy: Interval[T]) => xx.isOverlapedBy(yy)),
-//       "d" -> ((xx: Interval[T], yy: Interval[T]) => xx.during(yy)),
-//       "D" -> ((xx: Interval[T], yy: Interval[T]) => xx.contains(yy)),
-//       "s" -> ((xx: Interval[T], yy: Interval[T]) => xx.starts(yy)),
-//       "S" -> ((xx: Interval[T], yy: Interval[T]) => xx.isStartedBy(yy)),
-//       "f" -> ((xx: Interval[T], yy: Interval[T]) => xx.finishes(yy)),
-//       "F" -> ((xx: Interval[T], yy: Interval[T]) => xx.isFinishedBy(yy)),
-//       "e" -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy)),
-//       "E" -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy))
-//     )
+  private def makeIntervalRelationsCheckMap[T: Domain](using bOrd: Ordering[Boundary[T]]) =
+    Map(
+      "b" -> ((xx: Interval[T], yy: Interval[T]) => xx.before(yy)),
+      "B" -> ((xx: Interval[T], yy: Interval[T]) => xx.after(yy))
+      // "m" -> ((xx: Interval[T], yy: Interval[T]) => xx.meets(yy)),
+      // "M" -> ((xx: Interval[T], yy: Interval[T]) => xx.isMetBy(yy)),
+      // "o" -> ((xx: Interval[T], yy: Interval[T]) => xx.overlaps(yy)),
+      // "O" -> ((xx: Interval[T], yy: Interval[T]) => xx.isOverlapedBy(yy)),
+      // "d" -> ((xx: Interval[T], yy: Interval[T]) => xx.during(yy)),
+      // "D" -> ((xx: Interval[T], yy: Interval[T]) => xx.contains(yy)),
+      // "s" -> ((xx: Interval[T], yy: Interval[T]) => xx.starts(yy)),
+      // "S" -> ((xx: Interval[T], yy: Interval[T]) => xx.isStartedBy(yy)),
+      // "f" -> ((xx: Interval[T], yy: Interval[T]) => xx.finishes(yy)),
+      // "F" -> ((xx: Interval[T], yy: Interval[T]) => xx.isFinishedBy(yy)),
+      // "e" -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy)),
+      // "E" -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy))
+    )
 
 //   /**
 //    * Finds name of the relations two itervals are satisfying
@@ -72,4 +72,4 @@ trait IntervalRelAssert {}
 //     if isNonEmpty && trues.size != 1 then
 //       fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected only one relation")
 
-// object IntervalRelAssert extends IntervalRelAssert
+object IntervalRelAssert extends IntervalRelAssert

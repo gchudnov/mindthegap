@@ -1,62 +1,50 @@
 package com.github.gchudnov.mtg.internal
 
-object AAA {}
-
-// import com.github.gchudnov.mtg.Boundary
-// import com.github.gchudnov.mtg.BoundaryOrdering
-// import com.github.gchudnov.mtg.Degenerate
-// import com.github.gchudnov.mtg.Domain
-// import com.github.gchudnov.mtg.Interval
-// import com.github.gchudnov.mtg.Proper
+import com.github.gchudnov.mtg.Boundary
+import com.github.gchudnov.mtg.Interval
 
 // TODO: review the file, extract useful portions to readme, check if we need to import something from Relation.scala
 
 /**
  * Interval Relations
  */
-// trait IntervalRel[+T]:
-//   a: Interval[T] =>
+transparent trait IntervalRel[+T]:
+  a: Interval[T] =>
 
-// /**
-//  * Before, Preceeds (b)
-//  *
-//  * {{{
-//  *   PP (Point-Point):
-//  *   {p}; {q}
-//  *   p < q
-//  *
-//  *   PI (Point-Interval):
-//  *   {p}; {a-, a+}
-//  *   p < a-
-//  *
-//  *   II (Interval-Interval):
-//  *   {a-, a+}; {b-, b+}
-//  *   a- < b-
-//  *   a- < b+
-//  *   a+ < b-
-//  *   a+ < b+
-//  *
-//  *   a- < a+ < b- < b+
-//  * }}}
-//  */
-// final def before[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   (a, b) match
-//     case (Degenerate(_), Degenerate(_)) =>
-//       bOrd.lt(a.left, b.left)
-//     case (Degenerate(_), Proper(_, _)) =>
-//       bOrd.lt(a.left, b.left)
-//     case (Proper(_, _), Degenerate(_)) =>
-//       bOrd.lt(a.right, b.left)
-//     case (Proper(_, _), Proper(_, _)) =>
-//       bOrd.lt(a.right, b.left)
-//     case (_, _) =>
-//       false
+  /**
+   * Before, Preceeds (b)
+   *
+   * {{{
+   *   PP (Point-Point):
+   *   {p}; {q}
+   *   p < q
+   *
+   *   PI (Point-Interval):
+   *   {p}; {a-, a+}
+   *   p < a-
+   *
+   *   II (Interval-Interval):
+   *   {a-, a+}; {b-, b+}
+   *   a- < b-
+   *   a- < b+
+   *   a+ < b-
+   *   a+ < b+
+   *
+   *   a- < a+ < b- < b+
+   * }}}
+   */
+  final def before[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    if a.isDegenrate && b.isDegenrate then bOrd.lt(a.left, b.left)
+    else if a.isDegenrate && b.isProper then bOrd.lt(a.left, b.left)
+    else if a.isProper && b.isDegenrate then bOrd.lt(a.right, b.left)
+    else if a.isProper && b.isProper then bOrd.lt(a.right, b.left)
+    else false
 
-// /**
-//  * After, IsPreceededBy (B)
-//  */
-// final def after[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   b.before(a)
+  /**
+   * After, IsPreceededBy (B)
+   */
+  final def after[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    b.before(a)
 
 // /**
 //  * Meets (m)

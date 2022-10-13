@@ -23,6 +23,14 @@
   - RightClosed | `(-∞, b] = {x | x < b}`
 - Unbounded | `(-∞, +∞) = R`
 
+## Usage
+
+```
+TODO: add imports
+```
+
+TODO: describe the need of `Domain`. create a section later that explains it.
+
 ### Factory Method
 
 `Interval.make` is a universal method that can be used to create an *empty*, *degenerate* or a *proper* intervals.

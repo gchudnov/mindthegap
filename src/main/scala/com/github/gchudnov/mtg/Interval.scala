@@ -1,6 +1,6 @@
 package com.github.gchudnov.mtg
 
-// import com.github.gchudnov.mtg.internal.IntervalRel
+import com.github.gchudnov.mtg.internal.IntervalRel
 
 /**
  * An Interval
@@ -48,7 +48,7 @@ package com.github.gchudnov.mtg
  * }}}
  */
 
-enum Interval[+T]:
+enum Interval[+T] extends IntervalRel[T]:
   case Empty extends Interval[Nothing]
   case Degenerate(a: T)
   case Proper[T](l: Boundary.Left[T], r: Boundary.Right[T]) extends Interval[T]
@@ -114,7 +114,7 @@ object Interval:
   /**
    * ∅
    */
-  def empty[T]: Interval[Nothing] =
+  def empty[T]: Interval[T] =
     Interval.Empty
 
   /**
