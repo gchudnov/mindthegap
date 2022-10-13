@@ -3,8 +3,6 @@ package com.github.gchudnov.mtg.internal
 import com.github.gchudnov.mtg.Boundary
 import com.github.gchudnov.mtg.Interval
 
-// TODO: review the file, extract useful portions to readme, check if we need to import something from Relation.scala
-
 /**
  * Interval Relations
  */
@@ -34,11 +32,9 @@ transparent trait IntervalRel[+T]:
    * }}}
    */
   final def before[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    if a.isDegenrate && b.isDegenrate then bOrd.lt(a.left, b.left)
-    else if a.isDegenrate && b.isProper then bOrd.lt(a.left, b.left)
-    else if a.isProper && b.isDegenrate then bOrd.lt(a.right, b.left)
-    else if a.isProper && b.isProper then bOrd.lt(a.right, b.left)
-    else false
+    if a.isEmpty || b.isEmpty then false
+    else if a.isDegenrate then bOrd.lt(a.left, b.left)
+    else bOrd.lt(a.right, b.left) // a.isProper
 
   /**
    * After, IsPreceededBy (B)
@@ -46,28 +42,28 @@ transparent trait IntervalRel[+T]:
   final def after[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.before(a)
 
-// /**
-//  * Meets (m)
-//  *
-//  * {{{
-//  *   II (Interval-Interval):
-//  *   {a-, a+}; {b-; b+}
-//  *   a- < b-
-//  *   a- < b+
-//  *   a+ = b-
-//  *   a+ < b+
-//  *
-//  *   a- < a+ = b- < b+
-//  * }}}
-//  */
-// final def meets[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   a.isProper && b.isProper && bOrd.equiv(a.right, b.left)
+  /**
+   * Meets (m)
+   *
+   * {{{
+   *   II (Interval-Interval):
+   *   {a-, a+}; {b-; b+}
+   *   a- < b-
+   *   a- < b+
+   *   a+ = b-
+   *   a+ < b+
+   *
+   *   a- < a+ = b- < b+
+   * }}}
+   */
+  final def meets[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.isProper && b.isProper && bOrd.equiv(a.right, b.left)
 
-// /**
-//  * IsMetBy (M)
-//  */
-// final def isMetBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   b.meets(a)
+  /**
+   * IsMetBy (M)
+   */
+  final def isMetBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    b.meets(a)
 
 // /**
 //  * Overlaps (o)

@@ -162,11 +162,13 @@ A relation between a pair of intervals can be checked.
 ```
 
 ```scala
-// before
+// before, after
 Interval.open(1, 4).before(Interval.open(3, 6)) // true
+Interval.open(3, 6).after(Interval.open(1, 4))  // true
 
-// after
-Interval.open(3, 6).after(Interval.open(1, 4)) // true
+// meets, isMetBy
+Interval.closed(1, 5).meets(Interval.closed(5, 10))   // true
+Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) // true
 ```
 
 ## Show
