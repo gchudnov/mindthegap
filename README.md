@@ -45,21 +45,15 @@ In addition, there are a number of specialized methods for interval creation.
 
 ### Empty
 
-```text
-[b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
-```
-
 ```scala
+// [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
 Interval.empty[Int]
 ```
 
 ### Degenerate
 
-```text
-[a, a] = {a}
-```
-
 ```scala
+// [a, a] = {a}
 Interval.degenerate(5)
 ```
 
@@ -67,41 +61,29 @@ Interval.degenerate(5)
 
 #### Open
 
-```text
-(a, b) = {x | a < x < b}
-```
-
 ```scala
+// (a, b) = {x | a < x < b}
 Interval.open(1, 5)
 ```
 
 #### Closed
 
-```text
-[a, b] = {x | a <= x <= b}
-```
-
 ```scala
+// [a, b] = {x | a <= x <= b}
 Interval.closed(1, 5)
 ```
 
 #### LeftClosedRightOpen
 
-```text
-[a, b) = {x | a <= x < b}
-```
-
 ```scala
+// [a, b) = {x | a <= x < b}
 Interval.leftClosedRightOpen(1, 10)
 ```
 
 #### LeftOpenRightClosed
 
-```text
-(a, b] = {x | a < x <= b}
-```
-
 ```scala
+// (a, b] = {x | a < x <= b}
 Interval.leftOpenRightClosed(1, 10)
 ```
 
@@ -109,21 +91,15 @@ Interval.leftOpenRightClosed(1, 10)
 
 #### LeftOpen
 
-```text
-(a, +∞) = {x | x > a}
-```
-
 ```scala
+// (a, +∞) = {x | x > a}
 Interval.leftOpen(1)
 ```
 
 #### LeftClosed
 
-```text
-[a, +∞) = {x | x >= a}
-```
-
 ```scala
+// [a, +∞) = {x | x >= a}
 Interval.leftClosed(5)
 ```
 
@@ -131,31 +107,22 @@ Interval.leftClosed(5)
 
 #### RightOpen
 
-```text
-(-∞, b) = {x | x < b}
-```
-
 ```scala
+// (-∞, b) = {x | x < b}
 Interval.rightOpen(1)
 ```
 
 #### RightClosed
 
-```text
-(-∞, b] = {x | x < b}
-```
-
 ```scala
+// (-∞, b] = {x | x < b}
 Interval.rightClosed(5)
 ```
 
 ### Unbounded
 
-```text
-(-∞, +∞) = R
-```
-
 ```scala
+// (-∞, +∞) = R
 Interval.unbounded[Int]
 ```
 
@@ -166,11 +133,13 @@ To display an interval, `Show` can be used:
 ```scala
 import com.github.gchudnov.mtg.Show.given
 
-val a = Interval.proper(None, Some(2), true, true)
-val e = Interval.empty[Int]
+val a = Interval.empty[Int]
+val b = Interval.degenerate(5)
+val c = Interval.proper(None, true, Some(2), false)
 
-a.show // [-∞,2]
-e.show // ∅
+a.show // ∅
+b.show // {5}
+c.show // [-∞,2)
 ```
 
 ## Ordering
