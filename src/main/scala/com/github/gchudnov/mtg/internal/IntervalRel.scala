@@ -140,38 +140,32 @@ transparent trait IntervalRel[+T]:
   final def isStartedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.starts(a)
 
-// /**
-//  * Finishes (f)
-//  *
-//  * {{{
-//  *   PI (Point-Interval):
-//  *   {p}; {a-, a+}
-//  *   p = a+
-//  *
-//  *   II (Interval-Interval):
-//  *   {a-, a+}; {b-; b+}
-//  *   a- > b-
-//  *   a- < b+
-//  *   a+ > b-
-//  *   a+ = b+
-//  *
-//  *   b- < a- < a+ = b+
-//  * }}}
-//  */
-// final def finishes[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   (a, b) match
-//     case (Degenerate(_), Proper(_, _)) =>
-//       bOrd.equiv(a.right, b.right)
-//     case (Proper(_, _), Proper(_, _)) =>
-//       bOrd.equiv(a.right, b.right) && bOrd.lt(b.left, a.left)
-//     case (_, _) =>
-//       false
+  /**
+   * Finishes (f)
+   *
+   * {{{
+   *   PI (Point-Interval):
+   *   {p}; {a-, a+}
+   *   p = a+
+   *
+   *   II (Interval-Interval):
+   *   {a-, a+}; {b-; b+}
+   *   a- > b-
+   *   a- < b+
+   *   a+ > b-
+   *   a+ = b+
+   *
+   *   b- < a- < a+ = b+
+   * }}}
+   */
+  final def finishes[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.nonEmpty && b.isProper && bOrd.equiv(a.right, b.right) && bOrd.lt(b.left, a.left)
 
-// /**
-//  * IsFinishedBy (F)
-//  */
-// final def isFinishedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   b.finishes(a)
+  /**
+   * IsFinishedBy (F)
+   */
+  final def isFinishedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    b.finishes(a)
 
 // /**
 //  * Equals (e)

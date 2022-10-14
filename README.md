@@ -173,6 +173,14 @@ Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) // true
 // overlaps, isOverlappedBy
 Interval.open(1, 10).overlaps(Interval.open(5, 20))      // true
 Interval.open(5, 30).isOverlapedBy(Interval.open(1, 10)) // true
+
+// starts, isSatrtedBy
+Interval.closed(1, 2).starts(Interval.closed(1, 10))      // true
+Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) // true
+
+// finishes, isFinishedBy
+Interval.leftClosedRightOpen(0, 5).finishes(Interval.leftClosedRightOpen(-1, 5))     // true
+Interval.leftClosedRightOpen(-1, 5).isFinishedBy(Interval.leftClosedRightOpen(0, 5)) // true
 ```
 
 ## Show
