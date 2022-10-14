@@ -224,6 +224,19 @@ Interval.open(2, 7).isSuperset(Interval.open(4, 7))  // true
 Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
 ```
 
+## IsDisjoint
+
+```text
+  isDisjoint                AAAAA
+  before(a,b)      b        :   : BBBBB  |  a+ < b-
+  after(a,b)       B  BBBBB :   :        |  a- > b+
+```
+
+```scala
+Interval.open(1, 4).isDisjoint(Interval.open(3, 6)) // true
+Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) // true
+```
+
 ## Show
 
 To display an interval, `Show` can be used:

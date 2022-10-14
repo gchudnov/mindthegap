@@ -191,19 +191,6 @@ transparent trait BasicRel[+T]:
     a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
 
 // /**
-//  * Checks if there A and B are disjoint.
-//  *
-//  * A and B are disjoint if A does not intersect B.
-//  *
-//  * {{{
-//  *    before | b
-//  *    after  | B
-//  * }}}
-//  */
-// final def isDisjoint[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   a.before(b) || a.after(b)
-
-// /**
 //  * Checks whether A is less-or-equal to B
 //  *
 //  * A ≤ B

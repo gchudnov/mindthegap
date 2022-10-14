@@ -50,3 +50,21 @@ transparent trait ExtendedRel[+T]:
    */
   final def isSuperset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.gteq(b.left, a.left) && bOrd.lteq(b.right, a.right)
+
+  /**
+   * Checks if there A and B are disjoint.
+   *
+   * A and B are disjoint if A does not intersect B.
+   *
+   * {{{
+   *   a+ < b-
+   *   a- > b+
+   * }}}
+   *
+   * {{{
+   *    before | b
+   *    after  | B
+   * }}}
+   */
+  final def isDisjoint[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.nonEmpty && b.nonEmpty && (bOrd.lt(a.right, b.left) || bOrd.gt(a.left, b.right))
