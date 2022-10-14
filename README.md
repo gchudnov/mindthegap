@@ -181,6 +181,9 @@ Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) // true
 // finishes, isFinishedBy
 Interval.leftClosedRightOpen(0, 5).finishes(Interval.leftClosedRightOpen(-1, 5))     // true
 Interval.leftClosedRightOpen(-1, 5).isFinishedBy(Interval.leftClosedRightOpen(0, 5)) // true
+
+// equalsTo
+Interval.open(4, 7).equalsTo(Interval.open(4, 7)) // true
 ```
 
 ## Show

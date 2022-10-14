@@ -167,28 +167,28 @@ transparent trait IntervalRel[+T]:
   final def isFinishedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.finishes(a)
 
-// /**
-//  * Equals (e)
-//  *
-//  * A = B
-//  *
-//  * {{{
-//  *   PP (Point-Point):
-//  *   {p}; {q}
-//  *   p = q
-//  *
-//  *   II (Interval-Interval):
-//  *   {a-, a+}; {b-; b+}
-//  *   a- = b-
-//  *   a- < b+
-//  *   a+ > b-
-//  *   a+ = b+
-//  *
-//  *   a- = b- < a+ = b+
-//  * }}}
-//  */
-// final def equalsTo[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
+  /**
+   * Equals (e)
+   *
+   * A = B
+   *
+   * {{{
+   *   PP (Point-Point):
+   *   {p}; {q}
+   *   p = q
+   *
+   *   II (Interval-Interval):
+   *   {a-, a+}; {b-; b+}
+   *   a- = b-
+   *   a- < b+
+   *   a+ > b-
+   *   a+ = b+
+   *
+   *   a- = b- < a+ = b+
+   * }}}
+   */
+  final def equalsTo[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
 
 // /**
 //  * IsSubset
