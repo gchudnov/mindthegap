@@ -213,27 +213,6 @@ transparent trait BasicRel[+T]:
 //   a.nonEmpty && b.nonEmpty && bOrd.lteq(a.left, b.left) && bOrd.lteq(a.right, b.right)
 
 // /**
-//  * Less
-//  *
-//  * Checks whether A less-than B (Order Relation)
-//  *
-//  * A < B
-//  *
-//  * {{{
-//  *   a- < b-
-//  *   a+ < b+
-//  * }}}
-//  *
-//  * {{{
-//  *   - before         | b
-//  *   - meets          | m
-//  *   - overlaps       | o
-//  * }}}
-//  */
-// final def isLess[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   a.nonEmpty && b.nonEmpty && bOrd.lt(a.left, b.left) && bOrd.lt(a.right, b.right)
-
-// /**
 //  * Checks whether A greater-than-or-equal-to B (Order Relation)
 //  *
 //  * A ≥ B

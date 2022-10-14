@@ -52,6 +52,8 @@ transparent trait ExtendedRel[+T]:
     a.nonEmpty && b.nonEmpty && bOrd.gteq(b.left, a.left) && bOrd.lteq(b.right, a.right)
 
   /**
+   * IsDisjoint
+   *
    * Checks if there A and B are disjoint.
    *
    * A and B are disjoint if A does not intersect B.
@@ -68,3 +70,24 @@ transparent trait ExtendedRel[+T]:
    */
   final def isDisjoint[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && (bOrd.lt(a.right, b.left) || bOrd.gt(a.left, b.right))
+
+  /**
+   * IsLess
+   *
+   * Checks whether A less-than B (Order Relation)
+   *
+   * A < B
+   *
+   * {{{
+   *   a- < b-
+   *   a+ < b+
+   * }}}
+   *
+   * {{{
+   *   - before         | b
+   *   - meets          | m
+   *   - overlaps       | o
+   * }}}
+   */
+  final def isLess[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.nonEmpty && b.nonEmpty && bOrd.lt(a.left, b.left) && bOrd.lt(a.right, b.right)
