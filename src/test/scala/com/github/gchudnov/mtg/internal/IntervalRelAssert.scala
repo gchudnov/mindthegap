@@ -7,30 +7,30 @@ import com.github.gchudnov.mtg.Boundary
 import com.github.gchudnov.mtg.Interval
 
 trait IntervalRelAssert:
+  import IntervalRelAssert.*
 
-  private def makeIntervalRelationsCheckMap[T: Domain](using bOrd: Ordering[Boundary[T]]) =
+  private def relFnMap[T: Domain](using bOrd: Ordering[Boundary[T]]) =
     Map(
-      "b" -> ((xx: Interval[T], yy: Interval[T]) => xx.before(yy)),
-      "B" -> ((xx: Interval[T], yy: Interval[T]) => xx.after(yy))
-      // "m" -> ((xx: Interval[T], yy: Interval[T]) => xx.meets(yy)),
-      // "M" -> ((xx: Interval[T], yy: Interval[T]) => xx.isMetBy(yy)),
-      // "o" -> ((xx: Interval[T], yy: Interval[T]) => xx.overlaps(yy)),
-      // "O" -> ((xx: Interval[T], yy: Interval[T]) => xx.isOverlapedBy(yy)),
-      // "d" -> ((xx: Interval[T], yy: Interval[T]) => xx.during(yy)),
-      // "D" -> ((xx: Interval[T], yy: Interval[T]) => xx.contains(yy)),
-      // "s" -> ((xx: Interval[T], yy: Interval[T]) => xx.starts(yy)),
-      // "S" -> ((xx: Interval[T], yy: Interval[T]) => xx.isStartedBy(yy)),
-      // "f" -> ((xx: Interval[T], yy: Interval[T]) => xx.finishes(yy)),
-      // "F" -> ((xx: Interval[T], yy: Interval[T]) => xx.isFinishedBy(yy)),
-      // "e" -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy)),
-      // "E" -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy))
+      Rel.Before        -> ((xx: Interval[T], yy: Interval[T]) => xx.before(yy)),
+      Rel.After         -> ((xx: Interval[T], yy: Interval[T]) => xx.after(yy)),
+      Rel.Meets         -> ((xx: Interval[T], yy: Interval[T]) => xx.meets(yy)),
+      Rel.IsMetBy       -> ((xx: Interval[T], yy: Interval[T]) => xx.isMetBy(yy)),
+      Rel.Overlaps      -> ((xx: Interval[T], yy: Interval[T]) => xx.overlaps(yy)),
+      Rel.IsOverlapedBy -> ((xx: Interval[T], yy: Interval[T]) => xx.isOverlapedBy(yy)),
+      Rel.During        -> ((xx: Interval[T], yy: Interval[T]) => xx.during(yy)),
+      Rel.Contains      -> ((xx: Interval[T], yy: Interval[T]) => xx.contains(yy)),
+      Rel.Starts        -> ((xx: Interval[T], yy: Interval[T]) => xx.starts(yy)),
+      Rel.IsStartedBy   -> ((xx: Interval[T], yy: Interval[T]) => xx.isStartedBy(yy)),
+      Rel.Finishes      -> ((xx: Interval[T], yy: Interval[T]) => xx.finishes(yy)),
+      Rel.IsFinishedBy  -> ((xx: Interval[T], yy: Interval[T]) => xx.isFinishedBy(yy)),
+      Rel.EqualsTo      -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy))
     )
 
 //   /**
 //    * Finds name of the relations two itervals are satisfying
 //    */
 //   def findSatisfyRelations[T: Domain](xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Set[String] =
-//     val relations = makeIntervalRelationsCheckMap[T]
+//     val relations = relFnMap[T]
 //     val satisfied = relations.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>
 //       val res = fn(xx, yy)
 //       if res then acc + k
@@ -47,7 +47,7 @@ trait IntervalRelAssert:
 //       )
 
 //   def assertFwdBck[T: Ordering: Domain](r: String, xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
-//     val relations = makeIntervalRelationsCheckMap[T]
+//     val relations = relFnMap[T]
 
 //     val fk = r
 //     val bk = r.map(_.toUpper)
@@ -72,4 +72,19 @@ trait IntervalRelAssert:
 //     if isNonEmpty && trues.size != 1 then
 //       fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected only one relation")
 
-object IntervalRelAssert extends IntervalRelAssert
+object IntervalRelAssert extends IntervalRelAssert:
+
+  enum Rel(name: String):
+    case Before        extends Rel("b")
+    case After         extends Rel("B")
+    case Meets         extends Rel("m")
+    case IsMetBy       extends Rel("M")
+    case Overlaps      extends Rel("o")
+    case IsOverlapedBy extends Rel("O")
+    case During        extends Rel("d")
+    case Contains      extends Rel("D")
+    case Starts        extends Rel("s")
+    case IsStartedBy   extends Rel("S")
+    case Finishes      extends Rel("f")
+    case IsFinishedBy  extends Rel("F")
+    case EqualsTo      extends Rel("e")
