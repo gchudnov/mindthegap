@@ -1,6 +1,7 @@
 package com.github.gchudnov.mtg
+
+import com.github.gchudnov.mtg.*
 import com.github.gchudnov.mtg.Arbitraries.*
-import com.github.gchudnov.mtg.Domains.given
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
@@ -13,8 +14,6 @@ final class IntervalSpec extends TestSpec:
   given intProb: IntProb   = intProb226
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
-
-  given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
 
   "Interval" when {
 
@@ -31,10 +30,10 @@ final class IntervalSpec extends TestSpec:
        */
       "create intervals" in {
         forAll(genOneIntTuple) { case ((ox, oy), ix, iy) =>
-          val actual = Interval.make(ox, oy, ix, iy)
+          val actual = Interval.make(ox, ix, oy, iy)
 
           actual match
-            case Empty =>
+            case Interval.Empty =>
               actual.isEmpty mustBe (true)
               actual.nonEmpty mustBe (false)
               actual.isDegenrate mustBe (false)
@@ -42,7 +41,7 @@ final class IntervalSpec extends TestSpec:
               actual.isProper mustBe (false)
               actual.nonProper mustBe (true)
 
-            case ab @ Degenerate(_) =>
+            case Interval.Degenerate(_) =>
               actual.isEmpty mustBe (false)
               actual.nonEmpty mustBe (true)
               actual.isDegenrate mustBe (true)
@@ -50,9 +49,9 @@ final class IntervalSpec extends TestSpec:
               actual.isProper mustBe (false)
               actual.nonProper mustBe (true)
 
-              bOrd.equiv(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe (true)
+              summon[Ordering[Boundary[Int]]].equiv(Boundary.Left(ox, ix), Boundary.Right(oy, iy)) mustBe (true)
 
-            case Proper(_, _) =>
+            case Interval.Proper(_, _) =>
               actual.isEmpty mustBe (false)
               actual.nonEmpty mustBe (true)
               actual.isDegenrate mustBe (false)
@@ -60,24 +59,33 @@ final class IntervalSpec extends TestSpec:
               actual.isProper mustBe (true)
               actual.nonProper mustBe (false)
 
-              bOrd.lt(LeftBoundary(ox, ix), RightBoundary(oy, iy)) mustBe (true)
+              summon[Ordering[Boundary[Int]]].lt(Boundary.Left(ox, ix), Boundary.Right(oy, iy)) mustBe (true)
         }
       }
 
-      "edge cases" in {
-        Interval.make(Some(0), Some(0), true, false).isEmpty mustBe (true)
+      "handle edge cases" in {
+        // [0, 0)
+        Interval.make(Some(0), true, Some(0), false).isEmpty mustBe (true)
+
+        // [-inf, +inf]
+        Interval.make[Int](None, true, None, true).isEmpty mustBe (false)
       }
     }
 
-    "create" should {
+    "factory methods" should {
 
-      "construct an empty interval" in {
+      "construct an empty interval with type parameter" in {
         val a = Interval.empty[Int]
 
         a.isEmpty mustBe (true)
         a.isDegenrate mustBe (false)
         a.isProper mustBe (false)
 
+        a.nonEmpty mustBe (false)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (true)
+
+        a.isBounded mustBe (false)
         a.isUnbounded mustBe (false)
 
         assertThrows[NoSuchElementException] {
@@ -89,20 +97,27 @@ final class IntervalSpec extends TestSpec:
         }
       }
 
-      "construct an unbounded interval" in {
-        val a = Interval.unbounded[Int]
+      "construct an empty interval without type parameter" in {
+        val a = Interval.empty
 
-        a.isEmpty mustBe (false)
+        a.isEmpty mustBe (true)
         a.isDegenrate mustBe (false)
-        a.isProper mustBe (true)
+        a.isProper mustBe (false)
 
-        a.isUnbounded mustBe (true)
+        a.nonEmpty mustBe (false)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (true)
 
-        a.left.isBounded mustBe (false)
-        a.left.isUnbounded mustBe (true)
+        a.isBounded mustBe (false)
+        a.isUnbounded mustBe (false)
 
-        a.right.isBounded mustBe (false)
-        a.right.isUnbounded mustBe (true)
+        assertThrows[NoSuchElementException] {
+          a.left
+        }
+
+        assertThrows[NoSuchElementException] {
+          a.right
+        }
       }
 
       "construct a degenerate interval" in {
@@ -112,6 +127,11 @@ final class IntervalSpec extends TestSpec:
         a.isDegenrate mustBe (true)
         a.isProper mustBe (false)
 
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (false)
+        a.nonProper mustBe (true)
+
+        a.isBounded mustBe (true)
         a.isUnbounded mustBe (false)
 
         a.left.isBounded mustBe (true)
@@ -122,12 +142,17 @@ final class IntervalSpec extends TestSpec:
       }
 
       "construct a proper interval" in {
-        val a = Interval.proper(Some(1), Some(5), false, false)
+        val a = Interval.proper(Some(1), false, Some(5), false)
 
         a.isEmpty mustBe (false)
         a.isDegenrate mustBe (false)
         a.isProper mustBe (true)
 
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (true)
         a.isUnbounded mustBe (false)
 
         a.left.isBounded mustBe (true)
@@ -137,6 +162,48 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (false)
       }
 
+      "construct a proper interval with left and right boundaries" in {
+        val a = Interval.proper(Boundary.Left(Some(1), true), Boundary.Right(Some(5), true))
+
+        a.isEmpty mustBe (false)
+        a.isDegenrate mustBe (false)
+        a.isProper mustBe (true)
+
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (true)
+        a.isUnbounded mustBe (false)
+
+        a.left.isBounded mustBe (true)
+        a.left.isUnbounded mustBe (false)
+
+        a.right.isBounded mustBe (true)
+        a.right.isUnbounded mustBe (false)
+      }
+
+      "construct an unbounded interval" in {
+        val a = Interval.unbounded[Int]
+
+        a.isEmpty mustBe (false)
+        a.isDegenrate mustBe (false)
+        a.isProper mustBe (true)
+
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (false)
+        a.isUnbounded mustBe (true)
+
+        a.left.isBounded mustBe (false)
+        a.left.isUnbounded mustBe (true)
+
+        a.right.isBounded mustBe (false)
+        a.right.isUnbounded mustBe (true)
+      }
+
       "construct an open interval" in {
         val a = Interval.open(1, 5)
 
@@ -144,6 +211,11 @@ final class IntervalSpec extends TestSpec:
         a.isDegenrate mustBe (false)
         a.isProper mustBe (true)
 
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (true)
         a.isUnbounded mustBe (false)
 
         a.left.isBounded mustBe (true)
@@ -160,6 +232,11 @@ final class IntervalSpec extends TestSpec:
         a.isDegenrate mustBe (false)
         a.isProper mustBe (true)
 
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (true)
         a.isUnbounded mustBe (false)
 
         a.left.isBounded mustBe (true)
@@ -176,6 +253,11 @@ final class IntervalSpec extends TestSpec:
         a.isDegenrate mustBe (false)
         a.isProper mustBe (true)
 
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (false)
         a.isUnbounded mustBe (false)
 
         a.left.isBounded mustBe (true)
@@ -192,6 +274,11 @@ final class IntervalSpec extends TestSpec:
         a.isDegenrate mustBe (false)
         a.isProper mustBe (true)
 
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (false)
         a.isUnbounded mustBe (false)
 
         a.left.isBounded mustBe (true)
@@ -208,6 +295,11 @@ final class IntervalSpec extends TestSpec:
         a.isDegenrate mustBe (false)
         a.isProper mustBe (true)
 
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (false)
         a.isUnbounded mustBe (false)
 
         a.left.isBounded mustBe (false)
@@ -224,6 +316,11 @@ final class IntervalSpec extends TestSpec:
         a.isDegenrate mustBe (false)
         a.isProper mustBe (true)
 
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (false)
         a.isUnbounded mustBe (false)
 
         a.left.isBounded mustBe (false)
@@ -240,6 +337,11 @@ final class IntervalSpec extends TestSpec:
         a.isDegenrate mustBe (false)
         a.isProper mustBe (true)
 
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (true)
         a.isUnbounded mustBe (false)
 
         a.left.isBounded mustBe (true)
@@ -256,6 +358,11 @@ final class IntervalSpec extends TestSpec:
         a.isDegenrate mustBe (false)
         a.isProper mustBe (true)
 
+        a.nonEmpty mustBe (true)
+        a.nonDegenerate mustBe (true)
+        a.nonProper mustBe (false)
+
+        a.isBounded mustBe (true)
         a.isUnbounded mustBe (false)
 
         a.left.isBounded mustBe (true)

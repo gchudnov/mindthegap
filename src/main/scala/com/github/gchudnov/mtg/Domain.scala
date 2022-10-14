@@ -23,3 +23,5 @@ trait Domain[T]:
    *   x - epsilon
    */
   def pred(x: T): T
+
+object Domain extends DomainDefaults

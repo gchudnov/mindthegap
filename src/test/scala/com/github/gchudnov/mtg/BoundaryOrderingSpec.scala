@@ -1,171 +1,201 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.Domains
 import com.github.gchudnov.mtg.TestSpec
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 
 final class BoundaryOrderingSpec extends TestSpec:
-  import Domains.integralDomain
 
-  given bOrd: Ordering[Boundary[Int]] = BoundaryOrdering.boundaryOrdering[Int]
+  val bOrd: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
 
   "BoundaryOrdering" when {
-    "(LeftBoundary, LeftBoundary)" should {
+    "(Boundary.Left, Boundary.Left)" should {
       "compare" in {
         // 1, 1
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = true), LeftBoundary[Int](Some(1), isInclude = true)) mustBe (0)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = false), LeftBoundary[Int](Some(1), isInclude = true)) mustBe (1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = true), LeftBoundary[Int](Some(1), isInclude = false)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = false), LeftBoundary[Int](Some(1), isInclude = false)) mustBe (0)
+        bOrd.compare(Boundary.Left[Int](Some(1), true), Boundary.Left[Int](Some(1), true)) mustBe (0)
+        bOrd.compare(Boundary.Left[Int](Some(1), false), Boundary.Left[Int](Some(1), true)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(1), true), Boundary.Left[Int](Some(1), false)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](Some(1), false), Boundary.Left[Int](Some(1), false)) mustBe (0)
 
         // 1, 2
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = true), LeftBoundary[Int](Some(2), isInclude = true)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = false), LeftBoundary[Int](Some(2), isInclude = true)) mustBe (0)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = true), LeftBoundary[Int](Some(2), isInclude = false)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = false), LeftBoundary[Int](Some(2), isInclude = false)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](Some(1), true), Boundary.Left[Int](Some(2), true)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](Some(1), false), Boundary.Left[Int](Some(2), true)) mustBe (0)
+        bOrd.compare(Boundary.Left[Int](Some(1), true), Boundary.Left[Int](Some(2), false)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](Some(1), false), Boundary.Left[Int](Some(2), false)) mustBe (-1)
 
         // 2, 1
-        bOrd.compare(LeftBoundary[Int](Some(2), isInclude = true), LeftBoundary[Int](Some(1), isInclude = true)) mustBe (1)
-        bOrd.compare(LeftBoundary[Int](Some(2), isInclude = false), LeftBoundary[Int](Some(1), isInclude = true)) mustBe (1)
-        bOrd.compare(LeftBoundary[Int](Some(2), isInclude = true), LeftBoundary[Int](Some(1), isInclude = false)) mustBe (0)
-        bOrd.compare(LeftBoundary[Int](Some(2), isInclude = false), LeftBoundary[Int](Some(1), isInclude = false)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(2), true), Boundary.Left[Int](Some(1), true)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(2), false), Boundary.Left[Int](Some(1), true)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(2), true), Boundary.Left[Int](Some(1), false)) mustBe (0)
+        bOrd.compare(Boundary.Left[Int](Some(2), false), Boundary.Left[Int](Some(1), false)) mustBe (1)
 
         // 1, -inf
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = true), LeftBoundary[Int](None, isInclude = true)) mustBe (1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = true), LeftBoundary[Int](None, isInclude = false)) mustBe (1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = false), LeftBoundary[Int](None, isInclude = true)) mustBe (1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = false), LeftBoundary[Int](None, isInclude = false)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(1), true), Boundary.Left[Int](None, true)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(1), true), Boundary.Left[Int](None, false)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(1), false), Boundary.Left[Int](None, true)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(1), false), Boundary.Left[Int](None, false)) mustBe (1)
 
         // -inf, 1
-        bOrd.compare(LeftBoundary[Int](None, isInclude = true), LeftBoundary[Int](Some(1), isInclude = true)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](None, isInclude = true), LeftBoundary[Int](Some(1), isInclude = false)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](None, isInclude = false), LeftBoundary[Int](Some(1), isInclude = true)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](None, isInclude = false), LeftBoundary[Int](Some(1), isInclude = false)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, true), Boundary.Left[Int](Some(1), true)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, true), Boundary.Left[Int](Some(1), false)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, false), Boundary.Left[Int](Some(1), true)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, false), Boundary.Left[Int](Some(1), false)) mustBe (-1)
 
         // -inf, -inf
-        bOrd.compare(LeftBoundary[Int](None, isInclude = true), LeftBoundary[Int](None, isInclude = true)) mustBe (0)
-        bOrd.compare(LeftBoundary[Int](None, isInclude = true), LeftBoundary[Int](None, isInclude = false)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](None, isInclude = false), LeftBoundary[Int](None, isInclude = true)) mustBe (1)
-        bOrd.compare(LeftBoundary[Int](None, isInclude = false), LeftBoundary[Int](None, isInclude = false)) mustBe (0)
+        bOrd.compare(Boundary.Left[Int](None, true), Boundary.Left[Int](None, true)) mustBe (0)
+        bOrd.compare(Boundary.Left[Int](None, true), Boundary.Left[Int](None, false)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, false), Boundary.Left[Int](None, true)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](None, false), Boundary.Left[Int](None, false)) mustBe (0)
       }
     }
 
-    "(RightBoundary, RightBoundary)" should {
+    "(Boundary.Right, Boundary.Right)" should {
       "compare" in {
         // 1, 1
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = true), RightBoundary[Int](Some(1), isInclude = true)) mustBe (0)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = false), RightBoundary[Int](Some(1), isInclude = true)) mustBe (-1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = true), RightBoundary[Int](Some(1), isInclude = false)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = false), RightBoundary[Int](Some(1), isInclude = false)) mustBe (0)
+        bOrd.compare(Boundary.Right[Int](Some(1), true), Boundary.Right[Int](Some(1), true)) mustBe (0)
+        bOrd.compare(Boundary.Right[Int](Some(1), false), Boundary.Right[Int](Some(1), true)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), true), Boundary.Right[Int](Some(1), false)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](Some(1), false), Boundary.Right[Int](Some(1), false)) mustBe (0)
 
         // 1, 2
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = true), RightBoundary[Int](Some(2), isInclude = true)) mustBe (-1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = false), RightBoundary[Int](Some(2), isInclude = true)) mustBe (-1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = true), RightBoundary[Int](Some(2), isInclude = false)) mustBe (0)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = false), RightBoundary[Int](Some(2), isInclude = false)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), true), Boundary.Right[Int](Some(2), true)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), false), Boundary.Right[Int](Some(2), true)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), true), Boundary.Right[Int](Some(2), false)) mustBe (0)
+        bOrd.compare(Boundary.Right[Int](Some(1), false), Boundary.Right[Int](Some(2), false)) mustBe (-1)
 
         // 2, 1
-        bOrd.compare(RightBoundary[Int](Some(2), isInclude = true), RightBoundary[Int](Some(1), isInclude = true)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](Some(2), isInclude = false), RightBoundary[Int](Some(1), isInclude = true)) mustBe (0)
-        bOrd.compare(RightBoundary[Int](Some(2), isInclude = true), RightBoundary[Int](Some(1), isInclude = false)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](Some(2), isInclude = false), RightBoundary[Int](Some(1), isInclude = false)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](Some(2), true), Boundary.Right[Int](Some(1), true)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](Some(2), false), Boundary.Right[Int](Some(1), true)) mustBe (0)
+        bOrd.compare(Boundary.Right[Int](Some(2), true), Boundary.Right[Int](Some(1), false)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](Some(2), false), Boundary.Right[Int](Some(1), false)) mustBe (1)
 
         // 1, +inf
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = true), RightBoundary[Int](None, isInclude = true)) mustBe (-1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = true), RightBoundary[Int](None, isInclude = false)) mustBe (-1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = false), RightBoundary[Int](None, isInclude = true)) mustBe (-1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = false), RightBoundary[Int](None, isInclude = false)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), true), Boundary.Right[Int](None, true)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), true), Boundary.Right[Int](None, false)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), false), Boundary.Right[Int](None, true)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), false), Boundary.Right[Int](None, false)) mustBe (-1)
 
         // +inf, 1
-        bOrd.compare(RightBoundary[Int](None, isInclude = true), RightBoundary[Int](Some(1), isInclude = true)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](None, isInclude = true), RightBoundary[Int](Some(1), isInclude = false)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](None, isInclude = false), RightBoundary[Int](Some(1), isInclude = true)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](None, isInclude = false), RightBoundary[Int](Some(1), isInclude = false)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, true), Boundary.Right[Int](Some(1), true)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, true), Boundary.Right[Int](Some(1), false)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, false), Boundary.Right[Int](Some(1), true)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, false), Boundary.Right[Int](Some(1), false)) mustBe (1)
 
         // +inf, +inf
-        bOrd.compare(RightBoundary[Int](None, isInclude = true), RightBoundary[Int](None, isInclude = true)) mustBe (0)
-        bOrd.compare(RightBoundary[Int](None, isInclude = true), RightBoundary[Int](None, isInclude = false)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](None, isInclude = false), RightBoundary[Int](None, isInclude = true)) mustBe (-1)
-        bOrd.compare(RightBoundary[Int](None, isInclude = false), RightBoundary[Int](None, isInclude = false)) mustBe (0)
+        bOrd.compare(Boundary.Right[Int](None, true), Boundary.Right[Int](None, true)) mustBe (0)
+        bOrd.compare(Boundary.Right[Int](None, true), Boundary.Right[Int](None, false)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, false), Boundary.Right[Int](None, true)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](None, false), Boundary.Right[Int](None, false)) mustBe (0)
       }
     }
 
-    "(LeftBoundary, RightBoundary)" should {
+    "(Boundary.Left, Boundary.Right)" should {
       "compare" in {
         // 1, 1
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = true), RightBoundary[Int](Some(1), isInclude = true)) mustBe (0)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = false), RightBoundary[Int](Some(1), isInclude = true)) mustBe (1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = true), RightBoundary[Int](Some(1), isInclude = false)) mustBe (1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = false), RightBoundary[Int](Some(1), isInclude = false)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(1), true), Boundary.Right[Int](Some(1), true)) mustBe (0)
+        bOrd.compare(Boundary.Left[Int](Some(1), false), Boundary.Right[Int](Some(1), true)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(1), true), Boundary.Right[Int](Some(1), false)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(1), false), Boundary.Right[Int](Some(1), false)) mustBe (1)
 
         // 1, 2
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = true), RightBoundary[Int](Some(2), isInclude = true)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = false), RightBoundary[Int](Some(2), isInclude = true)) mustBe (0)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = true), RightBoundary[Int](Some(2), isInclude = false)) mustBe (0)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = false), RightBoundary[Int](Some(2), isInclude = false)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(1), true), Boundary.Right[Int](Some(2), true)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](Some(1), false), Boundary.Right[Int](Some(2), true)) mustBe (0)
+        bOrd.compare(Boundary.Left[Int](Some(1), true), Boundary.Right[Int](Some(2), false)) mustBe (0)
+        bOrd.compare(Boundary.Left[Int](Some(1), false), Boundary.Right[Int](Some(2), false)) mustBe (1)
 
         // 2, 1
-        bOrd.compare(LeftBoundary[Int](Some(2), isInclude = true), RightBoundary[Int](Some(1), isInclude = true)) mustBe (1)
-        bOrd.compare(LeftBoundary[Int](Some(2), isInclude = false), RightBoundary[Int](Some(1), isInclude = true)) mustBe (1)
-        bOrd.compare(LeftBoundary[Int](Some(2), isInclude = true), RightBoundary[Int](Some(1), isInclude = false)) mustBe (1)
-        bOrd.compare(LeftBoundary[Int](Some(2), isInclude = false), RightBoundary[Int](Some(1), isInclude = false)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(2), true), Boundary.Right[Int](Some(1), true)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(2), false), Boundary.Right[Int](Some(1), true)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(2), true), Boundary.Right[Int](Some(1), false)) mustBe (1)
+        bOrd.compare(Boundary.Left[Int](Some(2), false), Boundary.Right[Int](Some(1), false)) mustBe (1)
 
         // 1, +inf
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = true), RightBoundary[Int](None, isInclude = true)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = true), RightBoundary[Int](None, isInclude = false)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = false), RightBoundary[Int](None, isInclude = true)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](Some(1), isInclude = false), RightBoundary[Int](None, isInclude = false)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](Some(1), true), Boundary.Right[Int](None, true)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](Some(1), true), Boundary.Right[Int](None, false)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](Some(1), false), Boundary.Right[Int](None, true)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](Some(1), false), Boundary.Right[Int](None, false)) mustBe (-1)
 
         // -inf, 1
-        bOrd.compare(LeftBoundary[Int](None, isInclude = true), RightBoundary[Int](Some(1), isInclude = true)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](None, isInclude = true), RightBoundary[Int](Some(1), isInclude = false)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](None, isInclude = false), RightBoundary[Int](Some(1), isInclude = true)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](None, isInclude = false), RightBoundary[Int](Some(1), isInclude = false)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, true), Boundary.Right[Int](Some(1), true)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, true), Boundary.Right[Int](Some(1), false)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, false), Boundary.Right[Int](Some(1), true)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, false), Boundary.Right[Int](Some(1), false)) mustBe (-1)
 
         // -inf, +inf
-        bOrd.compare(LeftBoundary[Int](None, isInclude = true), RightBoundary[Int](None, isInclude = true)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](None, isInclude = true), RightBoundary[Int](None, isInclude = false)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](None, isInclude = false), RightBoundary[Int](None, isInclude = true)) mustBe (-1)
-        bOrd.compare(LeftBoundary[Int](None, isInclude = false), RightBoundary[Int](None, isInclude = false)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, true), Boundary.Right[Int](None, true)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, true), Boundary.Right[Int](None, false)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, false), Boundary.Right[Int](None, true)) mustBe (-1)
+        bOrd.compare(Boundary.Left[Int](None, false), Boundary.Right[Int](None, false)) mustBe (-1)
       }
     }
 
-    "(RightBoundary, LeftBoundary)" should {
+    "(Boundary.Right, Boundary.Left)" should {
       "compare" in {
         // 1, 1
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = true), LeftBoundary[Int](Some(1), isInclude = true)) mustBe (0)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = false), LeftBoundary[Int](Some(1), isInclude = true)) mustBe (-1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = true), LeftBoundary[Int](Some(1), isInclude = false)) mustBe (-1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = false), LeftBoundary[Int](Some(1), isInclude = false)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), true), Boundary.Left[Int](Some(1), true)) mustBe (0)
+        bOrd.compare(Boundary.Right[Int](Some(1), false), Boundary.Left[Int](Some(1), true)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), true), Boundary.Left[Int](Some(1), false)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), false), Boundary.Left[Int](Some(1), false)) mustBe (-1)
 
         // 1, 2
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = true), LeftBoundary[Int](Some(2), isInclude = true)) mustBe (-1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = false), LeftBoundary[Int](Some(2), isInclude = true)) mustBe (-1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = true), LeftBoundary[Int](Some(2), isInclude = false)) mustBe (-1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = false), LeftBoundary[Int](Some(2), isInclude = false)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), true), Boundary.Left[Int](Some(2), true)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), false), Boundary.Left[Int](Some(2), true)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), true), Boundary.Left[Int](Some(2), false)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(1), false), Boundary.Left[Int](Some(2), false)) mustBe (-1)
 
         // 2, 1
-        bOrd.compare(RightBoundary[Int](Some(2), isInclude = true), LeftBoundary[Int](Some(1), isInclude = true)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](Some(2), isInclude = false), LeftBoundary[Int](Some(1), isInclude = true)) mustBe (0)
-        bOrd.compare(RightBoundary[Int](Some(2), isInclude = true), LeftBoundary[Int](Some(1), isInclude = false)) mustBe (0)
-        bOrd.compare(RightBoundary[Int](Some(2), isInclude = false), LeftBoundary[Int](Some(1), isInclude = false)) mustBe (-1)
+        bOrd.compare(Boundary.Right[Int](Some(2), true), Boundary.Left[Int](Some(1), true)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](Some(2), false), Boundary.Left[Int](Some(1), true)) mustBe (0)
+        bOrd.compare(Boundary.Right[Int](Some(2), true), Boundary.Left[Int](Some(1), false)) mustBe (0)
+        bOrd.compare(Boundary.Right[Int](Some(2), false), Boundary.Left[Int](Some(1), false)) mustBe (-1)
 
         // 1, -inf
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = true), LeftBoundary[Int](None, isInclude = true)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = true), LeftBoundary[Int](None, isInclude = false)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = false), LeftBoundary[Int](None, isInclude = true)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](Some(1), isInclude = false), LeftBoundary[Int](None, isInclude = false)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](Some(1), true), Boundary.Left[Int](None, true)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](Some(1), true), Boundary.Left[Int](None, false)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](Some(1), false), Boundary.Left[Int](None, true)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](Some(1), false), Boundary.Left[Int](None, false)) mustBe (1)
 
         // +inf, 1
-        bOrd.compare(RightBoundary[Int](None, isInclude = true), LeftBoundary[Int](Some(1), isInclude = true)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](None, isInclude = true), LeftBoundary[Int](Some(1), isInclude = false)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](None, isInclude = false), LeftBoundary[Int](Some(1), isInclude = true)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](None, isInclude = false), LeftBoundary[Int](Some(1), isInclude = false)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, true), Boundary.Left[Int](Some(1), true)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, true), Boundary.Left[Int](Some(1), false)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, false), Boundary.Left[Int](Some(1), true)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, false), Boundary.Left[Int](Some(1), false)) mustBe (1)
 
         // +inf, -inf
-        bOrd.compare(RightBoundary[Int](None, isInclude = true), LeftBoundary[Int](None, isInclude = true)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](None, isInclude = true), LeftBoundary[Int](None, isInclude = false)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](None, isInclude = false), LeftBoundary[Int](None, isInclude = true)) mustBe (1)
-        bOrd.compare(RightBoundary[Int](None, isInclude = false), LeftBoundary[Int](None, isInclude = false)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, true), Boundary.Left[Int](None, true)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, true), Boundary.Left[Int](None, false)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, false), Boundary.Left[Int](None, true)) mustBe (1)
+        bOrd.compare(Boundary.Right[Int](None, false), Boundary.Left[Int](None, false)) mustBe (1)
+      }
+    }
+
+    "ordered" should {
+      "lt" in {
+        val t = Table(
+          ("ba", "bb", "expected"),
+          (Boundary.Left[Int](None, true), Boundary.Right[Int](None, true), true),
+          (Boundary.Left[Int](None, false), Boundary.Right[Int](None, false), true),
+          (Boundary.Left[Int](None, true), Boundary.Right[Int](None, false), true),
+          (Boundary.Left[Int](None, false), Boundary.Right[Int](None, true), true)
+        )
+
+        forAll(t) { (ba, bb, expected) =>
+          bOrd.lt(ba, bb) mustBe (expected)
+        }
+      }
+
+      "equiv" in {
+        val t = Table(
+          ("ba", "bb", "expected"),
+          (Boundary.Left[Int](Some(1), true), Boundary.Right[Int](Some(1), true), true),
+          (Boundary.Left[Int](Some(1), false), Boundary.Right[Int](Some(1), false), false),
+          (Boundary.Left[Int](Some(1), true), Boundary.Right[Int](Some(1), false), false),
+          (Boundary.Left[Int](Some(1), false), Boundary.Right[Int](Some(1), true), false)
+        )
+
+        forAll(t) { (ba, bb, expected) =>
+          bOrd.equiv(ba, bb) mustBe (expected)
+        }
       }
     }
   }

@@ -1,10 +1,12 @@
 *.class
 *.log
 
-.bloop
-.bsp
-.idea
+.bsp/
+.idea/
 .metals
+.metals/
+.bloop/
+.ammonite/
 target/
 
 metals.sbt
