@@ -169,6 +169,10 @@ Interval.open(3, 6).after(Interval.open(1, 4))  // true
 // meets, isMetBy
 Interval.closed(1, 5).meets(Interval.closed(5, 10))   // true
 Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) // true
+
+// overlaps, isOverlappedBy
+Interval.open(1, 10).overlaps(Interval.open(5, 20))      // true
+Interval.open(5, 30).isOverlapedBy(Interval.open(1, 10)) // true
 ```
 
 ## Show

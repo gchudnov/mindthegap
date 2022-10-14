@@ -65,28 +65,28 @@ transparent trait IntervalRel[+T]:
   final def isMetBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.meets(a)
 
-// /**
-//  * Overlaps (o)
-//  *
-//  * {{{
-//  *   II (Interval-Interval):
-//  *   {a-, a+}; {b-; b+}
-//  *   a- < b-
-//  *   a- < b+
-//  *   a+ > b-
-//  *   a+ < b+
-//  *
-//  *   a- < b- < a+ < b+
-//  * }}}
-//  */
-// final def overlaps[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   a.isProper && b.isProper && bOrd.lt(a.left, b.left) && bOrd.lt(b.left, a.right) && bOrd.lt(a.right, b.right)
+  /**
+   * Overlaps (o)
+   *
+   * {{{
+   *   II (Interval-Interval):
+   *   {a-, a+}; {b-; b+}
+   *   a- < b-
+   *   a- < b+
+   *   a+ > b-
+   *   a+ < b+
+   *
+   *   a- < b- < a+ < b+
+   * }}}
+   */
+  final def overlaps[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.isProper && b.isProper && bOrd.lt(a.left, b.left) && bOrd.lt(b.left, a.right) && bOrd.lt(a.right, b.right)
 
-// /**
-//  * IsOverlapedBy (O)
-//  */
-// final def isOverlapedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   b.overlaps(a)
+  /**
+   * IsOverlapedBy (O)
+   */
+  final def isOverlapedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    b.overlaps(a)
 
 // /**
 //  * During (d)
