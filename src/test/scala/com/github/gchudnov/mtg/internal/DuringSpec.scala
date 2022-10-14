@@ -13,7 +13,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
  *   BBBBBB
  * }}}
  */
-final class DuringSpec extends TestSpec: // with IntervalRelAssert {}
+final class DuringSpec extends TestSpec:
 
   given intRange: IntRange = intRange5
   given intProb: IntProb   = intProb127
@@ -22,16 +22,18 @@ final class DuringSpec extends TestSpec: // with IntervalRelAssert {}
 
   "During" when {
     "during & contains (includes)" should {
-      // "auto check" in {
-      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-      //     val xx = Interval.make(ox1, ox2, ix1, ix2)
-      //     val yy = Interval.make(oy1, oy2, iy1, iy2)
+      "auto check" in {
+        import IntervalRelAssert.*
 
-      //     whenever(xx.during(yy)) {
-      //       assertFwdBck("d", xx, yy)
-      //     }
-      //   }
-      // }
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          whenever(xx.during(yy)) {
+            assertOne(Rel.During)(xx, yy)
+          }
+        }
+      }
 
       "manual check" in {
         // Empty

@@ -1,6 +1,6 @@
 package com.github.gchudnov.mtg.internal
 
-import com.github.gchudnov.mtg.Show.*
+import com.github.gchudnov.mtg.Show.given
 import org.scalatest.matchers.must.Matchers.*
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Boundary
@@ -9,7 +9,7 @@ import com.github.gchudnov.mtg.Interval
 trait IntervalRelAssert:
   import IntervalRelAssert.*
 
-  private def relFnMap[T: Domain](using bOrd: Ordering[Boundary[T]]) =
+  private def relFnMap[T](using bOrd: Ordering[Boundary[T]]) =
     Map(
       Rel.Before        -> ((xx: Interval[T], yy: Interval[T]) => xx.before(yy)),
       Rel.After         -> ((xx: Interval[T], yy: Interval[T]) => xx.after(yy)),
@@ -26,51 +26,66 @@ trait IntervalRelAssert:
       Rel.EqualsTo      -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy))
     )
 
-//   /**
-//    * Finds name of the relations two itervals are satisfying
-//    */
-//   def findSatisfyRelations[T: Domain](xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Set[String] =
-//     val relations = relFnMap[T]
-//     val satisfied = relations.foldLeft(Set.empty[String]) { case (acc, (k, fn)) =>
-//       val res = fn(xx, yy)
-//       if res then acc + k
-//       else acc
-//     }
-//     satisfied
+  private val invRels: Map[Rel, Rel] = Map(
+    // forward
+    Rel.Before   -> Rel.After,
+    Rel.Meets    -> Rel.IsMetBy,
+    Rel.Overlaps -> Rel.IsOverlapedBy,
+    Rel.During   -> Rel.Contains,
+    Rel.Starts   -> Rel.IsStartedBy,
+    Rel.Finishes -> Rel.IsFinishedBy,
+    // backward
+    Rel.After         -> Rel.Before,
+    Rel.IsMetBy       -> Rel.Meets,
+    Rel.IsOverlapedBy -> Rel.Overlaps,
+    Rel.Contains      -> Rel.During,
+    Rel.IsStartedBy   -> Rel.Starts,
+    Rel.IsFinishedBy  -> Rel.Finishes,
+    // dual
+    Rel.EqualsTo -> Rel.EqualsTo
+  )
 
-//   def assertOneOf[T: Ordering: Domain](rs: Set[String], xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
-//     val trues = findSatisfyRelations(xx, yy) - "E" // "E" is a duplicate of "e"
+  /**
+   * Finds relations two itervals are satisfying
+   */
+  def findRelations[T](xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Set[Rel] =
+    relFnMap[T].foldLeft(Set.empty[Rel]) { case (acc, (k, fn)) =>
+      val res = fn(xx, yy)
+      if res then acc + k
+      else acc
+    }
 
-//     if trues.size != 1 || !rs.contains(trues.head) then
-//       fail(
-//         s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| should satisfy one of ${rs.mkString("[", ",", "]")} relations, however it satisfies ${trues.mkString("[", ",", "]")} instead"
-//       )
+  def assertAny[T](xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
+    val trues      = findRelations(xx, yy)
+    val isNonEmpty = !(xx.isEmpty || yy.isEmpty)
+    if isNonEmpty && trues.size != 1 then
+      fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected only one relation")
 
-//   def assertFwdBck[T: Ordering: Domain](r: String, xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
-//     val relations = relFnMap[T]
+  def assertOneOf[T](rs: Set[Rel])(xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
+    val trues = findRelations(xx, yy)
+    if trues.size != 1 || !rs.contains(trues.head) then
+      fail(
+        s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| should satisfy one of ${rs.mkString("[", ",", "]")} relations, however it satisfies ${trues.mkString("[", ",", "]")} instead"
+      )
 
-//     val fk = r
-//     val bk = r.map(_.toUpper)
-//     val ks = List(fk, bk)
+  def assertOne[T: Ordering: Domain](r: Rel)(xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
+    val relations = relFnMap[T]
 
-//     val fwd  = relations(fk)
-//     val bck  = relations(bk)
-//     val rest = relations.filterNot { case (k, _) => ks.contains(k) }
+    val fk = r
+    val bk = invRels(r)
+    val ks = List(fk, bk)
 
-//     fwd(xx, yy) mustBe (true)
-//     bck(yy, xx) mustBe (true)
+    val fwdFn  = relations(fk)
+    val bckFn  = relations(bk)
+    val restFn = relations.filterNot { case (k, _) => ks.contains(k) }
 
-//     rest.foreach { case (k, fn) =>
-//       if fn(xx, yy) then fail(s"xx: ${xx}, yy: ${yy}: ${fk}|${xx.show}, ${yy.show}| == true; ${k}|${xx.show}, ${yy.show}| mustBe false, got true")
-//       if fn(yy, xx) then fail(s"xx: ${xx}, yy: ${yy}: ${fk}|${xx.show}, ${yy.show}| == true; ${k}|${yy.show}, ${xx.show}| mustBe false, got true")
-//     }
+    fwdFn(xx, yy) mustBe (true)
+    bckFn(yy, xx) mustBe (true)
 
-//   def assertAnySingle[T: Ordering: Domain](xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Boundary[T]]): Unit =
-//     val trues = findSatisfyRelations(xx, yy) - "E" // "E" is a duplicate of "e"
-
-//     val isNonEmpty = !(xx.isEmpty || yy.isEmpty)
-//     if isNonEmpty && trues.size != 1 then
-//       fail(s"xx: ${xx}, yy: ${yy}: |${xx.show}, ${yy.show}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected only one relation")
+    restFn.foreach { case (k, fn) =>
+      if fn(xx, yy) then fail(s"xx: ${xx}, yy: ${yy}; given that ${fk}|${xx.show}, ${yy.show}| == true; expected ${k}|${xx.show}, ${yy.show}| to be false, got true")
+      if fn(yy, xx) then fail(s"xx: ${xx}, yy: ${yy}; given that ${fk}|${xx.show}, ${yy.show}| == true; expected ${k}|${yy.show}, ${xx.show}| to be false, got true")
+    }
 
 object IntervalRelAssert extends IntervalRelAssert:
 

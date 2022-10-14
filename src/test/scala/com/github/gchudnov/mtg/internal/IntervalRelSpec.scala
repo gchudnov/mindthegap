@@ -21,8 +21,8 @@ final class IntervalRelSpec extends TestSpec: // with IntervalRelAssert {}
 //   "isSubset" should {
 //     "auto check" in {
 //       forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-//         val xx = Interval.make(ox1, ox2, ix1, ix2)
-//         val yy = Interval.make(oy1, oy2, iy1, iy2)
+//         val xx = Interval.make(ox1, ix1, ox2, ix2)
+//         val yy = Interval.make(oy1, iy1, oy2, iy2)
 
 //         whenever(xx.isSubset(yy)) {
 //           assertOneOf(Set("s", "d", "f", "e"), xx, yy)
@@ -34,8 +34,8 @@ final class IntervalRelSpec extends TestSpec: // with IntervalRelAssert {}
 //   "isSuperset" should {
 //     "auto check" in {
 //       forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-//         val xx = Interval.make(ox1, ox2, ix1, ix2)
-//         val yy = Interval.make(oy1, oy2, iy1, iy2)
+//         val xx = Interval.make(ox1, ix1, ox2, ix2)
+//         val yy = Interval.make(oy1, iy1, oy2, iy2)
 
 //         whenever(xx.isSuperset(yy)) {
 //           assertOneOf(Set("S", "D", "F", "e"), xx, yy)
@@ -47,8 +47,8 @@ final class IntervalRelSpec extends TestSpec: // with IntervalRelAssert {}
 //   "isDisjoint" should {
 //     "auto check" in {
 //       forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-//         val xx = Interval.make(ox1, ox2, ix1, ix2)
-//         val yy = Interval.make(oy1, oy2, iy1, iy2)
+//         val xx = Interval.make(ox1, ix1, ox2, ix2)
+//         val yy = Interval.make(oy1, iy1, oy2, iy2)
 
 //         whenever(xx.isDisjoint(yy)) {
 //           assertOneOf(Set("b", "B"), xx, yy)
@@ -60,8 +60,8 @@ final class IntervalRelSpec extends TestSpec: // with IntervalRelAssert {}
 //   "isLessEqual" should {
 //     "auto check" in {
 //       forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-//         val xx = Interval.make(ox1, ox2, ix1, ix2)
-//         val yy = Interval.make(oy1, oy2, iy1, iy2)
+//         val xx = Interval.make(ox1, ix1, ox2, ix2)
+//         val yy = Interval.make(oy1, iy1, oy2, iy2)
 
 //         whenever(xx.isLessEqual(yy)) {
 //           assertOneOf(Set("b", "m", "o", "s", "F", "e"), xx, yy)
@@ -73,8 +73,8 @@ final class IntervalRelSpec extends TestSpec: // with IntervalRelAssert {}
 //   "isLess" should {
 //     "auto check" in {
 //       forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-//         val xx = Interval.make(ox1, ox2, ix1, ix2)
-//         val yy = Interval.make(oy1, oy2, iy1, iy2)
+//         val xx = Interval.make(ox1, ix1, ox2, ix2)
+//         val yy = Interval.make(oy1, iy1, oy2, iy2)
 
 //         whenever(xx.isLess(yy)) {
 //           assertOneOf(Set("b", "m", "o"), xx, yy)
@@ -86,8 +86,8 @@ final class IntervalRelSpec extends TestSpec: // with IntervalRelAssert {}
 //   "isGreaterEqual" should {
 //     "auto check" in {
 //       forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-//         val xx = Interval.make(ox1, ox2, ix1, ix2)
-//         val yy = Interval.make(oy1, oy2, iy1, iy2)
+//         val xx = Interval.make(ox1, ix1, ox2, ix2)
+//         val yy = Interval.make(oy1, iy1, oy2, iy2)
 
 //         whenever(xx.isGreaterEqual(yy)) {
 //           assertOneOf(Set("B", "M", "O", "f", "S", "e"), xx, yy)
@@ -99,8 +99,8 @@ final class IntervalRelSpec extends TestSpec: // with IntervalRelAssert {}
 //   "isGreater" should {
 //     "auto check" in {
 //       forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-//         val xx = Interval.make(ox1, ox2, ix1, ix2)
-//         val yy = Interval.make(oy1, oy2, iy1, iy2)
+//         val xx = Interval.make(ox1, ix1, ox2, ix2)
+//         val yy = Interval.make(oy1, iy1, oy2, iy2)
 
 //         whenever(xx.isGreater(yy)) {
 //           assertOneOf(Set("B", "M", "O"), xx, yy)
@@ -112,8 +112,8 @@ final class IntervalRelSpec extends TestSpec: // with IntervalRelAssert {}
 //   "satisfy" should {
 //     "one relation only" in {
 //       forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-//         val xx = Interval.make(ox1, ox2, ix1, ix2)
-//         val yy = Interval.make(oy1, oy2, iy1, iy2)
+//         val xx = Interval.make(ox1, ix1, ox2, ix2)
+//         val yy = Interval.make(oy1, iy1, oy2, iy2)
 
 //         assertAnySingle(xx, yy)
 //       }

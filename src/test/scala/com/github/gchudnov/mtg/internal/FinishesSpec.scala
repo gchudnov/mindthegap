@@ -22,16 +22,18 @@ final class FinishesSpec extends TestSpec: // with IntervalRelAssert {}
 
   "Finishes" when {
     "finishes & isFinishedBy" should {
-      // "auto check" in {
-      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-      //     val xx = Interval.make(ox1, ox2, ix1, ix2)
-      //     val yy = Interval.make(oy1, oy2, iy1, iy2)
+      "auto check" in {
+        import IntervalRelAssert.*
 
-      //     whenever(xx.finishes(yy)) {
-      //       assertFwdBck("f", xx, yy)
-      //     }
-      //   }
-      // }
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          whenever(xx.finishes(yy)) {
+            assertOne(Rel.Finishes)(xx, yy)
+          }
+        }
+      }
 
       "manual check" in {
         // Empty
@@ -69,5 +71,5 @@ final class FinishesSpec extends TestSpec: // with IntervalRelAssert {}
         // (-inf, +inf)  (-inf, +inf)
         Interval.unbounded[Int].finishes(Interval.unbounded[Int]) mustBe (false)
       }
-    }    
+    }
   }

@@ -22,16 +22,18 @@ final class EqualsSpec extends TestSpec: // with IntervalRelAssert {}
 
   "Equals" when {
     "equals" should {
-      // "auto check" in {
-      //   forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
-      //     val xx = Interval.make(ox1, ox2, ix1, ix2)
-      //     val yy = Interval.make(oy1, oy2, iy1, iy2)
+      "auto check" in {
+        import IntervalRelAssert.*
 
-      //     whenever(xx.equalsTo(yy)) {
-      //       assertFwdBck("e", xx, yy)
-      //     }
-      //   }
-      // }
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          whenever(xx.equalsTo(yy)) {
+            assertOne(Rel.EqualsTo)(xx, yy)
+          }
+        }
+      }
 
       "manual check" in {
         // Empty
