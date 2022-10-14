@@ -206,6 +206,24 @@ Interval.open(4, 7).isSubset(Interval.open(2, 7))  // true
 Interval.open(4, 7).isSubset(Interval.open(4, 7))  // true
 ```
 
+### IsSuperset
+
+```text
+  isSuperset                    BBBBB         |  b- >= a- ; b+ <= a+
+                                :   :
+  is-started-by(a,b)   S        AAAAAAAAA
+  contains(a,b)        D      AAAAAAAAA
+  is-finished-by(a,b)  F    AAAAAAAAA
+  equals(a, b)         e        AAAAA
+```
+
+```scala
+Interval.open(4, 10).isSuperset(Interval.open(4, 7)) // true
+Interval.open(2, 10).isSuperset(Interval.open(4, 7)) // true
+Interval.open(2, 7).isSuperset(Interval.open(4, 7))  // true
+Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
+```
+
 ## Show
 
 To display an interval, `Show` can be used:

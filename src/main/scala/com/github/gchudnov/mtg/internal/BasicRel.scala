@@ -191,19 +191,6 @@ transparent trait BasicRel[+T]:
     a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
 
 // /**
-//  * Checks whether A is a superset of B
-//  *
-//  * {{{
-//  *   - A is-started-by B  | S
-//  *   - A contains B       | D
-//  *   - A is-finished-by B | F
-//  *   - A equals B         | e
-//  * }}}
-//  */
-// final def isSuperset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   a.isStartedBy(b) || a.contains(b) || a.isFinishedBy(b) || a.equalsTo(b)
-
-// /**
 //  * Checks if there A and B are disjoint.
 //  *
 //  * A and B are disjoint if A does not intersect B.

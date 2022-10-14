@@ -30,3 +30,23 @@ transparent trait ExtendedRel[+T]:
    */
   final def isSubset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.gteq(a.left, b.left) && bOrd.lteq(a.right, b.right)
+
+  /**
+   * IsSuperset
+   *
+   * Checks whether A is a superset of B
+   *
+   * {{{
+   *   b- >= a-
+   *   b+ <= a+
+   * }}}
+   *
+   * {{{
+   *   - A is-started-by B  | S
+   *   - A contains B       | D
+   *   - A is-finished-by B | F
+   *   - A equals B         | e
+   * }}}
+   */
+  final def isSuperset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.nonEmpty && b.nonEmpty && bOrd.gteq(b.left, a.left) && bOrd.lteq(b.right, a.right)
