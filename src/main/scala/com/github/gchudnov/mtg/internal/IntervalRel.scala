@@ -32,9 +32,7 @@ transparent trait IntervalRel[+T]:
    * }}}
    */
   final def before[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    if a.isEmpty || b.isEmpty then false
-    else if a.isDegenrate then bOrd.lt(a.left, b.left)
-    else bOrd.lt(a.right, b.left) // a.isProper
+    a.nonEmpty && b.nonEmpty && bOrd.lt(a.right, b.left)
 
   /**
    * After, IsPreceededBy (B)
@@ -88,32 +86,32 @@ transparent trait IntervalRel[+T]:
   final def isOverlapedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.overlaps(a)
 
-// /**
-//  * During (d)
-//  *
-//  * {{{
-//  *   PI (Point-Interval):
-//  *   {p}; {a-, a+}
-//  *   a- < p < a+
-//  *
-//  *   II (Interval-Interval):
-//  *   {a-, a+}; {b-; b+}
-//  *   a- > b-
-//  *   a- < b+
-//  *   a+ > b-
-//  *   a+ < b+
-//  *
-//  *   b- < a- < a+ < b+
-//  * }}}
-//  */
-// final def during[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   a.nonEmpty && b.isProper && bOrd.lt(b.left, a.left) && bOrd.lt(a.right, b.right)
+  /**
+   * During (d)
+   *
+   * {{{
+   *   PI (Point-Interval):
+   *   {p}; {a-, a+}
+   *   a- < p < a+
+   *
+   *   II (Interval-Interval):
+   *   {a-, a+}; {b-; b+}
+   *   a- > b-
+   *   a- < b+
+   *   a+ > b-
+   *   a+ < b+
+   *
+   *   b- < a- < a+ < b+
+   * }}}
+   */
+  final def during[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.nonEmpty && b.isProper && bOrd.lt(b.left, a.left) && bOrd.lt(a.right, b.right)
 
-// /**
-//  * Contains (D)
-//  */
-// final def contains[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   b.during(a)
+  /**
+   * Contains (D)
+   */
+  final def contains[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    b.during(a)
 
 // /**
 //  * Starts (s)
