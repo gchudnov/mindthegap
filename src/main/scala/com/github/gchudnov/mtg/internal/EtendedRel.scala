@@ -1,0 +1,32 @@
+package com.github.gchudnov.mtg.internal
+
+import com.github.gchudnov.mtg.Boundary
+import com.github.gchudnov.mtg.Interval
+
+/**
+ * Extended Interval Relations
+ */
+transparent trait ExtendedRel[+T]:
+  a: Interval[T] =>
+
+  /**
+   * IsSubset
+   *
+   * Checks whether A is a subset of B
+   *
+   * A ⊆ B
+   *
+   * {{{
+   *   a- >= b-
+   *   a+ <= b+
+   * }}}
+   *
+   * {{{
+   *   - A starts B   | s
+   *   - A during B   | d
+   *   - A finishes B | f
+   *   - A equals B   | e
+   * }}}
+   */
+  final def isSubset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.nonEmpty && b.nonEmpty && bOrd.gteq(a.left, b.left) && bOrd.lteq(a.right, b.right)

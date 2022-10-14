@@ -146,7 +146,7 @@ Interval.rightClosed(5)
 Interval.unbounded[Int]
 ```
 
-## Relation Check
+## Basic Relations
 
 A relation between a pair of intervals can be checked.
 
@@ -184,6 +184,26 @@ Interval.leftClosedRightOpen(-1, 5).isFinishedBy(Interval.leftClosedRightOpen(0,
 
 // equalsTo
 Interval.open(4, 7).equalsTo(Interval.open(4, 7)) // true
+```
+
+## Extended Relations
+
+### IsSubset
+
+```text
+  isSubset                  AAAAA            |  a- >= b- ; a+ <= b+
+                            :   :
+  starts(a,b)      s        BBBBBBBBB
+  during(a,b)      d      BBBBBBBBB
+  finishes(a,b)    f    BBBBBBBBB
+  equals(a, b)     e        BBBBB
+```
+
+```scala
+Interval.open(4, 7).isSubset(Interval.open(4, 10)) // true
+Interval.open(4, 7).isSubset(Interval.open(2, 10)) // true
+Interval.open(4, 7).isSubset(Interval.open(2, 7))  // true
+Interval.open(4, 7).isSubset(Interval.open(4, 7))  // true
 ```
 
 ## Show

@@ -4,9 +4,9 @@ import com.github.gchudnov.mtg.Boundary
 import com.github.gchudnov.mtg.Interval
 
 /**
- * Interval Relations
+ * Basic Interval Relations
  */
-transparent trait IntervalRel[+T]:
+transparent trait BasicRel[+T]:
   a: Interval[T] =>
 
   /**
@@ -189,28 +189,6 @@ transparent trait IntervalRel[+T]:
    */
   final def equalsTo[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.equiv(a.left, b.left) && bOrd.equiv(a.right, b.right)
-
-// /**
-//  * IsSubset
-//  *
-//  * Checks whether A is a subset of B
-//  *
-//  * A ⊆ B
-//  *
-//  * {{{
-//  *   a- >= b-
-//  *   a+ <= b+
-//  * }}}
-//  *
-//  * {{{
-//  *   - A starts B   | s
-//  *   - A during B   | d
-//  *   - A finishes B | f
-//  *   - A equals B   | e
-//  * }}}
-//  */
-// final def isSubset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-//   a.nonEmpty && b.nonEmpty && bOrd.gteq(a.left, b.left) && bOrd.lteq(a.right, b.right)
 
 // /**
 //  * Checks whether A is a superset of B
