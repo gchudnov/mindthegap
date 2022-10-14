@@ -190,6 +190,8 @@ Interval.open(4, 7).equalsTo(Interval.open(4, 7)) // true
 
 ### IsSubset
 
+Checks whether `A` is a subset of `B`.
+
 ```text
   isSubset                  AAAAA            |  a- >= b- ; a+ <= b+
                             :   :
@@ -208,6 +210,8 @@ Interval.open(4, 7).isSubset(Interval.open(4, 7))  // true
 
 ### IsSuperset
 
+Checks whether `A` is a superset of `B`.
+
 ```text
   isSuperset                    BBBBB         |  b- >= a- ; b+ <= a+
                                 :   :
@@ -225,6 +229,8 @@ Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
 ```
 
 ## IsDisjoint
+
+Checks if there `A` and `B` are disjoint. `A` and `B` are disjoint if `A` does not intersect `B`.
 
 ```text
   isDisjoint                AAAAA
