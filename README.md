@@ -228,6 +228,7 @@ Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
 
 ```text
   isDisjoint                AAAAA
+                            :   :
   before(a,b)      b        :   : BBBBB  |  a+ < b-
   after(a,b)       B  BBBBB :   :        |  a- > b+
 ```
