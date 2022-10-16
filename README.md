@@ -146,7 +146,7 @@ Interval.rightClosed(5)
 Interval.unbounded[Int]
 ```
 
-## Relation Check
+## Basic Relations
 
 A relation between a pair of intervals can be checked.
 
@@ -184,6 +184,82 @@ Interval.leftClosedRightOpen(-1, 5).isFinishedBy(Interval.leftClosedRightOpen(0,
 
 // equalsTo
 Interval.open(4, 7).equalsTo(Interval.open(4, 7)) // true
+```
+
+## Extended Relations
+
+### IsSubset
+
+Checks whether `A` is a subset of `B`.
+
+```text
+  isSubset                  AAAAA            |  a- >= b- AND a+ <= b+
+                            :   :
+  starts(a,b)      s        BBBBBBBBB
+  during(a,b)      d      BBBBBBBBB
+  finishes(a,b)    f    BBBBBBBBB
+  equals(a, b)     e        BBBBB
+```
+
+```scala
+Interval.open(4, 7).isSubset(Interval.open(4, 10)) // true
+Interval.open(4, 7).isSubset(Interval.open(2, 10)) // true
+Interval.open(4, 7).isSubset(Interval.open(2, 7))  // true
+Interval.open(4, 7).isSubset(Interval.open(4, 7))  // true
+```
+
+### IsSuperset
+
+Checks whether `A` is a superset of `B`.
+
+```text
+  isSuperset                    BBBBB         |  b- >= a- AND b+ <= a+
+                                :   :
+  is-started-by(a,b)   S        AAAAAAAAA
+  contains(a,b)        D      AAAAAAAAA
+  is-finished-by(a,b)  F    AAAAAAAAA
+  equals(a, b)         e        AAAAA
+```
+
+```scala
+Interval.open(4, 10).isSuperset(Interval.open(4, 7)) // true
+Interval.open(2, 10).isSuperset(Interval.open(4, 7)) // true
+Interval.open(2, 7).isSuperset(Interval.open(4, 7))  // true
+Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
+```
+
+## IsDisjoint
+
+Checks if there `A` and `B` are disjoint. `A` and `B` are disjoint if `A` does not intersect `B`.
+
+```text
+  isDisjoint                AAAAA        |  a+ < b- OR a- > b+
+                            :   :
+  before(a,b)      b        :   : BBBBB
+  after(a,b)       B  BBBBB :   :
+```
+
+```scala
+Interval.open(1, 4).isDisjoint(Interval.open(3, 6)) // true
+Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) // true
+```
+
+## IsLess
+
+Checks whether `A` less-than `B`.
+
+```text
+  isLess                    AAAAA            |  a- < b- AND a+ < b+
+                            :   :
+  before(a,b)      b        :   : BBBBBBBBB 
+  meets(a,b)       m        :   BBBBBBBBB
+  overlaps(a,b)    o        : BBBBBBBBB
+```
+
+```scala
+Interval.open(4, 7).isLess(Interval.open(10, 15)) // true
+Interval.open(4, 7).isLess(Interval.open(6, 15))  // true
+Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 ```
 
 ## Show
