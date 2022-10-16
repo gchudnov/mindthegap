@@ -6,7 +6,7 @@ import com.github.gchudnov.mtg.Interval
 /**
  * Extended Interval Relations
  */
-transparent trait ExtendedRel[+T]:
+private[mtg] transparent trait ExtendedRel[+T]:
   a: Interval[T] =>
 
   /**

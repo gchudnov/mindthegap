@@ -1,51 +1,61 @@
 package com.github.gchudnov.mtg
 
-// import com.github.gchudnov.mtg.Domains
 import com.github.gchudnov.mtg.TestSpec
 
-final class IntervalOrderingSpec extends TestSpec {}
+final class IntervalOrderingSpec extends TestSpec:
 
-// import Domains.given
-// import BoundaryOrdering.given
-// import IntervalOrdering.given
+  "IntervalOrdering" when {
+    "two intervals with before-relation" should {
+      "be ordered" in {
+        val a = Interval.closed(0, 10)
+        val b = Interval.closed(20, 30)
 
-// "IntervalOrdering" when {
-//   "two intervals with before (b) relation" should {
-//     "be ordered" in {
-//       val a = Interval.closed(0, 10)
-//       val b = Interval.closed(20, 30)
+        List(b, a).sorted mustBe List(a, b)
+      }
+    }
 
-//       List(b, a).sorted mustBe List(a, b)
-//     }
-//   }
+    "two intervals with meet-relation" should {
+      "be ordered" in {
+        val a = Interval.closed(0, 10)
+        val b = Interval.closed(20, 30)
 
-//   "two intervals with meet (m) relation" should {
-//     "be ordered" in {
-//       val a = Interval.closed(0, 10)
-//       val b = Interval.closed(20, 30)
+        List(b, a).sorted mustBe List(a, b)
+      }
+    }
 
-//       List(b, a).sorted mustBe List(a, b)
-//     }
-//   }
+    "two intervals with overlaps-relation" should {
+      "be ordered" in {
+        val a = Interval.closed(0, 10)
+        val b = Interval.closed(5, 15)
 
-//   "two intervals with overlaps (m) relation" should {
-//     "be ordered" in {
-//       val a = Interval.closed(0, 10)
-//       val b = Interval.closed(5, 15)
+        List(b, a).sorted mustBe List(a, b)
+      }
+    }
 
-//       List(b, a).sorted mustBe List(a, b)
-//     }
-//   }
+    "empty intervals" should {
+      "be compared" in {
+        val a = Interval.empty[Int]
+        val b = Interval.empty[Int]
 
-//   "empty and non-empty intervals" should {
-//     "be compared" in {
-//       val iOrd: Ordering[Interval[Int]] = summon[Ordering[Interval[Int]]]
+        summon[Ordering[Interval[Int]]].compare(a, b) mustBe 0
+      }
+    }
 
-//       val a = Interval.closed(0, 10)
-//       val b = Interval.empty[Int]
+    "empty and non-empty intervals" should {
+      "be compared" in {
+        val a = Interval.empty[Int]
+        val b = Interval.closed(0, 10)
 
-//       iOrd.compare(a, b) mustBe (1)
-//       iOrd.compare(b, a) mustBe (1)
-//     }
-//   }
-// }
+        summon[Ordering[Interval[Int]]].compare(a, b) mustBe -1
+      }
+    }
+
+    "non-empty and empty intervals" should {
+      "be compared" in {
+        val a = Interval.closed(0, 10)
+        val b = Interval.empty[Int]
+
+        summon[Ordering[Interval[Int]]].compare(a, b) mustBe 1
+      }
+    }
+  }

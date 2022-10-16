@@ -112,6 +112,9 @@ enum Interval[+T] extends BasicRel[T] with ExtendedRel[T]:
 
 object Interval:
 
+  given intervalOrdering[T](using Ordering[Boundary[T]]): Ordering[Interval[T]] =
+    new IntervalOrdering[T]
+
   /**
    * ∅
    */
