@@ -228,7 +228,7 @@ Interval.open(2, 7).isSuperset(Interval.open(4, 7))  // true
 Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
 ```
 
-## IsDisjoint
+### IsDisjoint
 
 Checks if there `A` and `B` are disjoint. `A` and `B` are disjoint if `A` does not intersect `B`.
 
