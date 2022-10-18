@@ -86,7 +86,25 @@ object Diagram:
     val first: Int = left + padding  // first offset for non-inf value
     val last: Int  = right - padding // laft offset for non-inf value
 
-    val size: Int = last - first
+    val size: Int = last - first + 1
+
+    /**
+     * Make a label so that it is visible on the canvas.
+     */
+    def label(x: Int, text: String): Label =
+      val p = Canvas.align(x.toDouble - (text.size.toDouble / 2.0))
+      val q = p + text.size
+
+      // if label just slighly out of the bounds, make it visible
+      val x1 =
+        if (p < 0 && isIn(x)) then 0
+        else if (q >= width && isIn(x)) then width - text.size
+        else p
+
+      Label(x1, text)
+
+    private def isIn(x: Int): Boolean =
+      (x >= 0 && x < width)
 
   object Canvas:
     val small: Canvas =
@@ -169,17 +187,6 @@ object Diagram:
     )
 
     val translator = Translator.make(effectiveView, canvas)
-
-    // /**
-    //  * Calculate Label position; Try to align only if close to ends of the canvas
-    //  */
-    // def toLabelPos(x: Int, text: String): Int =
-    //   val p = align(x - (text.size / 2.0))
-    //   val q = p + text.size
-
-    //   if (p < 0 && (x >= 0 && x < canvas.width)) then 0
-    //   else if (q >= canvas.width && (x >= 0 && x < canvas.width)) then canvas.width - text.size
-    //   else p
 
     // xs.foldLeft(Diagram.empty) { case (acc, i) =>
     //   val y = acc.height
