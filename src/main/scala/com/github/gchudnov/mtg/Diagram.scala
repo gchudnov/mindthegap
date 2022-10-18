@@ -34,7 +34,6 @@ object Diagram:
       if isInclude then rightClosed else rightOpen
 
   object Theme:
-
     enum Label:
       case None      // draw labels as-is on one line
       case NoOverlap // draw sorted labels that are non-overlapping: next label should be separated by space from the prev one
@@ -60,10 +59,10 @@ object Diagram:
   ):
     require(
       left.flatMap(lhs => right.map(rhs => summon[Ordering[T]].lteq(lhs, rhs))).getOrElse(true),
-      "left view boundary must be less or equal to right view boundary"
+      "left view boundary must be less or equal to the right view boundary"
     )
 
-    val width: Option[T] =
+    val size: Option[T] =
       for
         lhs <- left
         rhs <- right
@@ -77,23 +76,60 @@ object Diagram:
         right = None
       )
 
-  final case class Canvas[+T](
+  final case class Canvas(
     width: Int,
     padding: Int
   ):
-    val left: Int   = 0               // start of the canvas, inclusive
-    val right: Int  = width - 1       // end of the canvas, inclusive
-    val first: Int  = left + padding  // first offset for non-inf value
-    val last: Int   = right - padding // laft offset for non-inf value
-    val spread: Int = last - first
+    val left: Int  = 0         // start of the canvas, inclusive
+    val right: Int = width - 1 // end of the canvas, inclusive
+
+    val first: Int = left + padding  // first offset for non-inf value
+    val last: Int  = right - padding // laft offset for non-inf value
+
+    val size: Int = last - first
 
   object Canvas:
-
-    val small: Canvas[Nothing] =
-      Canvas[Nothing](
+    val small: Canvas =
+      Canvas(
         width = 40,
         padding = 2
       )
+
+    /**
+     * Align value to the grid
+     */
+    def align(value: Double): Int =
+      value.round.toInt
+
+  sealed trait Translator[T: Numeric]:
+    def translate(b: Boundary[T]): Int
+
+  object Translator:
+    def make[T: Numeric](view: View[T], canvas: Canvas): Translator[T] =
+      new BasicTranslater[T](view, canvas)
+
+  final class BasicTranslater[T: Numeric](view: View[T], canvas: Canvas) extends Translator[T]:
+
+    private val ok: Option[Double] =
+      view.size.map(vsz => canvas.size.toDouble / summon[Numeric[T]].toDouble(vsz))
+
+    override def translate(b: Boundary[T]): Int =
+      b.value match
+        case None =>
+          // -inf or +inf
+          if b.isLeft then canvas.left else canvas.right
+        case Some(x) =>
+          ok match
+            case Some(k) =>
+              // finite view-boundaries
+              val numT = summon[Numeric[T]]
+              val left = view.left.get // NOTE: .get is safe, we MUST have the left value, since otherwise `k` would be None
+              val dx   = numT.minus(x, left)
+              val dd   = numT.toDouble(dx)
+              Canvas.align((k * dd) + canvas.left)
+            case None =>
+              // one of the view-boundaries is inf
+              if b.isLeft then canvas.first else canvas.last
 
   final case class Tick(pos: Int)
 
@@ -102,7 +138,7 @@ object Diagram:
       value.size
 
   final case class Span(x0: Int, x1: Int, y: Int, includeX0: Boolean, includeX1: Boolean):
-    require(x0 <= x1, s"A Span |${x0}, ${x1}| is negative")
+    require(x0 <= x1, s"A Span |${x0}, ${x1}| cannot be negative")
 
     def size: Int =
       x1 - x0
@@ -118,9 +154,9 @@ object Diagram:
     )
 
   /**
-   * Prepare intervals for the rendering
+   * Make a Diagram that can be rendered
    */
-  def prepare[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas[T])(using Ordering[Boundary[T]]): Diagram =
+  def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =
     val tNum = summon[Numeric[T]]
 
     val xs: List[Interval[T]] = intervals.filter(_.nonEmpty)
@@ -132,25 +168,7 @@ object Diagram:
       right = view.right.fold(bs.maxOption.flatMap(_.value))(Some(_))
     )
 
-    // val ok = ofw.map(fw => cw.toDouble / tNum.toDouble(fw))
-
-    // // translates the coordindate into position on the canvas
-    // def translateX(value: Option[T], isLeft: Boolean): Int =
-    //   value match
-    //     case None =>
-    //       // -inf or +inf
-    //       if isLeft then cxFirst else cxLast
-    //     case Some(x) =>
-    //       ok match
-    //         case None =>
-    //           // one of the boundaries is inf
-    //           if isLeft then cxMin else cxMax
-    //         case Some(k) =>
-    //           // finite boundaries
-    //           val fMin = ofMin.get
-    //           val df   = tNum.minus(x, fMin)
-    //           val dd   = tNum.toDouble(df)
-    //           align((k * dd) + cxMin)
+    val translator = Translator.make(effectiveView, canvas)
 
     // /**
     //  * Calculate Label position; Try to align only if close to ends of the canvas
@@ -267,12 +285,6 @@ object Diagram:
 
 //   private def clap(value: Double, minValue: Double, maxValue: Double): Double =
 //     if value < minValue then minValue else if value > maxValue then maxValue else value
-
-  /**
-   * Align value to the grid
-   */
-  private def align(value: Double): Int =
-    value.round.toInt
 
 //   /**
 //    * Measure the number of lines required to draw all labels

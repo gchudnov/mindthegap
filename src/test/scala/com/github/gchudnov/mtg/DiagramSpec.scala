@@ -9,14 +9,14 @@ import com.github.gchudnov.mtg.Diagram.View
 
 final class DiagramSpec extends TestSpec:
 
-  private val canvas: Canvas[Int] = Canvas.small
+  private val canvas: Canvas = Canvas.small
   private val view: View[Int]     = View.default
   private val theme: Theme        = Theme.default
 
   "Diagram" when {
-    "prepare" should {
 
-      "prepare a point" in {
+    "make" should {
+      "diagram a point" in {
         // val a       = Interval.degenerate[Int](5) // [5]
         // val diagram = Diagram.prepare(List(a), view, canvas)
 
