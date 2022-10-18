@@ -4,6 +4,9 @@ import Show.given
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.ListBuffer
 
+/**
+ * Diagram
+ */
 final case class Diagram(
   width: Int,
   height: Int,
@@ -15,6 +18,19 @@ final case class Diagram(
 
 object Diagram:
 
+  val empty: Diagram =
+    Diagram(
+      width = 0,
+      height = 0,
+      spans = List.empty[Span],
+      ticks = List.empty[Tick],
+      labels = List.empty[Label],
+      legend = List.empty[String]
+    )
+
+  /**
+   * Theme
+   */
   final case class Theme(
     space: Char,
     fill: Char,
@@ -53,6 +69,9 @@ object Diagram:
         label = Label.None
       )
 
+  /**
+   * View
+   */
   final case class View[+T: Numeric](
     left: Option[T], // left boundary of the view
     right: Option[T] // right boundary of the view
@@ -76,6 +95,9 @@ object Diagram:
         right = None
       )
 
+  /**
+   * Canvas
+   */
   final case class Canvas(
     width: Int,
     padding: Int
@@ -119,6 +141,9 @@ object Diagram:
     def align(value: Double): Int =
       value.round.toInt
 
+  /**
+   * Translator
+   */
   sealed trait Translator[T: Numeric]:
     def translate(b: Boundary[T]): Int
 
@@ -149,27 +174,26 @@ object Diagram:
               // one of the view-boundaries is inf
               if b.isLeft then canvas.first else canvas.last
 
+  /**
+   * Tick
+   */
   final case class Tick(pos: Int)
 
+  /**
+   * Label
+   */
   final case class Label(pos: Int, value: String):
     def size: Int =
       value.size
 
+  /**
+   * Span
+   */
   final case class Span(x0: Int, x1: Int, y: Int, includeX0: Boolean, includeX1: Boolean):
     require(x0 <= x1, s"A Span |${x0}, ${x1}| cannot be negative")
 
     def size: Int =
       x1 - x0
-
-  val empty: Diagram =
-    Diagram(
-      width = 0,
-      height = 0,
-      spans = List.empty[Span],
-      ticks = List.empty[Tick],
-      labels = List.empty[Label],
-      legend = List.empty[String]
-    )
 
   /**
    * Make a Diagram that can be rendered
@@ -186,6 +210,7 @@ object Diagram:
       right = view.right.fold(bs.maxOption.flatMap(_.value))(Some(_))
     )
 
+    // translates boundaries to canvas coordinates
     val translator = Translator.make(effectiveView, canvas)
 
     // xs.foldLeft(Diagram.empty) { case (acc, i) =>
