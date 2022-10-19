@@ -92,7 +92,7 @@ object Diagram:
       left.isEmpty && right.isEmpty
 
   object View:
-    def default[T: Numeric]: View[T] =
+    def empty[T: Numeric]: View[T] =
       View(
         left = None,
         right = None
@@ -128,7 +128,9 @@ object Diagram:
     val first: Int = left + padding  // first offset for non-inf value
     val last: Int  = right - padding // laft offset for non-inf value
 
-    val size: Int = last - first + 1
+    val size: Int = last - first
+
+    println(s"left: ${left}, right: ${right}, first: ${first}, last: ${last}, size: ${size}")
 
     /**
      * Make a label so that it is visible on the canvas.
@@ -149,11 +151,14 @@ object Diagram:
       (x >= 0 && x < width)
 
   object Canvas:
-    val small: Canvas =
+    val default: Canvas =
       Canvas(
         width = 40,
         padding = 2
       )
+
+    def make(width: Int, padding: Int): Canvas =
+      Canvas(width = width, padding = padding)
 
     /**
      * Align value to the grid
@@ -231,6 +236,8 @@ object Diagram:
   def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =
     val effectiveView = if view.isEmpty then View.make(intervals) else view
     val translator    = Translator.make(effectiveView, canvas)
+
+    println(("effectiveView", effectiveView))
 
     val d = intervals.filter(_.nonEmpty).foldLeft(Diagram.empty) { case (acc, i) =>
       val y = acc.height
