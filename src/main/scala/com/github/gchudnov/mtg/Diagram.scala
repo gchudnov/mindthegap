@@ -13,7 +13,7 @@ final case class Diagram(
   spans: List[Diagram.Span],
   ticks: List[Diagram.Tick],
   labels: List[Diagram.Label],
-  legend: List[String]
+  legend: List[Diagram.Legend]
 )
 
 object Diagram:
@@ -25,7 +25,7 @@ object Diagram:
       spans = List.empty[Span],
       ticks = List.empty[Tick],
       labels = List.empty[Label],
-      legend = List.empty[String]
+      legend = List.empty[Legend]
     )
 
   /**
@@ -231,6 +231,11 @@ object Diagram:
       List(Tick(x0), Tick(x1))
 
   /**
+   * Legend Entry
+   */
+  final case class Legend(value: String)
+
+  /**
    * Make a Diagram that can be rendered
    */
   def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =
@@ -245,7 +250,7 @@ object Diagram:
       val span    = translator.translate(i).copy(y = y)
       val ticks   = span.ticks
       val labels  = List(canvas.label(span.x0, Show.leftValue(i.left.value)), canvas.label(span.x1, Show.rightValue(i.right.value)))
-      val iLegend = i.show
+      val iLegend = Legend(i.show)
 
       acc.copy(
         width = canvas.width,
