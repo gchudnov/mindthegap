@@ -290,12 +290,6 @@ object Diagram:
         if (p >= 0 && p < view.size) then view(p) = ch
       }
 
-    // private def drawLabelNone(l: Label): List[String] =
-    //   l.value.toList.zipWithIndex.foreach { case (ch, i) =>
-    //     val p = l.pos + i
-    //     if (p >= 0 && p < view.size) then view(p) = ch
-    //   }
-
     /**
      * Measure the number of lines required to draw all labels
      */
@@ -420,12 +414,6 @@ object Diagram:
 
 //   private def drawTick(l: Label, theme: Theme, view: Array[Char]): Unit =
 //     if ((l.tick >= 0) && (l.tick < view.size)) then view(l.tick) = theme.tick
-
-//   private def drawLabel(l: Label, view: Array[Char]): Unit =
-//     l.value.toList.zipWithIndex.foreach { case (ch, i) =>
-//       val p = l.pos + i
-//       if (p >= 0 && p < view.size) then view(p) = ch
-//     }
 
 //   /**
 //    * Draw Stacked Labels
