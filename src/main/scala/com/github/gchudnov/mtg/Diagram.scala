@@ -236,6 +236,89 @@ object Diagram:
   final case class Legend(value: String)
 
   /**
+   * Renderer
+   */
+  sealed trait Renderer:
+    def render(d: Diagram): List[String]
+
+  object Renderer:
+    def make(theme: Theme): Renderer =
+      new BasicRenderer(theme)
+
+  /**
+   * Basic Renderer
+   */
+  final class BasicRenderer(theme: Theme) extends Renderer:
+
+    override def render(d: Diagram): List[String] =
+      // axis height
+      val ah = 1
+
+      // height of labels
+      val labels = drawLabels(d.labels, d.width)
+
+      println(("labels", labels))
+
+      ???
+
+    /**
+     * Calculate the height of the labels
+     */
+    private def drawLabels(ls: List[Label], width: Int): List[String] =
+      theme.label match
+        case Theme.Label.None =>
+          drawLabelsNone(ls, width)
+        case Theme.Label.NoOverlap =>
+          drawLabelsNoOverlap(ls, width)
+        case Theme.Label.Stacked =>
+          drawLabelsStacked(ls, width)
+
+    private def drawLabelsNone(ls: List[Label], width: Int): List[String] =
+      val view = Array.fill[Char](width)(theme.space)
+      ls.foreach(l => drawLabel(l, view))
+      List(view.mkString)
+
+    private def drawLabelsNoOverlap(ls: List[Label], width: Int): List[String] =
+      ???
+
+    private def drawLabelsStacked(ls: List[Label], width: Int): List[String] =
+      ???
+
+    private def drawLabel(l: Label, view: Array[Char]): Unit =
+      l.value.toList.zipWithIndex.foreach { case (ch, i) =>
+        val p = l.pos + i
+        if (p >= 0 && p < view.size) then view(p) = ch
+      }
+
+    // private def drawLabelNone(l: Label): List[String] =
+    //   l.value.toList.zipWithIndex.foreach { case (ch, i) =>
+    //     val p = l.pos + i
+    //     if (p >= 0 && p < view.size) then view(p) = ch
+    //   }
+
+    /**
+     * Measure the number of lines required to draw all labels
+     */
+    // private def measure(ls: List[Label], width: Int): Int =
+    //   val res = ls.sortBy(_.pos).foldLeft(ListBuffer[Int](0)) { case (acc, l) =>
+    //     val first = l.pos
+    //     val last  = l.pos + l.size
+
+    //     val row = acc.indices.find(i =>
+    //       if first > acc(i) && last <= width then true
+    //       else false
+    //     )
+
+    //     row match
+    //       case None =>
+    //         acc.addOne(last)
+    //       case Some(i) =>
+    //         acc(i) = last
+    //         acc
+    //   }
+    //   res.size
+
+  /**
    * Make a Diagram that can be rendered
    */
   def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =
@@ -269,17 +352,12 @@ object Diagram:
       legend = d.legend.distinct
     )
 
-//   /**
-//    * Render the provided Diagram
-//    */
-//   def render(d: Diagram, theme: Theme): List[String] =
-//     // axis height
-//     val ah = 1
-
-//     // height of labels
-//     val lh = theme.label match
-//       case LabelTheme.None | LabelTheme.NoOverlap => 1
-//       case LabelTheme.Stacked                     => measure(d.labels, d.width)
+  /**
+   * Render the provided Diagram
+   */
+  def render(d: Diagram, theme: Theme): List[String] =
+    val r = Renderer.make(theme)
+    r.render(d)
 
 //     val w = d.width
 //     val h = d.height + ah + lh // axis, labels
@@ -333,32 +411,12 @@ object Diagram:
 //     val result = if theme.legend then chart.zip(legend).map { case (line, text) => s"${line}${theme.space}|${if text.nonEmpty then theme.space.toString else ""}${text}" }
 //     else chart
 
-//     result
+// val result = ???
+
+// result
 
 //   private def clap(value: Double, minValue: Double, maxValue: Double): Double =
 //     if value < minValue then minValue else if value > maxValue then maxValue else value
-
-//   /**
-//    * Measure the number of lines required to draw all labels
-//    */
-//   private def measure(ls: List[Label], width: Int): Int =
-//     val res = ls.sortBy(_.tick).foldLeft(ListBuffer[Int](0)) { case (acc, l) =>
-//       val first = l.pos
-//       val last  = l.pos + l.size
-
-//       val row = acc.indices.find(i =>
-//         if first > acc(i) && last <= width then true
-//         else false
-//       )
-
-//       row match
-//         case None =>
-//           acc.addOne(last)
-//         case Some(i) =>
-//           acc(i) = last
-//           acc
-//     }
-//     res.size
 
 //   private def drawTick(l: Label, theme: Theme, view: Array[Char]): Unit =
 //     if ((l.tick >= 0) && (l.tick < view.size)) then view(l.tick) = theme.tick
