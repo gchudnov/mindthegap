@@ -85,8 +85,11 @@ object Diagram:
       for
         lhs <- left
         rhs <- right
-        dx  <- if summon[Ordering[T]].lt(lhs, rhs) then Some(summon[Numeric[T]].minus(rhs, lhs)) else None
+        dx   = summon[Numeric[T]].minus(rhs, lhs)
       yield dx
+
+    def isEmpty: Boolean =
+      left.isEmpty && right.isEmpty
 
   object View:
     def default[T: Numeric]: View[T] =
@@ -94,6 +97,23 @@ object Diagram:
         left = None,
         right = None
       )
+
+    def make[T: Numeric: Domain](intervals: List[Interval[T]])(using Ordering[Boundary[T]]): View[T] =
+      val xs: List[Interval[T]] = intervals.filter(_.nonEmpty)
+
+      val ls: List[Boundary[T]] = xs.map(_.left).filter(_.isBounded)
+      val rs: List[Boundary[T]] = xs.map(_.right).filter(_.isBounded)
+
+      val lMin: Option[T] = ls.minOption.flatMap(_.value)
+      val rMax: Option[T] = rs.maxOption.flatMap(_.value)
+
+      val (vMin, vMax) = (lMin, rMax) match
+        case xy @ (Some(x), Some(y)) =>
+          if summon[Ordering[T]].equiv(x, y) then (Some(summon[Domain[T]].pred(x)), Some(summon[Domain[T]].succ(y))) else xy
+        case xy =>
+          xy
+
+      View(left = vMin, right = vMax)
 
   /**
    * Canvas
@@ -145,7 +165,7 @@ object Diagram:
    * Translator
    */
   sealed trait Translator[T: Numeric]:
-    def translate(b: Boundary[T]): Int
+    def translate(i: Interval[T]): Span
 
   object Translator:
     def make[T: Numeric](view: View[T], canvas: Canvas): Translator[T] =
@@ -156,7 +176,9 @@ object Diagram:
     private val ok: Option[Double] =
       view.size.map(vsz => canvas.size.toDouble / summon[Numeric[T]].toDouble(vsz))
 
-    override def translate(b: Boundary[T]): Int =
+    println(("ok", ok))
+
+    private def translate(b: Boundary[T]): Int =
       b.value match
         case None =>
           // -inf or +inf
@@ -166,13 +188,18 @@ object Diagram:
             case Some(k) =>
               // finite view-boundaries
               val numT = summon[Numeric[T]]
-              val left = view.left.get // NOTE: .get is safe, we MUST have the left value, since otherwise `k` would be None
+              val left = view.left.get // NOTE: .get is safe, otherwise `k` would be None
               val dx   = numT.minus(x, left)
               val dd   = numT.toDouble(dx)
-              Canvas.align((k * dd) + canvas.left)
+              Canvas.align((k * dd) + canvas.first)
             case None =>
               // one of the view-boundaries is inf
               if b.isLeft then canvas.first else canvas.last
+
+    override def translate(i: Interval[T]): Span =
+      val x0 = translate(i.left)
+      val x1 = translate(i.right)
+      Span(x0 = x0, x1 = x1, y = 0, includeX0 = i.left.isInclude, includeX1 = i.right.isInclude)
 
   /**
    * Tick
@@ -195,59 +222,40 @@ object Diagram:
     def size: Int =
       x1 - x0
 
+    def ticks: List[Tick] =
+      List(Tick(x0), Tick(x1))
+
   /**
    * Make a Diagram that can be rendered
    */
   def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =
-    val tNum = summon[Numeric[T]]
+    val effectiveView = if view.isEmpty then View.make(intervals) else view
+    val translator    = Translator.make(effectiveView, canvas)
 
-    val xs: List[Interval[T]] = intervals.filter(_.nonEmpty)
-    val bs: List[Boundary[T]] = xs.flatMap(it => List[Boundary[T]](it.left, it.right)).filter(_.isBounded)
+    val d = intervals.filter(_.nonEmpty).foldLeft(Diagram.empty) { case (acc, i) =>
+      val y = acc.height
 
-    // effective view that displayed on the canbas
-    val effectiveView = View(
-      left = view.left.fold(bs.minOption.flatMap(_.value))(Some(_)),
-      right = view.right.fold(bs.maxOption.flatMap(_.value))(Some(_))
+      val span    = translator.translate(i).copy(y = y)
+      val ticks   = span.ticks
+      val labels  = List(canvas.label(span.x0, Show.leftValue(i.left.value)), canvas.label(span.x1, Show.rightValue(i.right.value)))
+      val iLegend = i.show
+
+      acc.copy(
+        width = canvas.width,
+        height = y + 1,
+        spans = acc.spans :+ span,
+        ticks = acc.ticks ++ ticks,
+        labels = acc.labels ++ labels,
+        legend = acc.legend :+ iLegend
+      )
+    }
+
+    d.copy(
+      spans = d.spans,
+      ticks = d.ticks.distinct,
+      labels = d.labels.distinct,
+      legend = d.legend.distinct
     )
-
-    // translates boundaries to canvas coordinates
-    val translator = Translator.make(effectiveView, canvas)
-
-    // xs.foldLeft(Diagram.empty) { case (acc, i) =>
-    //   val y = acc.height
-
-    //   // spans
-    //   val x0   = translateX(i.left.value, isLeft = true)
-    //   val x1   = if i.isProper then translateX(i.right.value, isLeft = false) else x0
-    //   val span = Span(x0 = x0, x1 = x1, y = y, includeX0 = i.left.isInclude, includeX1 = i.right.isInclude)
-
-    //   // ticks, labels
-    //   val x0Text  = Show.leftValue(i.left.value)
-    //   val x0Pos   = toLabelPos(x0, x0Text)
-    //   val x0Tick  = Tick(x0)
-    //   val x0Label = Label(pos = x0Pos, value = x0Text)
-
-    //   val x1Text  = Show.rightValue(i.right.value)
-    //   val x1Pos   = toLabelPos(x1, x1Text)
-    //   val x1Tick  = Tick(x1)
-    //   val x1Label = Label(pos = x1Pos, value = x1Text)
-
-    //   val ticks  = List(x0Tick, x1Tick)
-    //   val labels = List(x0Label, x1Label)
-
-    //   val iLegend = i.show
-
-    //   acc.copy(
-    //     width = canvas.width,
-    //     height = y + 1,
-    //     spans = acc.spans :+ span,
-    //     ticks = (acc.ticks ++ ticks).distinct,
-    //     labels = (acc.labels ++ labels).distinct,
-    //     legend = acc.legend :+ iLegend
-    //   )
-    // }
-
-    ???
 
 //   /**
 //    * Render the provided Diagram
