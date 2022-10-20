@@ -238,16 +238,29 @@ final class DiagramSpec extends TestSpec:
           actual mustBe expected
         }
 
-        "draw meeting labels as stacked" in {
+        "draw meeting labels" in {
           val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
 
           val r = new Diagram.BasicRenderer(stackedLabelTheme)
 
           val actual = r.drawLabels(ls, 40)
           val expected = List(
-            "  1  2      5           10          15  ",
-            "-∞                                      ",
-            "                                      +∞"
+            "-∞   2      5           10          15  ",
+            "  1                                   +∞"
+          )
+
+          actual mustBe expected
+        }
+
+        "draw overlapping labels" in {
+          val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
+
+          val r = new Diagram.BasicRenderer(stackedLabelTheme)
+
+          val actual = r.drawLabels(ls, 40)
+          val expected = List(
+            "100 400                                 ",
+            "   300                                  "
           )
 
           actual mustBe expected

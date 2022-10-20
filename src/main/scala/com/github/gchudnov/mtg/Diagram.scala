@@ -130,7 +130,7 @@ object Diagram:
 
     val size: Int = last - first
 
-    println(s"left: ${left}, right: ${right}, first: ${first}, last: ${last}, size: ${size}")
+    // println(s"left: ${left}, right: ${right}, first: ${first}, last: ${last}, size: ${size}")
 
     /**
      * Make a label so that it is visible on the canvas.
@@ -181,7 +181,7 @@ object Diagram:
     private val ok: Option[Double] =
       view.size.map(vsz => canvas.size.toDouble / summon[Numeric[T]].toDouble(vsz))
 
-    println(("ok", ok))
+    // println(("ok", ok))
 
     private def translate(b: Boundary[T]): Int =
       b.value match
@@ -265,7 +265,7 @@ object Diagram:
       // height of labels
       val labels = drawLabels(d.labels, d.width)
 
-      println(("labels", labels))
+      // println(("labels", labels))
 
       ???
 
@@ -298,18 +298,20 @@ object Diagram:
       List(view.mkString)
 
     private def drawLabelsStacked(ls: List[Label], width: Int): List[String] =
-      val emptyState = (Vector(Array.fill[Char](width)(theme.space)), ListBuffer[Int](0))
+      val emptyState = (Vector(Array.fill[Char](width)(theme.space)), ListBuffer[Int](-1))
       val res = ls
         .sortBy(_.pos)
         .foldLeft(emptyState)((acc, l) =>
           val p = l.pos
           val q = l.pos + l.size
 
+          println(l)
+
           val views = acc._1
           val last  = acc._2
 
           val indides = last.indices
-          val i       = indides.find(i => (p > last(i) && q < width))
+          val i       = indides.find(i => (p > last(i) && q <= width))
 
           i match
             case None =>
@@ -384,7 +386,7 @@ object Diagram:
     val effectiveView = if view.isEmpty then View.make(intervals) else view
     val translator    = Translator.make(effectiveView, canvas)
 
-    println(("effectiveView", effectiveView))
+    // println(("effectiveView", effectiveView))
 
     val d = intervals.filter(_.nonEmpty).foldLeft(Diagram.empty) { case (acc, i) =>
       val y = acc.height
