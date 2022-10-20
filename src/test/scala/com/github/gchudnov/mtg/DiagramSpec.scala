@@ -169,7 +169,7 @@ final class DiagramSpec extends TestSpec:
 
           val r = new Diagram.BasicRenderer(noneLabelTheme)
 
-          val actual   = r.drawLabels(ls, 40)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("  5                                 10  ")
 
           actual mustBe expected
@@ -180,7 +180,7 @@ final class DiagramSpec extends TestSpec:
 
           val r = new Diagram.BasicRenderer(noneLabelTheme)
 
-          val actual   = r.drawLabels(ls, 40)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("-∞1  2      5           10          15+∞")
 
           actual mustBe expected
@@ -191,7 +191,7 @@ final class DiagramSpec extends TestSpec:
 
           val r = new Diagram.BasicRenderer(noneLabelTheme)
 
-          val actual   = r.drawLabels(ls, 40)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("1003400                                 ")
 
           actual mustBe expected
@@ -206,7 +206,7 @@ final class DiagramSpec extends TestSpec:
 
           val r = new Diagram.BasicRenderer(noOverlapLabelTheme)
 
-          val actual   = r.drawLabels(ls, 40)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("100 400                                 ")
 
           actual mustBe expected
@@ -217,7 +217,7 @@ final class DiagramSpec extends TestSpec:
 
           val r = new Diagram.BasicRenderer(noOverlapLabelTheme)
 
-          val actual   = r.drawLabels(ls, 40)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("-∞   2      5           10          15  ")
 
           actual mustBe expected
@@ -232,7 +232,7 @@ final class DiagramSpec extends TestSpec:
 
           val r = new Diagram.BasicRenderer(stackedLabelTheme)
 
-          val actual   = r.drawLabels(ls, 40)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("  5                                 10  ")
 
           actual mustBe expected
@@ -243,7 +243,7 @@ final class DiagramSpec extends TestSpec:
 
           val r = new Diagram.BasicRenderer(stackedLabelTheme)
 
-          val actual = r.drawLabels(ls, 40)
+          val actual = r.drawLabels(ls, canvas.width)
           val expected = List(
             "-∞   2      5           10          15  ",
             "  1                                   +∞"
@@ -257,7 +257,7 @@ final class DiagramSpec extends TestSpec:
 
           val r = new Diagram.BasicRenderer(stackedLabelTheme)
 
-          val actual = r.drawLabels(ls, 40)
+          val actual = r.drawLabels(ls, canvas.width)
           val expected = List(
             "100 400                                 ",
             "   300                                  "
@@ -267,5 +267,15 @@ final class DiagramSpec extends TestSpec:
         }
       }
 
+      "draw ticks" in {
+        val ts = List(Tick(2), Tick(12), Tick(25), Tick(0), Tick(37), Tick(5), Tick(39))
+
+        val r = new Diagram.BasicRenderer(theme)
+
+        val actual = r.drawTicks(ts, canvas.width)
+        val expected = List("+-+--+------+------------+-----------+-+") 
+
+        actual mustBe expected
+      }
     }
   }

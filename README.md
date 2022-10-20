@@ -244,7 +244,7 @@ Interval.open(1, 4).isDisjoint(Interval.open(3, 6)) // true
 Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) // true
 ```
 
-## IsLess
+### IsLess
 
 Checks whether `A` less-than `B`.
 

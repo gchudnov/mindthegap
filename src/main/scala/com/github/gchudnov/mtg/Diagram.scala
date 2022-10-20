@@ -259,19 +259,18 @@ object Diagram:
   final class BasicRenderer(theme: Theme) extends Renderer:
 
     override def render(d: Diagram): List[String] =
-      // axis height
-      val ah = 1
-
-      // height of labels
+      val ticks  = drawTicks(d.ticks, d.width)
       val labels = drawLabels(d.labels, d.width)
 
       // println(("labels", labels))
 
       ???
 
-    /**
-     * Calculate the height of the labels
-     */
+    private[mtg] def drawTicks(ts: List[Tick], width: Int): List[String] =
+      val view = Array.fill[Char](width)(theme.axis)
+      ts.sortBy(_.pos).foreach(t => drawTick(t, view))
+      List(view.mkString)
+
     private[mtg] def drawLabels(ls: List[Label], width: Int): List[String] =
       theme.label match
         case Theme.Label.None =>
@@ -305,8 +304,6 @@ object Diagram:
           val p = l.pos
           val q = l.pos + l.size
 
-          println(l)
-
           val views = acc._1
           val last  = acc._2
 
@@ -327,57 +324,14 @@ object Diagram:
 
       res._1.map(_.mkString).toList
 
-    /**
-     * Measure the number of lines required to draw all labels
-     */
-    // private def measure(ls: List[Label], width: Int): Int =
-    //   val res = ls.sortBy(_.pos).foldLeft(ListBuffer[Int](0)) { case (acc, l) =>
-    //     val first = l.pos
-    //     val last  = l.pos + l.size
-
-    //     val row = acc.indices.find(i =>
-    //       if first > acc(i) && last <= width then true
-    //       else false
-    //     )
-
-    //     row match
-    //       case None =>
-    //         acc.addOne(last)
-    //       case Some(i) =>
-    //         acc(i) = last
-    //         acc
-    //   }
-    //   res.size
-
-//   /**
-//    * Draw Stacked Labels
-//    */
-//   private def drawStacked(ls: List[Label], theme: Theme, view: Array[Array[Char]]): Unit =
-//     val width  = view(0).size
-//     val height = view.size
-
-//     ls.sortBy(_.tick)
-//       .foreach(l =>
-//         val first = l.pos
-//         val last  = l.pos + l.size
-
-//         val prev = if first > 0 then first - 1 else 0
-
-//         val row = view.indices.find(i =>
-//           if view(i)(prev) == theme.space && last <= width then true
-//           else false
-//         )
-
-//         row match
-//           case None    => require(false, "labels were incorrectly measured")
-//           case Some(x) => drawLabel(l, view(x))
-//       )
-
     private def drawLabel(l: Label, view: Array[Char]): Unit =
       l.value.toList.zipWithIndex.foreach { case (ch, i) =>
         val p = l.pos + i
         if (p >= 0 && p < view.size) then view(p) = ch
       }
+
+    private def drawTick(t: Tick, view: Array[Char]): Unit =
+      if ((t.pos >= 0) && (t.pos < view.size)) then view(t.pos) = theme.tick
 
   /**
    * Make a Diagram that can be rendered
@@ -472,36 +426,4 @@ object Diagram:
 //     val result = if theme.legend then chart.zip(legend).map { case (line, text) => s"${line}${theme.space}|${if text.nonEmpty then theme.space.toString else ""}${text}" }
 //     else chart
 
-// val result = ???
-
 // result
-
-//   private def clap(value: Double, minValue: Double, maxValue: Double): Double =
-//     if value < minValue then minValue else if value > maxValue then maxValue else value
-
-//   private def drawTick(l: Label, theme: Theme, view: Array[Char]): Unit =
-//     if ((l.tick >= 0) && (l.tick < view.size)) then view(l.tick) = theme.tick
-
-//   /**
-//    * Draw Stacked Labels
-//    */
-//   private def drawStacked(ls: List[Label], theme: Theme, view: Array[Array[Char]]): Unit =
-//     val width  = view(0).size
-//     val height = view.size
-
-//     ls.sortBy(_.tick)
-//       .foreach(l =>
-//         val first = l.pos
-//         val last  = l.pos + l.size
-
-//         val prev = if first > 0 then first - 1 else 0
-
-//         val row = view.indices.find(i =>
-//           if view(i)(prev) == theme.space && last <= width then true
-//           else false
-//         )
-
-//         row match
-//           case None    => require(false, "labels were incorrectly measured")
-//           case Some(x) => drawLabel(l, view(x))
-//       )
