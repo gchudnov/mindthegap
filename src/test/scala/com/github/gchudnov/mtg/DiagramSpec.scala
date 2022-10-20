@@ -160,59 +160,99 @@ final class DiagramSpec extends TestSpec:
     }
 
     "renderer" should {
-      "draw non-overlapping labels with Theme.Label.None" in {
-        val ls = List(Label(2, "5"), Label(36, "10"))
 
-        val r = new Diagram.BasicRenderer(theme.copy(label = Theme.Label.None))
+      "Theme.Label.None" should {
+        val noneLabelTheme = theme.copy(label = Theme.Label.None)
 
-        val actual   = r.drawLabels(ls, 40)
-        val expected = List("  5                                 10  ")
+        "draw non-overlapping labels" in {
+          val ls = List(Label(2, "5"), Label(36, "10"))
 
-        actual mustBe expected
+          val r = new Diagram.BasicRenderer(noneLabelTheme)
+
+          val actual   = r.drawLabels(ls, 40)
+          val expected = List("  5                                 10  ")
+
+          actual mustBe expected
+        }
+
+        "draw meeting labels" in {
+          val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
+
+          val r = new Diagram.BasicRenderer(noneLabelTheme)
+
+          val actual   = r.drawLabels(ls, 40)
+          val expected = List("-∞1  2      5           10          15+∞")
+
+          actual mustBe expected
+        }
+
+        "draw overlapping labels" in {
+          val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
+
+          val r = new Diagram.BasicRenderer(noneLabelTheme)
+
+          val actual   = r.drawLabels(ls, 40)
+          val expected = List("1003400                                 ")
+
+          actual mustBe expected
+        }
       }
 
-      "draw meeting labels with Theme.Label.None" in {
-        val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
+      "Theme.Label.NoOverlap" should {
+        val noOverlapLabelTheme = theme.copy(label = Theme.Label.NoOverlap)
 
-        val r = new Diagram.BasicRenderer(theme.copy(label = Theme.Label.None))
+        "draw only non-overlapping labels" in {
+          val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
 
-        val actual   = r.drawLabels(ls, 40)
-        val expected = List("-∞1  2      5           10          15+∞")
+          val r = new Diagram.BasicRenderer(noOverlapLabelTheme)
 
-        actual mustBe expected
+          val actual   = r.drawLabels(ls, 40)
+          val expected = List("100 400                                 ")
+
+          actual mustBe expected
+        }
+
+        "draw only non-meeting labels" in {
+          val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
+
+          val r = new Diagram.BasicRenderer(noOverlapLabelTheme)
+
+          val actual   = r.drawLabels(ls, 40)
+          val expected = List("-∞   2      5           10          15  ")
+
+          actual mustBe expected
+        }
       }
 
-      "draw overlapping labels with Theme.Label.None" in {
-        val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
+      "Theme.Label.Stacked" should {
+        val stackedLabelTheme = theme.copy(label = Theme.Label.Stacked)
 
-        val r = new Diagram.BasicRenderer(theme.copy(label = Theme.Label.None))
+        "draw non-overlapping and non-meetinglabels on one line" in {
+          val ls = List(Label(2, "5"), Label(36, "10"))
 
-        val actual   = r.drawLabels(ls, 40)
-        val expected = List("1003400                                 ")
+          val r = new Diagram.BasicRenderer(stackedLabelTheme)
 
-        actual mustBe expected
+          val actual   = r.drawLabels(ls, 40)
+          val expected = List("  5                                 10  ")
+
+          actual mustBe expected
+        }
+
+        "draw meeting labels as stacked" in {
+          val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
+
+          val r = new Diagram.BasicRenderer(stackedLabelTheme)
+
+          val actual = r.drawLabels(ls, 40)
+          val expected = List(
+            "  1  2      5           10          15  ",
+            "-∞                                      ",
+            "                                      +∞"
+          )
+
+          actual mustBe expected
+        }
       }
 
-      "draw only non-overlapping labels with Theme.Label.NoOverlap" in {
-        val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
-
-        val r = new Diagram.BasicRenderer(theme.copy(label = Theme.Label.NoOverlap))
-
-        val actual   = r.drawLabels(ls, 40)
-        val expected = List("100 400                                 ")
-
-        actual mustBe expected
-      }
-
-      "draw non-meeting labels with Theme.Label.NoOverlap" in {
-        val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
-
-        val r = new Diagram.BasicRenderer(theme.copy(label = Theme.Label.NoOverlap))
-
-        val actual   = r.drawLabels(ls, 40)
-        val expected = List("-∞   2      5           10          15  ")
-
-        actual mustBe expected
-      }
     }
   }

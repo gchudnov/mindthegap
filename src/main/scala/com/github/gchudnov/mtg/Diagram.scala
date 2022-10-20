@@ -297,26 +297,33 @@ object Diagram:
         )
       List(view.mkString)
 
-//         d.labels
-//           .sortBy(_.tick)
-//           .foreach(l =>
-//             if !isOverlap(l) then
-//               drawTick(l, theme, arr(d.height))
-//               drawLabel(l, arr(d.height + 1))
-//           )
-
-//     def isOverlap(l: Label): Boolean =
-//       if l.pos > 0 then arr(d.height + 1)(l.pos - 1) != theme.space
-//       else false
-
     private def drawLabelsStacked(ls: List[Label], width: Int): List[String] =
-      ???
+      val emptyState = (Vector(Array.fill[Char](width)(theme.space)), ListBuffer[Int](0))
+      val res = ls
+        .sortBy(_.pos)
+        .foldLeft(emptyState)((acc, l) =>
+          val p = l.pos
+          val q = l.pos + l.size
 
-    private def drawLabel(l: Label, view: Array[Char]): Unit =
-      l.value.toList.zipWithIndex.foreach { case (ch, i) =>
-        val p = l.pos + i
-        if (p >= 0 && p < view.size) then view(p) = ch
-      }
+          val views = acc._1
+          val last  = acc._2
+
+          val indides = last.indices
+          val i       = indides.find(i => (p > last(i) && q < width))
+
+          i match
+            case None =>
+              val view = Array.fill[Char](width)(theme.space)
+              drawLabel(l, view)
+              (views :+ view, last.addOne(q))
+            case Some(j) =>
+              val view = views(j)
+              drawLabel(l, view)
+              last(j) = q
+              (views, last)
+        )
+
+      res._1.map(_.mkString).toList
 
     /**
      * Measure the number of lines required to draw all labels
@@ -339,6 +346,36 @@ object Diagram:
     //         acc
     //   }
     //   res.size
+
+//   /**
+//    * Draw Stacked Labels
+//    */
+//   private def drawStacked(ls: List[Label], theme: Theme, view: Array[Array[Char]]): Unit =
+//     val width  = view(0).size
+//     val height = view.size
+
+//     ls.sortBy(_.tick)
+//       .foreach(l =>
+//         val first = l.pos
+//         val last  = l.pos + l.size
+
+//         val prev = if first > 0 then first - 1 else 0
+
+//         val row = view.indices.find(i =>
+//           if view(i)(prev) == theme.space && last <= width then true
+//           else false
+//         )
+
+//         row match
+//           case None    => require(false, "labels were incorrectly measured")
+//           case Some(x) => drawLabel(l, view(x))
+//       )
+
+    private def drawLabel(l: Label, view: Array[Char]): Unit =
+      l.value.toList.zipWithIndex.foreach { case (ch, i) =>
+        val p = l.pos + i
+        if (p >= 0 && p < view.size) then view(p) = ch
+      }
 
   /**
    * Make a Diagram that can be rendered
