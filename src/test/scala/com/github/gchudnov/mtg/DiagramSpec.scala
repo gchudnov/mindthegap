@@ -158,4 +158,61 @@ final class DiagramSpec extends TestSpec:
         actual mustBe expected
       }
     }
+
+    "renderer" should {
+      "draw non-overlapping labels with Theme.Label.None" in {
+        val ls = List(Label(2, "5"), Label(36, "10"))
+
+        val r = new Diagram.BasicRenderer(theme.copy(label = Theme.Label.None))
+
+        val actual   = r.drawLabels(ls, 40)
+        val expected = List("  5                                 10  ")
+
+        actual mustBe expected
+      }
+
+      "draw meeting labels with Theme.Label.None" in {
+        val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
+
+        val r = new Diagram.BasicRenderer(theme.copy(label = Theme.Label.None))
+
+        val actual   = r.drawLabels(ls, 40)
+        val expected = List("-∞1  2      5           10          15+∞")
+
+        actual mustBe expected
+      }
+
+      "draw overlapping labels with Theme.Label.None" in {
+        val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
+
+        val r = new Diagram.BasicRenderer(theme.copy(label = Theme.Label.None))
+
+        val actual   = r.drawLabels(ls, 40)
+        val expected = List("1003400                                 ")
+
+        actual mustBe expected
+      }
+
+      "draw only non-overlapping labels with Theme.Label.NoOverlap" in {
+        val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
+
+        val r = new Diagram.BasicRenderer(theme.copy(label = Theme.Label.NoOverlap))
+
+        val actual   = r.drawLabels(ls, 40)
+        val expected = List("100 400                                 ")
+
+        actual mustBe expected
+      }
+
+      "draw non-meeting labels with Theme.Label.NoOverlap" in {
+        val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
+
+        val r = new Diagram.BasicRenderer(theme.copy(label = Theme.Label.NoOverlap))
+
+        val actual   = r.drawLabels(ls, 40)
+        val expected = List("-∞   2      5           10          15  ")
+
+        actual mustBe expected
+      }
+    }
   }

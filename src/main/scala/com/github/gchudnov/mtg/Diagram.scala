@@ -218,6 +218,10 @@ object Diagram:
     def size: Int =
       value.size
 
+  object Label:
+    val empty: Label =
+      Label(0, "")
+
   /**
    * Span
    */
@@ -234,6 +238,10 @@ object Diagram:
    * Legend Entry
    */
   final case class Legend(value: String)
+
+  object Legend:
+    val empty: Legend =
+      Legend("")
 
   /**
    * Renderer
@@ -264,7 +272,7 @@ object Diagram:
     /**
      * Calculate the height of the labels
      */
-    private def drawLabels(ls: List[Label], width: Int): List[String] =
+    private[mtg] def drawLabels(ls: List[Label], width: Int): List[String] =
       theme.label match
         case Theme.Label.None =>
           drawLabelsNone(ls, width)
@@ -275,11 +283,31 @@ object Diagram:
 
     private def drawLabelsNone(ls: List[Label], width: Int): List[String] =
       val view = Array.fill[Char](width)(theme.space)
-      ls.foreach(l => drawLabel(l, view))
+      ls.sortBy(_.pos).foreach(l => drawLabel(l, view))
       List(view.mkString)
 
     private def drawLabelsNoOverlap(ls: List[Label], width: Int): List[String] =
-      ???
+      val view = Array.fill[Char](width)(theme.space)
+      ls.sortBy(_.pos)
+        .foldLeft(-1)((last, l) =>
+          if l.pos > last then
+            drawLabel(l, view)
+            l.pos + l.value.size
+          else last
+        )
+      List(view.mkString)
+
+//         d.labels
+//           .sortBy(_.tick)
+//           .foreach(l =>
+//             if !isOverlap(l) then
+//               drawTick(l, theme, arr(d.height))
+//               drawLabel(l, arr(d.height + 1))
+//           )
+
+//     def isOverlap(l: Label): Boolean =
+//       if l.pos > 0 then arr(d.height + 1)(l.pos - 1) != theme.space
+//       else false
 
     private def drawLabelsStacked(ls: List[Label], width: Int): List[String] =
       ???
