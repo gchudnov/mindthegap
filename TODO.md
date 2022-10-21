@@ -1,1 +1,3 @@
 # TODO
+
+- add interval algorithms
