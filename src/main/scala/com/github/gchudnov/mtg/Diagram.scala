@@ -259,7 +259,7 @@ object Diagram:
       val ticks  = drawTicks(d.ticks, d.width)
       val labels = drawLabels(d.labels, d.width)
 
-      val chart = spans ++ ticks ++ labels
+      val chart = (spans ++ ticks ++ labels).filter(_.nonEmpty)
 
       if theme.legend then
         val legend = d.legend.map(_.value) ++ List.fill[String](chart.size - d.legend.size)("")
@@ -294,7 +294,7 @@ object Diagram:
       val view = Array.fill[Char](width)(theme.space)
       ls.sortBy(_.pos)
         .foldLeft(-1)((last, l) =>
-          if l.pos > last then
+          if (l.pos > last) || (l.pos > 0 && l.pos == last && (!view(l.pos - 1).isDigit || (l.value.nonEmpty && !l.value(0).isDigit))) then
             drawLabel(l, view)
             l.pos + l.value.size
           else last

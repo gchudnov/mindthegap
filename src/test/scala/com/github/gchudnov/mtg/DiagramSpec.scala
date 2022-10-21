@@ -16,6 +16,15 @@ final class DiagramSpec extends TestSpec:
 
   "Diagram" when {
     "make" should {
+      "diagram an empty interval" in {
+        val a = Interval.empty[Int]
+
+        val actual   = Diagram.make(List(a), view, canvas)
+        val expected = Diagram.empty
+
+        actual mustBe expected
+      }
+
       "diagram a point" in {
         val a = Interval.degenerate[Int](5) // [5]
 
@@ -164,6 +173,17 @@ final class DiagramSpec extends TestSpec:
       "Theme.Label.None" should {
         val noneLabelTheme = theme.copy(label = Theme.Label.None)
 
+        "draw an empty collection of labels" in {
+          val ls = List.empty[Label]
+
+          val r = new Diagram.BasicRenderer(noneLabelTheme)
+
+          val actual   = r.drawLabels(ls, canvas.width)
+          val expected = List("                                        ")
+
+          actual mustBe expected
+        }
+
         "draw non-overlapping labels" in {
           val ls = List(Label(2, "5"), Label(36, "10"))
 
@@ -201,6 +221,17 @@ final class DiagramSpec extends TestSpec:
       "Theme.Label.NoOverlap" should {
         val noOverlapLabelTheme = theme.copy(label = Theme.Label.NoOverlap)
 
+        "draw an empty collection of labels" in {
+          val ls = List.empty[Label]
+
+          val r = new Diagram.BasicRenderer(noOverlapLabelTheme)
+
+          val actual   = r.drawLabels(ls, canvas.width)
+          val expected = List("                                        ")
+
+          actual mustBe expected
+        }
+
         "draw only non-overlapping labels" in {
           val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
 
@@ -212,13 +243,24 @@ final class DiagramSpec extends TestSpec:
           actual mustBe expected
         }
 
-        "draw only non-meeting labels" in {
+        "draw meeting labels if one of them is non-numeric" in {
           val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
 
           val r = new Diagram.BasicRenderer(noOverlapLabelTheme)
 
           val actual   = r.drawLabels(ls, canvas.width)
-          val expected = List("-∞   2      5           10          15  ")
+          val expected = List("-∞1  2      5           10          15+∞")
+
+          actual mustBe expected
+        }
+
+        "draw only non-meeting labels" in {
+          val ls = List(Label(0, "100"), Label(3, "300"))
+
+          val r = new Diagram.BasicRenderer(noOverlapLabelTheme)
+
+          val actual   = r.drawLabels(ls, canvas.width)
+          val expected = List("100                                     ")
 
           actual mustBe expected
         }
@@ -226,6 +268,17 @@ final class DiagramSpec extends TestSpec:
 
       "Theme.Label.Stacked" should {
         val stackedLabelTheme = theme.copy(label = Theme.Label.Stacked)
+
+        "draw an empty collection of labels" in {
+          val ls = List.empty[Label]
+
+          val r = new Diagram.BasicRenderer(stackedLabelTheme)
+
+          val actual   = r.drawLabels(ls, canvas.width)
+          val expected = List("                                        ")
+
+          actual mustBe expected
+        }
 
         "draw non-overlapping and non-meetinglabels on one line" in {
           val ls = List(Label(2, "5"), Label(36, "10"))
@@ -267,6 +320,17 @@ final class DiagramSpec extends TestSpec:
         }
       }
 
+      "draw an empty collection of ticks" in {
+        val ts = List.empty[Tick]
+
+        val r = new Diagram.BasicRenderer(theme)
+
+        val actual   = r.drawTicks(ts, canvas.width)
+        val expected = List("----------------------------------------")
+
+        actual mustBe expected
+      }
+
       "draw ticks" in {
         val ts = List(Tick(2), Tick(12), Tick(25), Tick(0), Tick(37), Tick(5), Tick(39))
 
@@ -280,6 +344,26 @@ final class DiagramSpec extends TestSpec:
     }
 
     "render" should {
+      "display an empty interval" in {
+        val a       = Interval.empty[Int]
+        val diagram = Diagram.make(List(a), view, canvas)
+
+        val actual   = Diagram.render(diagram, theme)
+        val expected = List.empty[String]
+
+        actual mustBe expected
+      }
+
+      "display an empty interval with a legend" in {
+        val a       = Interval.empty[Int]
+        val diagram = Diagram.make(List(a), view, canvas)
+
+        val actual   = Diagram.render(diagram, theme.copy(legend = true))
+        val expected = List.empty[String]
+
+        actual mustBe expected
+      }
+
       "display a point" in {
         val a       = Interval.degenerate[Int](5) // [5]
         val diagram = Diagram.make(List(a), view, canvas)
