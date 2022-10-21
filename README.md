@@ -262,9 +262,19 @@ Interval.open(4, 7).isLess(Interval.open(6, 15))  // true
 Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 ```
 
+## Display
+
+A collection of intervals can be displayed:
+
+```scala
+```
+
+```text
+```
+
 ## Show
 
-To display an interval, `Show` can be used:
+To pretty-print an interval, `Show` can be used:
 
 ```scala
 import com.github.gchudnov.mtg.Show.given

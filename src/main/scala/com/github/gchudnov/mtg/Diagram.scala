@@ -16,7 +16,7 @@ final case class Diagram(
   legend: List[Diagram.Legend]
 )
 
-object Diagram:
+object Diagram extends NumericDefaults:
 
   val empty: Diagram =
     Diagram(
@@ -66,7 +66,7 @@ object Diagram:
         axis = '-',
         tick = '+',
         legend = false,
-        label = Label.None
+        label = Label.NoOverlap
       )
 
   /**
@@ -92,6 +92,7 @@ object Diagram:
       left.isEmpty && right.isEmpty
 
   object View:
+
     def empty[T: Numeric]: View[T] =
       View(
         left = None,

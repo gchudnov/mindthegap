@@ -7,11 +7,12 @@ import com.github.gchudnov.mtg.Diagram.Tick
 import com.github.gchudnov.mtg.Diagram.Label
 import com.github.gchudnov.mtg.Diagram.Legend
 import com.github.gchudnov.mtg.Diagram.View
+import java.time.OffsetDateTime
 
 final class DiagramSpec extends TestSpec:
 
   private val canvas: Canvas  = Canvas.make(40, 2)
-  private val view: View[Int] = View.empty
+  private val view: View[Int] = View.empty[Int]
   private val theme: Theme    = Theme.default
 
   "Diagram" when {
@@ -165,6 +166,21 @@ final class DiagramSpec extends TestSpec:
         )
 
         actual mustBe expected
+      }
+
+      "diagram offset-date-time" in {
+        import Diagram.given
+
+        val odtView: View[OffsetDateTime] = View.empty[OffsetDateTime]
+
+        val x = summon[Numeric[OffsetDateTime]]
+
+        val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
+
+        val actual = Diagram.make[OffsetDateTime](List(a), odtView, canvas)
+        val expected = Diagram.empty
+
+        // actual mustBe expected
       }
     }
 
@@ -689,6 +705,11 @@ final class DiagramSpec extends TestSpec:
         )
 
         actual mustBe expected
+      }
+
+      // TODO: add a test to display interval with dates
+      "display intervals with OffsetDateTime" in {
+        val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
       }
     }
   }
