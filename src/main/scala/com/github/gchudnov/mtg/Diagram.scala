@@ -381,6 +381,9 @@ object Diagram extends NumericDefaults:
       legend = d.legend.distinct
     )
 
+  def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =
+    make(intervals, view = View.empty[T], canvas = canvas)
+
   /**
    * Render the provided Diagram
    */

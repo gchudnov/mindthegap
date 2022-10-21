@@ -172,15 +172,19 @@ final class DiagramSpec extends TestSpec:
         import Diagram.given
 
         val odtView: View[OffsetDateTime] = View.empty[OffsetDateTime]
-
-        val x = summon[Numeric[OffsetDateTime]]
-
-        val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
+        val a                             = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
 
         val actual = Diagram.make[OffsetDateTime](List(a), odtView, canvas)
-        val expected = Diagram.empty
+        val expected = Diagram(
+          40,
+          1,
+          List(Span(2, 37, 0, true, true)),
+          List(Tick(2), Tick(37)),
+          List(Label(0, "2020-07-02T12:34Z"), Label(23, "2021-07-02T12:34Z")),
+          List(Legend("[2020-07-02T12:34Z,2021-07-02T12:34Z]"))
+        )
 
-        // actual mustBe expected
+        actual mustBe expected
       }
     }
 
@@ -707,9 +711,21 @@ final class DiagramSpec extends TestSpec:
         actual mustBe expected
       }
 
-      // TODO: add a test to display interval with dates
       "display intervals with OffsetDateTime" in {
+        import Diagram.given
+
         val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
+
+        val diagram = Diagram.make[OffsetDateTime](List(a), canvas)
+
+        val actual = Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked))
+        val expected = List(
+          "  [**********************************]  ",
+          "--+----------------------------------+--",
+          "2020-07-02T12:34Z      2021-07-02T12:34Z"
+        )
+
+        actual mustBe expected
       }
     }
   }
