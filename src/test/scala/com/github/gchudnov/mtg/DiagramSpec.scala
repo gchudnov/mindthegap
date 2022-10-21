@@ -272,8 +272,337 @@ final class DiagramSpec extends TestSpec:
 
         val r = new Diagram.BasicRenderer(theme)
 
-        val actual = r.drawTicks(ts, canvas.width)
-        val expected = List("+-+--+------+------------+-----------+-+") 
+        val actual   = r.drawTicks(ts, canvas.width)
+        val expected = List("+-+--+------+------------+-----------+-+")
+
+        actual mustBe expected
+      }
+    }
+
+    "render" should {
+      "display a point" in {
+        val a       = Interval.degenerate[Int](5) // [5]
+        val diagram = Diagram.make(List(a), view, canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "                    *                   ",
+          "--------------------+-------------------",
+          "                    5                   "
+        )
+
+        actual mustBe expected
+      }
+
+      "display two points" in {
+        val a       = Interval.degenerate[Int](5)  // [5]
+        val b       = Interval.degenerate[Int](10) // [10]
+        val diagram = Diagram.make(List(a, b), view, canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "  *                                     ",
+          "                                     *  ",
+          "--+----------------------------------+--",
+          "  5                                 10  "
+        )
+
+        actual mustBe expected
+      }
+
+      "display a closed interval" in {
+        val a       = Interval.closed[Int](5, 10)
+        val diagram = Diagram.make(List(a), view, canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "  [**********************************]  ",
+          "--+----------------------------------+--",
+          "  5                                 10  "
+        )
+
+        actual mustBe expected
+      }
+
+      "display a closed interval on a custom view" in {
+        val a       = Interval.closed[Int](5, 10)
+        val diagram = Diagram.make(List(a), view.copy(left = Some(0), right = Some(20)), canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "           [********]                   ",
+          "-----------+--------+-------------------",
+          "           5       10                   "
+        )
+
+        actual mustBe expected
+      }
+
+      "display left part of a closed interval" in {
+        val a       = Interval.closed[Int](5, 10)
+        val diagram = Diagram.make(List(a), view.copy(left = Some(0), right = Some(7)), canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "                           [************",
+          "---------------------------+------------",
+          "                           5            "
+        )
+
+        actual mustBe expected
+      }
+
+      "display right part of a closed interval" in {
+        val a       = Interval.closed[Int](5, 10)
+        val diagram = Diagram.make(List(a), view.copy(left = Some(7), right = Some(15)), canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "***************]                        ",
+          "---------------+------------------------",
+          "              10                        "
+        )
+
+        actual mustBe expected
+      }
+
+      "display middle part of a closed interval" in {
+        val a       = Interval.closed[Int](5, 10)
+        val diagram = Diagram.make(List(a), view.copy(left = Some(7), right = Some(8)), canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "****************************************",
+          "----------------------------------------",
+          "                                        "
+        )
+
+        actual mustBe expected
+      }
+
+      "display a closed interval with negative boundary" in {
+        val a       = Interval.closed[Int](-5, 10)
+        val diagram = Diagram.make(List(a), view, canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "  [**********************************]  ",
+          "--+----------------------------------+--",
+          " -5                                 10  "
+        )
+
+        actual mustBe expected
+      }
+
+      "display an unbounded interval" in {
+        val a       = Interval.unbounded[Int]
+        val diagram = Diagram.make(List(a), view, canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "(**************************************)",
+          "+--------------------------------------+",
+          "-∞                                    +∞"
+        )
+
+        actual mustBe expected
+      }
+
+      "display a leftOpen interval" in {
+        val a       = Interval.leftOpen(5) // (5, +∞)
+        val diagram = Diagram.make(List(a), view, canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "  (************************************)",
+          "--+------------------------------------+",
+          "  5                                   +∞"
+        )
+
+        actual mustBe expected
+      }
+
+      "display a leftClosed interval" in {
+        val a       = Interval.leftClosed(5) // [5, +∞)
+        val diagram = Diagram.make(List(a), view, canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val exptected = List(
+          "  [************************************)",
+          "--+------------------------------------+",
+          "  5                                   +∞"
+        )
+
+        actual mustBe exptected
+      }
+
+      "display a rightOpen interval" in {
+        val a       = Interval.rightOpen(5) // (-∞, 5)
+        val diagram = Diagram.make(List(a), view, canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "(************************************)  ",
+          "+------------------------------------+--",
+          "-∞                                   5  "
+        )
+
+        actual mustBe expected
+      }
+
+      "display a rightClosed interval" in {
+        val a       = Interval.rightClosed(5) // (-∞, 5]
+        val diagram = Diagram.make(List(a), view, canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "(************************************]  ",
+          "+------------------------------------+--",
+          "-∞                                   5  "
+        )
+
+        actual mustBe expected
+      }
+
+      "display several intervals" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(5, 10)
+        val c = Interval.rightClosed(15)
+        val d = Interval.leftOpen(2)
+
+        val diagram = Diagram.make(List(a, b, c, d), view, canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "  [*********]                           ",
+          "            [************]              ",
+          "(************************************]  ",
+          "     (*********************************)",
+          "+-+--+------+------------+-----------+-+",
+          "-∞1  2      5           10          15+∞"
+        )
+
+        actual mustBe expected
+      }
+
+      "display several intervals with legend" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(5, 10)
+        val c = Interval.rightClosed(15)
+        val d = Interval.leftOpen(2)
+
+        val diagram = Diagram.make(List(a, b, c, d), view, canvas)
+
+        val actual = Diagram.render(diagram, theme.copy(legend = true))
+        val expected = List(
+          "  [*********]                            | [1,5]",
+          "            [************]               | [5,10]",
+          "(************************************]   | (-∞,15]",
+          "     (*********************************) | (2,+∞)",
+          "+-+--+------+------------+-----------+-+ |",
+          "-∞1  2      5           10          15+∞ |"
+        )
+
+        actual mustBe expected
+      }
+
+      "display overlapping intervals" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(2, 6)
+        val c = Interval.closed(3, 7)
+        val d = Interval.closed(4, 8)
+        val e = Interval.closed(5, 9)
+        val f = Interval.closed(6, 10)
+
+        val diagram = Diagram.make(List(a, b, c, d, e, f), view, canvas)
+
+        val actual = Diagram.render(diagram, theme.copy(legend = true))
+        val expected = List(
+          "  [***************]                      | [1,5]",
+          "      [**************]                   | [2,6]",
+          "          [**************]               | [3,7]",
+          "              [**************]           | [4,8]",
+          "                  [**************]       | [5,9]",
+          "                     [***************]   | [6,10]",
+          "--+---+---+---+---+--+---+---+---+---+-- |",
+          "  1   2   3   4   5  6   7   8   9  10   |"
+        )
+
+        actual mustBe expected
+      }
+
+      "display overlapping intervals with overlapping labels (Theme.Label.None)" in {
+        val a = Interval.closed(100, 500)
+        val b = Interval.closed(150, 600)
+        val c = Interval.closed(200, 700)
+        val d = Interval.closed(250, 800)
+        val e = Interval.closed(300, 900)
+        val f = Interval.closed(600, 1000)
+
+        val diagram = Diagram.make(List(a, b, c, d, e, f), view, canvas)
+
+        val actual = Diagram.render(diagram, theme.copy(label = Theme.Label.None))
+        val expected = List(
+          "  [***************]                     ",
+          "    [****************]                  ",
+          "      [******************]              ",
+          "        [********************]          ",
+          "          [**********************]      ",
+          "                     [***************]  ",
+          "--+-+-+-+-+-------+--+---+---+---+---+--",
+          " 10152025300     500600 700 800 9001000 "
+        )
+
+        actual mustBe expected
+      }
+
+      "display overlapping intervals with overlapping labels (Theme.Label.NoOverlap)" in {
+        val a = Interval.closed(100, 500)
+        val b = Interval.closed(150, 600)
+        val c = Interval.closed(200, 700)
+        val d = Interval.closed(250, 800)
+        val e = Interval.closed(300, 900)
+        val f = Interval.closed(600, 1000)
+
+        val diagram = Diagram.make(List(a, b, c, d, e, f), view, canvas)
+
+        val actual = Diagram.render(diagram, theme.copy(label = Theme.Label.NoOverlap))
+        val expected = List(
+          "  [***************]                     ",
+          "    [****************]                  ",
+          "      [******************]              ",
+          "        [********************]          ",
+          "          [**********************]      ",
+          "                     [***************]  ",
+          "--+-+-+-+-+-------+--+---+---+---+---+--",
+          " 100 200 300     500    700 800 900     "
+        )
+
+        actual mustBe expected
+      }
+
+      "display overlapping intervals with overlapping labels (Theme.Label.Stacked)" in {
+        val a = Interval.closed(100, 500)
+        val b = Interval.closed(150, 600)
+        val c = Interval.closed(200, 700)
+        val d = Interval.closed(250, 800)
+        val e = Interval.closed(300, 900)
+        val f = Interval.closed(600, 1000)
+
+        val diagram = Diagram.make(List(a, b, c, d, e, f), view, canvas)
+
+        val actual = Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked))
+        val expected = List(
+          "  [***************]                     ",
+          "    [****************]                  ",
+          "      [******************]              ",
+          "        [********************]          ",
+          "          [**********************]      ",
+          "                     [***************]  ",
+          "--+-+-+-+-+-------+--+---+---+---+---+--",
+          " 100 200 300     500    700 800 900     ",
+          "   150 250          600            1000 "
+        )
 
         actual mustBe expected
       }

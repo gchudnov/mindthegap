@@ -130,8 +130,6 @@ object Diagram:
 
     val size: Int = last - first
 
-    // println(s"left: ${left}, right: ${right}, first: ${first}, last: ${last}, size: ${size}")
-
     /**
      * Make a label so that it is visible on the canvas.
      */
@@ -180,8 +178,6 @@ object Diagram:
 
     private val ok: Option[Double] =
       view.size.map(vsz => canvas.size.toDouble / summon[Numeric[T]].toDouble(vsz))
-
-    // println(("ok", ok))
 
     private def translate(b: Boundary[T]): Int =
       b.value match
@@ -259,12 +255,21 @@ object Diagram:
   final class BasicRenderer(theme: Theme) extends Renderer:
 
     override def render(d: Diagram): List[String] =
+      val spans  = drawSpans(d.spans, d.width)
       val ticks  = drawTicks(d.ticks, d.width)
       val labels = drawLabels(d.labels, d.width)
 
-      // println(("labels", labels))
+      val chart = spans ++ ticks ++ labels
 
-      ???
+      if theme.legend then
+        val legend = d.legend.map(_.value) ++ List.fill[String](chart.size - d.legend.size)("")
+        chart.zip(legend).map { case (ch, lg) => s"${ch}${theme.space}|${if lg.nonEmpty then theme.space.toString else ""}${lg}" }
+      else chart
+
+    private[mtg] def drawSpans(spans: List[Span], width: Int): List[String] =
+      val views: Array[Array[Char]] = Array.fill[Char](spans.size, width)(theme.space)
+      spans.zipWithIndex.foreach((span, i) => drawSpan(span, views(i)))
+      views.map(_.mkString).toList
 
     private[mtg] def drawTicks(ts: List[Tick], width: Int): List[String] =
       val view = Array.fill[Char](width)(theme.axis)
@@ -333,14 +338,22 @@ object Diagram:
     private def drawTick(t: Tick, view: Array[Char]): Unit =
       if ((t.pos >= 0) && (t.pos < view.size)) then view(t.pos) = theme.tick
 
+    private def drawSpan(span: Span, view: Array[Char]): Unit =
+      val p = math.max(span.x0, 0)
+      val q = math.min(span.x1, if view.nonEmpty then view.size - 1 else 0)
+
+      Range.inclusive(p, q).foreach(i => view(i) = theme.fill)
+
+      if span.size > 1 then
+        if (span.x0 >= 0 && span.x0 < view.size) then view(span.x0) = theme.leftBound(span.includeX0)
+        if (span.x1 >= 0 && span.x1 < view.size) then view(span.x1) = theme.rightBound(span.includeX1)
+
   /**
    * Make a Diagram that can be rendered
    */
   def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =
     val effectiveView = if view.isEmpty then View.make(intervals) else view
     val translator    = Translator.make(effectiveView, canvas)
-
-    // println(("effectiveView", effectiveView))
 
     val d = intervals.filter(_.nonEmpty).foldLeft(Diagram.empty) { case (acc, i) =>
       val y = acc.height
@@ -373,57 +386,3 @@ object Diagram:
   def render(d: Diagram, theme: Theme): List[String] =
     val r = Renderer.make(theme)
     r.render(d)
-
-//     val w = d.width
-//     val h = d.height + ah + lh // axis, labels
-
-//     val arr: Array[Array[Char]] = Array.fill[Char](h, w)(theme.space)
-
-//     // spans
-//     d.spans.foreach(s =>
-//       if s.size > 1 then
-//         val s0 = math.max(s.x0, 0)
-//         val s1 = math.min(s.x1, w)
-
-//         Range(s0, s1).foreach(i => arr(s.y)(i) = theme.fill)
-
-//         if (s.x0 >= 0 && s.x0 < w) then arr(s.y)(s.x0) = theme.leftBound(s.includeX0)
-//         if (s.x1 >= 0 && s.x1 < w) then arr(s.y)(s.x1) = theme.rightBound(s.includeX1)
-//       else if (s.x0 >= 0 && s.x0 < w) then arr(s.y)(s.x0) = theme.fill
-//     )
-
-//     // separator
-//     Range(0, d.width).foreach(i => arr(d.height)(i) = theme.axis)
-
-//     def isOverlap(l: Label): Boolean =
-//       if l.pos > 0 then arr(d.height + 1)(l.pos - 1) != theme.space
-//       else false
-
-//     // ticks, labels
-//     theme.label match
-//       case LabelTheme.None =>
-//         d.labels.foreach(l =>
-//           drawTick(l, theme, arr(d.height))
-//           drawLabel(l, arr(d.height + 1))
-//         )
-//       case LabelTheme.NoOverlap =>
-//         d.labels
-//           .sortBy(_.tick)
-//           .foreach(l =>
-//             if !isOverlap(l) then
-//               drawTick(l, theme, arr(d.height))
-//               drawLabel(l, arr(d.height + 1))
-//           )
-//       case LabelTheme.Stacked =>
-//         val larr: Array[Array[Char]] = Array.fill[Char](lh, w)(theme.space)
-//         d.labels.foreach(l => drawTick(l, theme, arr(d.height)))
-//         drawStacked(d.labels, theme, larr)
-//         larr.zipWithIndex.foreach { case (a, i) => a.copyToArray(arr(d.height + ah + i)) }
-
-//     val chart  = arr.map(_.toList.mkString).toList
-//     val legend = d.legend ++ List.fill[String](chart.size - d.legend.size)("")
-
-//     val result = if theme.legend then chart.zip(legend).map { case (line, text) => s"${line}${theme.space}|${if text.nonEmpty then theme.space.toString else ""}${text}" }
-//     else chart
-
-// result
