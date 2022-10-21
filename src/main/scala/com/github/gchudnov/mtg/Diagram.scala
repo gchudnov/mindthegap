@@ -156,7 +156,17 @@ object Diagram extends NumericDefaults:
         padding = 2
       )
 
-    def make(width: Int, padding: Int): Canvas =
+    /**
+     * Make a new Canvas
+     *
+     * @param width
+     *   width of the canvas
+     * @param padding
+     *   left and right padding betweein -inf and +inf and value on a canvas
+     * @return
+     *   canvas
+     */
+    def make(width: Int, padding: Int = 2): Canvas =
       Canvas(width = width, padding = padding)
 
     /**

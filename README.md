@@ -251,7 +251,7 @@ Checks whether `A` less-than `B`.
 ```text
   isLess                    AAAAA            |  a- < b- AND a+ < b+
                             :   :
-  before(a,b)      b        :   : BBBBBBBBB 
+  before(a,b)      b        :   : BBBBBBBBB
   meets(a,b)       m        :   BBBBBBBBB
   overlaps(a,b)    o        : BBBBBBBBB
 ```
@@ -261,6 +261,12 @@ Interval.open(4, 7).isLess(Interval.open(10, 15)) // true
 Interval.open(4, 7).isLess(Interval.open(6, 15))  // true
 Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 ```
+
+## Algorithms
+
+The library contains a number of basic algorithms:
+
+TBD
 
 ## Display
 
@@ -288,15 +294,17 @@ data.foreach(println)
 When printed, will produce the output:
 
 ```text
-  [***************]                     
-    [****************]                  
-      [******************]              
-        [********************]          
-          [**********************]      
-                     [***************]  
+  [***************]
+    [****************]
+      [******************]
+        [********************]
+          [**********************]
+                     [***************]
 --+-+-+-+-+-------+--+---+---+---+---+--
- 100 200 300     500    700 800 900    
+ 100 200 300     500    700 800 900
 ```
+
+### Theme
 
 `Theme` has a number of attributes that can specify the way the diagram is displayed:
 
@@ -320,7 +328,7 @@ val theme: Theme    = Theme.default
 
 val diagram = Diagram.make(List(a, b, c, d), view, canvas)
 
-val data = Diagram.render(diagram, theme.copy(legend = true))
+val data = Diagram.render(diagram, theme.copy(legend = true)) // List[String]
 
 data.foreach(println)
 ```
@@ -348,15 +356,52 @@ val theme: Theme    = Theme.default
 
 val diagram = Diagram.make[OffsetDateTime](List(a), canvas)
 
-val data = Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked))
+val data = Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked)) // List[String]
 
 data.foreach(println)
 ```
 
 ```text
-  [**********************************]  
+  [**********************************]
 --+----------------------------------+--
 2020-07-02T12:34Z      2021-07-02T12:34Z
+```
+
+### View
+
+`View` is used to specify a window to display on a canvas:
+
+```scala
+val a       = Interval.closed[Int](5, 10)
+
+val canvas: Canvas  = Canvas.make(40, 2)
+val view: View[Int] = View.empty[Int]
+val theme: Theme    = Theme.default
+
+val diagram = Diagram.make(List(a), view.copy(left = Some(0), right = Some(7)), canvas)
+
+val data = Diagram.render(diagram, theme) // List[String]
+
+data.foreach(println)
+```
+
+It will display a window `[0, 7]` on a canvas of width `40`:
+
+```text
+                           [************
+---------------------------+------------
+                           5
+```
+
+Here we can see that only a portion of a closed interval `[5, 10]` is displayed, since the right boundary of the view is `7`.
+
+### Canvas
+
+`Canvas` is used to specify the width of the text buffer to draw a diagram on.
+
+```scala
+val canvas1 = Canvas.default   // creates a default canvas
+val canvas2 = Canvas.make(100) // creates a canvas of width 100
 ```
 
 ## Show
