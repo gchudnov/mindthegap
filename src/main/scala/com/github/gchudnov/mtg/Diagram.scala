@@ -52,7 +52,7 @@ object Diagram extends NumericDefaults:
   object Theme:
     enum Label:
       case None      // draw labels as-is on one line
-      case NoOverlap // draw sorted labels that are non-overlapping: next label should be separated by space from the prev one
+      case NoOverlap // draw sorted labels that are non-overlapping, some of the labels might be skipped
       case Stacked   // draw all labels, but stack them onto multiple lines
 
     val default: Theme =

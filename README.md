@@ -267,9 +267,96 @@ Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 A collection of intervals can be displayed:
 
 ```scala
+val a = Interval.closed(100, 500)
+val b = Interval.closed(150, 600)
+val c = Interval.closed(200, 700)
+val d = Interval.closed(250, 800)
+val e = Interval.closed(300, 900)
+val f = Interval.closed(600, 1000)
+
+val canvas: Canvas  = Canvas.make(40, 2)
+val view: View[Int] = View.empty[Int]
+val theme: Theme    = Theme.default
+
+val diagram = Diagram.make(List(a, b, c, d, e, f), view, canvas)
+
+val data = Diagram.render(diagram, theme.copy(label = Theme.Label.NoOverlap)) // List[String]
+
+data.foreach(println)
+```
+
+When printed, will produce the output:
+
+```text
+  [***************]                     
+    [****************]                  
+      [******************]              
+        [********************]          
+          [**********************]      
+                     [***************]  
+--+-+-+-+-+-------+--+---+---+---+---+--
+ 100 200 300     500    700 800 900    
+```
+
+`Theme` has a number of attributes that can specify the way the diagram is displayed:
+
+- `label: Theme.Label` used to set the way labels are displayed:
+  - `Theme.Label.None` - draw labels as-is on one line, labels can overlap;
+  - `Theme.Label.NoOverlap` - draw sorted labels that are non-overlapping, some of the labels might be skipped (default);
+  - `Theme.Label.Stacked` - draw all labels, but stack them onto multiple lines;
+- `legend: Boolean` used to specify whether to display a legend or not (default: false)
+
+When legend is specified:
+
+```scala
+val a = Interval.closed(1, 5)
+val b = Interval.closed(5, 10)
+val c = Interval.rightClosed(15)
+val d = Interval.leftOpen(2)
+
+val canvas: Canvas  = Canvas.make(40, 2)
+val view: View[Int] = View.empty[Int]
+val theme: Theme    = Theme.default
+
+val diagram = Diagram.make(List(a, b, c, d), view, canvas)
+
+val data = Diagram.render(diagram, theme.copy(legend = true))
+
+data.foreach(println)
+```
+
+It will produce the following output:
+
+```text
+  [*********]                            | [1,5]
+            [************]               | [5,10]
+(************************************]   | (-∞,15]
+     (*********************************) | (2,+∞)
++-+--+------+------------+-----------+-+ |
+-∞1  2      5           10          15+∞ |
+```
+
+When intervals are using `OffsetDateTime` or `Instant`, import `Diagram.given` to make a diagram:
+
+```scala
+import Diagram.given
+
+val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
+
+val canvas: Canvas  = Canvas.make(40, 2)
+val theme: Theme    = Theme.default
+
+val diagram = Diagram.make[OffsetDateTime](List(a), canvas)
+
+val data = Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked))
+
+data.foreach(println)
 ```
 
 ```text
+  [**********************************]  
+--+----------------------------------+--
+2020-07-02T12:34Z      2021-07-02T12:34Z
 ```
 
 ## Show
