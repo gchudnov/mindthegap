@@ -8,6 +8,7 @@ import com.github.gchudnov.mtg.Diagram.Label
 import com.github.gchudnov.mtg.Diagram.Legend
 import com.github.gchudnov.mtg.Diagram.View
 import java.time.OffsetDateTime
+import java.time.Instant
 
 final class DiagramSpec extends TestSpec:
 
@@ -723,6 +724,24 @@ final class DiagramSpec extends TestSpec:
           "  [**********************************]  ",
           "--+----------------------------------+--",
           "2020-07-02T12:34Z      2021-07-02T12:34Z"
+        )
+
+        actual mustBe expected
+      }
+
+      "display intervals with Instant" in {
+        import Diagram.given
+
+        val a = Interval.closed(Instant.parse("2020-07-02T12:34:00Z"), Instant.parse("2021-07-02T12:34:00Z"))
+
+        val diagram = Diagram.make[Instant](List(a), canvas)
+
+        val actual = Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked))
+        val expected = List(
+          "  [**********************************]  ",
+          "--+----------------------------------+--",
+          "2020-07-02T12:34:00Z                    ",
+          "                    2021-07-02T12:34:00Z"
         )
 
         actual mustBe expected
