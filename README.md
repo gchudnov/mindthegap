@@ -17,7 +17,7 @@ libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "0.2.0"
 ## Intervals
 
 - Empty | `[b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅`
-- Degenerate | `[a, a] = {a}`
+- Point | `[a, a] = {a}`
 - Proper and Bounded
   - Open | `(a, b) = {x | a < x < b}`
   - Closed | `[a, b] = {x | a <= x <= b}`
@@ -45,14 +45,14 @@ The library support the following relations:
 
 ### Factory Method
 
-`Interval.make` is a universal method that can be used to create an _empty_, _degenerate_ or a _proper_ intervals.
+`Interval.make` is a universal method that can be used to create an _empty_, _point_ or a _proper_ intervals.
 
 ```scala
 // empty ∅
 val a1 = Interval.make(5, true, 2, false)
 val a2 = Interval.make(Boundary.Left(5, true), Boundary.Right(2, false))
 
-// degenerate {5}
+// point {5}
 val b1 = Interval.make(5, true, 5, true)
 val b2 = Interval.make(Boundary.Left(5, true), Boundary.Right(5, true))
 
@@ -70,11 +70,11 @@ In addition, there are a number of specialized methods for interval creation.
 Interval.empty[Int]
 ```
 
-### Degenerate
+### Point
 
 ```scala
 // [a, a] = {a}
-Interval.degenerate(5)
+Interval.point(5)
 ```
 
 ### Proper and Bounded
@@ -262,9 +262,9 @@ Interval.open(4, 7).isLess(Interval.open(6, 15))  // true
 Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 ```
 
-## Algorithms
+## Operations
 
-The library contains a number of basic algorithms: `intersection`, TBD.
+Intervals support the following list of operations: `intersection`, TBD.
 
 ### Intersection
 
@@ -441,7 +441,7 @@ To pretty-print an interval, `Show` can be used:
 import com.github.gchudnov.mtg.Show.given
 
 val a = Interval.empty[Int]
-val b = Interval.degenerate(5)
+val b = Interval.point(5)
 val c = Interval.proper(None, true, Some(2), false)
 
 a.show // ∅

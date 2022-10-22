@@ -5,13 +5,13 @@ import org.scalacheck.Gen
 object Arbitraries:
 
   final case class IntRange(min: Int, max: Int)
-  final case class IntProb(empty: Int, degenerate: Int, proper: Int)
+  final case class IntProb(empty: Int, point: Int, proper: Int)
 
   val intRange10: IntRange = IntRange(min = -10, max = 10)
   val intRange5: IntRange  = IntRange(min = -5, max = 5)
 
-  val intProb226: IntProb = IntProb(empty = 2, degenerate = 2, proper = 6)
-  val intProb127: IntProb = IntProb(empty = 1, degenerate = 2, proper = 7)
+  val intProb226: IntProb = IntProb(empty = 2, point = 2, proper = 6)
+  val intProb127: IntProb = IntProb(empty = 1, point = 2, proper = 7)
 
   /**
    * Parameters to contruct an integer interval `({a, b}, isIncludeA, IsIncludeB)`, where:
@@ -26,7 +26,7 @@ object Arbitraries:
   type IntTuple = ((Option[Int], Option[Int]), Boolean, Boolean)
 
   /**
-   * Generate a tuple (a, a) where both values have the same value. | Degenerate intervals
+   * Generate a tuple (a, a) where both values have the same value. | Point intervals
    */
   private def genIntTupleEq(using ir: IntRange): Gen[(Int, Int)] =
     for x <- Gen.choose(ir.min, ir.max)
@@ -42,7 +42,7 @@ object Arbitraries:
     yield (x, y)
 
   /**
-   * Generate a tuple (a, b), whre a <= b. | Degenerate, Proper intervals
+   * Generate a tuple (a, b), whre a <= b. | Point, Proper intervals
    */
   private def genIntTupleLt(using ir: IntRange): Gen[(Int, Int)] =
     for
@@ -99,24 +99,24 @@ object Arbitraries:
     val g2 = for
       ab <- genIntTupleEq.map(toSome)
       ia <- genBoolEq
-      ib <- if (ia) then Gen.const(false) else genBoolEq // if we selected '[', the second boundary cannot be ']', otherwise it will produce a degenerate interval.
+      ib <- if (ia) then Gen.const(false) else genBoolEq // if we selected '[', the second boundary cannot be ']', otherwise it will produce a point interval.
     yield (ab, ia, ib)
 
     Gen.oneOf(g1, g2)
 
   /**
-   * Generate Degenerate Intervals
+   * Generate Point Intervals
    * {{{
    *   [a, a] = {a}
    * }}}
    */
-  def genDegenerateIntTuple(using ir: IntRange): Gen[IntTuple] =
+  def genPointIntTuple(using ir: IntRange): Gen[IntTuple] =
     for ab <- genIntTupleEq.map(toSome) yield (ab, true, true)
 
   /**
    * Generate Proper Intervals
    *
-   * Neither Empty nor Degenerate
+   * Neither Empty nor Point
    * {{{
    *   {a, b}
    * }}}
@@ -143,12 +143,12 @@ object Arbitraries:
     yield ((oa, ob), ia, ib)
 
   /**
-   * Generate one of the (Empty, Degenerate, Proper) intervals
+   * Generate one of the (Empty, Point, Proper) intervals
    */
   def genOneIntTuple(using ir: IntRange, ip: IntProb): Gen[IntTuple] =
     Gen.frequency(
       ip.empty      -> genEmptyIntTuple,
-      ip.degenerate -> genDegenerateIntTuple,
+      ip.point -> genPointIntTuple,
       ip.proper     -> genProperIntTuple
     )
 

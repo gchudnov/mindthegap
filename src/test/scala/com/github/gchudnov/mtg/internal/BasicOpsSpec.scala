@@ -118,7 +118,7 @@ final class BasicOpsSpec extends TestSpec:
         val b = Interval.closed(1, 5)
 
         val actual   = a.intersection(b)
-        val expected = Interval.degenerate(5)
+        val expected = Interval.point(5)
 
         actual mustBe expected
       }
@@ -138,7 +138,7 @@ final class BasicOpsSpec extends TestSpec:
         val b = Interval.closed(5, 10)
 
         val actual   = a.intersection(b)
-        val expected = Interval.degenerate(5)
+        val expected = Interval.point(5)
 
         actual mustBe expected
       }

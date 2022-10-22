@@ -38,27 +38,27 @@ final class BeforeSpec extends TestSpec:
       "manual check" in {
         // Empty
         Interval.empty[Int].before(Interval.empty[Int]) mustBe (false)
-        Interval.empty[Int].before(Interval.degenerate(1)) mustBe (false)
+        Interval.empty[Int].before(Interval.point(1)) mustBe (false)
         Interval.empty[Int].before(Interval.closed(1, 4)) mustBe (false)
         Interval.empty[Int].before(Interval.open(1, 4)) mustBe (false)
         Interval.empty[Int].before(Interval.unbounded[Int]) mustBe (false)
 
-        // Degenerate (Point)
-        Interval.degenerate(5).before(Interval.empty[Int]) mustBe (false)
-        Interval.degenerate(5).before(Interval.degenerate(5)) mustBe (false)
-        Interval.degenerate(5).before(Interval.degenerate(6)) mustBe (true)
-        Interval.degenerate(6).after(Interval.degenerate(5)) mustBe (true)
-        Interval.degenerate(5).before(Interval.degenerate(10)) mustBe (true)
-        Interval.degenerate(5).before(Interval.open(5, 10)) mustBe (true)
-        Interval.degenerate(5).before(Interval.closed(5, 10)) mustBe (false)
-        Interval.degenerate(5).before(Interval.closed(6, 10)) mustBe (true)
-        Interval.degenerate(5).before(Interval.leftClosed(5)) mustBe (false)
-        Interval.degenerate(5).before(Interval.leftClosed(6)) mustBe (true)
-        Interval.degenerate(5).before(Interval.unbounded[Int]) mustBe (false)
+        // Point
+        Interval.point(5).before(Interval.empty[Int]) mustBe (false)
+        Interval.point(5).before(Interval.point(5)) mustBe (false)
+        Interval.point(5).before(Interval.point(6)) mustBe (true)
+        Interval.point(6).after(Interval.point(5)) mustBe (true)
+        Interval.point(5).before(Interval.point(10)) mustBe (true)
+        Interval.point(5).before(Interval.open(5, 10)) mustBe (true)
+        Interval.point(5).before(Interval.closed(5, 10)) mustBe (false)
+        Interval.point(5).before(Interval.closed(6, 10)) mustBe (true)
+        Interval.point(5).before(Interval.leftClosed(5)) mustBe (false)
+        Interval.point(5).before(Interval.leftClosed(6)) mustBe (true)
+        Interval.point(5).before(Interval.unbounded[Int]) mustBe (false)
 
         // [-∞,0], {4}
-        Interval.degenerate(4).after(Interval.proper[Int](None, true, Some(0), true)) mustBe (true)
-        Interval.proper[Int](None, true, Some(0), true).before(Interval.degenerate(4)) mustBe (true)
+        Interval.point(4).after(Interval.proper[Int](None, true, Some(0), true)) mustBe (true)
+        Interval.proper[Int](None, true, Some(0), true).before(Interval.point(4)) mustBe (true)
 
         // Proper
         Interval.open(4, 7).before(Interval.open(4, 7)) mustBe (false)

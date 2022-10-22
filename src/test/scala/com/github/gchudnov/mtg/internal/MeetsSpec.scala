@@ -38,22 +38,22 @@ final class MeetsSpec extends TestSpec: // with IntervalRelAssert {}
       "manual check" in {
         // Empty
         Interval.empty[Int].meets(Interval.empty[Int]) mustBe (false)
-        Interval.empty[Int].meets(Interval.degenerate(0)) mustBe (false)
+        Interval.empty[Int].meets(Interval.point(0)) mustBe (false)
         Interval.empty[Int].meets(Interval.closed(5, 10)) mustBe (false)
         Interval.empty[Int].meets(Interval.unbounded[Int]) mustBe (false)
 
-        // Degenerate
+        // Point
         // 5  {}
-        Interval.degenerate(6).meets(Interval.empty[Int]) mustBe (false)
+        Interval.point(6).meets(Interval.empty[Int]) mustBe (false)
 
         // 5  5
-        Interval.degenerate(5).meets(Interval.degenerate(5)) mustBe (false)
+        Interval.point(5).meets(Interval.point(5)) mustBe (false)
 
         // 5  6
-        Interval.degenerate(5).meets(Interval.degenerate(6)) mustBe (false)
+        Interval.point(5).meets(Interval.point(6)) mustBe (false)
 
         // 6  5
-        Interval.degenerate(6).meets(Interval.degenerate(5)) mustBe (false)
+        Interval.point(6).meets(Interval.point(5)) mustBe (false)
 
         // Proper
         // [1, 5]  [5, 10]

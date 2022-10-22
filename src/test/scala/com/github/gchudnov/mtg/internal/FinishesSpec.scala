@@ -38,14 +38,14 @@ final class FinishesSpec extends TestSpec: // with IntervalRelAssert {}
       "manual check" in {
         // Empty
         Interval.empty[Int].finishes(Interval.empty[Int]) mustBe (false)
-        Interval.empty[Int].finishes(Interval.degenerate(0)) mustBe (false)
+        Interval.empty[Int].finishes(Interval.point(0)) mustBe (false)
         Interval.empty[Int].finishes(Interval.closed(0, 5)) mustBe (false)
 
-        // Degenerate
-        Interval.degenerate(5).finishes(Interval.empty[Int]) mustBe (false)
-        Interval.degenerate(5).finishes(Interval.degenerate(5)) mustBe (false)
-        Interval.degenerate(5).finishes(Interval.closed(1, 5)) mustBe (true)
-        Interval.degenerate(1).finishes(Interval.closed(1, 5)) mustBe (false)
+        // Point
+        Interval.point(5).finishes(Interval.empty[Int]) mustBe (false)
+        Interval.point(5).finishes(Interval.point(5)) mustBe (false)
+        Interval.point(5).finishes(Interval.closed(1, 5)) mustBe (true)
+        Interval.point(1).finishes(Interval.closed(1, 5)) mustBe (false)
 
         // Proper
         // [0,5)  [-1,5)

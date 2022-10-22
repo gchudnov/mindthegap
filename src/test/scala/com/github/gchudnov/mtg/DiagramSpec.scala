@@ -28,7 +28,7 @@ final class DiagramSpec extends TestSpec:
       }
 
       "diagram a point" in {
-        val a = Interval.degenerate[Int](5) // [5]
+        val a = Interval.point[Int](5) // [5]
 
         val actual   = Diagram.make(List(a), view, canvas)
         val expected = Diagram(40, 1, List(Span(20, 20, true, true)), List(Tick(20)), List(Label(20, "5")), List(Legend("{5}")))
@@ -37,8 +37,8 @@ final class DiagramSpec extends TestSpec:
       }
 
       "diagram two points" in {
-        val a = Interval.degenerate[Int](5)  // [5]
-        val b = Interval.degenerate[Int](10) // [10]
+        val a = Interval.point[Int](5)  // [5]
+        val b = Interval.point[Int](10) // [10]
 
         val actual = Diagram.make(List(a, b), view, canvas)
         val expected =
@@ -402,7 +402,7 @@ final class DiagramSpec extends TestSpec:
       }
 
       "display a point" in {
-        val a       = Interval.degenerate[Int](5) // [5]
+        val a       = Interval.point[Int](5) // [5]
         val diagram = Diagram.make(List(a), view, canvas)
 
         val actual = Diagram.render(diagram, theme)
@@ -416,8 +416,8 @@ final class DiagramSpec extends TestSpec:
       }
 
       "display two points" in {
-        val a       = Interval.degenerate[Int](5)  // [5]
-        val b       = Interval.degenerate[Int](10) // [10]
+        val a       = Interval.point[Int](5)  // [5]
+        val b       = Interval.point[Int](10) // [10]
         val diagram = Diagram.make(List(a, b), view, canvas)
 
         val actual = Diagram.render(diagram, theme)

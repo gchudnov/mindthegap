@@ -22,8 +22,8 @@ final class ShowSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "represent a Degenerate interval" in {
-        val value    = Interval.degenerate(1)
+      "represent a Point interval" in {
+        val value    = Interval.point(1)
         val actual   = value.show
         val expected = "{1}"
 
