@@ -118,10 +118,17 @@ final class DiagramSpec extends TestSpec:
       }
 
       "diagram left part of a closed interval" in {
-        val a       = Interval.closed[Int](5, 10) // [5, 10]
+        val a = Interval.closed[Int](5, 10) // [5, 10]
 
         val actual = Diagram.make(List(a), view.copy(left = Some(0), right = Some(7)), canvas) // [0, 7]
-        val expected = Diagram(40, 1, List(Span(27, 52, true, true)), List(Tick(2), Tick(27), Tick(37), Tick(52)), List(Label(27, "5"), Label(51, "10")), List(Legend("[5,10]")))
+        val expected = Diagram(
+          40,
+          1,
+          List(Span(27, 52, true, true)),
+          List(Tick(2), Tick(27), Tick(37), Tick(52)),
+          List(Label(2, "0"), Label(27, "5"), Label(37, "7"), Label(51, "10")),
+          List(Legend("[5,10]"))
+        )
 
         actual mustBe expected
       }
@@ -444,9 +451,9 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.render(diagram, theme)
         val expected = List(
-          "           [********]                   ", 
-          "--+--------+--------+----------------+--", 
-          "           5       10                   "
+          "           [********]                   ",
+          "--+--------+--------+----------------+--",
+          "  0        5       10               20  "
         )
 
         actual mustBe expected
@@ -459,8 +466,8 @@ final class DiagramSpec extends TestSpec:
         val actual = Diagram.render(diagram, theme)
         val expected = List(
           "                           [************",
-          "---------------------------+------------",
-          "                           5            "
+          "--+------------------------+---------+--",
+          "  0                        5         7  "
         )
 
         actual mustBe expected
@@ -472,9 +479,9 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.render(diagram, theme)
         val expected = List(
-          "***************]                        ",
-          "---------------+------------------------",
-          "              10                        "
+          "***************]                        ", 
+          "--+------------+---------------------+--", 
+          "  7           10                    15  "
         )
 
         actual mustBe expected
@@ -486,9 +493,9 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.render(diagram, theme)
         val expected = List(
-          "****************************************",
-          "----------------------------------------",
-          "                                        "
+          "****************************************", 
+          "--+----------------------------------+--", 
+          "  7                                  8  "
         )
 
         actual mustBe expected

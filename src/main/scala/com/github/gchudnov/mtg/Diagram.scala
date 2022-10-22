@@ -152,6 +152,12 @@ object Diagram extends NumericDefaults:
 
       Label(x1, text)
 
+    def labels[T](i: Interval[T], span: Span): List[Label] =
+      List(
+        label(span.x0, Show.leftValue(i.left.value)),
+        label(span.x1, Show.rightValue(i.right.value))
+      )
+
     private def isIn(x: Int): Boolean =
       (x >= 0 && x < width)
 
@@ -372,14 +378,19 @@ object Diagram extends NumericDefaults:
     val effectiveView = if view.isEmpty then View.make(intervals) else view
     val translator    = Translator.make(effectiveView, canvas)
 
-    val viewTicks = if view.nonEmpty then translator.translate(view.toInterval).ticks else List.empty[Tick]
+    // if view is specified, provide labels and ticks to mark the boundries of the view
+    val (viewTicks, viewLabels) = if view.nonEmpty then
+      val vi = view.toInterval
+      val vs = translator.translate(vi)
+      (vs.ticks, canvas.labels(vi, vs))
+    else (List.empty[Tick], List.empty[Label])
 
     val d = intervals.filter(_.nonEmpty).foldLeft(Diagram.empty) { case (acc, i) =>
       val y = acc.height
 
       val span   = translator.translate(i)
       val ticks  = span.ticks
-      val labels = List(canvas.label(span.x0, Show.leftValue(i.left.value)), canvas.label(span.x1, Show.rightValue(i.right.value)))
+      val labels = canvas.labels(i, span)
       val legend = Legend(i.show)
 
       acc.copy(
@@ -395,7 +406,7 @@ object Diagram extends NumericDefaults:
     d.copy(
       spans = d.spans,
       ticks = (d.ticks ++ viewTicks).distinct.sortBy(_.pos),
-      labels = d.labels.distinct.sortBy(_.pos),
+      labels = (d.labels ++ viewLabels).distinct.sortBy(_.pos),
       legends = d.legends // NOTE: the order should match the order of spans
     )
 

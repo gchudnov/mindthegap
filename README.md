@@ -280,7 +280,7 @@ val d = Interval.closed(250, 800)
 val e = Interval.closed(300, 900)
 val f = Interval.closed(600, 1000)
 
-val canvas: Canvas  = Canvas.make(40, 2)
+val canvas: Canvas  = Canvas.make(40)
 val view: View[Int] = View.empty[Int]
 val theme: Theme    = Theme.default
 
@@ -322,7 +322,7 @@ val b = Interval.closed(5, 10)
 val c = Interval.rightClosed(15)
 val d = Interval.leftOpen(2)
 
-val canvas: Canvas  = Canvas.make(40, 2)
+val canvas: Canvas  = Canvas.make(40)
 val view: View[Int] = View.empty[Int]
 val theme: Theme    = Theme.default
 
@@ -354,7 +354,7 @@ val a = Interval.closed(
   OffsetDateTime.parse("2021-07-02T12:34Z")
 )
 
-val canvas: Canvas  = Canvas.make(40, 2)
+val canvas: Canvas  = Canvas.make(40)
 val theme: Theme    = Theme.default
 
 val diagram = Diagram.make[OffsetDateTime](List(a), canvas)
@@ -375,25 +375,25 @@ data.foreach(println)
 `View` is used to specify a window to display on a canvas:
 
 ```scala
-val a       = Interval.closed[Int](5, 10)
+val a       = Interval.closed[Int](5, 10) // [5, 10]
 
-val canvas: Canvas  = Canvas.make(40, 2)
-val view: View[Int] = View.empty[Int]
+val canvas: Canvas  = Canvas.make(40)                       // width 40 chars
+val view: View[Int] = View(left = Some(0), right = Some(7)) // [0, 7]
 val theme: Theme    = Theme.default
 
-val diagram = Diagram.make(List(a), view.copy(left = Some(0), right = Some(7)), canvas)
+val diagram = Diagram.make(List(a), view, canvas)
 
 val data = Diagram.render(diagram, theme) // List[String]
 
 data.foreach(println)
 ```
 
-It will display a window `[0, 7]` on a canvas of width `40`:
+It will display a view `[0, 7]` of an interval `[5, 10]` on a canvas of width `40`:
 
 ```text
                            [************
----------------------------+------------
-                           5
+--+------------------------+---------+--
+  0                        5         7
 ```
 
 Here we can see that only a portion of a closed interval `[5, 10]` is displayed, since the right boundary of the view is `7`.
