@@ -366,6 +366,9 @@ object Diagram extends NumericDefaults:
     val effectiveView = if view.isEmpty then View.make(intervals) else view
     val translator    = Translator.make(effectiveView, canvas)
 
+    // TODO: viewticks
+    // val viewTicks = ???
+
     val d = intervals.filter(_.nonEmpty).foldLeft(Diagram.empty) { case (acc, i) =>
       val y = acc.height
 

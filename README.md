@@ -349,7 +349,10 @@ When intervals are using `OffsetDateTime` or `Instant`, import `Diagram.given` t
 ```scala
 import Diagram.given
 
-val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
+val a = Interval.closed(
+  OffsetDateTime.parse("2020-07-02T12:34Z"),
+  OffsetDateTime.parse("2021-07-02T12:34Z")
+)
 
 val canvas: Canvas  = Canvas.make(40, 2)
 val theme: Theme    = Theme.default
@@ -400,7 +403,7 @@ Here we can see that only a portion of a closed interval `[5, 10]` is displayed,
 `Canvas` is used to specify the width of the text buffer to draw a diagram on.
 
 ```scala
-val canvas1 = Canvas.default   // creates a default canvas
+val canvas1 = Canvas.default   // creates a default canvas (width: 40)
 val canvas2 = Canvas.make(100) // creates a canvas of width 100
 ```
 

@@ -117,6 +117,15 @@ final class DiagramSpec extends TestSpec:
         actual mustBe expected
       }
 
+      "diagram left part of a closed interval" in {
+        val a       = Interval.closed[Int](5, 10) // [5, 10]
+
+        val actual = Diagram.make(List(a), view.copy(left = Some(0), right = Some(7)), canvas) // [0, 7]
+        val expected = Diagram(40, 1, List(Span(27, 52, 0, true, true)), List(Tick(27), Tick(52)), List(Label(27, "5"), Label(51, "10")), List(Legend("[5,10]")))
+
+        actual mustBe expected
+      }
+
       "diagram several intervals" in {
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
