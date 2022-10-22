@@ -479,8 +479,8 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.render(diagram, theme)
         val expected = List(
-          "***************]                        ", 
-          "--+------------+---------------------+--", 
+          "***************]                        ",
+          "--+------------+---------------------+--",
           "  7           10                    15  "
         )
 
@@ -493,8 +493,8 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.render(diagram, theme)
         val expected = List(
-          "****************************************", 
-          "--+----------------------------------+--", 
+          "****************************************",
+          "--+----------------------------------+--",
           "  7                                  8  "
         )
 

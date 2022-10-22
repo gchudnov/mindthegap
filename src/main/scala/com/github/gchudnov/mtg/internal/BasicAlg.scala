@@ -10,10 +10,10 @@ private[mtg] transparent trait BasicAlg[+T]:
   a: Interval[T] =>
 
   /**
-   * Intersection of two Intervals
+   * Intersection of two Intervals: A ∩ B
    *
    * {{{
-   *             a-           a+
+   *             b-           b+
    * |           |------------|
    * |           .            .
    * | |------|  .            .  |------|
@@ -40,11 +40,10 @@ private[mtg] transparent trait BasicAlg[+T]:
    * }}}
    */
   final def intersection[T1 >: T](b: Interval[T1])(using Ordering[Boundary[T1]]): Interval[T1] =
-    ???
-    // if a.isEmpty || b.isEmpty then Interval.empty[T]
-    // else if a.before(b) || a.after(b) then Interval.empty[T]
-    // else if a.starts(b) || a.during(b) || a.finishes(b) || a.equalsTo(b) then Interval.make[T1](a.left, a.right)
-    // else if a.isOverlapedBy(b) || a.isMetBy(b) || a.isStartedBy(b) then Interval.make(a.left, b.right)
-    // else if a.meets(b) || a.overlaps(b) || a.isFinishedBy(b) then Interval.make(b.left, a.right)
-    // else if a.contains(b) then Interval.make(b.left, b.right)
-    // else sys.error(s"Invalid state: unexpected intersection between ${a} and ${b}")
+    if a.isEmpty || b.isEmpty then Interval.empty[T]
+    else if a.before(b) || a.after(b) then Interval.empty[T]
+    else if a.starts(b) || a.during(b) || a.finishes(b) || a.equalsTo(b) then Interval.make[T1](a.left, a.right)
+    else if a.isOverlapedBy(b) || a.isMetBy(b) || a.isStartedBy(b) then Interval.make(a.left, b.right)
+    else if a.meets(b) || a.overlaps(b) || a.isFinishedBy(b) then Interval.make(b.left, a.right)
+    else if a.contains(b) then Interval.make(b.left, b.right)
+    else sys.error(s"Invalid state: unexpected intersection between ${a} and ${b}")

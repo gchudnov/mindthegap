@@ -264,9 +264,35 @@ Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 
 ## Algorithms
 
-The library contains a number of basic algorithms:
+The library contains a number of basic algorithms: `intersection`, TBD.
 
-TBD
+### Intersection
+
+Cacluate an intersection of two intervals `a` and `b`.
+
+```scala
+val a = Interval.closed(5, 10) // [5, 10]
+val b = Interval.closed(1, 7)  // [1, 7]
+
+val c = a.intersection(b)      // [5, 7]
+
+val canvas: Canvas = Canvas.make(40)
+val diagram        = Diagram.make(List(a, b, c), canvas)
+
+val data = Diagram.render(diagram, Theme.default.copy(legend = true))
+
+data.foreach(println)
+```
+
+Will produce the following result:
+
+```text
+                  [******************]   | [5,10]
+  [**********************]               | [1,7]
+                  [******]               | [5,7]
+--+---------------+------+-----------+-- |
+  1               5      7          10   |
+```
 
 ## Display
 
@@ -388,7 +414,7 @@ val data = Diagram.render(diagram, theme) // List[String]
 data.foreach(println)
 ```
 
-It will display a view `[0, 7]` of an interval `[5, 10]` on a canvas of width `40`:
+It will display a view `[0, 7]` into an interval `[5, 10]` on a canvas of width `40`:
 
 ```text
                            [************
