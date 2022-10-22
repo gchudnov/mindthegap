@@ -13,7 +13,7 @@ final case class Diagram(
   spans: List[Diagram.Span],
   ticks: List[Diagram.Tick],
   labels: List[Diagram.Label],
-  legend: List[Diagram.Legend]
+  legends: List[Diagram.Legend]
 )
 
 object Diagram extends NumericDefaults:
@@ -25,7 +25,7 @@ object Diagram extends NumericDefaults:
       spans = List.empty[Span],
       ticks = List.empty[Tick],
       labels = List.empty[Label],
-      legend = List.empty[Legend]
+      legends = List.empty[Legend]
     )
 
   /**
@@ -90,6 +90,12 @@ object Diagram extends NumericDefaults:
 
     def isEmpty: Boolean =
       left.isEmpty && right.isEmpty
+
+    def nonEmpty: Boolean =
+      !isEmpty
+
+    def toInterval[T1 >: T](using Ordering[Boundary[T1]]): Interval[T1] =
+      Interval.make[T1](left, true, right, true)
 
   object View:
 
@@ -273,7 +279,7 @@ object Diagram extends NumericDefaults:
       val chart = (spans ++ ticks ++ labels).filter(_.nonEmpty)
 
       if theme.legend then
-        val legend = d.legend.map(_.value) ++ List.fill[String](chart.size - d.legend.size)("")
+        val legend = d.legends.map(_.value) ++ List.fill[String](chart.size - d.legends.size)("")
         chart.zip(legend).map { case (ch, lg) => s"${ch}${theme.space}|${if lg.nonEmpty then theme.space.toString else ""}${lg}" }
       else chart
 
@@ -366,16 +372,15 @@ object Diagram extends NumericDefaults:
     val effectiveView = if view.isEmpty then View.make(intervals) else view
     val translator    = Translator.make(effectiveView, canvas)
 
-    // TODO: viewticks
-    // val viewTicks = ???
+    val viewTicks = if view.nonEmpty then translator.translate(view.toInterval).ticks else List.empty[Tick]
 
     val d = intervals.filter(_.nonEmpty).foldLeft(Diagram.empty) { case (acc, i) =>
       val y = acc.height
 
-      val span    = translator.translate(i)
-      val ticks   = span.ticks
-      val labels  = List(canvas.label(span.x0, Show.leftValue(i.left.value)), canvas.label(span.x1, Show.rightValue(i.right.value)))
-      val iLegend = Legend(i.show)
+      val span   = translator.translate(i)
+      val ticks  = span.ticks
+      val labels = List(canvas.label(span.x0, Show.leftValue(i.left.value)), canvas.label(span.x1, Show.rightValue(i.right.value)))
+      val legend = Legend(i.show)
 
       acc.copy(
         width = canvas.width,
@@ -383,15 +388,15 @@ object Diagram extends NumericDefaults:
         spans = acc.spans :+ span,
         ticks = acc.ticks ++ ticks,
         labels = acc.labels ++ labels,
-        legend = acc.legend :+ iLegend
+        legends = acc.legends :+ legend
       )
     }
 
     d.copy(
       spans = d.spans,
-      ticks = d.ticks.distinct,
-      labels = d.labels.distinct,
-      legend = d.legend.distinct
+      ticks = (d.ticks ++ viewTicks).distinct.sortBy(_.pos),
+      labels = d.labels.distinct.sortBy(_.pos),
+      legends = d.legends // NOTE: the order should match the order of spans
     )
 
   def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =

@@ -121,7 +121,7 @@ final class DiagramSpec extends TestSpec:
         val a       = Interval.closed[Int](5, 10) // [5, 10]
 
         val actual = Diagram.make(List(a), view.copy(left = Some(0), right = Some(7)), canvas) // [0, 7]
-        val expected = Diagram(40, 1, List(Span(27, 52, true, true)), List(Tick(27), Tick(52)), List(Label(27, "5"), Label(51, "10")), List(Legend("[5,10]")))
+        val expected = Diagram(40, 1, List(Span(27, 52, true, true)), List(Tick(2), Tick(27), Tick(37), Tick(52)), List(Label(27, "5"), Label(51, "10")), List(Legend("[5,10]")))
 
         actual mustBe expected
       }
@@ -142,8 +142,8 @@ final class DiagramSpec extends TestSpec:
             Span(0, 37, false, true),
             Span(5, 39, false, false)
           ),
-          List(Tick(2), Tick(12), Tick(25), Tick(0), Tick(37), Tick(5), Tick(39)),
-          List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞")),
+          List(Tick(0), Tick(2), Tick(5), Tick(12), Tick(25), Tick(37), Tick(39)),
+          List(Label(0, "-∞"), Label(2, "1"), Label(5, "2"), Label(12, "5"), Label(24, "10"), Label(36, "15"), Label(38, "+∞")),
           List(Legend("[1,5]"), Legend("[5,10]"), Legend("(-∞,15]"), Legend("(2,+∞)"))
         )
 
@@ -170,8 +170,8 @@ final class DiagramSpec extends TestSpec:
             Span(18, 33, true, true),
             Span(21, 37, true, true)
           ),
-          List(Tick(2), Tick(18), Tick(6), Tick(21), Tick(10), Tick(25), Tick(14), Tick(29), Tick(33), Tick(37)),
-          List(Label(2, "1"), Label(18, "5"), Label(6, "2"), Label(21, "6"), Label(10, "3"), Label(25, "7"), Label(14, "4"), Label(29, "8"), Label(33, "9"), Label(36, "10")),
+          List(Tick(2), Tick(6), Tick(10), Tick(14), Tick(18), Tick(21), Tick(25), Tick(29), Tick(33), Tick(37)),
+          List(Label(2, "1"), Label(6, "2"), Label(10, "3"), Label(14, "4"), Label(18, "5"), Label(21, "6"), Label(25, "7"), Label(29, "8"), Label(33, "9"), Label(36, "10")),
           List(Legend("[1,5]"), Legend("[2,6]"), Legend("[3,7]"), Legend("[4,8]"), Legend("[5,9]"), Legend("[6,10]"))
         )
 
@@ -444,8 +444,8 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.render(diagram, theme)
         val expected = List(
-          "           [********]                   ",
-          "-----------+--------+-------------------",
+          "           [********]                   ", 
+          "--+--------+--------+----------------+--", 
           "           5       10                   "
         )
 
