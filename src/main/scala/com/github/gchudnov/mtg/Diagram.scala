@@ -211,7 +211,7 @@ object Diagram extends NumericDefaults:
     override def translate(i: Interval[T]): Span =
       val x0 = translate(i.left)
       val x1 = translate(i.right)
-      Span(x0 = x0, x1 = x1, y = 0, includeX0 = i.left.isInclude, includeX1 = i.right.isInclude)
+      Span(x0 = x0, x1 = x1, includeX0 = i.left.isInclude, includeX1 = i.right.isInclude)
 
   /**
    * Tick
@@ -232,7 +232,7 @@ object Diagram extends NumericDefaults:
   /**
    * Span
    */
-  final case class Span(x0: Int, x1: Int, y: Int, includeX0: Boolean, includeX1: Boolean):
+  final case class Span(x0: Int, x1: Int, includeX0: Boolean, includeX1: Boolean):
     require(x0 <= x1, s"A Span |${x0}, ${x1}| cannot be negative")
 
     def size: Int =
@@ -372,7 +372,7 @@ object Diagram extends NumericDefaults:
     val d = intervals.filter(_.nonEmpty).foldLeft(Diagram.empty) { case (acc, i) =>
       val y = acc.height
 
-      val span    = translator.translate(i).copy(y = y)
+      val span    = translator.translate(i)
       val ticks   = span.ticks
       val labels  = List(canvas.label(span.x0, Show.leftValue(i.left.value)), canvas.label(span.x1, Show.rightValue(i.right.value)))
       val iLegend = Legend(i.show)
