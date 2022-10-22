@@ -10,3 +10,5 @@
 target/
 
 metals.sbt
+
+REF.md

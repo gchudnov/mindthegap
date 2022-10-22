@@ -4,9 +4,10 @@ import com.github.gchudnov.mtg.Boundary
 import com.github.gchudnov.mtg.Interval
 
 /**
- * Basic Interval Algorithms
+ * Basic Interval Operations:
+ *   - Intersection
  */
-private[mtg] transparent trait BasicAlg[+T]:
+private[mtg] transparent trait BasicOps[+T]:
   a: Interval[T] =>
 
   /**

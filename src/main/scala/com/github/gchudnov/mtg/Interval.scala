@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.internal.BasicRel
 import com.github.gchudnov.mtg.internal.ExtendedRel
-import com.github.gchudnov.mtg.internal.BasicAlg
+import com.github.gchudnov.mtg.internal.BasicOps
 
 /**
  * An Interval
@@ -25,7 +25,7 @@ import com.github.gchudnov.mtg.internal.BasicAlg
  *   - Unbounded                        | (-∞, +∞) = R
  * }}}
  *
- * NOTE: Degenerate -- other names are Point, Singleton.
+ * NOTE: Degenerate -- other names are Point, Singleton, Degenerate.
  *
  * {{{
  *   Proper               - An interval that is neither Empty nor Degenerate is said to be Proper.
@@ -50,7 +50,7 @@ import com.github.gchudnov.mtg.internal.BasicAlg
  * }}}
  */
 
-enum Interval[+T] extends BasicRel[T] with ExtendedRel[T] with BasicAlg[T]:
+enum Interval[+T] extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
   case Empty extends Interval[Nothing]
   case Degenerate(a: T)
   case Proper[T](l: Boundary.Left[T], r: Boundary.Right[T]) extends Interval[T]

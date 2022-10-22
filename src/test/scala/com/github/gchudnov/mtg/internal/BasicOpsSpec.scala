@@ -8,9 +8,9 @@ import com.github.gchudnov.mtg.Diagram
 import com.github.gchudnov.mtg.Diagram.Canvas
 import com.github.gchudnov.mtg.Diagram.Theme
 
-final class BasicAlgSpec extends TestSpec:
+final class BasicOpsSpec extends TestSpec:
 
-  "BasicAlg" when {
+  "BasicOps" when {
 
     "intersection" should {
       "∅ if A and B are empty" in {
@@ -194,5 +194,9 @@ final class BasicAlgSpec extends TestSpec:
 
         actual mustBe expected
       }
+    }
+
+    "XXXXX" should {
+
     }
   }
