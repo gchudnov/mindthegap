@@ -9,7 +9,6 @@ final class BasicOpsSpec extends TestSpec:
 
   "BasicOps" when {
 
-    "XXX" should {
-    }
+    "XXX" should {}
 
   }

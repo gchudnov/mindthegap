@@ -111,6 +111,16 @@ enum Interval[+T] extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
       case _ =>
         throw new ClassCastException("Specified type is not compatible with the type of the Interval")
 
+  /**
+   * A canonical form of an interval is where the interval is closed on both starting and finishing sides.
+   */
+  def canonical[U >: T: Domain]: Interval[U] =
+    this match
+      case Interval.Proper[U](l, r) =>
+        Interval.Proper(Boundary.Left(l.effectiveValue, true), Boundary.Right(r.effectiveValue, true))
+      case x =>
+        x
+
 object Interval:
 
   given intervalOrdering[T](using Ordering[Boundary[T]]): Ordering[Interval[T]] =
@@ -277,7 +287,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def make[T](a: Option[T], isIncludeA: Boolean, b: Option[T], isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def make[T: Domain](a: Option[T], isIncludeA: Boolean, b: Option[T], isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     make(Boundary.Left(a, isIncludeA), Boundary.Right(b, isIncludeB))
 
   /**
@@ -290,11 +300,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def make[T](ba: Boundary.Left[T], bb: Boundary.Right[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    (ba.value, bb.value) match
-      case (Some(x), Some(y)) =>
-        if bOrd.equiv(ba, bb) then point(x)
-        else if bOrd.lt(bb, ba) then empty[T]
-        else proper(ba, bb)
-      case _ =>
-        proper(ba, bb)
+  def make[T: Domain](ba: Boundary.Left[T], bb: Boundary.Right[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+    if bOrd.equiv(ba, bb) then point(ba.effectiveValue.get)
+    else if bOrd.lt(bb, ba) then empty[T]
+    else proper(ba, bb)

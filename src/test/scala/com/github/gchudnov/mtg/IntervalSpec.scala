@@ -69,6 +69,18 @@ final class IntervalSpec extends TestSpec:
 
         // [-inf, +inf]
         Interval.make[Int](None, true, None, true).isEmpty mustBe (false)
+
+        // (3, 5)
+        Interval.make(Some(3), false, Some(5), false) mustBe Interval.point(4)
+
+        // [4, 4]
+        Interval.make(Some(4), true, Some(4), true) mustBe Interval.point(4)
+
+        // (3, 4]
+        Interval.make(Some(3), false, Some(4), true) mustBe Interval.point(4)
+
+        // [4, 5)
+        Interval.make(Some(4), true, Some(5), false) mustBe Interval.point(4)
       }
     }
 
@@ -374,4 +386,29 @@ final class IntervalSpec extends TestSpec:
 
     }
 
+    "canonical" should {
+      "include all boundaries" in {
+        // (1, 5) = [2, 4]
+        Interval.open(1, 5).canonical mustBe Interval.closed(2, 4)
+
+        // [2, 5) = [2, 4]
+        Interval.leftClosedRightOpen(2, 5).canonical mustBe Interval.closed(2, 4)
+
+        // (1, 4] = [2, 4]
+        Interval.leftOpenRightClosed(1, 4).canonical mustBe Interval.closed(2, 4)
+
+        // [2, 4] = [2, 4]
+        Interval.closed(2, 4).canonical mustBe Interval.closed(2, 4)
+
+        // {2} = {2}
+        Interval.point(2).canonical mustBe Interval.point(2)
+        Interval.make(Some(2), true, Some(2), true).canonical mustBe Interval.point(2)
+        Interval.make(Some(1), false, Some(3), false).canonical mustBe Interval.point(2)
+        Interval.make(Boundary.Left(Some(1), false), Boundary.Right(Some(3), false)).canonical mustBe Interval.point(2)
+      }
+
+      "double canonical is canonical" in {
+        Interval.open(1, 5).canonical.canonical mustBe Interval.closed(2, 4)
+      }
+    }
   }

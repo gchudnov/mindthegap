@@ -94,7 +94,7 @@ object Diagram extends NumericDefaults:
     def nonEmpty: Boolean =
       !isEmpty
 
-    def toInterval[T1 >: T](using Ordering[Boundary[T1]]): Interval[T1] =
+    def toInterval[T1 >: T: Domain](using Ordering[Boundary[T1]]): Interval[T1] =
       Interval.make[T1](left, true, right, true)
 
   object View:

@@ -1,4 +1,3 @@
 # TODO
 
-- read allen
-- check PDF to add more ops
+- add more ops

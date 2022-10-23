@@ -47,7 +47,7 @@ private[mtg] transparent trait BasicOps[+T]:
    * A ∩ B := | max(a-, b-), min(a+, b+) |
    * }}}
    */
-  final def intersection[T1 >: T](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
+  final def intersection[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
     if a.isEmpty || b.isEmpty then Interval.empty[T]
     else Interval.make(ordT.max(a.left, b.left), ordT.min(a.right, b.right))
 
@@ -60,7 +60,7 @@ private[mtg] transparent trait BasicOps[+T]:
    * A # B := | min(a-, b-), max(a+, b+) |
    * }}}
    */
-  final def span[T1 >: T](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
+  final def span[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
     if a.isEmpty || b.isEmpty then Interval.empty[T]
     else Interval.make(ordT.min(a.left, b.left), ordT.max(a.right, b.right))
 

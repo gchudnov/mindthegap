@@ -7,6 +7,11 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
 final class GapSpec extends TestSpec:
 
+  given intRange: IntRange = intRange5
+  given intProb: IntProb   = intProb127
+
+  given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
+
   "Gap" when {
     "calc" should {
       "∅ if A and B are empty" in {
@@ -167,6 +172,21 @@ final class GapSpec extends TestSpec:
         val expected = Interval.empty[Int]
 
         actual mustBe expected
+      }
+    }
+
+    "A, B" should {
+
+      /**
+       * Commutative Property
+       */
+      "A || B = B || A" in {
+        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          xx.gap(yy).canonical mustBe yy.gap(xx).canonical
+        }
       }
     }
   }

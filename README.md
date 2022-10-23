@@ -25,6 +25,8 @@ One can distinguish an _empty_, _point_ and _proper_ intervals:
 For any interval `a`, We denote the lesser endpoint is denoted by `a-` and the greater by `a+`.
 We assume for a proper interval `a` that `a- < a+`.
 
+A canonical form of an interval is where the interval is _closed_ on both starting and finishing sides.
+
 Intervals might be open / closed on both ends, bounded and unbonded:
 
 - Empty | `[a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅`
