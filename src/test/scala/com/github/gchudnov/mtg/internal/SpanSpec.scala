@@ -181,11 +181,27 @@ final class SpanSpec extends TestSpec:
        * Commutative Property
        */
       "A # B = B # A" in {
-        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
           xx.span(yy).canonical mustBe yy.span(xx).canonical
+        }
+      }
+    }
+
+    "A, B, C" should {
+
+      /**
+       * Associative Property
+       */
+      "(A # B) # C = A # (B # C)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2)), ((oz1, iz1), (oz2, iz2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+          val zz = Interval.make(oz1, iz1, oz2, iz2)
+
+          (xx.span(yy).span(zz)).canonical mustBe xx.span(yy.span(zz)).canonical
         }
       }
     }

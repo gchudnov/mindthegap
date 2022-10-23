@@ -181,7 +181,7 @@ final class IntersectionSpec extends TestSpec:
        * Commutative Property
        */
       "A & B = B & A" in {
-        forAll(genOneIntTuple, genOneIntTuple) { case (((ox1, ox2), ix1, ix2), ((oy1, oy2), iy1, iy2)) =>
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
@@ -198,6 +198,22 @@ final class IntersectionSpec extends TestSpec:
 
         c1 mustBe c2
         c2 mustBe c1
+      }
+    }
+
+    "A, B, C" should {
+
+      /**
+       * Associative Property
+       */
+      "(A & B) & C = A & (B & C)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2)), ((oz1, iz1), (oz2, iz2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+          val zz = Interval.make(oz1, iz1, oz2, iz2)
+
+          (xx.intersection(yy).intersection(zz)).canonical mustBe xx.intersection(yy.intersection(zz)).canonical
+        }
       }
     }
   }

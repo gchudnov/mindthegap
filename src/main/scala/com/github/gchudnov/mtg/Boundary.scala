@@ -39,6 +39,13 @@ enum Boundary[T](val value: Option[T], val isInclude: Boolean):
   def effectiveValue(using d: Domain[T]): Option[T] =
     if isInclude then value else value.map(x => if isLeft then d.succ(x) else d.pred(x))
 
+  def canonical(using Domain[T]): Boundary[T] =
+    this match
+      case Left(a, includeA) =>
+        Left(effectiveValue, true)
+      case Right(b, includeB) =>
+        Right(effectiveValue, true)
+
 object Boundary:
 
   given boundaryOrdering[T: Ordering: Domain]: Ordering[Boundary[T]] =
