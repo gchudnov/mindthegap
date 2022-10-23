@@ -807,4 +807,26 @@ final class DiagramSpec extends TestSpec:
 
       actual mustBe expected
     }
+
+    "display a gap of two intervals" in {
+      val a = Interval.closed(5, 10)
+      val b = Interval.closed(12, 17)
+
+      val c = a.gap(b)
+
+      val canvas: Canvas = Canvas.make(40)
+      val diagram        = Diagram.make(List(a, b, c), canvas)
+
+      val actual = Diagram.render(diagram, Theme.default.copy(legend = true))
+
+      val expected = List(
+        "  [**************]                       | [5,10]",
+        "                      [**************]   | [12,17]",
+        "                 [****]                  | [10,12]",
+        "--+--------------+----+--------------+-- |",
+        "  5             10   12             17   |"
+      )
+
+      actual mustBe expected
+    }
   }

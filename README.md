@@ -18,9 +18,9 @@ libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "0.2.0"
 
 One can distinguish an _empty_, _point_ and _proper_ intervals:
 
-- A _proper_ interval is an ordered pair of points with the first point less than the second.
-- A _point_ is a degenerate interval wherefirst point is equal to the second.
-- An _empty_ interval is the one where first point is greater than the second.
+- A _proper_ interval is an ordered pair of points with the first point less than the second: `a- < a+`.
+- A _point_ is a degenerate interval where first point is equal to the second: `a- = a+`.
+- An _empty_ interval is the one where first point is greater than the second: `a+ < a-`.
 
 For any interval `a`, We denote the lesser endpoint is denoted by `a-` and the greater by `a+`.
 We assume for a proper interval `a` that `a- < a+`.
@@ -213,7 +213,7 @@ Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 
 ## Operations
 
-Intervals support the following list of operations: `intersection`, `span`.
+Intervals support the following list of operations: `intersection`, `span`, `gap`.
 
 ### Intersection
 
@@ -267,6 +267,32 @@ data.foreach(println)
   [**********************************]   | [1,10]
 --+---------------+------+-----------+-- |
   1               5      7          10   |
+```
+
+### Gap
+
+A gap of two intervals `a` and `b`: `a || b := | min(a-, b-), max(a+, b+) |`
+
+```scala
+val a = Interval.closed(5, 10)   // [5, 10]
+val b = Interval.closed(12, 17)  // [12, 17]
+
+val c = a.gap(b)                 // [10, 12]
+
+val canvas: Canvas = Canvas.make(40)
+val diagram        = Diagram.make(List(a, b, c), canvas)
+
+val data = Diagram.render(diagram, Theme.default.copy(legend = true))
+
+data.foreach(println)
+```
+
+```text
+  [**************]                       | [5,10]
+                      [**************]   | [12,17]
+                 [****]                  | [10,12]
+--+--------------+----+--------------+-- |
+  5             10   12             17   |
 ```
 
 ## Display

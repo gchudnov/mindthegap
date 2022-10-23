@@ -2,6 +2,7 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Boundary
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Domain
 
 /**
  * Basic Interval Operations:
@@ -62,3 +63,16 @@ private[mtg] transparent trait BasicOps[+T]:
   final def span[T1 >: T](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
     if a.isEmpty || b.isEmpty then Interval.empty[T]
     else Interval.make(ordT.min(a.left, b.left), ordT.max(a.right, b.right))
+
+  /**
+   * Gap of two intervals
+   *
+   *   - A || B
+   *
+   * {{{
+   * A || B := | min(a+, b+), max(a-, b-) |
+   * }}}
+   */
+  final def gap[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
+    if a.isEmpty || b.isEmpty then Interval.empty[T]
+    else Interval.make(ordT.min(a.right, b.right).effectiveValue, true, ordT.max(a.left, b.left).effectiveValue, true)
