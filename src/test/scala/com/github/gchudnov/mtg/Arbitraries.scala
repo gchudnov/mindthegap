@@ -147,9 +147,9 @@ object Arbitraries:
    */
   def genOneIntTuple(using ir: IntRange, ip: IntProb): Gen[IntTuple] =
     Gen.frequency(
-      ip.empty      -> genEmptyIntTuple,
-      ip.point -> genPointIntTuple,
-      ip.proper     -> genProperIntTuple
+      ip.empty  -> genEmptyIntTuple,
+      ip.point  -> genPointIntTuple,
+      ip.proper -> genProperIntTuple
     )
 
   /**

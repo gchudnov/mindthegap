@@ -763,4 +763,48 @@ final class DiagramSpec extends TestSpec:
         actual mustBe expected
       }
     }
+
+    "display an intersection of two intervals" in {
+      val a = Interval.closed(5, 10)
+      val b = Interval.closed(1, 7)
+
+      val c = a.intersection(b)
+
+      val canvas: Canvas = Canvas.make(40)
+      val diagram        = Diagram.make(List(a, b, c), canvas)
+
+      val actual = Diagram.render(diagram, Theme.default.copy(legend = true))
+
+      val expected = List(
+        "                  [******************]   | [5,10]",
+        "  [**********************]               | [1,7]",
+        "                  [******]               | [5,7]",
+        "--+---------------+------+-----------+-- |",
+        "  1               5      7          10   |"
+      )
+
+      actual mustBe expected
+    }
+
+    "display a span of two intervals" in {
+      val a = Interval.closed(5, 10)
+      val b = Interval.closed(1, 7)
+
+      val c = a.span(b)
+
+      val canvas: Canvas = Canvas.make(40)
+      val diagram        = Diagram.make(List(a, b, c), canvas)
+
+      val actual = Diagram.render(diagram, Theme.default.copy(legend = true))
+
+      val expected = List(
+        "                  [******************]   | [5,10]",
+        "  [**********************]               | [1,7]",
+        "  [**********************************]   | [1,10]",
+        "--+---------------+------+-----------+-- |",
+        "  1               5      7          10   |"
+      )
+
+      actual mustBe expected
+    }
   }

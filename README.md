@@ -139,7 +139,7 @@ Interval.open(4, 7).equalsTo(Interval.open(4, 7)) // true
 
 ### IsSubset
 
-Checks whether `A` is a subset of `B`.
+Determines whether `A` is a subset of `B`.
 
 ```text
   isSubset                  AAAAA            |  a- >= b- AND a+ <= b+
@@ -159,7 +159,7 @@ Interval.open(4, 7).isSubset(Interval.open(4, 7))  // true
 
 ### IsSuperset
 
-Checks whether `A` is a superset of `B`.
+Determines whether `A` is a superset of `B`.
 
 ```text
   isSuperset                    BBBBB         |  b- >= a- AND b+ <= a+
@@ -179,7 +179,7 @@ Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
 
 ### IsDisjoint
 
-Checks if there `A` and `B` are disjoint. `A` and `B` are disjoint if `A` does not intersect `B`.
+Determines if there `A` and `B` are disjoint. `A` and `B` are disjoint if `A` does not intersect `B`.
 
 ```text
   isDisjoint                AAAAA        |  a+ < b- OR a- > b+
@@ -195,7 +195,7 @@ Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) // true
 
 ### IsLess
 
-Checks whether `A` less-than `B`.
+Determines whether `A` less-than `B`.
 
 ```text
   isLess                    AAAAA            |  a- < b- AND a+ < b+
@@ -213,11 +213,11 @@ Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 
 ## Operations
 
-Intervals support the following list of operations: `intersection`, TBD.
+Intervals support the following list of operations: `intersection`, `span`.
 
 ### Intersection
 
-Cacluate an intersection of two intervals `a` and `b`.
+An intersection of two intervals `a` and `b`: `a ∩ b := | max(a-, b-), min(a+, b+) |`
 
 ```scala
 val a = Interval.closed(5, 10) // [5, 10]
@@ -239,6 +239,32 @@ Will produce the following result:
                   [******************]   | [5,10]
   [**********************]               | [1,7]
                   [******]               | [5,7]
+--+---------------+------+-----------+-- |
+  1               5      7          10   |
+```
+
+### Span
+
+A span of two intervals `a` and `b`: `a # b := | min(a-, b-), max(a+, b+) |`
+
+```scala
+val a = Interval.closed(5, 10) // [5, 10]
+val b = Interval.closed(1, 7)  // [1, 7]
+
+val c = a.span(b)              // [5, 10]
+
+val canvas: Canvas = Canvas.make(40)
+val diagram        = Diagram.make(List(a, b, c), canvas)
+
+val data = Diagram.render(diagram, Theme.default.copy(legend = true))
+
+data.foreach(println)
+```
+
+```text
+                  [******************]   | [5,10]
+  [**********************]               | [1,7]
+  [**********************************]   | [1,10]
 --+---------------+------+-----------+-- |
   1               5      7          10   |
 ```
