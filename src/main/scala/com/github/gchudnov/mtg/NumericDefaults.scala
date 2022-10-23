@@ -26,6 +26,8 @@ private[mtg] object NumericDefaults:
 
   /**
    * OffsetDateTime Numeric
+   *
+   * With seconds precision
    */
   final class OffsetDateTimeNumeric(unit: TemporalUnit) extends Numeric[OffsetDateTime]:
 
@@ -39,34 +41,36 @@ private[mtg] object NumericDefaults:
       x.compareTo(y)
 
     override def toDouble(x: OffsetDateTime): Double =
-      x.toEpochSecond().toDouble
+      toLong(x).toDouble
 
     override def toFloat(x: OffsetDateTime): Float =
-      x.toEpochSecond().toFloat
+      toLong(x).toFloat
 
     override def toInt(x: OffsetDateTime): Int =
-      x.toEpochSecond().toInt
+      toLong(x).toInt
 
     override def times(x: OffsetDateTime, y: OffsetDateTime): OffsetDateTime =
-      fromLong(x.toEpochSecond() * y.toEpochSecond())
+      fromLong(toLong(x) * toLong(y))
 
     override def toLong(x: OffsetDateTime): Long =
       x.toEpochSecond()
 
     override def minus(x: OffsetDateTime, y: OffsetDateTime): OffsetDateTime =
-      fromLong(x.toEpochSecond() - y.toEpochSecond())
+      fromLong(toLong(x) - toLong(y))
 
     override def negate(x: OffsetDateTime): OffsetDateTime =
       throw new NoSuchElementException("Numeric[OffsetDateTime].negate")
 
     override def plus(x: OffsetDateTime, y: OffsetDateTime): OffsetDateTime =
-      fromLong(x.toEpochSecond() + y.toEpochSecond())
+      fromLong(toLong(x) + toLong(y))
 
     override def parseString(str: String): Option[OffsetDateTime] =
       nonFatalCatch.opt(OffsetDateTime.parse(str))
 
   /**
    * Instant Numeric
+   *
+   * With seconds precision
    */
   final class InstantNumeric(unit: TemporalUnit) extends Numeric[Instant]:
 
@@ -80,28 +84,28 @@ private[mtg] object NumericDefaults:
       x.compareTo(y)
 
     override def toDouble(x: Instant): Double =
-      x.getEpochSecond().toDouble
+      toLong(x).toDouble
 
     override def toFloat(x: Instant): Float =
-      x.getEpochSecond().toFloat
+      toLong(x).toFloat
 
     override def toInt(x: Instant): Int =
-      x.getEpochSecond().toInt
+      toLong(x).toInt
 
     override def times(x: Instant, y: Instant): Instant =
-      fromLong(x.getEpochSecond() * y.getEpochSecond())
+      fromLong(toLong(x) * toLong(y))
 
     override def toLong(x: Instant): Long =
       x.getEpochSecond()
 
     override def minus(x: Instant, y: Instant): Instant =
-      fromLong(x.getEpochSecond() - y.getEpochSecond())
+      fromLong(toLong(x) - toLong(y))
 
     override def negate(x: Instant): Instant =
       throw new NoSuchElementException("Numeric[Instant].negate")
 
     override def plus(x: Instant, y: Instant): Instant =
-      fromLong(x.getEpochSecond() + y.getEpochSecond())
+      fromLong(toLong(x) + toLong(y))
 
     override def parseString(str: String): Option[Instant] =
       nonFatalCatch.opt(Instant.parse(str))

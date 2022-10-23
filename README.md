@@ -16,19 +16,30 @@ libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "0.2.0"
 
 ## Intervals
 
-- Empty | `[b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅`
-- Point | `[a, a] = {a}`
+One can distinguish an _empty_, _point_ and _proper_ intervals:
+
+- A _proper_ interval is an ordered pair of points with the first point less than the second.
+- A _point_ is a degenerate interval wherefirst point is equal to the second.
+- An _empty_ interval is the one where first point is greater than the second.
+
+For any interval `a`, We denote the lesser endpoint is denoted by `a-` and the greater by `a+`.
+We assume for a proper interval `a` that `a- < a+`.
+
+Intervals might be open / closed on both ends, bounded and unbonded:
+
+- Empty | `[a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅`
+- Point | `{x} = {x | a- = x = a+}`
 - Proper and Bounded
-  - Open | `(a, b) = {x | a < x < b}`
-  - Closed | `[a, b] = {x | a <= x <= b}`
-  - LeftClosedRightOpen | `[a, b) = {x | a <= x < b}`
-  - LeftOpenRightClosed | `(a, b] = {x | a < x <= b}`
+  - Open | `(a-, a+) = {x | a- < x < a+}`
+  - Closed | `[a-, a+] = {x | a- <= x <= a+}`
+  - LeftClosedRightOpen | `[a-, a+) = {x | a- <= x < a+}`
+  - LeftOpenRightClosed | `(a-, a+] = {x | a- < x <= a+}`
 - LeftBounded and RightUnbounded
-  - LeftOpen | `(a, +∞) = {x | x > a}`
-  - LeftClosed | `[a, +∞) = {x | x >= a}`
+  - LeftOpen | `(a-, +∞) = {x | x > a-}`
+  - LeftClosed | `[a-, +∞) = {x | x >= a-}`
 - LeftUnbounded and RightBounded
-  - RightOpen | `(-∞, b) = {x | x < b}`
-  - RightClosed | `(-∞, b] = {x | x < b}`
+  - RightOpen | `(-∞, a+) = {x | x < a+}`
+  - RightClosed | `(-∞, a+] = {x | x < a+}`
 - Unbounded | `(-∞, +∞) = R`
 
 ## Relations
@@ -41,109 +52,47 @@ The library support the following relations:
 
 ![relations.png](res/relations.png)
 
+The 13 relations are:
+
+- **Distinct** because no pair of definite intervals can be related by more than one of the relationships.
+- **Exhaustive** because any pair of definite intervals are described by one of the relations.
+
 ## Interval Creation
 
-### Factory Method
+### Make
 
 `Interval.make` is a universal method that can be used to create an _empty_, _point_ or a _proper_ intervals.
 
 ```scala
-// empty ∅
+// empty: ∅ = [5, 2)
 val a1 = Interval.make(5, true, 2, false)
 val a2 = Interval.make(Boundary.Left(5, true), Boundary.Right(2, false))
 
-// point {5}
+// point: {5} = [5, 5]
 val b1 = Interval.make(5, true, 5, true)
 val b2 = Interval.make(Boundary.Left(5, true), Boundary.Right(5, true))
 
-// proper [1, 5]
+// proper: [1, 5]
 val c1 = Interval.make(1, true, 5, true)
 val c2 = Interval.make(Boundary.Left(1, true), Boundary.Right(5, true))
 ```
 
+### Special Factory Methods
+
 In addition, there are a number of specialized methods for interval creation.
 
-### Empty
-
 ```scala
-// [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
-Interval.empty[Int]
-```
-
-### Point
-
-```scala
-// [a, a] = {a}
-Interval.point(5)
-```
-
-### Proper and Bounded
-
-#### Open
-
-```scala
-// (a, b) = {x | a < x < b}
-Interval.open(1, 5)
-```
-
-#### Closed
-
-```scala
-// [a, b] = {x | a <= x <= b}
-Interval.closed(1, 5)
-```
-
-#### LeftClosedRightOpen
-
-```scala
-// [a, b) = {x | a <= x < b}
-Interval.leftClosedRightOpen(1, 10)
-```
-
-#### LeftOpenRightClosed
-
-```scala
-// (a, b] = {x | a < x <= b}
-Interval.leftOpenRightClosed(1, 10)
-```
-
-### LeftBounded and RightUnbounded
-
-#### LeftOpen
-
-```scala
-// (a, +∞) = {x | x > a}
-Interval.leftOpen(1)
-```
-
-#### LeftClosed
-
-```scala
-// [a, +∞) = {x | x >= a}
-Interval.leftClosed(5)
-```
-
-### LeftUnbounded and RightBounded
-
-#### RightOpen
-
-```scala
-// (-∞, b) = {x | x < b}
-Interval.rightOpen(1)
-```
-
-#### RightClosed
-
-```scala
-// (-∞, b] = {x | x < b}
-Interval.rightClosed(5)
-```
-
-### Unbounded
-
-```scala
-// (-∞, +∞) = R
-Interval.unbounded[Int]
+Interval.empty[Int]                 // ∅
+Interval.point(5)                   // {5}
+Interval.open(1, 5)                 // (1, 5)
+Interval.closed(1, 5)               // [1, 5]
+Interval.leftClosedRightOpen(1, 5)  // [1, 5)
+Interval.leftOpenRightClosed(1, 5)  // (1, 5]
+Interval.leftOpen(1)                // (1, +∞)
+Interval.leftClosed(5)              // [5, +∞)
+Interval.rightOpen(1)               // (-∞, 1)
+Interval.rightClosed(5)             // (-∞, 5]
+Interval.unbounded[Int]             // (-∞, +∞)
 ```
 
 ## Basic Relations
@@ -468,10 +417,10 @@ where `succ` and `pred` are used to get the next and the previous value for `x`.
 Intervals can be ordered.
 
 ```scala
-val a = Interval.closed(0, 10)
-val b = Interval.closed(20, 30)
+val a = Interval.closed(0, 10)   // [0, 10]
+val b = Interval.closed(20, 30)  // [20, 30]
 
-List(b, a).sorted // List(a, b)
+List(b, a).sorted // List(a, b)  // [0, 10], [20, 30]
 ```
 
 ## Links

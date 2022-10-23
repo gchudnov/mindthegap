@@ -13,6 +13,8 @@ private[mtg] transparent trait BasicOps[+T]:
   /**
    * Intersection of two Intervals: A ∩ B
    *
+   * A & B
+   *
    * {{{
    *             b-           b+
    * |           |------------|
@@ -38,13 +40,10 @@ private[mtg] transparent trait BasicOps[+T]:
    * A ∩ B := | [a-, b+] if (A <O|M|S> B)     | O, M, S
    *          | [b-, a+] if (A <m|o|F> B)     | m, o, F
    *          | [b-, b+] if (A <D> B)         | D
+   *
+   * A ∩ B := | max(a−, b−), min(a+, b+) |
    * }}}
    */
-  final def intersection[T1 >: T](b: Interval[T1])(using Ordering[Boundary[T1]]): Interval[T1] =
+  final def intersection[T1 >: T](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
     if a.isEmpty || b.isEmpty then Interval.empty[T]
-    else if a.before(b) || a.after(b) then Interval.empty[T]
-    else if a.starts(b) || a.during(b) || a.finishes(b) || a.equalsTo(b) then Interval.make[T1](a.left, a.right)
-    else if a.isOverlapedBy(b) || a.isMetBy(b) || a.isStartedBy(b) then Interval.make(a.left, b.right)
-    else if a.meets(b) || a.overlaps(b) || a.isFinishedBy(b) then Interval.make(b.left, a.right)
-    else if a.contains(b) then Interval.make(b.left, b.right)
-    else sys.error(s"Invalid state: unexpected intersection between ${a} and ${b}")
+    else Interval.make(ordT.max(a.left, b.left), ordT.min(a.right, b.right))

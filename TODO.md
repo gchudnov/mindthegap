@@ -1,4 +1,4 @@
 # TODO
 
-- degenerate to point
-- check PDF to add more algorithms
+- read allen
+- check PDF to add more ops
