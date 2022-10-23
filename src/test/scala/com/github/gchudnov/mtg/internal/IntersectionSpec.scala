@@ -212,7 +212,7 @@ final class IntersectionSpec extends TestSpec:
           val yy = Interval.make(oy1, iy1, oy2, iy2)
           val zz = Interval.make(oz1, iz1, oz2, iz2)
 
-          (xx.intersection(yy).intersection(zz)).canonical mustBe xx.intersection(yy.intersection(zz)).canonical
+          ((xx.intersection(yy)).intersection(zz)).canonical mustBe xx.intersection(yy.intersection(zz)).canonical
         }
       }
     }

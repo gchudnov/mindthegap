@@ -201,7 +201,7 @@ final class SpanSpec extends TestSpec:
           val yy = Interval.make(oy1, iy1, oy2, iy2)
           val zz = Interval.make(oz1, iz1, oz2, iz2)
 
-          (xx.span(yy).span(zz)).canonical mustBe xx.span(yy.span(zz)).canonical
+          ((xx.span(yy)).span(zz)).canonical mustBe xx.span(yy.span(zz)).canonical
         }
       }
     }

@@ -97,6 +97,13 @@ Interval.rightClosed(5)             // (-∞, 5]
 Interval.unbounded[Int]             // (-∞, +∞)
 ```
 
+`.canonical` is used to get a canonical interval:
+
+```scala
+Interval.open(1, 5).canonical      // (1, 5) -> [2, 4]
+Interval.closed(1, 5).canonical    // [1, 5] -> [1, 5]
+```
+
 ## Basic Relations
 
 A relation between a pair of intervals can be checked.
@@ -464,7 +471,7 @@ trait Domain[T]:
   def pred(x: T): T
 ```
 
-where `succ` and `pred` are used to get the next and the previous value for `x`.
+where `succ(x)` and `pred(x)` are used to get the next and the previous value for `x`.
 
 ## Ordering
 
