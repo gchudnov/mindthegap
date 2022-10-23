@@ -40,7 +40,7 @@ object Show:
         i match
           case Interval.Empty =>
             s"${empty}"
-          case Interval.Degenerate(a) =>
+          case Interval.Point(a) =>
             s"${leftPoint}${a.toString()}${rightPoint}"
           case Interval.Proper(l, r) =>
             s"${l.show},${r.show}"

@@ -45,12 +45,12 @@ final class OverlapsSpec extends TestSpec: // with IntervalRelAssert {}
         Interval.empty[Int].overlaps(Interval.closed(1, 2)) mustBe (false)
         Interval.closed(1, 2).overlaps(Interval.empty[Int]) mustBe (false)
 
-        // Degenerate (Point)
-        Interval.degenerate(5).overlaps(Interval.closed(1, 10)) mustBe (false)
-        Interval.degenerate(5).overlaps(Interval.closed(1, 3)) mustBe (false)
-        Interval.degenerate(5).overlaps(Interval.closed(7, 10)) mustBe (false)
-        Interval.degenerate(5).overlaps(Interval.empty[Int]) mustBe (false)
-        Interval.degenerate(5).overlaps(Interval.unbounded[Int]) mustBe (false)
+        // Point
+        Interval.point(5).overlaps(Interval.closed(1, 10)) mustBe (false)
+        Interval.point(5).overlaps(Interval.closed(1, 3)) mustBe (false)
+        Interval.point(5).overlaps(Interval.closed(7, 10)) mustBe (false)
+        Interval.point(5).overlaps(Interval.empty[Int]) mustBe (false)
+        Interval.point(5).overlaps(Interval.unbounded[Int]) mustBe (false)
 
         // Proper
         // (1, 10)  (5, 20)
@@ -70,10 +70,10 @@ final class OverlapsSpec extends TestSpec: // with IntervalRelAssert {}
         Interval.open(1, 10).overlaps(Interval.open(20, 30)) mustBe (false)
 
         // (1, 10)  {10}
-        Interval.open(1, 10).overlaps(Interval.degenerate(10)) mustBe (false)
+        Interval.open(1, 10).overlaps(Interval.point(10)) mustBe (false)
 
         // [1, 10], {10}
-        Interval.closed(1, 10).overlaps(Interval.degenerate(10)) mustBe (false)
+        Interval.closed(1, 10).overlaps(Interval.point(10)) mustBe (false)
 
         // (1, 10)  (-10, 20)
         Interval.open(1, 10).overlaps(Interval.open(-10, 20)) mustBe (false)
@@ -122,8 +122,8 @@ final class OverlapsSpec extends TestSpec: // with IntervalRelAssert {}
         Interval.open(1, 10).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
 
         // (-inf, +inf) {2}
-        Interval.unbounded[Int].isOverlapedBy(Interval.degenerate(2)) mustBe (false)
-        Interval.degenerate(2).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].isOverlapedBy(Interval.point(2)) mustBe (false)
+        Interval.point(2).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
 
         // (-inf, 2)  (-2, +inf)
         Interval.rightOpen(2).overlaps(Interval.leftOpen(-2)) mustBe (true)

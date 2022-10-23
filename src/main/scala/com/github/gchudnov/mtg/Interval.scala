@@ -2,6 +2,7 @@ package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.internal.BasicRel
 import com.github.gchudnov.mtg.internal.ExtendedRel
+import com.github.gchudnov.mtg.internal.BasicOps
 
 /**
  * An Interval
@@ -9,7 +10,7 @@ import com.github.gchudnov.mtg.internal.ExtendedRel
  * Classification of Intervals:
  * {{{
  *   - Empty                            | [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
- *   - Degenerate                       | [a, a] = {a}
+ *   - Point                            | [a, a] = {a}
  *   - Proper and Bounded
  *     - Open                           | (a, b) = {x | a < x < b}
  *     - Closed                         | [a, b] = {x | a <= x <= b}
@@ -24,10 +25,10 @@ import com.github.gchudnov.mtg.internal.ExtendedRel
  *   - Unbounded                        | (-∞, +∞) = R
  * }}}
  *
- * NOTE: Degenerate -- other names are Point, Singleton.
+ * NOTE: Point -- other names are Singleton, Degenerate.
  *
  * {{{
- *   Proper               - An interval that is neither Empty nor Degenerate is said to be Proper.
+ *   Proper               - An interval that is neither Empty nor Point is said to be Proper.
  *   LeftBounded          - An interval is left-bounded, if there is a value that is smaller than all its elements.
  *   RightBounded         - An interval is right-bounded, if there is s value that is larger than all its elements.
  *   Bounded              - An interval is Bounded, if it is both Left- and Right-bounded; and is said to be Unbounded otherwise.
@@ -36,7 +37,7 @@ import com.github.gchudnov.mtg.internal.ExtendedRel
  *   RightUnbounded       - ..., +inf)
  *   HalfOpen             - includes only one of its endpoints, e.g. (0, 1]. [0, 1).
  *   Empty                - [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅.
- *   Degenerate           - Consists of a single real number: [a, a] = {a}.
+ *   Point                - Consists of a single real number: [a, a] = {a}.
  *   Open                 - does not include its endpoints, and is indicated with parentheses, e.g. (0, 1); (a, b) = {x | a < x < b}
  *   Closed               - an interval which includes all its limit points, e.g. [0, 1]; [a, b] = {x | a <= x <= b}
  *   LeftClosedRightOpen  - [a, b) = {x | a <= x < b}
@@ -49,15 +50,15 @@ import com.github.gchudnov.mtg.internal.ExtendedRel
  * }}}
  */
 
-enum Interval[+T] extends BasicRel[T] with ExtendedRel[T]:
+enum Interval[+T] extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
   case Empty extends Interval[Nothing]
-  case Degenerate(a: T)
+  case Point(a: T)
   case Proper[T](l: Boundary.Left[T], r: Boundary.Right[T]) extends Interval[T]
 
   def isEmpty: Boolean =
     this.ordinal == 0
 
-  def isDegenrate: Boolean =
+  def isPoint: Boolean =
     this.ordinal == 1
 
   def isProper: Boolean =
@@ -66,8 +67,8 @@ enum Interval[+T] extends BasicRel[T] with ExtendedRel[T]:
   def nonEmpty: Boolean =
     !isEmpty
 
-  def nonDegenerate: Boolean =
-    !isDegenrate
+  def nonPoint: Boolean =
+    !isPoint
 
   def nonProper: Boolean =
     !isProper
@@ -83,7 +84,7 @@ enum Interval[+T] extends BasicRel[T] with ExtendedRel[T]:
     this match
       case Interval.Proper(l, r) =>
         l.isBounded && r.isBounded
-      case Interval.Degenerate(_) =>
+      case Interval.Point(_) =>
         true
       case _ =>
         false
@@ -92,7 +93,7 @@ enum Interval[+T] extends BasicRel[T] with ExtendedRel[T]:
     this match
       case Interval.Empty =>
         throw new NoSuchElementException("Empty.left")
-      case Interval.Degenerate(a) =>
+      case Interval.Point(a) =>
         Boundary.Left(Some(a), true)
       case Interval.Proper[U](l, _) =>
         l
@@ -103,12 +104,22 @@ enum Interval[+T] extends BasicRel[T] with ExtendedRel[T]:
     this match
       case Interval.Empty =>
         throw new NoSuchElementException("Empty.right")
-      case Interval.Degenerate(a) =>
+      case Interval.Point(a) =>
         Boundary.Right(Some(a), true)
       case Interval.Proper[U](_, r) =>
         r
       case _ =>
         throw new ClassCastException("Specified type is not compatible with the type of the Interval")
+
+  /**
+   * A canonical form of an interval is where the interval is closed on both starting and finishing sides.
+   */
+  def canonical[U >: T: Domain]: Interval[U] =
+    this match
+      case Interval.Proper[U](l, r) =>
+        Interval.Proper(Boundary.Left(l.effectiveValue, true), Boundary.Right(r.effectiveValue, true))
+      case x =>
+        x
 
 object Interval:
 
@@ -129,8 +140,8 @@ object Interval:
    * @return
    *   a new interval
    */
-  def degenerate[T](a: T): Interval[T] =
-    Interval.Degenerate(a)
+  def point[T](a: T): Interval[T] =
+    Interval.Point(a)
 
   /**
    * {a, b}
@@ -276,7 +287,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def make[T](a: Option[T], isIncludeA: Boolean, b: Option[T], isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+  def make[T: Domain](a: Option[T], isIncludeA: Boolean, b: Option[T], isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
     make(Boundary.Left(a, isIncludeA), Boundary.Right(b, isIncludeB))
 
   /**
@@ -289,11 +300,7 @@ object Interval:
    * @return
    *   a new interval
    */
-  def make[T](ba: Boundary.Left[T], bb: Boundary.Right[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    (ba.value, bb.value) match
-      case (Some(x), Some(y)) =>
-        if bOrd.equiv(ba, bb) then degenerate(x)
-        else if bOrd.lt(bb, ba) then empty[T]
-        else proper(ba, bb)
-      case _ =>
-        proper(ba, bb)
+  def make[T: Domain](ba: Boundary.Left[T], bb: Boundary.Right[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
+    if bOrd.equiv(ba, bb) then point(ba.effectiveValue.get)
+    else if bOrd.lt(bb, ba) then empty[T]
+    else proper(ba, bb)

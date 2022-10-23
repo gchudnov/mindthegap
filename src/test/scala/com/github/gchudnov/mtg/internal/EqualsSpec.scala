@@ -38,12 +38,12 @@ final class EqualsSpec extends TestSpec: // with IntervalRelAssert {}
       "manual check" in {
         // Empty
         Interval.empty[Int].equalsTo(Interval.empty[Int]) mustBe (false)
-        Interval.empty[Int].equalsTo(Interval.degenerate(0)) mustBe (false)
+        Interval.empty[Int].equalsTo(Interval.point(0)) mustBe (false)
         Interval.empty[Int].equalsTo(Interval.closed(0, 1)) mustBe (false)
 
-        // Degenerate
-        Interval.degenerate(5).equalsTo(Interval.degenerate(5)) mustBe (true)
-        Interval.degenerate(5).equalsTo(Interval.empty[Int]) mustBe (false)
+        // Point
+        Interval.point(5).equalsTo(Interval.point(5)) mustBe (true)
+        Interval.point(5).equalsTo(Interval.empty[Int]) mustBe (false)
 
         // Proper
         Interval.open(4, 7).equalsTo(Interval.open(4, 7)) mustBe (true)

@@ -37,16 +37,16 @@ final class StartsSpec extends TestSpec: // with IntervalRelAssert {}
 
       "manual check" in {
         // Empty
-        Interval.empty[Int].starts(Interval.degenerate(0)) mustBe (false)
+        Interval.empty[Int].starts(Interval.point(0)) mustBe (false)
         Interval.empty[Int].starts(Interval.closed(0, 1)) mustBe (false)
         Interval.empty[Int].starts(Interval.unbounded[Int]) mustBe (false)
 
-        // Degenerate
-        Interval.degenerate(5).starts(Interval.closed(5, 10)) mustBe (true)
-        Interval.degenerate(5).starts(Interval.open(4, 10)) mustBe (true)
-        Interval.degenerate(5).starts(Interval.open(5, 10)) mustBe (false)
-        Interval.degenerate(5).starts(Interval.empty[Int]) mustBe (false)
-        Interval.degenerate(5).starts(Interval.unbounded[Int]) mustBe (false)
+        // Point
+        Interval.point(5).starts(Interval.closed(5, 10)) mustBe (true)
+        Interval.point(5).starts(Interval.open(4, 10)) mustBe (true)
+        Interval.point(5).starts(Interval.open(5, 10)) mustBe (false)
+        Interval.point(5).starts(Interval.empty[Int]) mustBe (false)
+        Interval.point(5).starts(Interval.unbounded[Int]) mustBe (false)
 
         // Proper
         // [1, 2]  [1, 10]

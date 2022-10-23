@@ -38,21 +38,21 @@ final class DuringSpec extends TestSpec:
       "manual check" in {
         // Empty
         Interval.empty[Int].during(Interval.open(5, 10)) mustBe (false)
-        Interval.empty[Int].during(Interval.degenerate(0)) mustBe (false)
+        Interval.empty[Int].during(Interval.point(0)) mustBe (false)
         Interval.empty[Int].during(Interval.unbounded[Int]) mustBe (false)
 
-        // Degenerate
+        // Point
         // {5}  (2, 9)
-        Interval.degenerate(5).during(Interval.open(2, 9)) mustBe (true)
-        Interval.degenerate(5).during(Interval.closed(2, 9)) mustBe (true)
+        Interval.point(5).during(Interval.open(2, 9)) mustBe (true)
+        Interval.point(5).during(Interval.closed(2, 9)) mustBe (true)
 
         // (2, 9)  {5}
-        Interval.open(2, 9).contains(Interval.degenerate(5)) mustBe (true)
+        Interval.open(2, 9).contains(Interval.point(5)) mustBe (true)
 
-        Interval.degenerate(5).during(Interval.closed(5, 10)) mustBe (false)
-        Interval.degenerate(5).during(Interval.open(5, 10)) mustBe (false)
-        Interval.degenerate(6).during(Interval.open(5, 10)) mustBe (false)
-        Interval.degenerate(7).during(Interval.open(5, 10)) mustBe (true)
+        Interval.point(5).during(Interval.closed(5, 10)) mustBe (false)
+        Interval.point(5).during(Interval.open(5, 10)) mustBe (false)
+        Interval.point(6).during(Interval.open(5, 10)) mustBe (false)
+        Interval.point(7).during(Interval.open(5, 10)) mustBe (true)
 
         // Proper
         Interval.closed(5, 7).during(Interval.closed(2, 10)) mustBe (true)
@@ -75,7 +75,7 @@ final class DuringSpec extends TestSpec:
         Interval.proper(Some(0), true, Some(2), false).during(Interval.proper[Int](None, true, None, true)) mustBe (true)
 
         // [0]  [-∞,+∞)
-        Interval.degenerate(0).during(Interval.proper[Int](None, true, None, false)) mustBe (true)
+        Interval.point(0).during(Interval.proper[Int](None, true, None, false)) mustBe (true)
 
         // (3,+∞), (0,+∞]
         Interval.leftOpen(3).during(Interval.proper(Some(0), false, None, true)) mustBe (true)

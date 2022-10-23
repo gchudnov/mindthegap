@@ -28,24 +28,24 @@ final class DiagramSpec extends TestSpec:
       }
 
       "diagram a point" in {
-        val a = Interval.degenerate[Int](5) // [5]
+        val a = Interval.point[Int](5) // [5]
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram(40, 1, List(Span(20, 20, 0, true, true)), List(Tick(20)), List(Label(20, "5")), List(Legend("{5}")))
+        val expected = Diagram(40, 1, List(Span(20, 20, true, true)), List(Tick(20)), List(Label(20, "5")), List(Legend("{5}")))
 
         actual mustBe expected
       }
 
       "diagram two points" in {
-        val a = Interval.degenerate[Int](5)  // [5]
-        val b = Interval.degenerate[Int](10) // [10]
+        val a = Interval.point[Int](5)  // [5]
+        val b = Interval.point[Int](10) // [10]
 
         val actual = Diagram.make(List(a, b), view, canvas)
         val expected =
           Diagram(
             40,
             2,
-            List(Span(2, 2, 0, true, true), Span(37, 37, 1, true, true)),
+            List(Span(2, 2, true, true), Span(37, 37, true, true)),
             List(Tick(2), Tick(37)),
             List(Label(2, "5"), Label(36, "10")),
             List(Legend("{5}"), Legend("{10}"))
@@ -58,7 +58,7 @@ final class DiagramSpec extends TestSpec:
         val a = Interval.closed[Int](5, 10) // [5, 10]
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram(40, 1, List(Span(2, 37, 0, true, true)), List(Tick(2), Tick(37)), List(Label(2, "5"), Label(36, "10")), List(Legend("[5,10]")))
+        val expected = Diagram(40, 1, List(Span(2, 37, true, true)), List(Tick(2), Tick(37)), List(Label(2, "5"), Label(36, "10")), List(Legend("[5,10]")))
 
         actual mustBe expected
       }
@@ -67,7 +67,7 @@ final class DiagramSpec extends TestSpec:
         val a = Interval.closed[Int](-5, 10) // [-5, 10]
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram(40, 1, List(Span(2, 37, 0, true, true)), List(Tick(2), Tick(37)), List(Label(1, "-5"), Label(36, "10")), List(Legend("[-5,10]")))
+        val expected = Diagram(40, 1, List(Span(2, 37, true, true)), List(Tick(2), Tick(37)), List(Label(1, "-5"), Label(36, "10")), List(Legend("[-5,10]")))
 
         actual mustBe expected
       }
@@ -76,7 +76,7 @@ final class DiagramSpec extends TestSpec:
         val a = Interval.unbounded[Int] // (-∞, +∞)
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram(40, 1, List(Span(0, 39, 0, false, false)), List(Tick(0), Tick(39)), List(Label(0, "-∞"), Label(38, "+∞")), List(Legend("(-∞,+∞)")))
+        val expected = Diagram(40, 1, List(Span(0, 39, false, false)), List(Tick(0), Tick(39)), List(Label(0, "-∞"), Label(38, "+∞")), List(Legend("(-∞,+∞)")))
 
         actual mustBe expected
       }
@@ -85,7 +85,7 @@ final class DiagramSpec extends TestSpec:
         val a = Interval.leftOpen(5) // (5, +∞)
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram(40, 1, List(Span(2, 39, 0, false, false)), List(Tick(2), Tick(39)), List(Label(2, "5"), Label(38, "+∞")), List(Legend("(5,+∞)")))
+        val expected = Diagram(40, 1, List(Span(2, 39, false, false)), List(Tick(2), Tick(39)), List(Label(2, "5"), Label(38, "+∞")), List(Legend("(5,+∞)")))
 
         actual mustBe expected
       }
@@ -94,7 +94,7 @@ final class DiagramSpec extends TestSpec:
         val a = Interval.leftClosed(5) // [5, +∞)
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram(40, 1, List(Span(2, 39, 0, true, false)), List(Tick(2), Tick(39)), List(Label(2, "5"), Label(38, "+∞")), List(Legend("[5,+∞)")))
+        val expected = Diagram(40, 1, List(Span(2, 39, true, false)), List(Tick(2), Tick(39)), List(Label(2, "5"), Label(38, "+∞")), List(Legend("[5,+∞)")))
 
         actual mustBe expected
       }
@@ -103,7 +103,7 @@ final class DiagramSpec extends TestSpec:
         val a = Interval.rightOpen(5) // (-∞, 5)
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram(40, 1, List(Span(0, 37, 0, false, false)), List(Tick(0), Tick(37)), List(Label(0, "-∞"), Label(37, "5")), List(Legend("(-∞,5)")))
+        val expected = Diagram(40, 1, List(Span(0, 37, false, false)), List(Tick(0), Tick(37)), List(Label(0, "-∞"), Label(37, "5")), List(Legend("(-∞,5)")))
 
         actual mustBe expected
       }
@@ -112,7 +112,23 @@ final class DiagramSpec extends TestSpec:
         val a = Interval.rightClosed(5) // (-∞, 5]
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram(40, 1, List(Span(0, 37, 0, false, true)), List(Tick(0), Tick(37)), List(Label(0, "-∞"), Label(37, "5")), List(Legend("(-∞,5]")))
+        val expected = Diagram(40, 1, List(Span(0, 37, false, true)), List(Tick(0), Tick(37)), List(Label(0, "-∞"), Label(37, "5")), List(Legend("(-∞,5]")))
+
+        actual mustBe expected
+      }
+
+      "diagram left part of a closed interval" in {
+        val a = Interval.closed[Int](5, 10) // [5, 10]
+
+        val actual = Diagram.make(List(a), view.copy(left = Some(0), right = Some(7)), canvas) // [0, 7]
+        val expected = Diagram(
+          40,
+          1,
+          List(Span(27, 52, true, true)),
+          List(Tick(2), Tick(27), Tick(37), Tick(52)),
+          List(Label(2, "0"), Label(27, "5"), Label(37, "7"), Label(51, "10")),
+          List(Legend("[5,10]"))
+        )
 
         actual mustBe expected
       }
@@ -128,13 +144,13 @@ final class DiagramSpec extends TestSpec:
           40,
           4,
           List(
-            Span(2, 12, 0, true, true),
-            Span(12, 25, 1, true, true),
-            Span(0, 37, 2, false, true),
-            Span(5, 39, 3, false, false)
+            Span(2, 12, true, true),
+            Span(12, 25, true, true),
+            Span(0, 37, false, true),
+            Span(5, 39, false, false)
           ),
-          List(Tick(2), Tick(12), Tick(25), Tick(0), Tick(37), Tick(5), Tick(39)),
-          List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞")),
+          List(Tick(0), Tick(2), Tick(5), Tick(12), Tick(25), Tick(37), Tick(39)),
+          List(Label(0, "-∞"), Label(2, "1"), Label(5, "2"), Label(12, "5"), Label(24, "10"), Label(36, "15"), Label(38, "+∞")),
           List(Legend("[1,5]"), Legend("[5,10]"), Legend("(-∞,15]"), Legend("(2,+∞)"))
         )
 
@@ -154,15 +170,15 @@ final class DiagramSpec extends TestSpec:
           40,
           6,
           List(
-            Span(2, 18, 0, true, true),
-            Span(6, 21, 1, true, true),
-            Span(10, 25, 2, true, true),
-            Span(14, 29, 3, true, true),
-            Span(18, 33, 4, true, true),
-            Span(21, 37, 5, true, true)
+            Span(2, 18, true, true),
+            Span(6, 21, true, true),
+            Span(10, 25, true, true),
+            Span(14, 29, true, true),
+            Span(18, 33, true, true),
+            Span(21, 37, true, true)
           ),
-          List(Tick(2), Tick(18), Tick(6), Tick(21), Tick(10), Tick(25), Tick(14), Tick(29), Tick(33), Tick(37)),
-          List(Label(2, "1"), Label(18, "5"), Label(6, "2"), Label(21, "6"), Label(10, "3"), Label(25, "7"), Label(14, "4"), Label(29, "8"), Label(33, "9"), Label(36, "10")),
+          List(Tick(2), Tick(6), Tick(10), Tick(14), Tick(18), Tick(21), Tick(25), Tick(29), Tick(33), Tick(37)),
+          List(Label(2, "1"), Label(6, "2"), Label(10, "3"), Label(14, "4"), Label(18, "5"), Label(21, "6"), Label(25, "7"), Label(29, "8"), Label(33, "9"), Label(36, "10")),
           List(Legend("[1,5]"), Legend("[2,6]"), Legend("[3,7]"), Legend("[4,8]"), Legend("[5,9]"), Legend("[6,10]"))
         )
 
@@ -179,7 +195,7 @@ final class DiagramSpec extends TestSpec:
         val expected = Diagram(
           40,
           1,
-          List(Span(2, 37, 0, true, true)),
+          List(Span(2, 37, true, true)),
           List(Tick(2), Tick(37)),
           List(Label(0, "2020-07-02T12:34Z"), Label(23, "2021-07-02T12:34Z")),
           List(Legend("[2020-07-02T12:34Z,2021-07-02T12:34Z]"))
@@ -386,7 +402,7 @@ final class DiagramSpec extends TestSpec:
       }
 
       "display a point" in {
-        val a       = Interval.degenerate[Int](5) // [5]
+        val a       = Interval.point[Int](5) // [5]
         val diagram = Diagram.make(List(a), view, canvas)
 
         val actual = Diagram.render(diagram, theme)
@@ -400,8 +416,8 @@ final class DiagramSpec extends TestSpec:
       }
 
       "display two points" in {
-        val a       = Interval.degenerate[Int](5)  // [5]
-        val b       = Interval.degenerate[Int](10) // [10]
+        val a       = Interval.point[Int](5)  // [5]
+        val b       = Interval.point[Int](10) // [10]
         val diagram = Diagram.make(List(a, b), view, canvas)
 
         val actual = Diagram.render(diagram, theme)
@@ -436,8 +452,8 @@ final class DiagramSpec extends TestSpec:
         val actual = Diagram.render(diagram, theme)
         val expected = List(
           "           [********]                   ",
-          "-----------+--------+-------------------",
-          "           5       10                   "
+          "--+--------+--------+----------------+--",
+          "  0        5       10               20  "
         )
 
         actual mustBe expected
@@ -450,8 +466,8 @@ final class DiagramSpec extends TestSpec:
         val actual = Diagram.render(diagram, theme)
         val expected = List(
           "                           [************",
-          "---------------------------+------------",
-          "                           5            "
+          "--+------------------------+---------+--",
+          "  0                        5         7  "
         )
 
         actual mustBe expected
@@ -464,8 +480,8 @@ final class DiagramSpec extends TestSpec:
         val actual = Diagram.render(diagram, theme)
         val expected = List(
           "***************]                        ",
-          "---------------+------------------------",
-          "              10                        "
+          "--+------------+---------------------+--",
+          "  7           10                    15  "
         )
 
         actual mustBe expected
@@ -478,8 +494,8 @@ final class DiagramSpec extends TestSpec:
         val actual = Diagram.render(diagram, theme)
         val expected = List(
           "****************************************",
-          "----------------------------------------",
-          "                                        "
+          "--+----------------------------------+--",
+          "  7                                  8  "
         )
 
         actual mustBe expected
@@ -746,5 +762,71 @@ final class DiagramSpec extends TestSpec:
 
         actual mustBe expected
       }
+    }
+
+    "display an intersection of two intervals" in {
+      val a = Interval.closed(5, 10)
+      val b = Interval.closed(1, 7)
+
+      val c = a.intersection(b)
+
+      val canvas: Canvas = Canvas.make(40)
+      val diagram        = Diagram.make(List(a, b, c), canvas)
+
+      val actual = Diagram.render(diagram, Theme.default.copy(legend = true))
+
+      val expected = List(
+        "                  [******************]   | [5,10]",
+        "  [**********************]               | [1,7]",
+        "                  [******]               | [5,7]",
+        "--+---------------+------+-----------+-- |",
+        "  1               5      7          10   |"
+      )
+
+      actual mustBe expected
+    }
+
+    "display a span of two intervals" in {
+      val a = Interval.closed(5, 10)
+      val b = Interval.closed(1, 7)
+
+      val c = a.span(b)
+
+      val canvas: Canvas = Canvas.make(40)
+      val diagram        = Diagram.make(List(a, b, c), canvas)
+
+      val actual = Diagram.render(diagram, Theme.default.copy(legend = true))
+
+      val expected = List(
+        "                  [******************]   | [5,10]",
+        "  [**********************]               | [1,7]",
+        "  [**********************************]   | [1,10]",
+        "--+---------------+------+-----------+-- |",
+        "  1               5      7          10   |"
+      )
+
+      actual mustBe expected
+    }
+
+    "display a gap of two intervals" in {
+      val a = Interval.closed(5, 10)
+      val b = Interval.closed(12, 17)
+
+      val c = a.gap(b)
+
+      val canvas: Canvas = Canvas.make(40)
+      val diagram        = Diagram.make(List(a, b, c), canvas)
+
+      val actual = Diagram.render(diagram, Theme.default.copy(legend = true))
+
+      val expected = List(
+        "  [**************]                       | [5,10]",
+        "                      [**************]   | [12,17]",
+        "                 [****]                  | [10,12]",
+        "--+--------------+----+--------------+-- |",
+        "  5             10   12             17   |"
+      )
+
+      actual mustBe expected
     }
   }
