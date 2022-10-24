@@ -70,6 +70,20 @@ final class BoundarySpec extends TestSpec:
         Boundary.Left[Int](Some(1), true).canonical mustBe Boundary.Left[Int](Some(1), true)
         Boundary.Left[Int](Some(1), false).canonical mustBe Boundary.Left[Int](Some(2), true)
       }
+
+      "succ(x)" in {
+        Boundary.Left[Int](None, true).succ mustBe Boundary.Left[Int](None, true)
+        Boundary.Left[Int](None, false).succ mustBe Boundary.Left[Int](None, false)
+        Boundary.Left[Int](Some(1), true).succ mustBe Boundary.Left[Int](Some(2), true)
+        Boundary.Left[Int](Some(1), false).succ mustBe Boundary.Left[Int](Some(2), false)
+      }
+
+      "pred(x)" in {
+        Boundary.Left[Int](None, true).pred mustBe Boundary.Left[Int](None, true)
+        Boundary.Left[Int](None, false).pred mustBe Boundary.Left[Int](None, false)
+        Boundary.Left[Int](Some(1), true).pred mustBe Boundary.Left[Int](Some(0), true)
+        Boundary.Left[Int](Some(1), false).pred mustBe Boundary.Left[Int](Some(0), false)
+      }
     }
 
     "Boundary.Right" should {
@@ -106,6 +120,20 @@ final class BoundarySpec extends TestSpec:
         Boundary.Right[Int](None, false).canonical mustBe Boundary.Right[Int](None, true)
         Boundary.Right[Int](Some(1), true).canonical mustBe Boundary.Right[Int](Some(1), true)
         Boundary.Right[Int](Some(1), false).canonical mustBe Boundary.Right[Int](Some(0), true)
+      }
+
+      "succ(x)" in {
+        Boundary.Right[Int](None, true).succ mustBe Boundary.Right[Int](None, true)
+        Boundary.Right[Int](None, false).succ mustBe Boundary.Right[Int](None, false)
+        Boundary.Right[Int](Some(1), true).succ mustBe Boundary.Right[Int](Some(2), true)
+        Boundary.Right[Int](Some(1), false).succ mustBe Boundary.Right[Int](Some(2), false)
+      }
+
+      "pred(x)" in {
+        Boundary.Right[Int](None, true).pred mustBe Boundary.Right[Int](None, true)
+        Boundary.Right[Int](None, false).pred mustBe Boundary.Right[Int](None, false)
+        Boundary.Right[Int](Some(1), true).pred mustBe Boundary.Right[Int](Some(0), true)
+        Boundary.Right[Int](Some(1), false).pred mustBe Boundary.Right[Int](Some(0), false)
       }
     }
   }

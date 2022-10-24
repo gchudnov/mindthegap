@@ -173,6 +173,20 @@ final class IntersectionSpec extends TestSpec:
 
         actual mustBe expected
       }
+
+      "unbounded, empty" in {
+        val a = Interval.unbounded[Int]
+        val b = Interval.empty[Int]
+
+        a.intersection(b) mustBe Interval.empty[Int]
+      }
+
+      "unbounded, non-empty" in {
+        val a = Interval.unbounded[Int]
+        val b = Interval.closed(1, 2)
+
+        a.intersection(b) mustBe Interval.closed(1, 2)
+      }
     }
 
     "A, B" should {

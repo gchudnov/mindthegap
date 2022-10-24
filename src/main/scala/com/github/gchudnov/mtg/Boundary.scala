@@ -46,6 +46,20 @@ enum Boundary[T](val value: Option[T], val isInclude: Boolean):
       case Right(b, includeB) =>
         Right(effectiveValue, true)
 
+  def succ(using d: Domain[T]): Boundary[T] =
+    this match
+      case Left(a, includeA) =>
+        Left(value.map(x => d.succ(x)), includeA)
+      case Right(b, includeB) =>
+        Right(value.map(x => d.succ(x)), includeB)
+
+  def pred(using d: Domain[T]): Boundary[T] =
+    this match
+      case Left(a, includeA) =>
+        Left(value.map(x => d.pred(x)), includeA)
+      case Right(b, includeB) =>
+        Right(value.map(x => d.pred(x)), includeB)
+
 object Boundary:
 
   given boundaryOrdering[T: Ordering: Domain]: Ordering[Boundary[T]] =

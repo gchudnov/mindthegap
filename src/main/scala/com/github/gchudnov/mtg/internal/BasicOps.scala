@@ -37,6 +37,11 @@ private[mtg] transparent trait BasicOps[+T]:
    *   - A ∩ B
    *   - A & B
    *
+   * NOTE:
+   *   - a and b intersect if (a- <= b+) AND (b- <= a+)
+   *   - empty interval do not intersect with any of the intervals.
+   *   - unbounded interval intersects with all non-empty intervals.
+   *
    * {{{
    *          | ∅        if (A <b|B> B)       | b, B
    *          | [a-, a+] if (A <s|d|f|e> B)   | s, d, f, e

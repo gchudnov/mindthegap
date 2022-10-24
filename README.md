@@ -220,11 +220,29 @@ Interval.open(4, 7).isLess(Interval.open(6, 15))  // true
 Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 ```
 
+### IsAdjacent
+
+Two intervals `a` and `b` are adjacent if: `succ(a+) = b- OR succ(b+) = a-`
+
+```text
+  isAdjacent       AAAAA          | succ(a+) = b- OR succ(b+) = a-
+  before(a,b)      :   :BBBBB
+```
+
+```scala
+Interval.open(1, 4).isAdjacent(Interval.open(3, 6))     // true
+Interval.open(3, 6).isAdjacent(Interval.open(1, 4))     // true
+Interval.closed(1, 4).isAdjacent(Interval.closed(5, 6)) // true
+Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) // true
+```
+
 ## Operations
 
 Intervals support the following list of operations: `intersection`, `span`, `gap`.
 
 ### Intersection
+
+Two intervals `a` and `b` intersect if `(a- <= b+) AND (b- <= a+)`.
 
 An intersection of two intervals `a` and `b`: `a ∩ b := | max(a-, b-), min(a+, b+) |`
 
@@ -461,9 +479,9 @@ c.show // [-∞,2)
 
 ## Domain
 
-The library can work and create intervals for a set of predefined types: ones that implement `Integral[T]` trait (e.g. `Int`, `Long`), `OffsetDateTime`, and `Instant`.
+To work with intervals, a `given` instance of `Domain[T]` is needed.
 
-To support intervals with other types a `given` instance of `Domain[T]` is needed. `Domain[T]` is defined as:
+`Domain[T]` is defined as:
 
 ```scala
 trait Domain[T]:
@@ -472,6 +490,8 @@ trait Domain[T]:
 ```
 
 where `succ(x)` and `pred(x)` are used to get the next and the previous value for `x`.
+
+By default `Domain[T]` is implemented for `Integral[T]` types (e.g. `Int`, `Long`), `OffsetDateTime`, and `Instant`.
 
 ## Ordering
 

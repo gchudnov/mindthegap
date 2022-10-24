@@ -9,19 +9,19 @@ import com.github.gchudnov.mtg.internal.BasicOps
  *
  * Classification of Intervals:
  * {{{
- *   - Empty                            | [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
- *   - Point                            | [a, a] = {a}
+ *   - Empty                            | [a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅
+ *   - Point                            | {x} = {x | a- = x = a+}
  *   - Proper and Bounded
- *     - Open                           | (a, b) = {x | a < x < b}
- *     - Closed                         | [a, b] = {x | a <= x <= b}
- *     - LeftClosedRightOpen            | [a, b) = {x | a <= x < b}
- *     - LeftOpenRightClosed            | (a, b] = {x | a < x <= b}
+ *     - Open                           | (a-, a+) = {x | a- < x < a+}
+ *     - Closed                         | [a-, a+] = {x | a- <= x <= a+}
+ *     - LeftClosedRightOpen            | [a-, a+) = {x | a- <= x < a+}
+ *     - LeftOpenRightClosed            | (a-, a+] = {x | a- < x <= a+}
  *   - LeftBounded and RightUnbounded
- *     - LeftOpen                       | (a, +∞) = {x | x > a}
- *     - LeftClosed                     | [a, +∞) = {x | x >= a}
+ *     - LeftOpen                       | (a-, +∞) = {x | x > a-}
+ *     - LeftClosed                     | [a-, +∞) = {x | x >= a-}
  *   - LeftUnbounded and RightBounded
- *     - RightOpen                      | (-∞, b) = {x | x < b}
- *     - RightClosed                    | (-∞, b] = {x | x < b}
+ *     - RightOpen                      | (-∞, a+) = {x | x < a+}
+ *     - RightClosed                    | (-∞, a+] = {x | x < a+}
  *   - Unbounded                        | (-∞, +∞) = R
  * }}}
  *
@@ -36,16 +36,16 @@ import com.github.gchudnov.mtg.internal.BasicOps
  *   LeftUnbounded        - (+inf, ...
  *   RightUnbounded       - ..., +inf)
  *   HalfOpen             - includes only one of its endpoints, e.g. (0, 1]. [0, 1).
- *   Empty                - [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅.
- *   Point                - Consists of a single real number: [a, a] = {a}.
- *   Open                 - does not include its endpoints, and is indicated with parentheses, e.g. (0, 1); (a, b) = {x | a < x < b}
- *   Closed               - an interval which includes all its limit points, e.g. [0, 1]; [a, b] = {x | a <= x <= b}
- *   LeftClosedRightOpen  - [a, b) = {x | a <= x < b}
- *   LeftOpenRightClosed  - (a, b] = {x | a < x <= b}
- *   LeftOpen             - LeftBounded and RightUnbounded; (a, +∞) = {x | x > a}.
- *   LeftClosed           - LeftBounded and RightUnbounded; [a, +∞) = {x | x >= a}.
- *   RightOpen            - LeftUnbounded and RightBounded; (-∞, b) = {x | x < b}.
- *   RightClosed          - LeftUnbounded and RightBounded; (-∞, b] = {x | x < b}.
+ *   Empty                - [a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅.
+ *   Point                - Consists of a single real number: {x} = {x | a- = x = a+}.
+ *   Open                 - does not include its endpoints, and is indicated with parentheses, e.g. (0, 1); (a-, a+) = {x | a- < x < a+}
+ *   Closed               - an interval which includes all its limit points, e.g. [0, 1]; [a-, a+] = {x | a- <= x <= a+}
+ *   LeftClosedRightOpen  - [a-, a+) = {x | a- <= x < a+}
+ *   LeftOpenRightClosed  - (a-, a+] = {x | a- < x <= a+}
+ *   LeftOpen             - LeftBounded and RightUnbounded; (a-, +∞) = {x | x > a-}.
+ *   LeftClosed           - LeftBounded and RightUnbounded; [a-, +∞) = {x | x >= a-}.
+ *   RightOpen            - LeftUnbounded and RightBounded; (-∞, a+) = {x | x < a+}.
+ *   RightClosed          - LeftUnbounded and RightBounded; (-∞, a+] = {x | x < a+}.
  *   Unbounded            - Unbounded at both ends; (-∞, +∞) = R
  * }}}
  */
@@ -133,7 +133,7 @@ object Interval:
     Interval.Empty
 
   /**
-   * [a, a] = {a}
+   * {x} = {x | a- = x = a+}
    *
    * @param a
    *   point
@@ -144,7 +144,7 @@ object Interval:
     Interval.Point(a)
 
   /**
-   * {a, b}
+   * {a-, a+}
    *
    * @param a
    *   left boundary
@@ -161,7 +161,7 @@ object Interval:
     proper(Boundary.Left(a, isIncludeA), Boundary.Right(b, isIncludeB))
 
   /**
-   * {a, b}
+   * {a-, a+}
    *
    * @param ba
    *   left boundary
@@ -182,7 +182,7 @@ object Interval:
     proper[T](Boundary.Left(None, false), Boundary.Right(None, false))
 
   /**
-   * (a, b) = {x | a < x < b}
+   * (a-, a+) = {x | a- < x < a+}
    *
    * @param a
    *   left boundary
@@ -195,7 +195,7 @@ object Interval:
     proper(Boundary.Left(Some(a), false), Boundary.Right(Some(b), false))
 
   /**
-   * [a, b] = {x | a <= x <= b}
+   * [a-, a+] = {x | a- <= x <= a+}
    *
    * @param a
    *   left boundary
@@ -208,7 +208,7 @@ object Interval:
     proper(Boundary.Left(Some(a), true), Boundary.Right(Some(b), true))
 
   /**
-   * (a, +∞) = {x | x > a}
+   * (a-, +∞) = {x | x > a-}
    *
    * @param a
    *   left boundary
@@ -219,7 +219,7 @@ object Interval:
     proper(Boundary.Left(Some(a), false), Boundary.Right[T](None, false))
 
   /**
-   * [a, +∞) = {x | x >= a}
+   * [a-, +∞) = {x | x >= a-}
    *
    * @param a
    *   left boundary
@@ -230,7 +230,7 @@ object Interval:
     proper(Boundary.Left(Some(a), true), Boundary.Right[T](None, false))
 
   /**
-   * (-∞, b) = {x | x < b}
+   * (-∞, a+) = {x | x < a+}
    *
    * @param a
    *   right boundary
@@ -241,7 +241,7 @@ object Interval:
     proper(Boundary.Left[T](None, false), Boundary.Right(Some(b), false))
 
   /**
-   * (-∞, b] = {x | x < b}
+   * (-∞, a+] = {x | x < a+}
    *
    * @param a
    *   right boundary
@@ -252,7 +252,7 @@ object Interval:
     proper(Boundary.Left[T](None, false), Boundary.Right(Some(b), true))
 
   /**
-   * [a, b) = {x | a <= x < b}
+   * [a-, a+) = {x | a- <= x < a+}
    *
    * @param a
    *   right boundary
@@ -263,7 +263,7 @@ object Interval:
     proper(Boundary.Left[T](Some(a), true), Boundary.Right(Some(b), false))
 
   /**
-   * (a, b] = {x | a < x <= b}
+   * (a-, a+] = {x | a- < x <= a+}
    *
    * @param a
    *   right boundary
