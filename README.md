@@ -202,6 +202,24 @@ Interval.open(1, 4).isDisjoint(Interval.open(3, 6)) // true
 Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) // true
 ```
 
+### IsAdjacent
+
+Two intervals `a` and `b` are adjacent if: `succ(a+) = b- OR succ(b+) = a-`
+
+```text
+  isAdjacent                AAAAA        |  succ(a+) = b- OR succ(b+) = a-
+                            :   :
+  before(a,b)      b        :   :BBBBB
+  after(a,b)       B   BBBBB:   :
+```
+
+```scala
+Interval.open(1, 4).isAdjacent(Interval.open(3, 6))     // true
+Interval.open(3, 6).isAdjacent(Interval.open(1, 4))     // true
+Interval.closed(1, 4).isAdjacent(Interval.closed(5, 6)) // true
+Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) // true
+```
+
 ### IsLess
 
 Determines whether `A` less-than `B`.
@@ -218,22 +236,6 @@ Determines whether `A` less-than `B`.
 Interval.open(4, 7).isLess(Interval.open(10, 15)) // true
 Interval.open(4, 7).isLess(Interval.open(6, 15))  // true
 Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
-```
-
-### IsAdjacent
-
-Two intervals `a` and `b` are adjacent if: `succ(a+) = b- OR succ(b+) = a-`
-
-```text
-  isAdjacent       AAAAA          | succ(a+) = b- OR succ(b+) = a-
-  before(a,b)      :   :BBBBB
-```
-
-```scala
-Interval.open(1, 4).isAdjacent(Interval.open(3, 6))     // true
-Interval.open(3, 6).isAdjacent(Interval.open(1, 4))     // true
-Interval.closed(1, 4).isAdjacent(Interval.closed(5, 6)) // true
-Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) // true
 ```
 
 ## Operations

@@ -78,6 +78,18 @@ private[mtg] transparent trait ExtendedRel[+T]:
     a.nonEmpty && b.nonEmpty && (bOrd.lt(a.right, b.left) || bOrd.gt(a.left, b.right))
 
   /**
+   * IsAdjacent
+   *
+   * Two intervals a and b are adjacent if:
+   *
+   * {{{
+   *   succ(a+) = b- OR succ(b+) = a-
+   * }}}
+   */
+  final def isAdjacent[T1 >: T: Domain](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.nonEmpty && b.nonEmpty && (bOrd.equiv(a.right.succ, b.left) || bOrd.equiv(b.right.succ, a.left))
+
+  /**
    * IsLess
    *
    * Checks whether A less-than B (Order Relation)
@@ -97,15 +109,3 @@ private[mtg] transparent trait ExtendedRel[+T]:
    */
   final def isLess[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.lt(a.left, b.left) && bOrd.lt(a.right, b.right)
-
-  /**
-   * IsAdjacent
-   *
-   * Two intervals a and b are adjacent if:
-   *
-   * {{{
-   *   succ(a+) = b- OR succ(b+) = a-
-   * }}}
-   */
-  final def isAdjacent[T1 >: T: Domain](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    a.nonEmpty && b.nonEmpty && (bOrd.equiv(a.right.succ, b.left) || bOrd.equiv(b.right.succ, a.left))
