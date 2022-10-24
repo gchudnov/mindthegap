@@ -58,6 +58,7 @@ The 13 relations are:
 
 - **Distinct** because no pair of definite intervals can be related by more than one of the relationships.
 - **Exhaustive** because any pair of definite intervals are described by one of the relations.
+- **Qualitative** because no specific time spans are considered.
 
 ## Interval Creation
 
