@@ -221,6 +221,23 @@ Interval.closed(1, 4).isAdjacent(Interval.closed(5, 6)) // true
 Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) // true
 ```
 
+## Merges
+
+Given two intervals `a` and `b`, `merges(a,b)` if and only if `overlaps(a,b) OR meets(a,b)`
+
+```text
+  merges                    AAAAA        |
+                            :   :
+  meets(a,b)       m|M      :   BBBBBBBBB    |  a+ = b-
+  overlaps(a,b)    o|O      : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
+```
+
+```scala
+Interval.open(4, 10).merges(Interval.open(5, 12))     // true
+Interval.open(5, 12).isMergedBy(Interval.open(4, 10)) // true
+Interval.open(4, 7).merges(Interval.open(5, 8))       // true
+```
+
 ### IsLess
 
 Determines whether `A` less-than `B`.

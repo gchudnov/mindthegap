@@ -10,6 +10,7 @@ import com.github.gchudnov.mtg.Domain
  *   - IsSubset
  *   - IsSuperset
  *   - IsDisjoint
+ *   - isAdjacent
  *   - IsLess
  */
 private[mtg] transparent trait ExtendedRel[+T]:
@@ -85,9 +86,34 @@ private[mtg] transparent trait ExtendedRel[+T]:
    * {{{
    *   succ(a+) = b- OR succ(b+) = a-
    * }}}
+   *
+   * {{{
+   *   AAA
+   *      BBB
+   * }}}
    */
   final def isAdjacent[T1 >: T: Domain](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && (bOrd.equiv(a.right.succ, b.left) || bOrd.equiv(b.right.succ, a.left))
+
+  /**
+   * merges
+   *
+   * a merges b if and only if:
+   *   - a overlaps b OR
+   *   - a meets b
+   *
+   * {{{
+   *   a- < b- <= a+ < b+
+   * }}}
+   */
+  final def merges[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.isProper && b.isProper && bOrd.lt(a.left, b.left) && bOrd.lteq(b.left, a.right) && bOrd.lt(a.right, b.right)
+
+  /**
+   * IsMergedBy
+   */
+  final def isMergedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    b.merges(a)
 
   /**
    * IsLess
