@@ -104,15 +104,15 @@ final class MinusSpec extends TestSpec:
       //     actual mustBe expected
       //   }
 
-      //   "∅ if A is-overlapped-by B" in {
-      //     val a = Interval.closed(5, 10)
-      //     val b = Interval.closed(1, 7)
+      "[max(succ(b+), a-), a+] if A is-overlapped-by B" in {
+        val a = Interval.closed(5, 10)
+        val b = Interval.closed(1, 7)
 
-      //     val actual   = a.minus(b)
-      //     val expected = Interval.empty[Int]
+        val actual   = a.minus(b)
+        val expected = Interval.closed(8, 10)
 
-      //     actual mustBe expected
-      //   }
+        actual mustBe expected
+      }
 
       //   "[a-, b+] if A is-met-by B" in {
       //     val a = Interval.closed(5, 10)

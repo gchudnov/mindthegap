@@ -126,6 +126,10 @@ private[mtg] transparent trait BasicOps[+T]:
    *   - (b) `a` contains either `b-` or `b+` but not both;
    *   - (c) either b.starts(a) or b.finishes(a) is trye;
    *
+   * NOTE: a.minus(b) is undefined if:
+       - either a.starts(b) or a.finishes(b);
+       - either `a` or `b` is properly included in the other;
+   * 
    * {{{
    *   Example #1 ((a- < b-) AND (a+ <= b+)):
    *
