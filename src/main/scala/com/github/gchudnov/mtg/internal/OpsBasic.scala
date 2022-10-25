@@ -96,7 +96,7 @@ private[mtg] transparent trait BasicOps[+T]:
    * Gap (Complement)
    *
    *   - A || B
-   * 
+   *
    * A gap between two intervals `a` and `b`: `a || b := | min(a-, b-), max(a+, b+) |`.
    *
    * {{{
@@ -114,3 +114,16 @@ private[mtg] transparent trait BasicOps[+T]:
   final def gap[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
     if a.isEmpty || b.isEmpty then Interval.empty[T]
     else Interval.make(ordT.min(a.right, b.right).left, ordT.max(a.left, b.left).right)
+
+  /**
+   * Minus
+   * 
+   * 
+   * 
+   * {{{
+   * 
+   * 
+   * }}}
+   */
+  final def minus[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
+    ???

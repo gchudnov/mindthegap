@@ -392,6 +392,13 @@ val c = a.gap(b)                 // [10, 12]
   5             10   12             17   |
 ```
 
+If intervals are not disjoint, the gap is empty.
+
+### Minus
+
+TODO: write it down
+
+
 ## Display
 
 A collection of intervals can be displayed:

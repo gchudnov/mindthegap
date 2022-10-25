@@ -64,72 +64,72 @@ final class UnionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "∅ if A starts B" in {
+      "[a-, b+] if A starts B" in {
         val a = Interval.closed(1, 5)
         val b = Interval.closed(1, 10)
 
         val actual   = a.union(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.closed(1, 10)
 
         actual mustBe expected
       }
 
-      "∅ if A during B" in {
+      "[a-, b+] if A during B" in {
         val a = Interval.closed(5, 7)
         val b = Interval.closed(1, 10)
 
         val actual   = a.union(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.closed(1, 10)
 
         actual mustBe expected
       }
 
-      "∅ if A finishes B" in {
+      "[a-, b+] if A finishes B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 10)
 
         val actual   = a.union(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.closed(1, 10)
 
         actual mustBe expected
       }
 
-      "∅ if A equals B" in {
+      "[a-, a+] if A equals B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(5, 10)
 
         val actual   = a.union(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.closed(5, 10)
 
         actual mustBe expected
       }
 
-      "∅ if A is-overlapped-by B" in {
+      "[b-, a+] if A is-overlapped-by B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 7)
 
         val actual   = a.union(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.closed(1, 10)
 
         actual mustBe expected
       }
 
-      "∅ if A is-met-by B" in {
+      "[b-, a+] if A is-met-by B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 5)
 
         val actual   = a.union(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.closed(1, 10)
 
         actual mustBe expected
       }
 
-      "∅ if A is-started-by B" in {
+      "[a-, a+] if A is-started-by B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(1, 5)
 
         val actual   = a.union(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.closed(1, 10)
 
         actual mustBe expected
       }
@@ -154,22 +154,22 @@ final class UnionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "∅ in A is-finished-by B" in {
+      "[a-, b+] in A is-finished-by B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(7, 10)
 
         val actual   = a.union(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.closed(1, 10)
 
         actual mustBe expected
       }
 
-      "∅ if A contains B" in {
+      "[a-, a+] if A contains B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(5, 7)
 
         val actual   = a.union(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.closed(1, 10)
 
         actual mustBe expected
       }

@@ -1041,10 +1041,10 @@ final class DiagramSpec extends TestSpec:
       val actual = Diagram.render(diagram, theme)
 
       val expected = List(
-        "  [***************]                      | [1,5]", 
-        "                     [***************]   | [6,10]", 
-        "  [**********************************]   | [1,10]", 
-        "--+---------------+--+---------------+-- |", 
+        "  [***************]                      | [1,5]",
+        "                     [***************]   | [6,10]",
+        "  [**********************************]   | [1,10]",
+        "--+---------------+--+---------------+-- |",
         "  1               5  6              10   |"
       )
 
@@ -1073,7 +1073,7 @@ final class DiagramSpec extends TestSpec:
       actual mustBe expected
     }
 
-    "display a gap of two intersecting intervals" in {
+    "display a.gap(b) of two intersecting intervals" in {
       val a = Interval.closed(5, 10)
       val b = Interval.closed(4, 15)
 
@@ -1085,12 +1085,17 @@ final class DiagramSpec extends TestSpec:
       val actual = Diagram.render(diagram, theme)
 
       val expected = List(
+        "     [***************]                   | [5,10]",
+        "  [**********************************]   | [4,15]",
+        "                                         | ∅",
+        "--+--+---------------+---------------+-- |",
+        "  4  5              10              15   |"
       )
 
       actual mustBe expected
     }
 
-    "display a gap of two disjoint intervals" in {
+    "display a.gap(b) of two disjoint intervals" in {
       val a = Interval.closed(5, 10)
       val b = Interval.closed(12, 17)
 

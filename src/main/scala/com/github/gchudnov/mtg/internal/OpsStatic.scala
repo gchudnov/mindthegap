@@ -32,3 +32,9 @@ private[mtg] transparent trait StaticOps:
    */
   final def gap[T: Domain](a: Interval[T], b: Interval[T])(using ordT: Ordering[Boundary[T]]): Interval[T] =
     a.gap(b)
+
+  /**
+   * Minus
+   */
+  final def minus[T: Domain](a: Interval[T], b: Interval[T])(using ordT: Ordering[Boundary[T]]): Interval[T] =
+    a.minus(b)
