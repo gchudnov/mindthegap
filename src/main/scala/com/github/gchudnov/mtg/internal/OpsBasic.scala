@@ -11,7 +11,7 @@ private[mtg] transparent trait BasicOps[+T]:
   a: Interval[T] =>
 
   /**
-   * Intersection of two intervals
+   * Intersection
    *
    *   - A ∩ B
    *   - A & B
@@ -22,7 +22,7 @@ private[mtg] transparent trait BasicOps[+T]:
    *   - unbounded interval intersects with all non-empty intervals.
    *
    * {{{
-   * A ∩ B := | max(a-, b-), min(a+, b+) |
+   *   A ∩ B := | max(a-, b-), min(a+, b+) |
    * }}}
    *
    * {{{
@@ -38,12 +38,12 @@ private[mtg] transparent trait BasicOps[+T]:
     else Interval.make(ordT.max(a.left, b.left), ordT.min(a.right, b.right))
 
   /**
-   * Span of two intervals
+   * Span
    *
    *   - A # B
    *
    * {{{
-   * A # B := | min(a-, b-), max(a+, b+) |
+   *   A # B := | min(a-, b-), max(a+, b+) |
    * }}}
    *
    * {{{
@@ -59,12 +59,28 @@ private[mtg] transparent trait BasicOps[+T]:
     else Interval.make(ordT.min(a.left, b.left), ordT.max(a.right, b.right))
 
   /**
-   * Gap of two intervals (Complement)
+   * Union
+   *
+   * Union of two intervals `a` and `b` returns `[min(a-,b-), max(a+,b+)]` if `merges(a, b)` and `∅` otherwise.
+   *
+   * {{{
+   *   A union B := | min(a-,b-), max(a+,b+) | if merges(a, b) else ∅
+   * }}}
+   *
+   * {{{
+   * }}}
+   */
+  def union[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
+    if a.merges(b) then Interval.make(ordT.min(a.left, b.left), ordT.max(a.right, b.right))
+    else Interval.empty[T]
+
+  /**
+   * Gap (Complement)
    *
    *   - A || B
    *
    * {{{
-   * A || B := | min(a+, b+), max(a-, b-) |
+   *   A || B := | min(a+, b+), max(a-, b-) |
    * }}}
    *
    * {{{

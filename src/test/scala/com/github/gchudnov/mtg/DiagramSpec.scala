@@ -18,11 +18,18 @@ final class DiagramSpec extends TestSpec:
 
   "Diagram" when {
     "make" should {
+      "diagram no intervals" in {
+        val actual   = Diagram.make(List.empty[Interval[Int]], view, canvas)
+        val expected = Diagram.empty
+
+        actual mustBe expected
+      }
+
       "diagram an empty interval" in {
         val a = Interval.empty[Int]
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram.empty
+        val expected = Diagram(40, 1, List(Span(1, -1, true, true)), List(), List(), List(Legend("∅")))
 
         actual mustBe expected
       }
@@ -152,6 +159,24 @@ final class DiagramSpec extends TestSpec:
           List(Tick(0), Tick(2), Tick(5), Tick(12), Tick(25), Tick(37), Tick(39)),
           List(Label(0, "-∞"), Label(2, "1"), Label(5, "2"), Label(12, "5"), Label(24, "10"), Label(36, "15"), Label(38, "+∞")),
           List(Legend("[1,5]"), Legend("[5,10]"), Legend("(-∞,15]"), Legend("(2,+∞)"))
+        )
+
+        actual mustBe expected
+      }
+
+      "diagram several intervals that include an empty one" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(2, 6)
+        val c = Interval.empty[Int]
+
+        val actual = Diagram.make(List(a, b, c), view, canvas)
+        val expected = Diagram(
+          40,
+          3,
+          List(Span(2, 30, true, true), Span(9, 37, true, true), Span(1, -1, true, true)),
+          List(Tick(2), Tick(9), Tick(30), Tick(37)),
+          List(Label(2, "1"), Label(9, "2"), Label(30, "5"), Label(37, "6")),
+          List(Legend("[1,5]"), Legend("[2,6]"), Legend("∅"))
         )
 
         actual mustBe expected
@@ -381,12 +406,25 @@ final class DiagramSpec extends TestSpec:
     }
 
     "render" should {
+      "display no intervals" in {
+        val diagram = Diagram.make(List.empty[Interval[Int]], view, canvas)
+
+        val actual   = Diagram.render(diagram, theme)
+        val expected = List.empty[String]
+
+        actual mustBe expected
+      }
+
       "display an empty interval" in {
         val a       = Interval.empty[Int]
         val diagram = Diagram.make(List(a), view, canvas)
 
-        val actual   = Diagram.render(diagram, theme)
-        val expected = List.empty[String]
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "                                        ",
+          "----------------------------------------",
+          "                                        "
+        )
 
         actual mustBe expected
       }
@@ -395,8 +433,12 @@ final class DiagramSpec extends TestSpec:
         val a       = Interval.empty[Int]
         val diagram = Diagram.make(List(a), view, canvas)
 
-        val actual   = Diagram.render(diagram, theme.copy(legend = true))
-        val expected = List.empty[String]
+        val actual = Diagram.render(diagram, theme.copy(legend = true))
+        val expected = List(
+          "                                         | ∅",
+          "---------------------------------------- |",
+          "                                         |"
+        )
 
         actual mustBe expected
       }
@@ -803,6 +845,72 @@ final class DiagramSpec extends TestSpec:
         "  [**********************************]   | [1,10]",
         "--+---------------+------+-----------+-- |",
         "  1               5      7          10   |"
+      )
+
+      actual mustBe expected
+    }
+
+    "display a span of two disjoint intervals" in {
+      val a = Interval.closed(1, 5)
+      val b = Interval.closed(7, 10)
+
+      val c = a.span(b)
+
+      val canvas: Canvas = Canvas.make(40)
+      val diagram        = Diagram.make(List(a, b, c), canvas)
+
+      val actual = Diagram.render(diagram, Theme.default.copy(legend = true))
+
+      val expected = List(
+        "  [***************]                      | [1,5]",
+        "                         [***********]   | [7,10]",
+        "  [**********************************]   | [1,10]",
+        "--+---------------+------+-----------+-- |",
+        "  1               5      7          10   |"
+      )
+
+      actual mustBe expected
+    }
+
+    "display a union of two intervals" in {
+      val a = Interval.closed(1, 5)
+      val b = Interval.closed(5, 10)
+
+      val c = a.union(b)
+
+      val canvas: Canvas = Canvas.make(40)
+      val diagram        = Diagram.make(List(a, b, c), canvas)
+
+      val actual = Diagram.render(diagram, Theme.default.copy(legend = true))
+
+      val expected = List(
+        "  [***************]                      | [1,5]",
+        "                  [******************]   | [5,10]",
+        "  [**********************************]   | [1,10]",
+        "--+---------------+------------------+-- |",
+        "  1               5                 10   |"
+      )
+
+      actual mustBe expected
+    }
+
+    "display a union of two disjoint intervals" in {
+      val a = Interval.closed(1, 4)
+      val b = Interval.closed(6, 10)
+
+      val c = a.union(b)
+
+      val canvas: Canvas = Canvas.make(40)
+      val diagram        = Diagram.make(List(a, b, c), canvas)
+
+      val actual = Diagram.render(diagram, Theme.default.copy(legend = true))
+
+      val expected = List(
+        "  [***********]                          | [1,4]",
+        "                     [***************]   | [6,10]",
+        "                                         | ∅",
+        "--+-----------+------+---------------+-- |",
+        "  1           4      6              10   |"
       )
 
       actual mustBe expected

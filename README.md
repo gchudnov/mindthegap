@@ -44,24 +44,6 @@ Intervals might be open / closed on both ends, bounded and unbonded:
   - RightClosed | `(-∞, a+] = {x | x < a+}`
 - Unbounded | `(-∞, +∞) = R`
 
-## Relations
-
-The library support the following relations:
-
-- **Point-Point (PP)** relations between a pair of points.
-- **Point-Interval (PI)** relations that between a point and an interval.
-- **Interval-Interval (II)** relations that between a pair of intervals.
-
-![relations.png](res/relations.png)
-
-The 13 relations are:
-
-- **Distinct** because no pair of definite intervals can be related by more than one of the relationships.
-- **Exhaustive** because any pair of definite intervals are described by one of the relations.
-- **Qualitative** because no specific time spans are considered.
-
-## Interval Creation
-
 ### Make
 
 `Interval.make` is a universal method that can be used to create an _empty_, _point_ or a _proper_ intervals.
@@ -105,9 +87,21 @@ Interval.open(1, 5).canonical      // (1, 5) -> [2, 4]
 Interval.closed(1, 5).canonical    // [1, 5] -> [1, 5]
 ```
 
-## Basic Relations
+## Relations
 
-A relation between a pair of intervals can be checked.
+The library support the following relations:
+
+- **Point-Point (PP)** relations between a pair of points.
+- **Point-Interval (PI)** relations that between a point and an interval.
+- **Interval-Interval (II)** relations that between a pair of intervals.
+
+![relations.png](res/relations.png)
+
+The 13 relations are:
+
+- **Distinct** because no pair of definite intervals can be related by more than one of the relationships.
+- **Exhaustive** because any pair of definite intervals are described by one of the relations.
+- **Qualitative** because no specific time spans are considered.
 
 ```text
   Relation                  AAAAA
@@ -121,35 +115,37 @@ A relation between a pair of intervals can be checked.
 ```
 
 ```scala
-// before, after
+// before (b), after (B)
 Interval.open(1, 4).before(Interval.open(3, 6)) // true
 Interval.open(3, 6).after(Interval.open(1, 4))  // true
 
-// meets, isMetBy
+// meets (m), isMetBy (M)
 Interval.closed(1, 5).meets(Interval.closed(5, 10))   // true
 Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) // true
 
-// overlaps, isOverlappedBy
+// overlaps (o), isOverlappedBy (O)
 Interval.open(1, 10).overlaps(Interval.open(5, 20))      // true
 Interval.open(5, 30).isOverlapedBy(Interval.open(1, 10)) // true
 
-// starts, isSatrtedBy
+// starts (s), isSatrtedBy (S)
 Interval.closed(1, 2).starts(Interval.closed(1, 10))      // true
 Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) // true
 
-// finishes, isFinishedBy
+// finishes (f), isFinishedBy (F)
 Interval.leftClosedRightOpen(0, 5).finishes(Interval.leftClosedRightOpen(-1, 5))     // true
 Interval.leftClosedRightOpen(-1, 5).isFinishedBy(Interval.leftClosedRightOpen(0, 5)) // true
 
-// equalsTo
+// equalsTo (e)
 Interval.open(4, 7).equalsTo(Interval.open(4, 7)) // true
 ```
 
 ## Extended Relations
 
+Extended relations are the ones that compose of several basic relations.
+
 ### IsSubset
 
-Determines whether `A` is a subset of `B`.
+Determines whether `a` is a subset of `b`.
 
 ```text
   isSubset                  AAAAA            |  a- >= b- AND a+ <= b+
@@ -169,7 +165,7 @@ Interval.open(4, 7).isSubset(Interval.open(4, 7))  // true
 
 ### IsSuperset
 
-Determines whether `A` is a superset of `B`.
+Determines whether `a` is a superset of `b`.
 
 ```text
   isSuperset                    BBBBB         |  b- >= a- AND b+ <= a+
@@ -189,7 +185,7 @@ Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
 
 ### IsDisjoint
 
-Determines if there `A` and `B` are disjoint. `A` and `B` are disjoint if `A` does not intersect `B`.
+Determines if there `a` and `b` are disjoint. `a` and `b` are disjoint if `a` does not intersect `b`.
 
 ```text
   isDisjoint                AAAAA        |  a+ < b- OR a- > b+
@@ -226,10 +222,10 @@ Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) // true
 Given two intervals `a` and `b`, `merges(a,b)` if and only if `overlaps(a,b) OR meets(a,b)`
 
 ```text
-  merges                    AAAAA        |
+  merges                    AAAAA            |  overlaps(a,b) OR meets(a,b)
                             :   :
-  meets(a,b)       m|M      :   BBBBBBBBB    |  a+ = b-
-  overlaps(a,b)    o|O      : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
+  meets(a,b)       m|M      :   BBBBBBBBB
+  overlaps(a,b)    o|O      : BBBBBBBBB
 ```
 
 ```scala
@@ -240,7 +236,7 @@ Interval.open(4, 7).merges(Interval.open(5, 8))       // true
 
 ### IsLess
 
-Determines whether `A` less-than `B`.
+Determines whether `a` less-than `b`.
 
 ```text
   isLess                    AAAAA            |  a- < b- AND a+ < b+
@@ -258,7 +254,7 @@ Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 
 ## Operations
 
-Intervals support the following list of operations: `intersection`, `span`, `gap`.
+Intervals support the following list of operations: `intersection`, `span`, `union`, `gap`.
 
 ### Intersection
 
@@ -271,16 +267,7 @@ val a = Interval.closed(5, 10) // [5, 10]
 val b = Interval.closed(1, 7)  // [1, 7]
 
 val c = a.intersection(b)      // [5, 7]
-
-val canvas: Canvas = Canvas.make(40)
-val diagram        = Diagram.make(List(a, b, c), canvas)
-
-val data = Diagram.render(diagram, Theme.default.copy(legend = true))
-
-data.foreach(println)
 ```
-
-Will produce the following result:
 
 ```text
                   [******************]   | [5,10]
@@ -298,14 +285,7 @@ A span of two intervals `a` and `b`: `a # b := | min(a-, b-), max(a+, b+) |`
 val a = Interval.closed(5, 10) // [5, 10]
 val b = Interval.closed(1, 7)  // [1, 7]
 
-val c = a.span(b)              // [5, 10]
-
-val canvas: Canvas = Canvas.make(40)
-val diagram        = Diagram.make(List(a, b, c), canvas)
-
-val data = Diagram.render(diagram, Theme.default.copy(legend = true))
-
-data.foreach(println)
+val c = a.span(b)              // [1, 10]
 ```
 
 ```text
@@ -314,6 +294,42 @@ data.foreach(println)
   [**********************************]   | [1,10]
 --+---------------+------+-----------+-- |
   1               5      7          10   |
+```
+
+### Union
+
+Union of two intervals `a` and `b` returns `| min(a-,b-), max(a+,b+) |` if `merges(a, b)` and `∅` otherwise.
+
+```scala
+val a = Interval.closed(1, 5)  // [1, 5]
+val b = Interval.closed(5, 10) // [5, 10]
+
+val c = a.union(b)
+```
+
+```text
+  [***************]                      | [1,5]
+                  [******************]   | [5,10]
+  [**********************************]   | [1,10]
+--+---------------+------------------+-- |
+  1               5                 10   |
+```
+
+If intervals are disjoint, the union is empty:
+
+```scala
+val a = Interval.closed(1, 4)
+val b = Interval.closed(6, 10)
+
+val c = a.union(b)
+```
+
+```text
+  [***********]                          | [1,4]
+                     [***************]   | [6,10]
+                                         | ∅
+--+-----------+------+---------------+-- |
+  1           4      6              10   |
 ```
 
 ### Gap
@@ -325,13 +341,6 @@ val a = Interval.closed(5, 10)   // [5, 10]
 val b = Interval.closed(12, 17)  // [12, 17]
 
 val c = a.gap(b)                 // [10, 12]
-
-val canvas: Canvas = Canvas.make(40)
-val diagram        = Diagram.make(List(a, b, c), canvas)
-
-val data = Diagram.render(diagram, Theme.default.copy(legend = true))
-
-data.foreach(println)
 ```
 
 ```text
@@ -360,9 +369,7 @@ val theme: Theme    = Theme.default
 
 val diagram = Diagram.make(List(a, b, c, d, e, f), view, canvas)
 
-val data = Diagram.render(diagram, theme.copy(label = Theme.Label.NoOverlap)) // List[String]
-
-data.foreach(println)
+Diagram.render(diagram, theme.copy(label = Theme.Label.NoOverlap)) // List[String]
 ```
 
 When printed, will produce the output:
@@ -402,9 +409,7 @@ val theme: Theme    = Theme.default
 
 val diagram = Diagram.make(List(a, b, c, d), view, canvas)
 
-val data = Diagram.render(diagram, theme.copy(legend = true)) // List[String]
-
-data.foreach(println)
+Diagram.render(diagram, theme.copy(legend = true)) // List[String]
 ```
 
 It will produce the following output:
@@ -433,9 +438,7 @@ val theme: Theme    = Theme.default
 
 val diagram = Diagram.make[OffsetDateTime](List(a), canvas)
 
-val data = Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked)) // List[String]
-
-data.foreach(println)
+Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked)) // List[String]
 ```
 
 ```text
@@ -457,9 +460,7 @@ val theme: Theme    = Theme.default
 
 val diagram = Diagram.make(List(a), view, canvas)
 
-val data = Diagram.render(diagram, theme) // List[String]
-
-data.foreach(println)
+Diagram.render(diagram, theme) // List[String]
 ```
 
 It will display a view `[0, 7]` into an interval `[5, 10]` on a canvas of width `40`:
