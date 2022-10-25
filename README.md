@@ -393,7 +393,7 @@ When printed, will produce the output:
   - `Theme.Label.None` - draw labels as-is on one line, labels can overlap;
   - `Theme.Label.NoOverlap` - draw sorted labels that are non-overlapping, some of the labels might be skipped (default);
   - `Theme.Label.Stacked` - draw all labels, but stack them onto multiple lines;
-- `legend: Boolean` used to specify whether to display a legend or not (default: false)
+- `legend: Boolean` used to specify whether to display a legend or not (default: true)
 
 When legend is specified:
 
