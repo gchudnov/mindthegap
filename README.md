@@ -243,7 +243,7 @@ Interval.closed(0, 5).intersects(Interval.closed(1, 6)) // true
 Two intervals `a` and `b` can be merged, if they are adjacent or intersect.
 
 ```text
-  merges                    AAAAA            |  overlaps(a,b) OR meets(a,b)
+  merges                    AAAAA            |  intersects(a,b) OR isAdjacent(a,b)
                             :   :
   before(a,b)      b        :   :BBBBB       |  succ(a+) = b-
   after(a,b)       B   BBBBB:   :            |  succ(b+) = a-
@@ -252,7 +252,7 @@ Two intervals `a` and `b` can be merged, if they are adjacent or intersect.
   starts(a,b)      s|S      BBBBBBBBB
   during(a,b)      d|D    BBBBBBBBB
   finishes(a,b)    f|F  BBBBBBBBB
-  equals(a, b)     e        BBBBB  
+  equals(a, b)     e        BBBBB
 ```
 
 ```scala
@@ -284,7 +284,7 @@ Intervals support the following list of operations: `intersection`, `span`, `uni
 
 ### Intersection
 
-An intersection of two intervals `a` and `b`: `a ∩ b := | max(a-, b-), min(a+, b+) |`.
+An intersection of two intervals `a` and `b`: `a ∩ b := [max(a-, b-), min(a+, b+)]`.
 
 ```scala
 val a = Interval.closed(5, 10) // [5, 10]
@@ -303,7 +303,7 @@ val c = a.intersection(b)      // [5, 7]
 
 ### Span
 
-A span of two intervals `a` and `b`: `a # b := | min(a-, b-), max(a+, b+) |`.
+A span of two intervals `a` and `b`: `a # b := [min(a-, b-), max(a+, b+)]`.
 
 ```scala
 val a = Interval.closed(5, 10) // [5, 10]
@@ -339,7 +339,7 @@ val c = a.span(b)               // [1, 10]
 
 ### Union
 
-A union of two intervals `a` and `b`: `| min(a-,b-), max(a+,b+) |` if `merges(a, b)` and `∅` otherwise.
+A union of two intervals `a` and `b`: `[min(a-,b-), max(a+,b+)]` if `merges(a, b)` and `∅` otherwise.
 
 ```scala
 val a = Interval.closed(1, 5)  // [1, 5]
@@ -375,7 +375,7 @@ val c = a.union(b)             // ∅
 
 ### Gap
 
-A gap between two intervals `a` and `b`: `a || b := | min(a-, b-), max(a+, b+) |`.
+A gap between two intervals `a` and `b`: `a || b := [min(a-, b-), max(a+, b+)]`.
 
 ```scala
 val a = Interval.closed(5, 10)   // [5, 10]
@@ -396,8 +396,25 @@ If intervals are not disjoint, the gap is empty.
 
 ### Minus
 
-TODO: write it down
+Subtraction of two intervals, `a` minus `b` returns:
 
+- `[a-, min(pred(b-), a+)]` if `(a- < b-)` and `(a+ <= b+)`.
+- ???
+
+```scala
+val a = Interval.closed(1, 10)
+val b = Interval.closed(5, 15)
+
+val c = a.minus(b)
+```
+
+```text
+  [**********************]               | [1,10]
+            [************************]   | [5,15]
+  [*******]                              | [1,4]
+--+-------+-+------------+-----------+-- |
+  1       4 5           10          15   |
+```
 
 ## Display
 

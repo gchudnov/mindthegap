@@ -64,7 +64,7 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, a+] if A starts B" in {
+      "[max(a-, b-), min(a+, b+)] if A starts B" in {
         val a = Interval.closed(1, 5)
         val b = Interval.closed(1, 10)
 
@@ -74,7 +74,7 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, a+] if A during B" in {
+      "[max(a-, b-), min(a+, b+)] if A during B" in {
         val a = Interval.closed(5, 7)
         val b = Interval.closed(1, 10)
 
@@ -84,7 +84,7 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, a+] if A finishes B" in {
+      "[max(a-, b-), min(a+, b+)] if A finishes B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 10)
 
@@ -94,7 +94,7 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, a+] if A equals B" in {
+      "[max(a-, b-), min(a+, b+)] if A equals B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(5, 10)
 
@@ -104,7 +104,7 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, b+] if A is-overlapped-by B" in {
+      "[max(a-, b-), min(a+, b+)] if A is-overlapped-by B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 7)
 
@@ -114,7 +114,7 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, b+] if A is-met-by B" in {
+      "[max(a-, b-), min(a+, b+)] if A is-met-by B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 5)
 
@@ -124,7 +124,7 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, b+] if A is-started-by B" in {
+      "[max(a-, b-), min(a+, b+)] if A is-started-by B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(1, 5)
 
@@ -134,7 +134,7 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[b-, a+] in A meets B" in {
+      "[max(a-, b-), min(a+, b+)] in A meets B" in {
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
 
@@ -144,7 +144,7 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[b-, a+] in A overlaps B" in {
+      "[max(a-, b-), min(a+, b+)] in A overlaps B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(7, 15)
 
@@ -154,7 +154,7 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[b-, a+] in A is-finished-by B" in {
+      "[max(a-, b-), min(a+, b+)] in A is-finished-by B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(7, 10)
 
@@ -164,7 +164,7 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[b-, b+] if A contains B" in {
+      "[max(a-, b-), min(a+, b+)] if A contains B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(5, 7)
 
@@ -174,18 +174,24 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "unbounded, empty" in {
+      "∅ if A = unbounded, B = empty" in {
         val a = Interval.unbounded[Int]
         val b = Interval.empty[Int]
 
-        a.intersection(b) mustBe Interval.empty[Int]
+        val actual   = a.intersection(b)
+        val expected = Interval.empty[Int]
+
+        actual mustBe expected
       }
 
-      "unbounded, non-empty" in {
+      "B if A = unbounded, B = non-empty" in {
         val a = Interval.unbounded[Int]
         val b = Interval.closed(1, 2)
 
-        a.intersection(b) mustBe Interval.closed(1, 2)
+        val actual   = a.intersection(b)
+        val expected = Interval.closed(1, 2)
+
+        actual mustBe expected
       }
     }
 

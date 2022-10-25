@@ -44,7 +44,7 @@ final class GapSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a+, b-] if A before B" in {
+      "[min(a-, b-), max(a+, b+)] if A before B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(20, 30)
 
@@ -54,7 +54,7 @@ final class GapSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[b+, a-] if A after B" in {
+      "[min(a-, b-), max(a+, b+)] if A after B" in {
         val a = Interval.closed(20, 30)
         val b = Interval.closed(1, 10)
 
@@ -114,7 +114,7 @@ final class GapSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, b+] if A is-met-by B" in {
+      "[min(a-, b-), max(a+, b+)] if A is-met-by B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 5)
 
@@ -134,7 +134,7 @@ final class GapSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[b-, a+] in A meets B" in {
+      "[min(a-, b-), max(a+, b+)] in A meets B" in {
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
 

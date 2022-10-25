@@ -1116,4 +1116,48 @@ final class DiagramSpec extends TestSpec:
 
       actual mustBe expected
     }
+
+    "display a.minus(b) if a.overlaps(b)" in {
+      val a = Interval.closed(1, 10)
+      val b = Interval.closed(5, 15)
+
+      val c = a.minus(b)
+
+      val canvas: Canvas = Canvas.make(40)
+      val diagram        = Diagram.make(List(a, b, c), canvas)
+
+      val actual = Diagram.render(diagram, theme)
+
+      val expected = List(
+        "  [**********************]               | [1,10]",
+        "            [************************]   | [5,15]",
+        "  [*******]                              | [1,4]",
+        "--+-------+-+------------+-----------+-- |",
+        "  1       4 5           10          15   |"
+      )
+
+      actual mustBe expected
+    }
+
+    "display a.minus(b) if a.isOverlappedBy(b)" in {
+      val a = Interval.closed(5, 15)
+      val b = Interval.closed(1, 10)
+
+      val c = a.minus(b)
+
+      val canvas: Canvas = Canvas.make(40)
+      val diagram        = Diagram.make(List(a, b, c), canvas)
+
+      val actual = Diagram.render(diagram, theme)
+
+      val expected = List(
+        "            [************************]   | [5,15]",
+        "  [**********************]               | [1,10]",
+        "                           [*********]   | [11,15]",
+        "--+---------+------------+-+---------+-- |",
+        "  1         5           10          15   |"
+      )
+
+      actual mustBe expected
+    }
   }

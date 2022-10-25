@@ -44,7 +44,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, b+] if A before B" in {
+      "[min(a-, b-), max(a+, b+)] if A before B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(20, 30)
 
@@ -54,7 +54,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[b-, a+] if A after B" in {
+      "[min(a-, b-), max(a+, b+)] if A after B" in {
         val a = Interval.closed(20, 30)
         val b = Interval.closed(1, 10)
 
@@ -64,7 +64,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, b+] if A starts B" in {
+      "[min(a-, b-), max(a+, b+)] if A starts B" in {
         val a = Interval.closed(1, 5)
         val b = Interval.closed(1, 10)
 
@@ -74,7 +74,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[b-, b+] if A during B" in {
+      "[min(a-, b-), max(a+, b+)] if A during B" in {
         val a = Interval.closed(5, 7)
         val b = Interval.closed(1, 10)
 
@@ -84,7 +84,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[b-, b+] if A finishes B" in {
+      "[min(a-, b-), max(a+, b+)] if A finishes B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 10)
 
@@ -94,7 +94,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, a+] if A equals B" in {
+      "[min(a-, b-), max(a+, b+)] if A equals B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(5, 10)
 
@@ -104,7 +104,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[b-, a+] if A is-overlapped-by B" in {
+      "[min(a-, b-), max(a+, b+)] if A is-overlapped-by B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 7)
 
@@ -114,7 +114,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[b-, a+] if A is-met-by B" in {
+      "[min(a-, b-), max(a+, b+)] if A is-met-by B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 5)
 
@@ -124,7 +124,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, b+] if A is-started-by B" in {
+      "[min(a-, b-), max(a+, b+)] if A is-started-by B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(1, 5)
 
@@ -134,7 +134,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, b+] in A meets B" in {
+      "[min(a-, b-), max(a+, b+)] in A meets B" in {
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
 
@@ -144,7 +144,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, b+] in A overlaps B" in {
+      "[min(a-, b-), max(a+, b+)] in A overlaps B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(7, 15)
 
@@ -154,7 +154,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, b+] in A is-finished-by B" in {
+      "[min(a-, b-), max(a+, b+)] in A is-finished-by B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(7, 10)
 
@@ -164,7 +164,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, a+] if A contains B" in {
+      "[min(a-, b-), max(a+, b+)] if A contains B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(5, 7)
 

@@ -16,10 +16,10 @@ private[mtg] transparent trait BasicOps[+T]:
    *   - A ∩ B
    *   - A & B
    *
-   * An intersection of two intervals `a` and `b`: `| max(a-, b-), min(a+, b+) |`.
+   * An intersection of two intervals `a` and `b`: `[max(a-, b-), min(a+, b+)]`.
    *
    * {{{
-   *   A ∩ B := [ max(a-, b-), min(a+, b+) ]
+   *   A ∩ B := [max(a-, b-), min(a+, b+)]
    *
    *                   [******************]   | [5,10]
    *   [**********************]               | [1,7]
@@ -37,10 +37,10 @@ private[mtg] transparent trait BasicOps[+T]:
    *
    *   - A # B
    *
-   * A span of two intervals `a` and `b`: `a # b := | min(a-, b-), max(a+, b+) |`.
+   * A span of two intervals `a` and `b`: `a # b := [min(a-, b-), max(a+, b+)]`.
    *
    * {{{
-   *   A # B := [ min(a-, b-), max(a+, b+) ]
+   *   A # B := [min(a-, b-), max(a+, b+)]
    *
    * Example #1:
    *
@@ -66,10 +66,10 @@ private[mtg] transparent trait BasicOps[+T]:
   /**
    * Union
    *
-   * A union of two intervals `a` and `b`: `| min(a-,b-), max(a+,b+) |` if `merges(a, b)` and `∅` otherwise.
+   * A union of two intervals `a` and `b`: `[min(a-,b-), max(a+,b+)]` if `merges(a, b)` and `∅` otherwise.
    *
    * {{{
-   *   A union B := [ min(a-,b-), max(a+,b+) ] if merges(a, b) else ∅
+   *   A union B := [min(a-,b-), max(a+,b+)] if merges(a, b) else ∅
    *
    * Example #1:
    *
@@ -97,13 +97,11 @@ private[mtg] transparent trait BasicOps[+T]:
    *
    *   - A || B
    *
-   * A gap between two intervals `a` and `b`: `a || b := | min(a-, b-), max(a+, b+) |`.
+   * A gap between two intervals `a` and `b`: `a || b := [min(a-, b-), max(a+, b+)]`.
    *
    * {{{
-   *   A || B := | min(a+, b+), max(a-, b-) |
-   * }}}
+   *   A || B := [min(a+, b+), max(a-, b-)]
    *
-   * {{{
    *   [**************]                       | [5,10]
    *                       [**************]   | [12,17]
    *                  [****]                  | [10,12]
@@ -117,13 +115,37 @@ private[mtg] transparent trait BasicOps[+T]:
 
   /**
    * Minus
-   * 
-   * 
-   * 
+   *
+   * Subtraction of two intervals, `a` minus `b` returns:
+   *
+   *   - `[a-, min(pred(b-), a+)]` if (a- < b-) and (a+ <= b+)
+   *   - `[max(succ(b+), a-), a+]` if (a- >= b-) and (a+ > b+)
+   *
+   * NOTE: a.minus(b) is defined only if and only if:
+   *   - (a) `a` and `b` are disjoint;
+   *   - (b) `a` contains either `b-` or `b+` but not both;
+   *   - (c) either b.starts(a) or b.finishes(a) is trye;
+   *
    * {{{
-   * 
-   * 
+   *   Example #1 ((a- < b-) AND (a+ <= b+)):
+   *
+   *   [**********************]               | [1,10]
+   *             [************************]   | [5,15]
+   *   [*******]                              | [1,4]
+   * --+-------+-+------------+-----------+-- |
+   *   1       4 5           10          15   |
+   *
+   *   Example #2 ((a- >= b-) AND (a+ > b+)):
+   *
+   *             [************************]   | [5,15]
+   *   [**********************]               | [1,10]
+   *                            [*********]   | [11,15]
+   * --+---------+------------+-+---------+-- |
+   *   1         5           10          15   |
    * }}}
    */
   final def minus[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
-    ???
+    if a.isEmpty || b.isEmpty then Interval.empty[T]
+    else if (ordT.lt(a.left, b.left) && ordT.lteq(a.right, b.right)) then Interval.make(a.left, ordT.min(b.left.pred, a.right).right)
+    else if (ordT.gteq(a.left, b.left) && ordT.gt(a.right, b.right)) then Interval.make(ordT.max(b.right.succ, a.left).left, a.right)
+    else ???

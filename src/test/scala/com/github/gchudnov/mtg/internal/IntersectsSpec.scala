@@ -58,6 +58,7 @@ final class IntersectsSpec extends TestSpec:
     }
 
     "A, B" should {
+
       /**
        * Commutative Property
        */

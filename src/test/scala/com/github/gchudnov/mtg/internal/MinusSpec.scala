@@ -13,180 +13,180 @@ final class MinusSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Minus" when {
-    // "calc" should {
-    //   "∅ if A and B are empty" in {
-    //     val a = Interval.empty[Int]
-    //     val b = Interval.empty[Int]
+    "calc" should {
+      "∅ if A and B are empty" in {
+        val a = Interval.empty[Int]
+        val b = Interval.empty[Int]
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.empty[Int]
+        val actual   = a.minus(b)
+        val expected = Interval.empty[Int]
 
-    //     actual mustBe expected
-    //   }
+        actual mustBe expected
+      }
 
-    //   "∅ if A is empty" in {
-    //     val a = Interval.empty[Int]
-    //     val b = Interval.closed(1, 10)
+      "∅ if A is empty" in {
+        val a = Interval.empty[Int]
+        val b = Interval.closed(1, 10)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.empty[Int]
+        val actual   = a.minus(b)
+        val expected = Interval.empty[Int]
 
-    //     actual mustBe expected
-    //   }
+        actual mustBe expected
+      }
 
-    //   "∅ if B is empty" in {
-    //     val a = Interval.closed(1, 10)
-    //     val b = Interval.empty[Int]
+      "∅ if B is empty" in {
+        val a = Interval.closed(1, 10)
+        val b = Interval.empty[Int]
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.empty[Int]
+        val actual   = a.minus(b)
+        val expected = Interval.empty[Int]
 
-    //     actual mustBe expected
-    //   }
+        actual mustBe expected
+      }
 
-    //   "[a+, b-] if A before B" in {
-    //     val a = Interval.closed(1, 10)
-    //     val b = Interval.closed(20, 30)
+      "[a-, a+] if A before B" in {
+        val a = Interval.closed(1, 10)
+        val b = Interval.closed(20, 30)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.closed(10, 20)
+        val actual   = a.minus(b)
+        val expected = Interval.closed(1, 10)
 
-    //     actual mustBe expected
-    //   }
+        actual mustBe expected
+      }
 
-    //   "[b+, a-] if A after B" in {
-    //     val a = Interval.closed(20, 30)
-    //     val b = Interval.closed(1, 10)
+      "[a-, a+] if A after B" in {
+        val a = Interval.closed(20, 30)
+        val b = Interval.closed(1, 10)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.closed(10, 20)
+        val actual   = a.minus(b)
+        val expected = Interval.closed(20, 30)
 
-    //     actual mustBe expected
-    //   }
+        actual mustBe expected
+      }
 
-    //   "∅ if A starts B" in {
-    //     val a = Interval.closed(1, 5)
-    //     val b = Interval.closed(1, 10)
+      // "∅ if A starts B" in {
+      //   val a = Interval.closed(1, 5)
+      //   val b = Interval.closed(1, 10)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.empty[Int]
+      //   val actual   = a.minus(b)
+      //   val expected = Interval.empty[Int]
 
-    //     actual mustBe expected
-    //   }
+      //   actual mustBe expected
+      // }
 
-    //   "∅ if A during B" in {
-    //     val a = Interval.closed(5, 7)
-    //     val b = Interval.closed(1, 10)
+      //   "∅ if A during B" in {
+      //     val a = Interval.closed(5, 7)
+      //     val b = Interval.closed(1, 10)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.empty[Int]
+      //     val actual   = a.minus(b)
+      //     val expected = Interval.empty[Int]
 
-    //     actual mustBe expected
-    //   }
+      //     actual mustBe expected
+      //   }
 
-    //   "∅ if A finishes B" in {
-    //     val a = Interval.closed(5, 10)
-    //     val b = Interval.closed(1, 10)
+      //   "∅ if A finishes B" in {
+      //     val a = Interval.closed(5, 10)
+      //     val b = Interval.closed(1, 10)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.empty[Int]
+      //     val actual   = a.minus(b)
+      //     val expected = Interval.empty[Int]
 
-    //     actual mustBe expected
-    //   }
+      //     actual mustBe expected
+      //   }
 
-    //   "∅ if A equals B" in {
-    //     val a = Interval.closed(5, 10)
-    //     val b = Interval.closed(5, 10)
+      //   "∅ if A equals B" in {
+      //     val a = Interval.closed(5, 10)
+      //     val b = Interval.closed(5, 10)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.empty[Int]
+      //     val actual   = a.minus(b)
+      //     val expected = Interval.empty[Int]
 
-    //     actual mustBe expected
-    //   }
+      //     actual mustBe expected
+      //   }
 
-    //   "∅ if A is-overlapped-by B" in {
-    //     val a = Interval.closed(5, 10)
-    //     val b = Interval.closed(1, 7)
+      //   "∅ if A is-overlapped-by B" in {
+      //     val a = Interval.closed(5, 10)
+      //     val b = Interval.closed(1, 7)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.empty[Int]
+      //     val actual   = a.minus(b)
+      //     val expected = Interval.empty[Int]
 
-    //     actual mustBe expected
-    //   }
+      //     actual mustBe expected
+      //   }
 
-    //   "[a-, b+] if A is-met-by B" in {
-    //     val a = Interval.closed(5, 10)
-    //     val b = Interval.closed(1, 5)
+      //   "[a-, b+] if A is-met-by B" in {
+      //     val a = Interval.closed(5, 10)
+      //     val b = Interval.closed(1, 5)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.point(5)
+      //     val actual   = a.minus(b)
+      //     val expected = Interval.point(5)
 
-    //     actual mustBe expected
-    //   }
+      //     actual mustBe expected
+      //   }
 
-    //   "∅ if A is-started-by B" in {
-    //     val a = Interval.closed(1, 10)
-    //     val b = Interval.closed(1, 5)
+      //   "∅ if A is-started-by B" in {
+      //     val a = Interval.closed(1, 10)
+      //     val b = Interval.closed(1, 5)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.empty[Int]
+      //     val actual   = a.minus(b)
+      //     val expected = Interval.empty[Int]
 
-    //     actual mustBe expected
-    //   }
+      //     actual mustBe expected
+      //   }
 
-    //   "[b-, a+] in A meets B" in {
-    //     val a = Interval.closed(1, 5)
-    //     val b = Interval.closed(5, 10)
+      //   "[b-, a+] in A meets B" in {
+      //     val a = Interval.closed(1, 5)
+      //     val b = Interval.closed(5, 10)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.point(5)
+      //     val actual   = a.minus(b)
+      //     val expected = Interval.point(5)
 
-    //     actual mustBe expected
-    //   }
+      //     actual mustBe expected
+      //   }
 
-    //   "∅ in A overlaps B" in {
-    //     val a = Interval.closed(5, 10)
-    //     val b = Interval.closed(7, 15)
+      "[a-, min(pred(b-), a+)] in A overlaps B" in {
+        val a = Interval.closed(1, 10)
+        val b = Interval.closed(5, 15)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.empty[Int]
+        val actual   = a.minus(b)
+        val expected = Interval.closed(1, 4)
 
-    //     actual mustBe expected
-    //   }
+        actual mustBe expected
+      }
 
-    //   "∅ in A is-finished-by B" in {
-    //     val a = Interval.closed(1, 10)
-    //     val b = Interval.closed(7, 10)
+      //   "∅ in A is-finished-by B" in {
+      //     val a = Interval.closed(1, 10)
+      //     val b = Interval.closed(7, 10)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.empty[Int]
+      //     val actual   = a.minus(b)
+      //     val expected = Interval.empty[Int]
 
-    //     actual mustBe expected
-    //   }
+      //     actual mustBe expected
+      //   }
 
-    //   "∅ if A contains B" in {
-    //     val a = Interval.closed(1, 10)
-    //     val b = Interval.closed(5, 7)
+      //   "∅ if A contains B" in {
+      //     val a = Interval.closed(1, 10)
+      //     val b = Interval.closed(5, 7)
 
-    //     val actual   = a.gap(b)
-    //     val expected = Interval.empty[Int]
+      //     val actual   = a.minus(b)
+      //     val expected = Interval.empty[Int]
 
-    //     actual mustBe expected
-    //   }
-    // }
+      //     actual mustBe expected
+      //   }
+      // }
 
-    // "A, B" should {
+      // "A, B" should {
 
-    //   /**
-    //    * Commutative Property
-    //    */
-    //   "A || B = B || A" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+      //   /**
+      //    * Commutative Property
+      //    */
+      //   "A || B = B || A" in {
+      //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+      //       val xx = Interval.make(ox1, ix1, ox2, ix2)
+      //       val yy = Interval.make(oy1, iy1, oy2, iy2)
 
-    //       xx.gap(yy).canonical mustBe yy.gap(xx).canonical
-    //     }
-    //   }
-    // }
+      //       xx.minus(yy).canonical mustBe yy.minus(xx).canonical
+      //     }
+      //   }
+    }
   }

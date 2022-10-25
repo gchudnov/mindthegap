@@ -171,7 +171,7 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ = b+
    *
    *   b- < a- < a+ = b+
-   * 
+   *
    *   Relation                  AAAAA
    *   finishes(a,b)    f|F  BBBBBBBBB            |  a+ = b+ ; a- > b-
    * }}}
