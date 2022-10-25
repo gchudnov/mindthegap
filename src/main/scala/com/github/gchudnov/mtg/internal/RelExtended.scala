@@ -27,13 +27,11 @@ private[mtg] transparent trait ExtendedRel[+T]:
    * {{{
    *   a- >= b-
    *   a+ <= b+
-   * }}}
    *
-   * {{{
-   *   - A starts B   | s
-   *   - A during B   | d
-   *   - A finishes B | f
-   *   - A equals B   | e
+   *   starts   | s
+   *   during   | d
+   *   finishes | f
+   *   equals   | e
    * }}}
    */
   final def isSubset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
@@ -47,13 +45,11 @@ private[mtg] transparent trait ExtendedRel[+T]:
    * {{{
    *   b- >= a-
    *   b+ <= a+
-   * }}}
    *
-   * {{{
-   *   - A is-started-by B  | S
-   *   - A contains B       | D
-   *   - A is-finished-by B | F
-   *   - A equals B         | e
+   *   is-started-by  | S
+   *   contains       | D
+   *   is-finished-by | F
+   *   equals         | e
    * }}}
    */
   final def isSuperset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
@@ -71,10 +67,7 @@ private[mtg] transparent trait ExtendedRel[+T]:
    *   a- > b+
    * }}}
    *
-   * {{{
-   *    before | b
-   *    after  | B
-   * }}}
+   * before | b after | B }}}
    */
   final def isDisjoint[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && (bOrd.lt(a.right, b.left) || bOrd.gt(a.left, b.right))
@@ -86,37 +79,63 @@ private[mtg] transparent trait ExtendedRel[+T]:
    *
    * {{{
    *   succ(a+) = b- OR succ(b+) = a-
-   * }}}
    *
-   * {{{
-   *    before | b
-   *    after  | B
+   *   before | b
+   *   after  | B
    * }}}
    */
   final def isAdjacent[T1 >: T: Domain](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && (bOrd.equiv(a.right.succ, b.left) || bOrd.equiv(b.right.succ, a.left))
 
   /**
-   * Merges
+   * Intersects
    *
-   * a merges b if and only if a overlaps b OR a meets b
-   *
-   * {{{
-   *   a- < b- <= a+ < b+
-   * }}}
+   * Two intervals `a` and `b` are intersecting if:
    *
    * {{{
-   *   meets(a,b)       m
-   *   overlaps(a,b)    o
+   *   a- <= b+
+   *   b- <= a+
+   *
+   *   Relation                  AAAAA
+   *   meets(a,b)       m|M      :   BBBBBBBBB    |  a+ = b-
+   *   overlaps(a,b)    o|O      : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
+   *   starts(a,b)      s|S      BBBBBBBBB        |  a- = b- ; a+ < b+
+   *   during(a,b)      d|D    BBBBBBBBB          |  a- > b- ; a+ < b+
+   *   finishes(a,b)    f|F  BBBBBBBBB            |  a+ = b+ ; a- > b-
+   *   equals(a, b)     e        BBBBB            |  a- = b- ; a+ = b+
    * }}}
    */
-  final def merges[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    a.isProper && b.isProper && bOrd.lt(a.left, b.left) && bOrd.lteq(b.left, a.right) && bOrd.lt(a.right, b.right)
+  final def intersects[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.nonEmpty && b.nonEmpty && bOrd.lteq(a.left, b.right) && bOrd.lteq(b.left, a.right)
+
+  /**
+   * IsIntersectedBy
+   */
+  final def isIntersectedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    b.intersects(a)
+
+  /**
+   * Merges
+   *
+   * Two intervals `a` and `b` can be merged, if they are adjacent or intersect.
+   *
+   * {{{
+   *   a- <= b+
+   *   b- <= a+
+   *   OR
+   *   succ(a+) = b- OR succ(b+) = a-
+   *
+   *   intersects(a,b)
+   *   isAdjacent(a,b)
+   * }}}
+   */
+  final def merges[T1 >: T: Domain](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.nonEmpty && b.nonEmpty && ((bOrd.lteq(a.left, b.right) && bOrd.lteq(b.left, a.right)) || (bOrd.equiv(a.right.succ, b.left) || bOrd.equiv(b.right.succ, a.left)))
 
   /**
    * IsMergedBy
    */
-  final def isMergedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isMergedBy[T1 >: T: Domain](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.merges(a)
 
   /**
@@ -129,12 +148,10 @@ private[mtg] transparent trait ExtendedRel[+T]:
    * {{{
    *   a- < b-
    *   a+ < b+
-   * }}}
    *
-   * {{{
-   *   - before         | b
-   *   - meets          | m
-   *   - overlaps       | o
+   *   before         | b
+   *   meets          | m
+   *   overlaps       | o
    * }}}
    */
   final def isLess[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =

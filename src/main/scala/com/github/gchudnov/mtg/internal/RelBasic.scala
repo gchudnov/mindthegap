@@ -29,9 +29,7 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ < b+
    *
    *   a- < a+ < b- < b+
-   * }}}
    *
-   * {{{
    *   Relation                  AAAAA
    *   before(a,b)      b        :   : BBBBBBBBB  |  a+ < b-
    * }}}
@@ -57,9 +55,7 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ < b+
    *
    *   a- < a+ = b- < b+
-   * }}}
    *
-   * {{{
    *   Relation                  AAAAA
    *   meets(a,b)       m        :   BBBBBBBBB    |  a+ = b-
    * }}}
@@ -85,9 +81,7 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ < b+
    *
    *   a- < b- < a+ < b+
-   * }}}
    *
-   * {{{
    *   Relation                  AAAAA
    *   overlaps(a,b)    o        : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
    * }}}
@@ -117,9 +111,7 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ < b+
    *
    *   b- < a- < a+ < b+
-   * }}}
    *
-   * {{{
    *   Relation                  AAAAA
    *   during(a,b)      d|D    BBBBBBBBB          |  a- > b- ; a+ < b+
    * }}}
@@ -149,9 +141,7 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ < b+
    *
    *   a- = b- < a+ < b+
-   * }}}
    *
-   * {{{
    *   Relation                  AAAAA
    *   starts(a,b)      s|S      BBBBBBBBB        |  a- = b- ; a+ < b+
    * }}}
@@ -181,9 +171,7 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ = b+
    *
    *   b- < a- < a+ = b+
-   * }}}
-   *
-   * {{{
+   * 
    *   Relation                  AAAAA
    *   finishes(a,b)    f|F  BBBBBBBBB            |  a+ = b+ ; a- > b-
    * }}}
@@ -215,9 +203,7 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ = b+
    *
    *   a- = b- < a+ = b+
-   * }}}
    *
-   * {{{
    *   Relation                  AAAAA
    *   equals(a, b)     e        BBBBB            |  a- = b- ; a+ = b+
    * }}}

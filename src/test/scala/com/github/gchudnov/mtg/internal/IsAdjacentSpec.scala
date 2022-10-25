@@ -41,4 +41,19 @@ final class IsAdjacentSpec extends TestSpec:
       Interval.closed(1, 4).isAdjacent(Interval.closed(5, 6)) mustBe (true)
       Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) mustBe (true)
     }
+
+    "A, B" should {
+
+      /**
+       * Commutative Property
+       */
+      "A is-adjacent B = B is-adjacent A" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          xx.isAdjacent(yy) mustBe yy.isAdjacent(xx)
+        }
+      }
+    }
   }

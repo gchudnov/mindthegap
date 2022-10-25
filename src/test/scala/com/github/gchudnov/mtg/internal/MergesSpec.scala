@@ -7,8 +7,6 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
 /**
  * Merges, IsMergedBy
- *
- *   - Overlaps OR Meets
  */
 final class MergesSpec extends TestSpec:
 
@@ -19,19 +17,6 @@ final class MergesSpec extends TestSpec:
 
   "Merges" when {
     "merges & isMergedBy" should {
-      "auto check" in {
-        import IntervalRelAssert.*
-
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
-
-          whenever(xx.merges(yy)) {
-            assertOneOf(Set(Rel.Overlaps, Rel.Meets))(xx, yy)
-          }
-        }
-      }
-
       "manual check" in {
         // Empty
         Interval.empty[Int].merges(Interval.empty[Int]) mustBe (false)
@@ -40,10 +25,11 @@ final class MergesSpec extends TestSpec:
         Interval.empty[Int].merges(Interval.open(1, 4)) mustBe (false)
         Interval.empty[Int].merges(Interval.unbounded[Int]) mustBe (false)
 
-        // // Point
+        // Point
         Interval.point(5).merges(Interval.empty[Int]) mustBe (false)
-        Interval.point(5).merges(Interval.point(5)) mustBe (false)
-        Interval.point(5).merges(Interval.open(5, 10)) mustBe (false)
+        Interval.point(5).merges(Interval.point(5)) mustBe (true)
+        Interval.point(5).merges(Interval.point(6)) mustBe (true)
+        Interval.point(5).merges(Interval.open(5, 10)) mustBe (true)
 
         // Proper
         Interval.open(4, 10).merges(Interval.open(5, 12)) mustBe (true)

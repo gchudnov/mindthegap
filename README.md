@@ -217,21 +217,47 @@ Interval.closed(1, 4).isAdjacent(Interval.closed(5, 6)) // true
 Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) // true
 ```
 
-## Merges
+### Intersects
 
-Given two intervals `a` and `b`, `merges(a,b)` if and only if `overlaps(a,b) OR meets(a,b)`
+Two intervals `a` and `b` are intersecting if: `a- <= b+ AND b- <= a+`
+
+```text
+  intersects                AAAAA        |  a- <= b+ AND b- <= a+
+                            :   :
+  meets(a,b)       m|M      :   BBBBBBBBB
+  overlaps(a,b)    o|O      : BBBBBBBBB
+  starts(a,b)      s|S      BBBBBBBBB
+  during(a,b)      d|D    BBBBBBBBB
+  finishes(a,b)    f|F  BBBBBBBBB
+  equals(a, b)     e        BBBBB
+```
+
+```scala
+Interval.empty[Int].intersects(Interval.empty[Int])     // false
+Interval.point(5).intersects(Interval.point(5))         // true
+Interval.closed(0, 5).intersects(Interval.closed(1, 6)) // true
+```
+
+### Merges
+
+Two intervals `a` and `b` can be merged, if they are adjacent or intersect.
 
 ```text
   merges                    AAAAA            |  overlaps(a,b) OR meets(a,b)
                             :   :
+  before(a,b)      b        :   :BBBBB       |  succ(a+) = b-
+  after(a,b)       B   BBBBB:   :            |  succ(b+) = a-
   meets(a,b)       m|M      :   BBBBBBBBB
   overlaps(a,b)    o|O      : BBBBBBBBB
+  starts(a,b)      s|S      BBBBBBBBB
+  during(a,b)      d|D    BBBBBBBBB
+  finishes(a,b)    f|F  BBBBBBBBB
+  equals(a, b)     e        BBBBB  
 ```
 
 ```scala
-Interval.open(4, 10).merges(Interval.open(5, 12))     // true
-Interval.open(5, 12).isMergedBy(Interval.open(4, 10)) // true
-Interval.open(4, 7).merges(Interval.open(5, 8))       // true
+Interval.point(5).merges(Interval.point(6))       // true
+Interval.open(4, 10).merges(Interval.open(5, 12)) // true
 ```
 
 ### IsLess
@@ -258,9 +284,7 @@ Intervals support the following list of operations: `intersection`, `span`, `uni
 
 ### Intersection
 
-Two intervals `a` and `b` intersect if `(a- <= b+) AND (b- <= a+)`.
-
-An intersection of two intervals `a` and `b`: `a ∩ b := | max(a-, b-), min(a+, b+) |`
+An intersection of two intervals `a` and `b`: `a ∩ b := | max(a-, b-), min(a+, b+) |`.
 
 ```scala
 val a = Interval.closed(5, 10) // [5, 10]
@@ -279,7 +303,7 @@ val c = a.intersection(b)      // [5, 7]
 
 ### Span
 
-A span of two intervals `a` and `b`: `a # b := | min(a-, b-), max(a+, b+) |`
+A span of two intervals `a` and `b`: `a # b := | min(a-, b-), max(a+, b+) |`.
 
 ```scala
 val a = Interval.closed(5, 10) // [5, 10]
@@ -296,32 +320,49 @@ val c = a.span(b)              // [1, 10]
   1               5      7          10   |
 ```
 
-### Union
-
-Union of two intervals `a` and `b` returns `| min(a-,b-), max(a+,b+) |` if `merges(a, b)` and `∅` otherwise.
+If intervals are disjoint, the span is non-empty:
 
 ```scala
-val a = Interval.closed(1, 5)  // [1, 5]
-val b = Interval.closed(5, 10) // [5, 10]
+val a = Interval.closed(1, 5)   // [1. 5]
+val b = Interval.closed(7, 10)  // [7, 10]
 
-val c = a.union(b)
+val c = a.span(b)               // [1, 10]
 ```
 
 ```text
   [***************]                      | [1,5]
-                  [******************]   | [5,10]
+                         [***********]   | [7,10]
   [**********************************]   | [1,10]
---+---------------+------------------+-- |
-  1               5                 10   |
+--+---------------+------+-----------+-- |
+  1               5      7          10   |
 ```
 
-If intervals are disjoint, the union is empty:
+### Union
+
+A union of two intervals `a` and `b`: `| min(a-,b-), max(a+,b+) |` if `merges(a, b)` and `∅` otherwise.
 
 ```scala
-val a = Interval.closed(1, 4)
-val b = Interval.closed(6, 10)
+val a = Interval.closed(1, 5)  // [1, 5]
+val b = Interval.closed(6, 10) // [6, 10]
 
-val c = a.union(b)
+val c = a.union(b)             // [1, 10]
+```
+
+```text
+  [***************]                      | [1,5]
+                     [***************]   | [6,10]
+  [**********************************]   | [1,10]
+--+---------------+--+---------------+-- |
+  1               5  6              10   |
+```
+
+If intervals are disjoint and not adjacent, the union is empty:
+
+```scala
+val a = Interval.closed(1, 4)  // [1, 4]
+val b = Interval.closed(6, 10) // [6, 10]
+
+val c = a.union(b)             // ∅
 ```
 
 ```text
@@ -334,7 +375,7 @@ val c = a.union(b)
 
 ### Gap
 
-A gap of two intervals `a` and `b`: `a || b := | min(a-, b-), max(a+, b+) |`
+A gap between two intervals `a` and `b`: `a || b := | min(a-, b-), max(a+, b+) |`.
 
 ```scala
 val a = Interval.closed(5, 10)   // [5, 10]

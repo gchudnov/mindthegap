@@ -16,16 +16,11 @@ private[mtg] transparent trait BasicOps[+T]:
    *   - A ∩ B
    *   - A & B
    *
-   * NOTE:
-   *   - a and b intersect if (a- <= b+) AND (b- <= a+)
-   *   - empty interval do not intersect with any of the intervals.
-   *   - unbounded interval intersects with all non-empty intervals.
+   * An intersection of two intervals `a` and `b`: `| max(a-, b-), min(a+, b+) |`.
    *
    * {{{
-   *   A ∩ B := | max(a-, b-), min(a+, b+) |
-   * }}}
+   *   A ∩ B := [ max(a-, b-), min(a+, b+) ]
    *
-   * {{{
    *                   [******************]   | [5,10]
    *   [**********************]               | [1,7]
    *                   [******]               | [5,7]
@@ -42,13 +37,23 @@ private[mtg] transparent trait BasicOps[+T]:
    *
    *   - A # B
    *
-   * {{{
-   *   A # B := | min(a-, b-), max(a+, b+) |
-   * }}}
+   * A span of two intervals `a` and `b`: `a # b := | min(a-, b-), max(a+, b+) |`.
    *
    * {{{
+   *   A # B := [ min(a-, b-), max(a+, b+) ]
+   *
+   * Example #1:
+   *
    *                   [******************]   | [5,10]
    *   [**********************]               | [1,7]
+   *   [**********************************]   | [1,10]
+   * --+---------------+------+-----------+-- |
+   *   1               5      7          10   |
+   *
+   * Example #2 (disjoint Intervals):
+   *
+   *   [***************]                      | [1,5]
+   *                          [***********]   | [7,10]
    *   [**********************************]   | [1,10]
    * --+---------------+------+-----------+-- |
    *   1               5      7          10   |
@@ -61,13 +66,26 @@ private[mtg] transparent trait BasicOps[+T]:
   /**
    * Union
    *
-   * Union of two intervals `a` and `b` returns `[min(a-,b-), max(a+,b+)]` if `merges(a, b)` and `∅` otherwise.
+   * A union of two intervals `a` and `b`: `| min(a-,b-), max(a+,b+) |` if `merges(a, b)` and `∅` otherwise.
    *
    * {{{
-   *   A union B := | min(a-,b-), max(a+,b+) | if merges(a, b) else ∅
-   * }}}
+   *   A union B := [ min(a-,b-), max(a+,b+) ] if merges(a, b) else ∅
    *
-   * {{{
+   * Example #1:
+   *
+   *   [***************]                      | [1,5]
+   *                      [***************]   | [6,10]
+   *   [**********************************]   | [1,10]
+   * --+---------------+--+---------------+-- |
+   *   1               5  6              10   |
+   *
+   * Example #1 (disjoint and non-adjacent Intervals):
+   *
+   *   [***********]                          | [1,4]
+   *                      [***************]   | [6,10]
+   *                                          | ∅
+   * --+-----------+------+---------------+-- |
+   *   1           4      6              10   |
    * }}}
    */
   def union[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
@@ -78,6 +96,8 @@ private[mtg] transparent trait BasicOps[+T]:
    * Gap (Complement)
    *
    *   - A || B
+   * 
+   * A gap between two intervals `a` and `b`: `a || b := | min(a-, b-), max(a+, b+) |`.
    *
    * {{{
    *   A || B := | min(a+, b+), max(a-, b-) |

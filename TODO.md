@@ -1,3 +1,3 @@
 # TODO
 
-- add more ops
+- add MINUS

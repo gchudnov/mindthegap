@@ -3,6 +3,7 @@ package com.github.gchudnov.mtg
 import com.github.gchudnov.mtg.internal.BasicRel
 import com.github.gchudnov.mtg.internal.ExtendedRel
 import com.github.gchudnov.mtg.internal.BasicOps
+import com.github.gchudnov.mtg.internal.StaticOps
 
 /**
  * An Interval
@@ -121,7 +122,7 @@ enum Interval[+T] extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
       case x =>
         x
 
-object Interval:
+object Interval extends StaticOps:
 
   given intervalOrdering[T](using Ordering[Boundary[T]]): Ordering[Interval[T]] =
     new IntervalOrdering[T]
