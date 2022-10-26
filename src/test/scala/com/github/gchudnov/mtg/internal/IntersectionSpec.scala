@@ -13,7 +13,7 @@ final class IntersectionSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Intersection" when {
-    "calc" should {
+    "a.intersection(b)" should {
       "∅ if A and B are empty" in {
         val a = Interval.empty[Int]
         val b = Interval.empty[Int]

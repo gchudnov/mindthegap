@@ -13,7 +13,7 @@ final class UnionSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Union" when {
-    "calc" should {
+    "a.union(b)" should {
       "∅ if A and B are empty" in {
         val a = Interval.empty[Int]
         val b = Interval.empty[Int]

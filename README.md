@@ -11,7 +11,7 @@
 Add the following dependency to your `build.sbt`:
 
 ```scala
-libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "0.2.0"
+libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "x.y.z"
 ```
 
 ## Intervals
@@ -280,8 +280,6 @@ Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 
 ## Operations
 
-Intervals support the following list of operations: `intersection`, `span`, `union`, `gap`.
-
 ### Intersection
 
 An intersection of two intervals `a` and `b`: `a ∩ b := [max(a-, b-), min(a+, b+)]`.
@@ -399,13 +397,13 @@ If intervals are not disjoint, the gap is empty.
 Subtraction of two intervals, `a` minus `b` returns:
 
 - `[a-, min(pred(b-), a+)]` if `(a- < b-)` and `(a+ <= b+)`.
-- ???
+- `[max(succ(b+), a-), a+]` if `(a- >= b-)` and `(a+ > b+)`.
 
 ```scala
-val a = Interval.closed(1, 10)
-val b = Interval.closed(5, 15)
+val a = Interval.closed(1, 10)  // [1, 10]
+val b = Interval.closed(5, 15)  // [5, 15]
 
-val c = a.minus(b)
+val c = a.minus(b)              // [1, 4]
 ```
 
 ```text
@@ -413,6 +411,26 @@ val c = a.minus(b)
             [************************]   | [5,15]
   [*******]                              | [1,4]
 --+-------+-+------------+-----------+-- |
+  1       4 5           10          15   |
+```
+
+NOTE: the operation `a.minus(b)` is not defined if `a.contains(b)` and throws a `UnsupportedOperationException`.
+Use `Intervals.minus(a, b)` instead that returns a collection of intervals:
+
+```scala
+val a = Interval.closed(1, 15)  // [1, 15]
+val b = Interval.closed(5, 10)  // [5, 10]
+
+// val c = a.minus(b)           // throws UnsupportedOperationException
+val cs = Intervals.minus(a, b)  // [[1, 4], [11, 15]]
+```
+
+```text
+  [**********************************]   | [1,15]  : a
+            [************]               | [5,10]  : b
+  [*******]                              | [1,4]   : c1
+                           [*********]   | [11,15] : c2
+--+-------+-+------------+-+---------+-- |
   1       4 5           10          15   |
 ```
 

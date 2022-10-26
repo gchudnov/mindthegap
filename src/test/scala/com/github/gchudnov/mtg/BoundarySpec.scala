@@ -86,17 +86,17 @@ final class BoundarySpec extends TestSpec:
       }
 
       "left" in {
-        Boundary.Left[Int](None, true).left mustBe Boundary.Left[Int](None, true)
-        Boundary.Left[Int](None, false).left mustBe Boundary.Left[Int](None, false)
-        Boundary.Left[Int](Some(1), true).left mustBe Boundary.Left[Int](Some(1), true)
-        Boundary.Left[Int](Some(1), false).left mustBe Boundary.Left[Int](Some(1), false)
+        Boundary.Left[Int](None, true).asLeft mustBe Boundary.Left[Int](None, true)
+        Boundary.Left[Int](None, false).asLeft mustBe Boundary.Left[Int](None, false)
+        Boundary.Left[Int](Some(1), true).asLeft mustBe Boundary.Left[Int](Some(1), true)
+        Boundary.Left[Int](Some(1), false).asLeft mustBe Boundary.Left[Int](Some(1), false)
       }
 
       "right" in {
-        Boundary.Left[Int](None, true).right mustBe Boundary.Right[Int](None, true)
-        Boundary.Left[Int](None, false).right mustBe Boundary.Right[Int](None, true)
-        Boundary.Left[Int](Some(1), true).right mustBe Boundary.Right[Int](Some(1), true)
-        Boundary.Left[Int](Some(1), false).right mustBe Boundary.Right[Int](Some(2), true)
+        Boundary.Left[Int](None, true).asRight mustBe Boundary.Right[Int](None, true)
+        Boundary.Left[Int](None, false).asRight mustBe Boundary.Right[Int](None, true)
+        Boundary.Left[Int](Some(1), true).asRight mustBe Boundary.Right[Int](Some(1), true)
+        Boundary.Left[Int](Some(1), false).asRight mustBe Boundary.Right[Int](Some(2), true)
       }
     }
 
@@ -151,17 +151,17 @@ final class BoundarySpec extends TestSpec:
       }
 
       "left" in {
-        Boundary.Right[Int](None, true).left mustBe Boundary.Left[Int](None, true)
-        Boundary.Right[Int](None, false).left mustBe Boundary.Left[Int](None, true)
-        Boundary.Right[Int](Some(1), true).left mustBe Boundary.Left[Int](Some(1), true)
-        Boundary.Right[Int](Some(1), false).left mustBe Boundary.Left[Int](Some(0), true)
+        Boundary.Right[Int](None, true).asLeft mustBe Boundary.Left[Int](None, true)
+        Boundary.Right[Int](None, false).asLeft mustBe Boundary.Left[Int](None, true)
+        Boundary.Right[Int](Some(1), true).asLeft mustBe Boundary.Left[Int](Some(1), true)
+        Boundary.Right[Int](Some(1), false).asLeft mustBe Boundary.Left[Int](Some(0), true)
       }
 
       "right" in {
-        Boundary.Right[Int](None, true).right mustBe Boundary.Right[Int](None, true)
-        Boundary.Right[Int](None, false).right mustBe Boundary.Right[Int](None, false)
-        Boundary.Right[Int](Some(1), true).right mustBe Boundary.Right[Int](Some(1), true)
-        Boundary.Right[Int](Some(1), false).right mustBe Boundary.Right[Int](Some(1), false)
+        Boundary.Right[Int](None, true).asRight mustBe Boundary.Right[Int](None, true)
+        Boundary.Right[Int](None, false).asRight mustBe Boundary.Right[Int](None, false)
+        Boundary.Right[Int](Some(1), true).asRight mustBe Boundary.Right[Int](Some(1), true)
+        Boundary.Right[Int](Some(1), false).asRight mustBe Boundary.Right[Int](Some(1), false)
       }
     }
   }

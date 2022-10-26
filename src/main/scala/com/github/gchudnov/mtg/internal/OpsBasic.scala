@@ -66,6 +66,8 @@ private[mtg] transparent trait BasicOps[+T]:
   /**
    * Union
    *
+   *   - A ∪ B
+   *
    * A union of two intervals `a` and `b`: `[min(a-,b-), max(a+,b+)]` if `merges(a, b)` and `∅` otherwise.
    *
    * {{{
@@ -111,7 +113,7 @@ private[mtg] transparent trait BasicOps[+T]:
    */
   final def gap[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
     if a.isEmpty || b.isEmpty then Interval.empty[T]
-    else Interval.make(ordT.min(a.right, b.right).left, ordT.max(a.left, b.left).right)
+    else Interval.make(ordT.min(a.right, b.right).asLeft, ordT.max(a.left, b.left).asRight)
 
   /**
    * Minus
@@ -127,9 +129,9 @@ private[mtg] transparent trait BasicOps[+T]:
    *   - (c) either b.starts(a) or b.finishes(a) is trye;
    *
    * NOTE: a.minus(b) is undefined if:
-       - either a.starts(b) or a.finishes(b);
-       - either `a` or `b` is properly included in the other;
-   * 
+   *   - either a.starts(b) or a.finishes(b);
+   *   - either `a` or `b` is properly included in the other;
+   *
    * {{{
    *   Example #1 ((a- < b-) AND (a+ <= b+)):
    *
@@ -149,7 +151,9 @@ private[mtg] transparent trait BasicOps[+T]:
    * }}}
    */
   final def minus[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
-    if a.isEmpty || b.isEmpty then Interval.empty[T]
-    else if (ordT.lt(a.left, b.left) && ordT.lteq(a.right, b.right)) then Interval.make(a.left, ordT.min(b.left.pred, a.right).right)
-    else if (ordT.gteq(a.left, b.left) && ordT.gt(a.right, b.right)) then Interval.make(ordT.max(b.right.succ, a.left).left, a.right)
-    else ???
+    if a.isEmpty then Interval.empty[T]
+    else if b.isEmpty then a
+    else if (ordT.lt(a.left, b.left) && ordT.lteq(a.right, b.right)) then Interval.make(a.left, ordT.min(b.left.pred, a.right).asRight)
+    else if (ordT.gteq(a.left, b.left) && ordT.gt(a.right, b.right)) then Interval.make(ordT.max(b.right.succ, a.left).asLeft, a.right)
+    else if a.contains(b) then throw new UnsupportedOperationException("a.minus(b) is not defined when a.contains(b) is true; use Intervals.minus(a, b) instead")
+    else Interval.empty[T]

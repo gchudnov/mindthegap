@@ -66,14 +66,14 @@ enum Boundary[T](val value: Option[T], val isInclude: Boolean):
   /**
    * Converts Right to the Left boundary
    */
-  def left(using Domain[T]): Boundary.Left[T] =
+  def asLeft(using Domain[T]): Boundary.Left[T] =
     if isLeft then this.asInstanceOf[Boundary.Left[T]]
     else Left(effectiveValue, true)
 
   /**
    * Converts Left to the Right boundary
    */
-  def right(using Domain[T]): Boundary.Right[T] =
+  def asRight(using Domain[T]): Boundary.Right[T] =
     if isRight then this.asInstanceOf[Boundary.Right[T]]
     else Right(effectiveValue, true)
 

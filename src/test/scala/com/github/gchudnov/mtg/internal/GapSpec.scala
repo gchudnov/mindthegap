@@ -13,7 +13,7 @@ final class GapSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Gap" when {
-    "calc" should {
+    "a.gap(b)" should {
       "∅ if A and B are empty" in {
         val a = Interval.empty[Int]
         val b = Interval.empty[Int]

@@ -963,201 +963,226 @@ final class DiagramSpec extends TestSpec:
       }
     }
 
-    "display a.intersection(b)" in {
-      val a = Interval.closed(5, 10)
-      val b = Interval.closed(1, 7)
+    "operations" should {
+      "display a.intersection(b)" in {
+        val a = Interval.closed(5, 10)
+        val b = Interval.closed(1, 7)
 
-      val c = a.intersection(b)
+        val c = a.intersection(b)
 
-      val canvas: Canvas = Canvas.make(40)
-      val diagram        = Diagram.make(List(a, b, c), canvas)
+        val canvas: Canvas = Canvas.make(40)
+        val diagram        = Diagram.make(List(a, b, c), canvas)
 
-      val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, theme)
 
-      val expected = List(
-        "                  [******************]   | [5,10]",
-        "  [**********************]               | [1,7]",
-        "                  [******]               | [5,7]",
-        "--+---------------+------+-----------+-- |",
-        "  1               5      7          10   |"
-      )
+        val expected = List(
+          "                  [******************]   | [5,10]",
+          "  [**********************]               | [1,7]",
+          "                  [******]               | [5,7]",
+          "--+---------------+------+-----------+-- |",
+          "  1               5      7          10   |"
+        )
 
-      actual mustBe expected
-    }
+        actual mustBe expected
+      }
 
-    "display a.span(b)" in {
-      val a = Interval.closed(5, 10)
-      val b = Interval.closed(1, 7)
+      "display a.span(b)" in {
+        val a = Interval.closed(5, 10)
+        val b = Interval.closed(1, 7)
 
-      val c = a.span(b)
+        val c = a.span(b)
 
-      val canvas: Canvas = Canvas.make(40)
-      val diagram        = Diagram.make(List(a, b, c), canvas)
+        val canvas: Canvas = Canvas.make(40)
+        val diagram        = Diagram.make(List(a, b, c), canvas)
 
-      val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, theme)
 
-      val expected = List(
-        "                  [******************]   | [5,10]",
-        "  [**********************]               | [1,7]",
-        "  [**********************************]   | [1,10]",
-        "--+---------------+------+-----------+-- |",
-        "  1               5      7          10   |"
-      )
+        val expected = List(
+          "                  [******************]   | [5,10]",
+          "  [**********************]               | [1,7]",
+          "  [**********************************]   | [1,10]",
+          "--+---------------+------+-----------+-- |",
+          "  1               5      7          10   |"
+        )
 
-      actual mustBe expected
-    }
+        actual mustBe expected
+      }
 
-    "display a.span(b) of two disjoint intervals" in {
-      val a = Interval.closed(1, 5)
-      val b = Interval.closed(7, 10)
+      "display a.span(b) of two disjoint intervals" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(7, 10)
 
-      val c = a.span(b)
+        val c = a.span(b)
 
-      val canvas: Canvas = Canvas.make(40)
-      val diagram        = Diagram.make(List(a, b, c), canvas)
+        val canvas: Canvas = Canvas.make(40)
+        val diagram        = Diagram.make(List(a, b, c), canvas)
 
-      val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, theme)
 
-      val expected = List(
-        "  [***************]                      | [1,5]",
-        "                         [***********]   | [7,10]",
-        "  [**********************************]   | [1,10]",
-        "--+---------------+------+-----------+-- |",
-        "  1               5      7          10   |"
-      )
+        val expected = List(
+          "  [***************]                      | [1,5]",
+          "                         [***********]   | [7,10]",
+          "  [**********************************]   | [1,10]",
+          "--+---------------+------+-----------+-- |",
+          "  1               5      7          10   |"
+        )
 
-      actual mustBe expected
-    }
+        actual mustBe expected
+      }
 
-    "display a.union(b)" in {
-      val a = Interval.closed(1, 5)
-      val b = Interval.closed(6, 10)
+      "display a.union(b)" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(6, 10)
 
-      val c = a.union(b)
+        val c = a.union(b)
 
-      val canvas: Canvas = Canvas.make(40)
-      val diagram        = Diagram.make(List(a, b, c), canvas)
+        val canvas: Canvas = Canvas.make(40)
+        val diagram        = Diagram.make(List(a, b, c), canvas)
 
-      val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, theme)
 
-      val expected = List(
-        "  [***************]                      | [1,5]",
-        "                     [***************]   | [6,10]",
-        "  [**********************************]   | [1,10]",
-        "--+---------------+--+---------------+-- |",
-        "  1               5  6              10   |"
-      )
+        val expected = List(
+          "  [***************]                      | [1,5]",
+          "                     [***************]   | [6,10]",
+          "  [**********************************]   | [1,10]",
+          "--+---------------+--+---------------+-- |",
+          "  1               5  6              10   |"
+        )
 
-      actual mustBe expected
-    }
+        actual mustBe expected
+      }
 
-    "display a.union(b) of two disjoint intervals" in {
-      val a = Interval.closed(1, 4)
-      val b = Interval.closed(6, 10)
+      "display a.union(b) of two disjoint intervals" in {
+        val a = Interval.closed(1, 4)
+        val b = Interval.closed(6, 10)
 
-      val c = a.union(b)
+        val c = a.union(b)
 
-      val canvas: Canvas = Canvas.make(40)
-      val diagram        = Diagram.make(List(a, b, c), canvas)
+        val canvas: Canvas = Canvas.make(40)
+        val diagram        = Diagram.make(List(a, b, c), canvas)
 
-      val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, theme)
 
-      val expected = List(
-        "  [***********]                          | [1,4]",
-        "                     [***************]   | [6,10]",
-        "                                         | ∅",
-        "--+-----------+------+---------------+-- |",
-        "  1           4      6              10   |"
-      )
+        val expected = List(
+          "  [***********]                          | [1,4]",
+          "                     [***************]   | [6,10]",
+          "                                         | ∅",
+          "--+-----------+------+---------------+-- |",
+          "  1           4      6              10   |"
+        )
 
-      actual mustBe expected
-    }
+        actual mustBe expected
+      }
 
-    "display a.gap(b) of two intersecting intervals" in {
-      val a = Interval.closed(5, 10)
-      val b = Interval.closed(4, 15)
+      "display a.gap(b) of two intersecting intervals" in {
+        val a = Interval.closed(5, 10)
+        val b = Interval.closed(4, 15)
 
-      val c = a.gap(b)
+        val c = a.gap(b)
 
-      val canvas: Canvas = Canvas.make(40)
-      val diagram        = Diagram.make(List(a, b, c), canvas)
+        val canvas: Canvas = Canvas.make(40)
+        val diagram        = Diagram.make(List(a, b, c), canvas)
 
-      val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, theme)
 
-      val expected = List(
-        "     [***************]                   | [5,10]",
-        "  [**********************************]   | [4,15]",
-        "                                         | ∅",
-        "--+--+---------------+---------------+-- |",
-        "  4  5              10              15   |"
-      )
+        val expected = List(
+          "     [***************]                   | [5,10]",
+          "  [**********************************]   | [4,15]",
+          "                                         | ∅",
+          "--+--+---------------+---------------+-- |",
+          "  4  5              10              15   |"
+        )
 
-      actual mustBe expected
-    }
+        actual mustBe expected
+      }
 
-    "display a.gap(b) of two disjoint intervals" in {
-      val a = Interval.closed(5, 10)
-      val b = Interval.closed(12, 17)
+      "display a.gap(b) of two disjoint intervals" in {
+        val a = Interval.closed(5, 10)
+        val b = Interval.closed(12, 17)
 
-      val c = a.gap(b)
+        val c = a.gap(b)
 
-      val canvas: Canvas = Canvas.make(40)
-      val diagram        = Diagram.make(List(a, b, c), canvas)
+        val canvas: Canvas = Canvas.make(40)
+        val diagram        = Diagram.make(List(a, b, c), canvas)
 
-      val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, theme)
 
-      val expected = List(
-        "  [**************]                       | [5,10]",
-        "                      [**************]   | [12,17]",
-        "                 [****]                  | [10,12]",
-        "--+--------------+----+--------------+-- |",
-        "  5             10   12             17   |"
-      )
+        val expected = List(
+          "  [**************]                       | [5,10]",
+          "                      [**************]   | [12,17]",
+          "                 [****]                  | [10,12]",
+          "--+--------------+----+--------------+-- |",
+          "  5             10   12             17   |"
+        )
 
-      actual mustBe expected
-    }
+        actual mustBe expected
+      }
 
-    "display a.minus(b) if a.overlaps(b)" in {
-      val a = Interval.closed(1, 10)
-      val b = Interval.closed(5, 15)
+      "display a.minus(b) if a.overlaps(b)" in {
+        val a = Interval.closed(1, 10)
+        val b = Interval.closed(5, 15)
 
-      val c = a.minus(b)
+        val c = a.minus(b)
 
-      val canvas: Canvas = Canvas.make(40)
-      val diagram        = Diagram.make(List(a, b, c), canvas)
+        val canvas: Canvas = Canvas.make(40)
+        val diagram        = Diagram.make(List(a, b, c), canvas)
 
-      val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, theme)
 
-      val expected = List(
-        "  [**********************]               | [1,10]",
-        "            [************************]   | [5,15]",
-        "  [*******]                              | [1,4]",
-        "--+-------+-+------------+-----------+-- |",
-        "  1       4 5           10          15   |"
-      )
+        val expected = List(
+          "  [**********************]               | [1,10]",
+          "            [************************]   | [5,15]",
+          "  [*******]                              | [1,4]",
+          "--+-------+-+------------+-----------+-- |",
+          "  1       4 5           10          15   |"
+        )
 
-      actual mustBe expected
-    }
+        actual mustBe expected
+      }
 
-    "display a.minus(b) if a.isOverlappedBy(b)" in {
-      val a = Interval.closed(5, 15)
-      val b = Interval.closed(1, 10)
+      "display a.minus(b) if a.isOverlappedBy(b)" in {
+        val a = Interval.closed(5, 15)
+        val b = Interval.closed(1, 10)
 
-      val c = a.minus(b)
+        val c = a.minus(b)
 
-      val canvas: Canvas = Canvas.make(40)
-      val diagram        = Diagram.make(List(a, b, c), canvas)
+        val canvas: Canvas = Canvas.make(40)
+        val diagram        = Diagram.make(List(a, b, c), canvas)
 
-      val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, theme)
 
-      val expected = List(
-        "            [************************]   | [5,15]",
-        "  [**********************]               | [1,10]",
-        "                           [*********]   | [11,15]",
-        "--+---------+------------+-+---------+-- |",
-        "  1         5           10          15   |"
-      )
+        val expected = List(
+          "            [************************]   | [5,15]",
+          "  [**********************]               | [1,10]",
+          "                           [*********]   | [11,15]",
+          "--+---------+------------+-+---------+-- |",
+          "  1         5           10          15   |"
+        )
 
-      actual mustBe expected
+        actual mustBe expected
+      }
+
+      "display Intervals.minus(a, b) if a.contains(b)" in {
+        val a = Interval.closed(1, 15)
+        val b = Interval.closed(5, 10)
+
+        val cs = Intervals.minus(a, b)
+
+        val canvas: Canvas = Canvas.make(40)
+        val diagram        = Diagram.make(List(a, b) ++ cs, canvas, List("a", "b", "c1", "c2"))
+
+        val actual = Diagram.render(diagram, theme)
+
+        val expected = List(
+          "  [**********************************]   | [1,15]  : a",
+          "            [************]               | [5,10]  : b",
+          "  [*******]                              | [1,4]   : c1",
+          "                           [*********]   | [11,15] : c2",
+          "--+-------+-+------------+-+---------+-- |",
+          "  1       4 5           10          15   |"
+        )
+
+        actual mustBe expected
+      }
     }
   }
