@@ -29,7 +29,7 @@ final class IntervalSpec extends TestSpec:
        * }}}
        */
       "create intervals" in {
-        forAll(genOneIntTuple) { case ((ox, oy), ix, iy) =>
+        forAll(genOneOfIntArgs) { case ((ox, ix), (oy, iy)) =>
           val actual = Interval.make(ox, ix, oy, iy)
 
           actual match

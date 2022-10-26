@@ -13,7 +13,8 @@ final case class Diagram(
   spans: List[Diagram.Span],
   ticks: List[Diagram.Tick],
   labels: List[Diagram.Label],
-  legends: List[Diagram.Legend]
+  legends: List[Diagram.Legend],
+  annotations: List[Diagram.Annotation]
 )
 
 object Diagram extends NumericDefaults:
@@ -25,7 +26,8 @@ object Diagram extends NumericDefaults:
       spans = List.empty[Span],
       ticks = List.empty[Tick],
       labels = List.empty[Label],
-      legends = List.empty[Legend]
+      legends = List.empty[Legend],
+      annotations = List.empty[Annotation]
     )
 
   /**
@@ -40,7 +42,10 @@ object Diagram extends NumericDefaults:
     rightClosed: Char,
     axis: Char,
     tick: Char,
+    border: Char,
+    comment: Char,
     legend: Boolean,
+    annotations: Boolean,
     label: Theme.Label
   ):
     def leftBound(isInclude: Boolean): Char =
@@ -65,7 +70,10 @@ object Diagram extends NumericDefaults:
         rightClosed = ']',
         axis = '-',
         tick = '+',
-        legend = false,
+        border = '|',
+        comment = ':',
+        legend = true,
+        annotations = true,
         label = Label.NoOverlap
       )
 
@@ -153,10 +161,13 @@ object Diagram extends NumericDefaults:
       Label(x1, text)
 
     def labels[T](i: Interval[T], span: Span): List[Label] =
-      List(
-        label(span.x0, Show.leftValue(i.left.value)),
-        label(span.x1, Show.rightValue(i.right.value))
-      )
+      if i.isEmpty then List.empty[Label]
+      else if i.isPoint then List(label(span.x0, Show.leftValue(i.left.value)))
+      else
+        List(
+          label(span.x0, Show.leftValue(i.left.value)),
+          label(span.x1, Show.rightValue(i.right.value))
+        )
 
     private def isIn(x: Int): Boolean =
       (x >= 0 && x < width)
@@ -221,9 +232,11 @@ object Diagram extends NumericDefaults:
               if b.isLeft then canvas.first else canvas.last
 
     override def translate(i: Interval[T]): Span =
-      val x0 = translate(i.left)
-      val x1 = translate(i.right)
-      Span(x0 = x0, x1 = x1, includeX0 = i.left.isInclude, includeX1 = i.right.isInclude)
+      if i.isEmpty then Span.empty
+      else
+        val x0 = translate(i.left)
+        val x1 = translate(i.right)
+        Span(x0 = x0, x1 = x1, includeX0 = i.left.isInclude, includeX1 = i.right.isInclude)
 
   /**
    * Tick
@@ -243,24 +256,61 @@ object Diagram extends NumericDefaults:
 
   /**
    * Span
+   *
+   * NOTE: Use negative span for an empty interval
    */
   final case class Span(x0: Int, x1: Int, includeX0: Boolean, includeX1: Boolean):
-    require(x0 <= x1, s"A Span |${x0}, ${x1}| cannot be negative")
+
+    def isEmpty: Boolean =
+      x1 < x0
+
+    def nonEmpty: Boolean =
+      !isEmpty
 
     def size: Int =
       x1 - x0
 
     def ticks: List[Tick] =
-      List(Tick(x0), Tick(x1))
+      if isEmpty then List.empty[Tick]
+      else List(Tick(x0), Tick(x1))
+
+  object Span:
+    val empty: Span =
+      Span(1, -1, true, true)
 
   /**
    * Legend Entry
    */
-  final case class Legend(value: String)
+  final case class Legend(value: String):
+    def isEmpty: Boolean =
+      value.isEmpty
+
+    def nonEmpty: Boolean =
+      value.nonEmpty
 
   object Legend:
     val empty: Legend =
       Legend("")
+
+    def make[T](i: Interval[T]): Legend =
+      Legend(i.show)
+
+  /**
+   * Annotation Entry
+   */
+  final case class Annotation(value: String):
+    def isEmpty: Boolean =
+      value.isEmpty
+
+    def nonEmpty: Boolean =
+      value.nonEmpty
+
+  object Annotation:
+    val empty: Annotation =
+      Annotation("")
+
+    def make(value: String): Annotation =
+      Annotation(value)
 
   /**
    * Renderer
@@ -282,12 +332,40 @@ object Diagram extends NumericDefaults:
       val ticks  = drawTicks(d.ticks, d.width)
       val labels = drawLabels(d.labels, d.width)
 
-      val chart = (spans ++ ticks ++ labels).filter(_.nonEmpty)
+      val chart = (spans ++ ticks ++ labels)
 
-      if theme.legend then
-        val legend = d.legends.map(_.value) ++ List.fill[String](chart.size - d.legends.size)("")
-        chart.zip(legend).map { case (ch, lg) => s"${ch}${theme.space}|${if lg.nonEmpty then theme.space.toString else ""}${lg}" }
-      else chart
+      // format: "span | legend : annotation"
+      val legends     = padWithEmptyLines(chart.size)(d.legends.map(_.value))
+      val annotations = padWithEmptyLines(chart.size)(d.annotations.map(_.value))
+
+      val addLegends     = theme.legend && legends.exists(_.nonEmpty)
+      val addAnnotations = theme.annotations && annotations.exists(_.nonEmpty)
+
+      // bordedered chart
+      val bordered =
+        if (addLegends || addAnnotations) then chart.map(line => if line.nonEmpty then s"${line}${theme.space}${theme.border}" else line)
+        else chart
+
+      // with legend
+      val legended =
+        if addLegends then bordered.zip(legends).map { case (line, legend) => if (line.nonEmpty && legend.nonEmpty) then s"${line}${theme.space}${legend}" else line }
+        else bordered
+
+      // with annotations
+      val annotated =
+        if addAnnotations then
+          val maxLineSize = legended.map(_.size).maxOption.getOrElse(0)
+          legended.zip(annotations).map { case (line, annotation) =>
+            if (line.nonEmpty && annotation.nonEmpty) then
+              val padSize    = maxLineSize - line.size
+              val paddedLine = padRight(padSize, theme.space)(line)
+              val separator  = if addLegends then s"${theme.space}${theme.comment}" else ""
+              s"${paddedLine}${separator}${theme.space}${annotation}"
+            else line
+          }
+        else legended
+
+      annotated.filter(_.nonEmpty)
 
     private[mtg] def drawSpans(spans: List[Span], width: Int): List[String] =
       val views: Array[Array[Char]] = Array.fill[Char](spans.size, width)(theme.space)
@@ -362,19 +440,28 @@ object Diagram extends NumericDefaults:
       if ((t.pos >= 0) && (t.pos < view.size)) then view(t.pos) = theme.tick
 
     private def drawSpan(span: Span, view: Array[Char]): Unit =
-      val p = math.max(span.x0, 0)
-      val q = math.min(span.x1, if view.nonEmpty then view.size - 1 else 0)
+      if span.nonEmpty then
+        val p = math.max(span.x0, 0)
+        val q = math.min(span.x1, if view.nonEmpty then view.size - 1 else 0)
 
-      Range.inclusive(p, q).foreach(i => view(i) = theme.fill)
+        Range.inclusive(p, q).foreach(i => view(i) = theme.fill)
 
-      if span.size > 1 then
-        if (span.x0 >= 0 && span.x0 < view.size) then view(span.x0) = theme.leftBound(span.includeX0)
-        if (span.x1 >= 0 && span.x1 < view.size) then view(span.x1) = theme.rightBound(span.includeX1)
+        if span.size > 1 then
+          if (span.x0 >= 0 && span.x0 < view.size) then view(span.x0) = theme.leftBound(span.includeX0)
+          if (span.x1 >= 0 && span.x1 < view.size) then view(span.x1) = theme.rightBound(span.includeX1)
+
+    private[mtg] def padRight(n: Int, pad: Char)(value: String): String =
+      if n > 0 then value + (pad.toString * n)
+      else value
+
+    private[mtg] def padWithEmptyLines(n: Int)(xs: List[String]): List[String] =
+      if ((xs.size < n) && (n > 0)) then xs ++ List.fill[String](n - xs.size)("")
+      else xs
 
   /**
    * Make a Diagram that can be rendered
    */
-  def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =
+  def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas, annotations: List[String])(using Ordering[Boundary[T]]): Diagram =
     val effectiveView = if view.isEmpty then View.make(intervals) else view
     val translator    = Translator.make(effectiveView, canvas)
 
@@ -385,13 +472,14 @@ object Diagram extends NumericDefaults:
       (vs.ticks, canvas.labels(vi, vs))
     else (List.empty[Tick], List.empty[Label])
 
-    val d = intervals.filter(_.nonEmpty).foldLeft(Diagram.empty) { case (acc, i) =>
+    val d = intervals.zipWithIndex.foldLeft(Diagram.empty) { case (acc, (i, j)) =>
       val y = acc.height
 
       val span   = translator.translate(i)
       val ticks  = span.ticks
       val labels = canvas.labels(i, span)
-      val legend = Legend(i.show)
+      val legend = Legend.make(i)
+      val ann    = if j < annotations.size then Annotation(annotations(j)) else Annotation.empty
 
       acc.copy(
         width = canvas.width,
@@ -399,19 +487,24 @@ object Diagram extends NumericDefaults:
         spans = acc.spans :+ span,
         ticks = acc.ticks ++ ticks,
         labels = acc.labels ++ labels,
-        legends = acc.legends :+ legend
+        legends = acc.legends :+ legend,
+        annotations = acc.annotations :+ ann
       )
     }
 
     d.copy(
-      spans = d.spans,
       ticks = (d.ticks ++ viewTicks).distinct.sortBy(_.pos),
-      labels = (d.labels ++ viewLabels).distinct.sortBy(_.pos),
-      legends = d.legends // NOTE: the order should match the order of spans
+      labels = (d.labels ++ viewLabels).distinct.sortBy(_.pos)
     )
 
+  def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =
+    make(intervals, view = view, canvas = canvas, annotations = List.empty[String])
+
   def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =
-    make(intervals, view = View.empty[T], canvas = canvas)
+    make(intervals, view = View.empty[T], canvas = canvas, annotations = List.empty[String])
+
+  def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas, annotations: List[String])(using Ordering[Boundary[T]]): Diagram =
+    make(intervals, view = View.empty[T], canvas = canvas, annotations = annotations)
 
   /**
    * Render the provided Diagram

@@ -29,6 +29,9 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ < b+
    *
    *   a- < a+ < b- < b+
+   *
+   *   Relation                  AAAAA
+   *   before(a,b)      b        :   : BBBBBBBBB  |  a+ < b-
    * }}}
    */
   final def before[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
@@ -52,6 +55,9 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ < b+
    *
    *   a- < a+ = b- < b+
+   *
+   *   Relation                  AAAAA
+   *   meets(a,b)       m        :   BBBBBBBBB    |  a+ = b-
    * }}}
    */
   final def meets[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
@@ -75,6 +81,9 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ < b+
    *
    *   a- < b- < a+ < b+
+   *
+   *   Relation                  AAAAA
+   *   overlaps(a,b)    o        : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
    * }}}
    */
   final def overlaps[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
@@ -87,7 +96,7 @@ private[mtg] transparent trait BasicRel[+T]:
     b.overlaps(a)
 
   /**
-   * During (d)
+   * During, IncludedIn (d)
    *
    * {{{
    *   PI (Point-Interval):
@@ -102,19 +111,22 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ < b+
    *
    *   b- < a- < a+ < b+
+   *
+   *   Relation                  AAAAA
+   *   during(a,b)      d|D    BBBBBBBBB          |  a- > b- ; a+ < b+
    * }}}
    */
   final def during[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.isProper && bOrd.lt(b.left, a.left) && bOrd.lt(a.right, b.right)
 
   /**
-   * Contains (D)
+   * Contains, Includes (D)
    */
   final def contains[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.during(a)
 
   /**
-   * Starts (s)
+   * Starts, Begins (s)
    *
    * {{{
    *   PI (Point-Interval):
@@ -129,6 +141,9 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ < b+
    *
    *   a- = b- < a+ < b+
+   *
+   *   Relation                  AAAAA
+   *   starts(a,b)      s|S      BBBBBBBBB        |  a- = b- ; a+ < b+
    * }}}
    */
   final def starts[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
@@ -141,7 +156,7 @@ private[mtg] transparent trait BasicRel[+T]:
     b.starts(a)
 
   /**
-   * Finishes (f)
+   * Finishes, Ends (f)
    *
    * {{{
    *   PI (Point-Interval):
@@ -156,6 +171,9 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ = b+
    *
    *   b- < a- < a+ = b+
+   *
+   *   Relation                  AAAAA
+   *   finishes(a,b)    f|F  BBBBBBBBB            |  a+ = b+ ; a- > b-
    * }}}
    */
   final def finishes[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
@@ -185,6 +203,9 @@ private[mtg] transparent trait BasicRel[+T]:
    *   a+ = b+
    *
    *   a- = b- < a+ = b+
+   *
+   *   Relation                  AAAAA
+   *   equals(a, b)     e        BBBBB            |  a- = b- ; a+ = b+
    * }}}
    */
   final def equalsTo[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =

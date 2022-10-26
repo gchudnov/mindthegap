@@ -4,21 +4,22 @@ import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Intervals
 
-final class GapSpec extends TestSpec:
+final class MinusSpec extends TestSpec:
 
   given intRange: IntRange = intRange5
   given intProb: IntProb   = intProb127
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  "Gap" when {
-    "a.gap(b)" should {
+  "Minus" when {
+    "a.minus(b)" should {
       "∅ if A and B are empty" in {
         val a = Interval.empty[Int]
         val b = Interval.empty[Int]
 
-        val actual   = a.gap(b)
+        val actual   = a.minus(b)
         val expected = Interval.empty[Int]
 
         actual mustBe expected
@@ -28,38 +29,38 @@ final class GapSpec extends TestSpec:
         val a = Interval.empty[Int]
         val b = Interval.closed(1, 10)
 
-        val actual   = a.gap(b)
+        val actual   = a.minus(b)
         val expected = Interval.empty[Int]
 
         actual mustBe expected
       }
 
-      "∅ if B is empty" in {
+      "A if B is empty" in {
         val a = Interval.closed(1, 10)
         val b = Interval.empty[Int]
 
-        val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val actual   = a.minus(b)
+        val expected = Interval.closed(1, 10)
 
         actual mustBe expected
       }
 
-      "[min(a-, b-), max(a+, b+)] if A before B" in {
+      "[a-, a+] if A before B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(20, 30)
 
-        val actual   = a.gap(b)
-        val expected = Interval.closed(11, 19)
+        val actual   = a.minus(b)
+        val expected = Interval.closed(1, 10)
 
         actual mustBe expected
       }
 
-      "[min(a-, b-), max(a+, b+)] if A after B" in {
+      "[a-, a+] if A after B" in {
         val a = Interval.closed(20, 30)
         val b = Interval.closed(1, 10)
 
-        val actual   = a.gap(b)
-        val expected = Interval.closed(11, 19)
+        val actual   = a.minus(b)
+        val expected = Interval.closed(20, 30)
 
         actual mustBe expected
       }
@@ -68,7 +69,7 @@ final class GapSpec extends TestSpec:
         val a = Interval.closed(1, 5)
         val b = Interval.closed(1, 10)
 
-        val actual   = a.gap(b)
+        val actual   = a.minus(b)
         val expected = Interval.empty[Int]
 
         actual mustBe expected
@@ -78,7 +79,7 @@ final class GapSpec extends TestSpec:
         val a = Interval.closed(5, 7)
         val b = Interval.closed(1, 10)
 
-        val actual   = a.gap(b)
+        val actual   = a.minus(b)
         val expected = Interval.empty[Int]
 
         actual mustBe expected
@@ -88,7 +89,7 @@ final class GapSpec extends TestSpec:
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 10)
 
-        val actual   = a.gap(b)
+        val actual   = a.minus(b)
         val expected = Interval.empty[Int]
 
         actual mustBe expected
@@ -98,112 +99,103 @@ final class GapSpec extends TestSpec:
         val a = Interval.closed(5, 10)
         val b = Interval.closed(5, 10)
 
-        val actual   = a.gap(b)
+        val actual   = a.minus(b)
         val expected = Interval.empty[Int]
 
         actual mustBe expected
       }
 
-      "∅ if A is-overlapped-by B" in {
+      "[max(succ(b+), a-), a+] if A is-overlapped-by B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 7)
 
-        val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val actual   = a.minus(b)
+        val expected = Interval.closed(8, 10)
 
         actual mustBe expected
       }
 
-      "∅ if A is-met-by B" in {
+      "[max(succ(b+), a-), a+] if A is-met-by B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 5)
 
-        val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val actual   = a.minus(b)
+        val expected = Interval.closed(6, 10)
 
         actual mustBe expected
       }
 
-      "∅ if A is-started-by B" in {
+      "[max(succ(b+), a-), a+] if A is-started-by B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(1, 5)
 
-        val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val actual   = a.minus(b)
+        val expected = Interval.closed(6, 10)
 
         actual mustBe expected
       }
 
-      "∅ in A meets B" in {
+      "[a-, min(pred(b-), a+)] in A meets B" in {
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
 
-        val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val actual   = a.minus(b)
+        val expected = Interval.closed(1, 4)
 
         actual mustBe expected
       }
 
-      "∅ in A overlaps B" in {
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(7, 15)
+      "[a-, min(pred(b-), a+)] in A overlaps B" in {
+        val a = Interval.closed(1, 10)
+        val b = Interval.closed(5, 15)
 
-        val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val actual   = a.minus(b)
+        val expected = Interval.closed(1, 4)
 
         actual mustBe expected
       }
 
-      "∅ in A is-finished-by B" in {
+      "[a-, min(pred(b-), a+)] in A is-finished-by B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(7, 10)
 
-        val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val actual   = a.minus(b)
+        val expected = Interval.closed(1, 6)
 
         actual mustBe expected
       }
 
-      "∅ if A contains B" in {
+      "undefined if A contains B" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(5, 7)
 
-        val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
-
-        actual mustBe expected
+        assertThrows[UnsupportedOperationException] {
+          a.minus(b)
+        }
       }
     }
 
     "Interval" should {
-      "Interval.gap(a, b)" in {
-        val a = Interval.closed(1, 5)  // [1, 5]
-        val b = Interval.closed(7, 10) // [7, 10]
+      "Interval.minus(a, b)" in {
+        val a = Interval.closed(1, 10)
+        val b = Interval.closed(7, 10)
 
-        val expected = Interval.point(6) // {6}
+        val actual   = Interval.minus(a, b)
+        val expected = Interval.closed(1, 6)
 
-        val c1 = Interval.gap(a, b).canonical
-        val c2 = Interval.gap(b, a).canonical
-
-        c1 mustBe c2
-        c2 mustBe c1
-
-        c1 mustBe expected
+        actual mustBe expected
       }
     }
 
-    "A, B" should {
+    "Intervals.minus(a, b)" should {
+      "return two intervals if A contains B" in {
+        val a = Interval.closed(1, 15)
+        val b = Interval.closed(5, 10)
 
-      /**
-       * Commutative Property
-       */
-      "A || B = B || A" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        val actual   = Intervals.minus(a, b)
+        val expected = List(Interval.closed(1, 4), Interval.closed(11, 15))
 
-          xx.gap(yy).canonical mustBe yy.gap(xx).canonical
-        }
+        actual must contain theSameElementsAs (expected)
       }
     }
   }
