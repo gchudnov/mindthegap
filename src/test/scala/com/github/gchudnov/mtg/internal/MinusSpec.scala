@@ -175,7 +175,19 @@ final class MinusSpec extends TestSpec:
       }
     }
 
-    "Instance.minus(a, b)" should {
+    "Interval" should {
+      "Interval.minus(a, b)" in {
+        val a = Interval.closed(1, 10)
+        val b = Interval.closed(7, 10)
+
+        val actual   = Interval.minus(a, b)
+        val expected = Interval.closed(1, 6)
+
+        actual mustBe expected
+      }
+    }
+
+    "Intervals.minus(a, b)" should {
       "return two intervals if A contains B" in {
         val a = Interval.closed(1, 15)
         val b = Interval.closed(5, 10)

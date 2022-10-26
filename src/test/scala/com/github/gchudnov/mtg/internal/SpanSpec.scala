@@ -24,22 +24,22 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "∅ if A is empty" in {
+      "B if A is empty" in {
         val a = Interval.empty[Int]
         val b = Interval.closed(1, 10)
 
         val actual   = a.span(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.closed(1, 10)
 
         actual mustBe expected
       }
 
-      "∅ if B is empty" in {
+      "A if B is empty" in {
         val a = Interval.closed(1, 10)
         val b = Interval.empty[Int]
 
         val actual   = a.span(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.closed(1, 10)
 
         actual mustBe expected
       }
@@ -172,6 +172,23 @@ final class SpanSpec extends TestSpec:
         val expected = Interval.closed(1, 10)
 
         actual mustBe expected
+      }
+    }
+
+    "Interval" should {
+      "Interval.span(a, b)" in {
+        val a = Interval.closed(1, 5)  // [1, 5]
+        val b = Interval.closed(7, 10) // [7, 10]
+
+        val expected = Interval.closed(1, 10) // [1, 10]
+
+        val c1 = Interval.span(a, b).canonical
+        val c2 = Interval.span(b, a).canonical
+
+        c1 mustBe c2
+        c2 mustBe c1
+
+        c1 mustBe expected
       }
     }
 

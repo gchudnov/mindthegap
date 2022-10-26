@@ -49,7 +49,7 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(20, 30)
 
         val actual   = a.gap(b)
-        val expected = Interval.closed(10, 20)
+        val expected = Interval.closed(11, 19)
 
         actual mustBe expected
       }
@@ -59,7 +59,7 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(1, 10)
 
         val actual   = a.gap(b)
-        val expected = Interval.closed(10, 20)
+        val expected = Interval.closed(11, 19)
 
         actual mustBe expected
       }
@@ -114,12 +114,12 @@ final class GapSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[min(a-, b-), max(a+, b+)] if A is-met-by B" in {
+      "∅ if A is-met-by B" in {
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 5)
 
         val actual   = a.gap(b)
-        val expected = Interval.point(5)
+        val expected = Interval.empty[Int]
 
         actual mustBe expected
       }
@@ -134,12 +134,12 @@ final class GapSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[min(a-, b-), max(a+, b+)] in A meets B" in {
+      "∅ in A meets B" in {
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
 
         val actual   = a.gap(b)
-        val expected = Interval.point(5)
+        val expected = Interval.empty[Int]
 
         actual mustBe expected
       }
@@ -172,6 +172,23 @@ final class GapSpec extends TestSpec:
         val expected = Interval.empty[Int]
 
         actual mustBe expected
+      }
+    }
+
+    "Interval" should {
+      "Interval.gap(a, b)" in {
+        val a = Interval.closed(1, 5)  // [1, 5]
+        val b = Interval.closed(7, 10) // [7, 10]
+
+        val expected = Interval.point(6) // {6}
+
+        val c1 = Interval.gap(a, b).canonical
+        val c2 = Interval.gap(b, a).canonical
+
+        c1 mustBe c2
+        c2 mustBe c1
+
+        c1 mustBe expected
       }
     }
 

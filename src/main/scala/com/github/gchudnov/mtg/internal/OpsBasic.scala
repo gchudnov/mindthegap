@@ -60,7 +60,8 @@ private[mtg] transparent trait BasicOps[+T]:
    * }}}
    */
   final def span[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
-    if a.isEmpty || b.isEmpty then Interval.empty[T]
+    if a.isEmpty then b
+    else if b.isEmpty then a
     else Interval.make(ordT.min(a.left, b.left), ordT.max(a.right, b.right))
 
   /**
@@ -91,7 +92,9 @@ private[mtg] transparent trait BasicOps[+T]:
    * }}}
    */
   def union[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
-    if a.merges(b) then Interval.make(ordT.min(a.left, b.left), ordT.max(a.right, b.right))
+    if a.isEmpty then b
+    else if b.isEmpty then a
+    else if a.merges(b) then Interval.make(ordT.min(a.left, b.left), ordT.max(a.right, b.right))
     else Interval.empty[T]
 
   /**
@@ -104,16 +107,16 @@ private[mtg] transparent trait BasicOps[+T]:
    * {{{
    *   A || B := [min(a+, b+), max(a-, b-)]
    *
-   *   [**************]                       | [5,10]
-   *                       [**************]   | [12,17]
-   *                  [****]                  | [10,12]
-   * --+--------------+----+--------------+-- |
-   *   5             10   12             17   |
+   *   [***********]                          | [5,10]
+   *                          [***********]   | [15,20]
+   *                 [******]                 | [11,14]
+   * --+-----------+-+------+-+-----------+-- |
+   *   5          10 11    14 15         20   |
    * }}}
    */
   final def gap[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
     if a.isEmpty || b.isEmpty then Interval.empty[T]
-    else Interval.make(ordT.min(a.right, b.right).asLeft, ordT.max(a.left, b.left).asRight)
+    else Interval.make(ordT.min(a.right, b.right).succ.asLeft, ordT.max(a.left, b.left).pred.asRight)
 
   /**
    * Minus

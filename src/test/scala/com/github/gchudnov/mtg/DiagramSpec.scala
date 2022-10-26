@@ -1098,7 +1098,7 @@ final class DiagramSpec extends TestSpec:
 
       "display a.gap(b) of two disjoint intervals" in {
         val a = Interval.closed(5, 10)
-        val b = Interval.closed(12, 17)
+        val b = Interval.closed(15, 20)
 
         val c = a.gap(b)
 
@@ -1108,11 +1108,11 @@ final class DiagramSpec extends TestSpec:
         val actual = Diagram.render(diagram, theme)
 
         val expected = List(
-          "  [**************]                       | [5,10]",
-          "                      [**************]   | [12,17]",
-          "                 [****]                  | [10,12]",
-          "--+--------------+----+--------------+-- |",
-          "  5             10   12             17   |"
+          "  [***********]                          | [5,10]",
+          "                         [***********]   | [15,20]",
+          "                [******]                 | [11,14]",
+          "--+-----------+-+------+-+-----------+-- |",
+          "  5          10       14            20   |"
         )
 
         actual mustBe expected

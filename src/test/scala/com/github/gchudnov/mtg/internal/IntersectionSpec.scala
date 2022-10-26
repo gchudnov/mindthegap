@@ -221,6 +221,23 @@ final class IntersectionSpec extends TestSpec:
       }
     }
 
+    "Interval" should {
+      "Interval.intersection(a, b)" in {
+        val a = Interval.rightClosed(2) // (-∞, 2]
+        val b = Interval.closed(1, 10)  // [1, 10]
+
+        val expected = Interval.closed(1, 2) // [1, 2]
+
+        val c1 = Interval.intersection(a, b).canonical
+        val c2 = Interval.intersection(b, a).canonical
+
+        c1 mustBe c2
+        c2 mustBe c1
+
+        c1 mustBe expected
+      }
+    }
+
     "A, B, C" should {
 
       /**

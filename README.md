@@ -377,17 +377,17 @@ A gap between two intervals `a` and `b`: `a || b := [min(a-, b-), max(a+, b+)]`.
 
 ```scala
 val a = Interval.closed(5, 10)   // [5, 10]
-val b = Interval.closed(12, 17)  // [12, 17]
+val b = Interval.closed(15, 20)  // [15, 20]
 
-val c = a.gap(b)                 // [10, 12]
+val c = a.gap(b)                 // [11, 14]
 ```
 
 ```text
-  [**************]                       | [5,10]
-                      [**************]   | [12,17]
-                 [****]                  | [10,12]
---+--------------+----+--------------+-- |
-  5             10   12             17   |
+  [***********]                          | [5,10]
+                         [***********]   | [15,20]
+                [******]                 | [11,14]
+--+-----------+-+------+-+-----------+-- |
+  5          10 11    14 15         20   |
 ```
 
 If intervals are not disjoint, the gap is empty.
