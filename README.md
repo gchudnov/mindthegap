@@ -104,14 +104,21 @@ The 13 relations are:
 - **Qualitative** because no specific time spans are considered.
 
 ```text
-  Relation                  AAAAA
-  before(a,b)      b|B      :   : BBBBBBBBB  |  a+ < b-
-  meets(a,b)       m|M      :   BBBBBBBBB    |  a+ = b-
-  overlaps(a,b)    o|O      : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
-  starts(a,b)      s|S      BBBBBBBBB        |  a- = b- ; a+ < b+
-  during(a,b)      d|D    BBBBBBBBB          |  a- > b- ; a+ < b+
-  finishes(a,b)    f|F  BBBBBBBBB            |  a+ = b+ ; a- > b-
-  equals(a, b)     e        BBBBB            |  a- = b- ; a+ = b+
+  Relation                         AAAAA
+                                   :   :
+  a.before(b)         b            :   : BBBBBBBBB  | a+ < b-
+  a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
+  a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
+  a.starts(b)         s            BBBBBBBBB        | a- = b- ; a+ < b+
+  a.during(b)         d          BBBBBBBBB          | a- > b- ; a+ < b+
+  a.finishes(b)       f        BBBBBBBBB            | a+ = b+ ; a- > b-
+  a.after(b)          B  BBBBBBBBB :   :            | a- > b+
+  a.isMetBy(b)        M    BBBBBBBBB   :            | a- = b+
+  a.isOverlappedBy(b) O      BBBBBBBBB :            | b- < a- < b+ < a+
+  a.isStartedBy(b)    S            BBB :            | a- = b- ; b+ < a+
+  a.contains(b)       D            : B :            | a- < b- ; b+ < a+
+  a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
+  a.equals(b)         e            BBBBB            | a- = b- ; a+ = b+
 ```
 
 ```scala
@@ -148,12 +155,12 @@ Extended relations are the ones that compose of several basic relations.
 Determines whether `a` is a subset of `b`.
 
 ```text
-  isSubset                  AAAAA            |  a- >= b- AND a+ <= b+
-                            :   :
-  starts(a,b)      s        BBBBBBBBB
-  during(a,b)      d      BBBBBBBBB
-  finishes(a,b)    f    BBBBBBBBB
-  equals(a, b)     e        BBBBB
+  isSubset                         AAAAA            | a- >= b- AND a+ <= b+
+                                   :   :
+  a.starts(b)         s            BBBBBBBBB        | a- = b- ; a+ < b+
+  a.during(b)         d          BBBBBBBBB          | a- > b- ; a+ < b+
+  a.finishes(b)       f        BBBBBBBBB            | a+ = b+ ; a- > b-
+  a.equals(b)         e            BBBBB            | a- = b- ; a+ = b+
 ```
 
 ```scala
@@ -168,12 +175,12 @@ Interval.open(4, 7).isSubset(Interval.open(4, 7))  // true
 Determines whether `a` is a superset of `b`.
 
 ```text
-  isSuperset                    BBBBB         |  b- >= a- AND b+ <= a+
-                                :   :
-  is-started-by(a,b)   S        AAAAAAAAA
-  contains(a,b)        D      AAAAAAAAA
-  is-finished-by(a,b)  F    AAAAAAAAA
-  equals(a, b)         e        AAAAA
+  isSuperset                       AAAAA            | b- >= a- AND b+ <= a+
+                                   :   :
+  a.isStartedBy(b)    S            BBB :            | a- = b- ; b+ < a+
+  a.contains(b)       D            : B :            | a- < b- ; b+ < a+
+  a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
+  a.equals(b)         e            BBBBB            | a- = b- ; a+ = b+
 ```
 
 ```scala
@@ -188,10 +195,10 @@ Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
 Determines if there `a` and `b` are disjoint. `a` and `b` are disjoint if `a` does not intersect `b`.
 
 ```text
-  isDisjoint                AAAAA        |  a+ < b- OR a- > b+
-                            :   :
-  before(a,b)      b        :   : BBBBB
-  after(a,b)       B  BBBBB :   :
+  isDisjoint                       AAAAA            | a+ < b- OR a- > b+
+                                   :   :
+  a.before(b)         b            :   : BBBBBBBBB  | a+ < b-
+  a.after(b)          B  BBBBBBBBB :   :            | a- > b+
 ```
 
 ```scala
@@ -201,13 +208,13 @@ Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) // true
 
 ### IsAdjacent
 
-Two intervals `a` and `b` are adjacent if: `succ(a+) = b- OR succ(b+) = a-`
+Two intervals `a` and `b` are adjacent if they are disjoint and `succ(a+) = b- OR succ(b+) = a-`
 
 ```text
-  isAdjacent                AAAAA        |  succ(a+) = b- OR succ(b+) = a-
-                            :   :
-  before(a,b)      b        :   :BBBBB
-  after(a,b)       B   BBBBB:   :
+  isAdjacent                       AAAAA            |  succ(a+) = b- OR succ(b+) = a-
+                                   :   :
+  a.before(b)         b            :   : BBBBBBBBB  | a+ < b- ; succ(a+) = b-
+  a.after(b)          B  BBBBBBBBB :   :            | a- > b+ ; succ(b+) = a-
 ```
 
 ```scala
@@ -222,14 +229,19 @@ Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) // true
 Two intervals `a` and `b` are intersecting if: `a- <= b+ AND b- <= a+`
 
 ```text
-  intersects                AAAAA        |  a- <= b+ AND b- <= a+
-                            :   :
-  meets(a,b)       m|M      :   BBBBBBBBB
-  overlaps(a,b)    o|O      : BBBBBBBBB
-  starts(a,b)      s|S      BBBBBBBBB
-  during(a,b)      d|D    BBBBBBBBB
-  finishes(a,b)    f|F  BBBBBBBBB
-  equals(a, b)     e        BBBBB
+  intersects                       AAAAA            | a- <= b+ AND b- <= a+
+                                   :   :
+  a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
+  a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
+  a.starts(b)         s            BBBBBBBBB        | a- = b- ; a+ < b+
+  a.during(b)         d          BBBBBBBBB          | a- > b- ; a+ < b+
+  a.finishes(b)       f        BBBBBBBBB            | a+ = b+ ; a- > b-
+  a.isMetBy(b)        M    BBBBBBBBB   :            | a- = b+
+  a.isOverlappedBy(b) O      BBBBBBBBB :            | b- < a- < b+ < a+
+  a.isStartedBy(b)    S            BBB :            | a- = b- ; b+ < a+
+  a.contains(b)       D            : B :            | a- < b- ; b+ < a+
+  a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
+  a.equals(b)         e            BBBBB            | a- = b- ; a+ = b+
 ```
 
 ```scala
@@ -243,16 +255,21 @@ Interval.closed(0, 5).intersects(Interval.closed(1, 6)) // true
 Two intervals `a` and `b` can be merged, if they are adjacent or intersect.
 
 ```text
-  merges                    AAAAA            |  intersects(a,b) OR isAdjacent(a,b)
-                            :   :
-  before(a,b)      b        :   :BBBBB       |  succ(a+) = b-
-  after(a,b)       B   BBBBB:   :            |  succ(b+) = a-
-  meets(a,b)       m|M      :   BBBBBBBBB
-  overlaps(a,b)    o|O      : BBBBBBBBB
-  starts(a,b)      s|S      BBBBBBBBB
-  during(a,b)      d|D    BBBBBBBBB
-  finishes(a,b)    f|F  BBBBBBBBB
-  equals(a, b)     e        BBBBB
+  merges                           AAAAA            | intersects(a,b) OR isAdjacent(a,b)
+                                   :   :
+  a.before(b)         b            :   : BBBBBBBBB  | a+ < b- ; succ(a+) = b-
+  a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
+  a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
+  a.starts(b)         s            BBBBBBBBB        | a- = b- ; a+ < b+
+  a.during(b)         d          BBBBBBBBB          | a- > b- ; a+ < b+
+  a.finishes(b)       f        BBBBBBBBB            | a+ = b+ ; a- > b-
+  a.after(b)          B  BBBBBBBBB :   :            | a- > b+ ; succ(b+) = a-
+  a.isMetBy(b)        M    BBBBBBBBB   :            | a- = b+
+  a.isOverlappedBy(b) O      BBBBBBBBB :            | b- < a- < b+ < a+
+  a.isStartedBy(b)    S            BBB :            | a- = b- ; b+ < a+
+  a.contains(b)       D            : B :            | a- < b- ; b+ < a+
+  a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
+  a.equals(b)         e            BBBBB            | a- = b- ; a+ = b+
 ```
 
 ```scala
@@ -265,11 +282,11 @@ Interval.open(4, 10).merges(Interval.open(5, 12)) // true
 Determines whether `a` less-than `b`.
 
 ```text
-  isLess                    AAAAA            |  a- < b- AND a+ < b+
-                            :   :
-  before(a,b)      b        :   : BBBBBBBBB
-  meets(a,b)       m        :   BBBBBBBBB
-  overlaps(a,b)    o        : BBBBBBBBB
+  isLess                           AAAAA            | a- < b- AND a+ < b+
+                                   :   :
+  a.before(b)         b            :   : BBBBBBBBB  | a+ < b-
+  a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
+  a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
 ```
 
 ```scala
