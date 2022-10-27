@@ -25,21 +25,23 @@ final class IsSubsetSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "IsSubset" when {
-    "isSubset" should {
-      "auto check" in {
-        import IntervalRelAssert.*
+    import IntervalRelAssert.*
 
+    "a.isSubset(b)" should {
+      "b.isSuperset(a)" in {
         forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
           whenever(xx.isSubset(yy)) {
+            yy.isSuperset(xx) mustBe true
+
             assertOneOf(Set(Rel.Starts, Rel.During, Rel.Finishes, Rel.EqualsTo))(xx, yy)
           }
         }
       }
 
-      "manual check" in {
+      "valid in special cases" in {
         Interval.open(4, 7).isSubset(Interval.open(4, 10)) mustBe (true)
         Interval.open(4, 7).isSubset(Interval.open(2, 10)) mustBe (true)
         Interval.open(4, 7).isSubset(Interval.open(2, 7)) mustBe (true)

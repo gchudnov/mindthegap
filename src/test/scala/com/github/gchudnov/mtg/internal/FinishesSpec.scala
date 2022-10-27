@@ -13,7 +13,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
  *   BBBBBB
  * }}}
  */
-final class FinishesSpec extends TestSpec: // with IntervalRelAssert {}
+final class FinishesSpec extends TestSpec:
 
   given intRange: IntRange = intRange5
   given intProb: IntProb   = intProb127
@@ -21,21 +21,53 @@ final class FinishesSpec extends TestSpec: // with IntervalRelAssert {}
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Finishes" when {
-    "finishes & isFinishedBy" should {
-      "auto check" in {
-        import IntervalRelAssert.*
+    import IntervalRelAssert.*
 
+    "a.finishes(b)" should {
+      "b.finisedBy(a)" in {
         forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
           whenever(xx.finishes(yy)) {
+            yy.isFinishedBy(xx) mustBe true
+
             assertOne(Rel.Finishes)(xx, yy)
           }
         }
       }
+    }
 
-      "manual check" in {
+    "a.finisedBy(b)" should {
+      "b.finishes(a)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          whenever(xx.isFinishedBy(yy)) {
+            yy.finishes(xx) mustBe true
+
+            assertOne(Rel.IsFinishedBy)(xx, yy)
+          }
+        }
+      }
+    }
+
+    "a.finishes(b) AND b.isFinishedBy(a)" should {
+
+      "equal" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val actual   = xx.finishes(yy)
+          val expected = yy.isFinishedBy(xx)
+
+          actual mustBe expected
+        }
+      }
+
+      "valid in special cases" in {
         // Empty
         Interval.empty[Int].finishes(Interval.empty[Int]) mustBe (false)
         Interval.empty[Int].finishes(Interval.point(0)) mustBe (false)

@@ -21,21 +21,53 @@ final class BeforeSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Before" when {
-    "before (preceeds) & after (isPreceededBy)" should {
-      "auto check" in {
-        import IntervalRelAssert.*
+    import IntervalRelAssert.*
 
+    "a.before(b)" should {
+      "b.after(a)" in {
         forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
           whenever(xx.before(yy)) {
+            yy.after(xx) mustBe true
+
             assertOne(Rel.Before)(xx, yy)
           }
         }
       }
+    }
 
-      "manual check" in {
+    "a.after(b)" should {
+      "b.before(a)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          whenever(xx.after(yy)) {
+            yy.before(xx) mustBe true
+
+            assertOne(Rel.After)(xx, yy)
+          }
+        }
+      }
+    }
+
+    "a.before(b) AND b.after(a)" should {
+
+      "equal" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val actual   = xx.before(yy)
+          val expected = yy.after(xx)
+
+          actual mustBe expected
+        }
+      }
+
+      "valid in special cases" in {
         // Empty
         Interval.empty[Int].before(Interval.empty[Int]) mustBe (false)
         Interval.empty[Int].before(Interval.point(1)) mustBe (false)

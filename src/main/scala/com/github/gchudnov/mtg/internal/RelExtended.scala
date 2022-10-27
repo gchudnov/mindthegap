@@ -42,6 +42,8 @@ private[mtg] transparent trait ExtendedRel[+T]:
    *
    * Checks whether A is a superset of B
    *
+   * A ⊇ B
+   *
    * {{{
    *   b- >= a-
    *   b+ <= a+
@@ -141,7 +143,7 @@ private[mtg] transparent trait ExtendedRel[+T]:
   /**
    * IsLess
    *
-   * Checks whether A less-than B (Order Relation)
+   * Checks whether A is less-than B (Order Relation)
    *
    * A < B
    *
@@ -156,3 +158,22 @@ private[mtg] transparent trait ExtendedRel[+T]:
    */
   final def isLess[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.lt(a.left, b.left) && bOrd.lt(a.right, b.right)
+
+  /**
+   * IsGreater
+   *
+   * Checks whether A is greater-than B (Order Relation)
+   *
+   * A > B
+   *
+   * {{{
+   *   a- > b-
+   *   a+ > b+
+   *
+   *   after          | B
+   *   isMetBy        | M
+   *   isOverlappedBy | O
+   * }}}
+   */
+  final def isGreater[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.nonEmpty && b.nonEmpty && bOrd.gt(a.left, b.left) && bOrd.gt(a.right, b.right)

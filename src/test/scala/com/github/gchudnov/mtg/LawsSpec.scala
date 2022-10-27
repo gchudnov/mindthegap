@@ -13,6 +13,7 @@ final class LawsSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Laws" when {
+
     "a.intersection(b) is defined" should {
       "a.UNION(b) is certainly defined as well" in {
         forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
@@ -25,4 +26,5 @@ final class LawsSpec extends TestSpec:
         }
       }
     }
+
   }

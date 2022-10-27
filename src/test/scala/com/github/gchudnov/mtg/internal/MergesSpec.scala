@@ -16,8 +16,53 @@ final class MergesSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Merges" when {
-    "merges & isMergedBy" should {
-      "manual check" in {
+    import IntervalRelAssert.*
+
+    "a.merges(b)" should {
+      "b.merges(a)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          whenever(xx.merges(yy)) {
+            yy.merges(xx) mustBe true
+
+            assertOneOf(
+              Set(
+                Rel.Meets,
+                Rel.IsMetBy,
+                Rel.Overlaps,
+                Rel.IsOverlapedBy,
+                Rel.During,
+                Rel.Contains,
+                Rel.Starts,
+                Rel.IsStartedBy,
+                Rel.Finishes,
+                Rel.IsFinishedBy,
+                Rel.EqualsTo,
+                Rel.Before,
+                Rel.After
+              )
+            )(xx, yy)
+          }
+        }
+      }
+    }
+
+    "a.merges(b) AND b.merges(a)" should {
+      "equal" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val actual   = xx.merges(yy)
+          val expected = yy.merges(xx)
+
+          actual mustBe expected
+        }
+      }
+
+      "valid in special cases" in {
         // Empty
         Interval.empty[Int].merges(Interval.empty[Int]) mustBe (false)
         Interval.empty[Int].merges(Interval.point(1)) mustBe (false)

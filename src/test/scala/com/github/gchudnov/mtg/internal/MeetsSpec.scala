@@ -21,21 +21,52 @@ final class MeetsSpec extends TestSpec: // with IntervalRelAssert {}
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Meets" when {
-    "meets & isMetBy" should {
-      "auto check" in {
-        import IntervalRelAssert.*
+    import IntervalRelAssert.*
 
+    "a.meets(b)" should {
+      "b.isMetBy(a)" in {
         forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
           whenever(xx.meets(yy)) {
+            yy.isMetBy(xx) mustBe true
+
             assertOne(Rel.Meets)(xx, yy)
           }
         }
       }
+    }
 
-      "manual check" in {
+    "a.isMetBy(b)" should {
+      "b.meets(a)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          whenever(xx.isMetBy(yy)) {
+            yy.meets(xx) mustBe true
+
+            assertOne(Rel.IsMetBy)(xx, yy)
+          }
+        }
+      }
+    }
+
+    "a.meets(b) AND b.isMetBy(a)" should {
+      "equal" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val actual   = xx.meets(yy)
+          val expected = yy.isMetBy(xx)
+
+          actual mustBe expected
+        }
+      }
+
+      "valid in special cases" in {
         // Empty
         Interval.empty[Int].meets(Interval.empty[Int]) mustBe (false)
         Interval.empty[Int].meets(Interval.point(0)) mustBe (false)

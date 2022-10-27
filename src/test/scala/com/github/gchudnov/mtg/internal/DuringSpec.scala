@@ -21,21 +21,53 @@ final class DuringSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "During" when {
-    "during & contains (includes)" should {
-      "auto check" in {
-        import IntervalRelAssert.*
+    import IntervalRelAssert.*
 
+    "a.during(b)" should {
+      "b.contains(a)" in {
         forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
           whenever(xx.during(yy)) {
+            yy.contains(xx) mustBe true
+
             assertOne(Rel.During)(xx, yy)
           }
         }
       }
+    }
 
-      "manual check" in {
+    "a.contains(b)" should {
+      "b.during(a)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          whenever(xx.contains(yy)) {
+            yy.during(xx) mustBe true
+
+            assertOne(Rel.Contains)(xx, yy)
+          }
+        }
+      }
+    }
+
+    "a.during(b) AND b.contains(a)" should {
+
+      "equal" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val actual   = xx.during(yy)
+          val expected = yy.contains(xx)
+
+          actual mustBe expected
+        }
+      }
+
+      "valid in specal cases" in {
         // Empty
         Interval.empty[Int].during(Interval.open(5, 10)) mustBe (false)
         Interval.empty[Int].during(Interval.point(0)) mustBe (false)

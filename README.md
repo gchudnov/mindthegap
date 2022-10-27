@@ -155,7 +155,7 @@ Extended relations are the ones that compose of several basic relations.
 Determines whether `a` is a subset of `b`.
 
 ```text
-  isSubset                         AAAAA            | a- >= b- AND a+ <= b+
+  a.isSubset(b)                    AAAAA            | a- >= b- AND a+ <= b+
                                    :   :
   a.starts(b)         s            BBBBBBBBB        | a- = b- ; a+ < b+
   a.during(b)         d          BBBBBBBBB          | a- > b- ; a+ < b+
@@ -175,7 +175,7 @@ Interval.open(4, 7).isSubset(Interval.open(4, 7))  // true
 Determines whether `a` is a superset of `b`.
 
 ```text
-  isSuperset                       AAAAA            | b- >= a- AND b+ <= a+
+  a.isSuperset(b)                  AAAAA            | b- >= a- AND b+ <= a+
                                    :   :
   a.isStartedBy(b)    S            BBB :            | a- = b- ; b+ < a+
   a.contains(b)       D            : B :            | a- < b- ; b+ < a+
@@ -195,7 +195,7 @@ Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
 Determines if there `a` and `b` are disjoint. `a` and `b` are disjoint if `a` does not intersect `b`.
 
 ```text
-  isDisjoint                       AAAAA            | a+ < b- OR a- > b+
+  a.isDisjoint(b)                  AAAAA            | a+ < b- OR a- > b+
                                    :   :
   a.before(b)         b            :   : BBBBBBBBB  | a+ < b-
   a.after(b)          B  BBBBBBBBB :   :            | a- > b+
@@ -211,7 +211,7 @@ Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) // true
 Two intervals `a` and `b` are adjacent if they are disjoint and `succ(a+) = b- OR succ(b+) = a-`
 
 ```text
-  isAdjacent                       AAAAA            |  succ(a+) = b- OR succ(b+) = a-
+  a.isAdjacent(b)                  AAAAA            |  succ(a+) = b- OR succ(b+) = a-
                                    :   :
   a.before(b)         b            :   : BBBBBBBBB  | a+ < b- ; succ(a+) = b-
   a.after(b)          B  BBBBBBBBB :   :            | a- > b+ ; succ(b+) = a-
@@ -229,7 +229,7 @@ Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) // true
 Two intervals `a` and `b` are intersecting if: `a- <= b+ AND b- <= a+`
 
 ```text
-  intersects                       AAAAA            | a- <= b+ AND b- <= a+
+  a.intersects(b)                  AAAAA            | a- <= b+ AND b- <= a+
                                    :   :
   a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
   a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
@@ -255,7 +255,7 @@ Interval.closed(0, 5).intersects(Interval.closed(1, 6)) // true
 Two intervals `a` and `b` can be merged, if they are adjacent or intersect.
 
 ```text
-  merges                           AAAAA            | intersects(a,b) OR isAdjacent(a,b)
+  a.merges(b)                      AAAAA            | intersects(a,b) OR isAdjacent(a,b)
                                    :   :
   a.before(b)         b            :   : BBBBBBBBB  | a+ < b- ; succ(a+) = b-
   a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
@@ -279,10 +279,10 @@ Interval.open(4, 10).merges(Interval.open(5, 12)) // true
 
 ### IsLess
 
-Determines whether `a` less-than `b`.
+Determines whether `a` is less-than `b`.
 
 ```text
-  isLess                           AAAAA            | a- < b- AND a+ < b+
+  a.isLess(b)                      AAAAA            | a- < b- AND a+ < b+
                                    :   :
   a.before(b)         b            :   : BBBBBBBBB  | a+ < b-
   a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
@@ -294,6 +294,26 @@ Interval.open(4, 7).isLess(Interval.open(10, 15)) // true
 Interval.open(4, 7).isLess(Interval.open(6, 15))  // true
 Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 ```
+
+### IsGreater
+
+Determines whether `a` is greater-than `b`.
+
+```text
+  a.isGreater                      AAAAA            | a- < b- AND a+ < b+
+                                   :   :
+  a.after(b)          B  BBBBBBBBB :   :            | a- > b+
+  a.isMetBy(b)        M    BBBBBBBBB   :            | a- = b+
+  a.isOverlappedBy(b) O      BBBBBBBBB :            | b- < a- < b+ < a+
+```
+
+```scala
+Interval.open(10, 15).isGreater(Interval.open(4, 7)) // true
+Interval.open(6, 15).isGreater(Interval.open(4, 7))  // true
+Interval.open(5, 15).isGreater(Interval.open(4, 7))  // true
+```
+
+NOTE: empty intervals cannot be compared -- operations `isLess`, `isGreater`, `equalsTo` return `false`.
 
 ## Operations
 
@@ -390,7 +410,7 @@ val c = a.union(b)             // ∅
 
 ### Gap
 
-A gap between two intervals `a` and `b`: `a || b := [min(a-, b-), max(a+, b+)]`.
+A gap between two intervals `a` and `b`: `a ∥ b := [min(a-, b-), max(a+, b+)]`.
 
 ```scala
 val a = Interval.closed(5, 10)   // [5, 10]

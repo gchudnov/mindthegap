@@ -13,7 +13,52 @@ final class IntersectionSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Intersection" when {
+
     "a.intersection(b)" should {
+      "b.intersection(a)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val zz = xx.intersection(yy)
+
+          whenever(zz.nonEmpty) {
+            val ww = yy.intersection(xx)
+
+            zz.canonical mustBe ww.canonical
+          }
+        }
+      }
+    }
+
+    "a.intersection(b) AND b.intersection(a)" should {
+
+      /**
+       * A & B = B & A
+       */
+      "equal" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val actual   = xx.intersection(yy).canonical
+          val expected = yy.intersection(xx).canonical
+
+          actual mustBe expected
+        }
+      }
+
+      "(2, +∞] & (3, 5) = (3, 5) & (2, +∞]" in {
+        val a = Interval.leftOpen(2)                          // (2, +∞]
+        val b = Interval.make(Some(3), false, Some(5), false) // (3, 5)
+
+        val c1 = a.intersection(b).canonical
+        val c2 = b.intersection(a).canonical
+
+        c1 mustBe c2
+        c2 mustBe c1
+      }
+
       "∅ if A and B are empty" in {
         val a = Interval.empty[Int]
         val b = Interval.empty[Int]
@@ -195,32 +240,6 @@ final class IntersectionSpec extends TestSpec:
       }
     }
 
-    "A, B" should {
-
-      /**
-       * Commutative Property
-       */
-      "A & B = B & A" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
-
-          xx.intersection(yy).canonical mustBe yy.intersection(xx).canonical
-        }
-      }
-
-      "(2, +∞] & (3, 5) = (3, 5) & (2, +∞]" in {
-        val a = Interval.leftOpen(2)                          // (2, +∞]
-        val b = Interval.make(Some(3), false, Some(5), false) // (3, 5)
-
-        val c1 = a.intersection(b).canonical
-        val c2 = b.intersection(a).canonical
-
-        c1 mustBe c2
-        c2 mustBe c1
-      }
-    }
-
     "Interval" should {
       "Interval.intersection(a, b)" in {
         val a = Interval.rightClosed(2) // (-∞, 2]
@@ -239,17 +258,16 @@ final class IntersectionSpec extends TestSpec:
     }
 
     "A, B, C" should {
-
-      /**
-       * Associative Property
-       */
       "(A & B) & C = A & (B & C)" in {
         forAll(genOneOfIntArgs, genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2)), ((oz1, iz1), (oz2, iz2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
           val zz = Interval.make(oz1, iz1, oz2, iz2)
 
-          ((xx.intersection(yy)).intersection(zz)).canonical mustBe xx.intersection(yy.intersection(zz)).canonical
+          val actual   = ((xx.intersection(yy)).intersection(zz)).canonical
+          val expected = xx.intersection(yy.intersection(zz)).canonical
+
+          actual mustBe expected
         }
       }
     }

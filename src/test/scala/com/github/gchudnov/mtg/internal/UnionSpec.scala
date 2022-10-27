@@ -14,6 +14,35 @@ final class UnionSpec extends TestSpec:
 
   "Union" when {
     "a.union(b)" should {
+      "b.union(a)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val zz = xx.union(yy)
+
+          whenever(zz.nonEmpty) {
+            val ww = yy.union(xx)
+
+            zz.canonical mustBe ww.canonical
+          }
+        }
+      }
+    }
+
+    "a.union(b) AND b.union(a)" should {
+      "equal" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val actual   = xx.union(yy).canonical
+          val expected = yy.union(xx).canonical
+
+          actual mustBe expected
+        }
+      }
+
       "∅ if A and B are empty" in {
         val a = Interval.empty[Int]
         val b = Interval.empty[Int]

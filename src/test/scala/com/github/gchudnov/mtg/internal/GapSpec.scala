@@ -14,6 +14,39 @@ final class GapSpec extends TestSpec:
 
   "Gap" when {
     "a.gap(b)" should {
+      "b.gap(a)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val zz = xx.gap(yy)
+
+          whenever(zz.nonEmpty) {
+            val ww = yy.gap(xx)
+
+            zz.canonical mustBe ww.canonical
+          }
+        }
+      }
+    }
+
+    "a.gap(b) AND b.gap(a)" should {
+
+      /**
+       * A ∥ B = B ∥ A
+       */
+      "equal" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val actual   = xx.gap(yy).canonical
+          val expected = yy.gap(xx).canonical
+
+          actual mustBe expected
+        }
+      }
+
       "∅ if A and B are empty" in {
         val a = Interval.empty[Int]
         val b = Interval.empty[Int]
@@ -189,21 +222,6 @@ final class GapSpec extends TestSpec:
         c2 mustBe c1
 
         c1 mustBe expected
-      }
-    }
-
-    "A, B" should {
-
-      /**
-       * Commutative Property
-       */
-      "A || B = B || A" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
-
-          xx.gap(yy).canonical mustBe yy.gap(xx).canonical
-        }
       }
     }
   }
