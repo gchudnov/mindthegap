@@ -25,6 +25,14 @@ final class GapSpec extends TestSpec:
             val ww = yy.gap(xx)
 
             zz.canonical mustBe ww.canonical
+
+            // gap should be not intersecting with `a` or `b`
+            zz.intersects(xx) mustBe false
+            zz.intersects(yy) mustBe false
+
+            // gap must be adjacent
+            zz.isAdjacent(xx) mustBe true
+            zz.isAdjacent(yy) mustBe true
           }
         }
       }
@@ -45,6 +53,36 @@ final class GapSpec extends TestSpec:
 
           actual mustBe expected
         }
+      }
+
+      "∅ if A = [-inf, 0], B = (-inf, 0)" in {
+        // [-inf, inf)  [-inf, inf)
+        val xx = Interval.make[Int](None, true, Some(0), true)
+        val yy = Interval.make[Int](None, false, Some(0), false)
+
+        val zz = xx.gap(yy)
+
+        zz mustBe Interval.empty[Int]
+      }
+
+      "∅ if A = [-inf, inf), B = [-inf, inf)" in {
+        // [-inf, inf)  [-inf, inf)
+        val xx = Interval.make[Int](None, true, None, false)
+        val yy = Interval.make[Int](None, true, None, false)
+
+        val zz = xx.gap(yy)
+
+        zz mustBe Interval.empty[Int]
+      }
+
+      "∅ if A = [-inf, inf], B = [-inf, inf]" in {
+        // [-inf, inf)  [-inf, inf)
+        val xx = Interval.make[Int](None, true, None, true)
+        val yy = Interval.make[Int](None, true, None, true)
+
+        val zz = xx.gap(yy)
+
+        zz mustBe Interval.empty[Int]
       }
 
       "∅ if A and B are empty" in {

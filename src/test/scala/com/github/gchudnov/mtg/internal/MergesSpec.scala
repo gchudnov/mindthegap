@@ -24,7 +24,7 @@ final class MergesSpec extends TestSpec:
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
-          whenever(xx.merges(yy)) {
+          whenever(xx.merges(yy) && xx.nonEmpty && yy.nonEmpty) {
             yy.merges(xx) mustBe true
 
             assertOneOf(
@@ -44,6 +44,26 @@ final class MergesSpec extends TestSpec:
                 Rel.After
               )
             )(xx, yy)
+
+            // a.intersects(b) OR a.isAdjacent(b)
+            (xx.intersects(yy) || xx.isAdjacent(yy)) mustBe (true)
+          }
+        }
+      }
+
+      "b.merges(a) if (a.isEmpty OR b.isEmpty)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          whenever(xx.merges(yy) && (xx.isEmpty || yy.isEmpty)) {
+            yy.merges(xx) mustBe true
+
+            val rs = findRelations(xx, yy)
+            rs.isEmpty mustBe (true)
+
+            xx.intersects(yy) mustBe (false)
+            xx.isAdjacent(yy) mustBe (false)
           }
         }
       }
@@ -64,19 +84,21 @@ final class MergesSpec extends TestSpec:
 
       "valid in special cases" in {
         // Empty
-        Interval.empty[Int].merges(Interval.empty[Int]) mustBe (false)
-        Interval.empty[Int].merges(Interval.point(1)) mustBe (false)
-        Interval.empty[Int].merges(Interval.closed(1, 4)) mustBe (false)
-        Interval.empty[Int].merges(Interval.open(1, 4)) mustBe (false)
-        Interval.empty[Int].merges(Interval.unbounded[Int]) mustBe (false)
+        Interval.empty[Int].merges(Interval.empty[Int]) mustBe (true)
+        Interval.empty[Int].merges(Interval.point(1)) mustBe (true)
+        Interval.empty[Int].merges(Interval.closed(1, 4)) mustBe (true)
+        Interval.empty[Int].merges(Interval.open(1, 4)) mustBe (true)
+        Interval.empty[Int].merges(Interval.unbounded[Int]) mustBe (true)
 
         // Point
-        Interval.point(5).merges(Interval.empty[Int]) mustBe (false)
+        Interval.point(5).merges(Interval.empty[Int]) mustBe (true)
         Interval.point(5).merges(Interval.point(5)) mustBe (true)
         Interval.point(5).merges(Interval.point(6)) mustBe (true)
         Interval.point(5).merges(Interval.open(5, 10)) mustBe (true)
 
         // Proper
+        Interval.closed(4, 10).merges(Interval.empty[Int]) mustBe (true)
+        Interval.closed(4, 10).merges(Interval.Point(11)) mustBe (true)
         Interval.open(4, 10).merges(Interval.open(5, 12)) mustBe (true)
         Interval.open(5, 12).isMergedBy(Interval.open(4, 10)) mustBe (true)
         Interval.open(4, 7).merges(Interval.open(5, 8)) mustBe (true)

@@ -4,6 +4,7 @@ import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Boundary
 
 final class IsDisjointSpec extends TestSpec:
 
@@ -11,6 +12,8 @@ final class IsDisjointSpec extends TestSpec:
   given intProb: IntProb   = intProb127
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
+
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
 
   "IsDisjoint" when {
     import IntervalRelAssert.*
@@ -25,6 +28,15 @@ final class IsDisjointSpec extends TestSpec:
             yy.isDisjoint(xx) mustBe true
 
             assertOneOf(Set(Rel.Before, Rel.After))(xx, yy)
+
+            // a+ < b- || a- > b+
+            val a1 = Boundary.Left(ox1, ix1)
+            val b1 = Boundary.Left(oy1, iy1)
+
+            val a2 = Boundary.Right(ox2, ix2)
+            val b2 = Boundary.Right(oy2, iy2)
+
+            (ordB.lt(xx.right, yy.left) || ordB.gt(xx.left, yy.right)) mustBe true
           }
         }
       }

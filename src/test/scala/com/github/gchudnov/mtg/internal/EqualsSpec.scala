@@ -46,6 +46,7 @@ final class EqualsSpec extends TestSpec:
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
           whenever(xx.equalsTo(yy)) {
+            // a- = b- && a+ = b+
             val a1 = Boundary.Left(ox1, ix1)
             val b1 = Boundary.Left(oy1, iy1)
 

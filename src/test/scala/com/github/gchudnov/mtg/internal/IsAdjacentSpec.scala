@@ -29,6 +29,7 @@ final class IsAdjacentSpec extends TestSpec:
 
             assertOneOf(Set(Rel.Before, Rel.After))(xx, yy)
 
+            // succ(a+) = b- OR succ(b+) = a-
             if xx.before(yy) then
               // succ(a+) = b-
               val b1 = Boundary.Left(oy1, iy1)

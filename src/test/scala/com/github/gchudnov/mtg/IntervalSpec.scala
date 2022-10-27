@@ -65,10 +65,13 @@ final class IntervalSpec extends TestSpec:
 
       "handle edge cases" in {
         // [0, 0)
-        Interval.make(Some(0), true, Some(0), false).isEmpty mustBe (true)
+        Interval.make(Some(0), true, Some(0), false) mustBe Interval.empty[Int]
 
         // [-inf, +inf]
-        Interval.make[Int](None, true, None, true).isEmpty mustBe (false)
+        Interval.make[Int](None, true, None, true).isUnbounded mustBe true
+
+        // (-inf, +inf)
+        Interval.make[Int](None, false, None, false) mustBe Interval.unbounded[Int]
 
         // (3, 5)
         Interval.make(Some(3), false, Some(5), false) mustBe Interval.point(4)
@@ -81,12 +84,15 @@ final class IntervalSpec extends TestSpec:
 
         // [4, 5)
         Interval.make(Some(4), true, Some(5), false) mustBe Interval.point(4)
+
+        // [-inf, inf]
+
       }
     }
 
     "factory methods" should {
 
-      "construct an empty interval with type parameter" in {
+      "Interval.empty[Int]" in {
         val a = Interval.empty[Int]
 
         a.isEmpty mustBe (true)
@@ -109,7 +115,7 @@ final class IntervalSpec extends TestSpec:
         }
       }
 
-      "construct an empty interval without type parameter" in {
+      "Interval.empty" in {
         val a = Interval.empty
 
         a.isEmpty mustBe (true)
@@ -132,7 +138,7 @@ final class IntervalSpec extends TestSpec:
         }
       }
 
-      "construct a point interval" in {
+      "Interval.point(x)" in {
         val a = Interval.point(5)
 
         a.isEmpty mustBe (false)
@@ -153,7 +159,7 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (false)
       }
 
-      "construct a proper interval" in {
+      "Interval.proper(x, y, w, z)" in {
         val a = Interval.proper(Some(1), false, Some(5), false)
 
         a.isEmpty mustBe (false)
@@ -174,7 +180,7 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (false)
       }
 
-      "construct a proper interval with left and right boundaries" in {
+      "Interval.proper(a, b)" in {
         val a = Interval.proper(Boundary.Left(Some(1), true), Boundary.Right(Some(5), true))
 
         a.isEmpty mustBe (false)
@@ -195,7 +201,7 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (false)
       }
 
-      "construct an unbounded interval" in {
+      "Interval.unbounded[Int]" in {
         val a = Interval.unbounded[Int]
 
         a.isEmpty mustBe (false)
@@ -216,7 +222,7 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (true)
       }
 
-      "construct an open interval" in {
+      "Interval.open(x, y)" in {
         val a = Interval.open(1, 5)
 
         a.isEmpty mustBe (false)
@@ -237,7 +243,7 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (false)
       }
 
-      "construct a closed interval" in {
+      "Interval.closed(x, y)" in {
         val a = Interval.closed(1, 5)
 
         a.isEmpty mustBe (false)
@@ -258,7 +264,7 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (false)
       }
 
-      "construct a leftOpen interval" in {
+      "Interval.leftOpen(x)" in {
         val a = Interval.leftOpen(1)
 
         a.isEmpty mustBe (false)
@@ -279,7 +285,7 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (true)
       }
 
-      "construct a leftClosed interval" in {
+      "Interval.leftClosed(x)" in {
         val a = Interval.leftClosed(5)
 
         a.isEmpty mustBe (false)
@@ -300,7 +306,7 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (true)
       }
 
-      "construct a rightOpen interval" in {
+      "Interval.rightOpen(x)" in {
         val a = Interval.rightOpen(1)
 
         a.isEmpty mustBe (false)
@@ -321,7 +327,7 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (false)
       }
 
-      "construct a rightClosed interval" in {
+      "Interval.rightClosed(x)" in {
         val a = Interval.rightClosed(5)
 
         a.isEmpty mustBe (false)
@@ -342,7 +348,7 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (false)
       }
 
-      "construct a leftClosedRightOpen interval" in {
+      "Interval.leftClosedRightOpen(x, y)" in {
         val a = Interval.leftClosedRightOpen(1, 10)
 
         a.isEmpty mustBe (false)
@@ -363,7 +369,7 @@ final class IntervalSpec extends TestSpec:
         a.right.isUnbounded mustBe (false)
       }
 
-      "construct a leftOpenRightClosed interval" in {
+      "Interval.leftOpenRightClosed(x, y)" in {
         val a = Interval.leftOpenRightClosed(1, 10)
 
         a.isEmpty mustBe (false)
@@ -387,7 +393,7 @@ final class IntervalSpec extends TestSpec:
     }
 
     "canonical" should {
-      "include all boundaries" in {
+      "represent" in {
         // (1, 5) = [2, 4]
         Interval.open(1, 5).canonical mustBe Interval.closed(2, 4)
 

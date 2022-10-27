@@ -4,6 +4,7 @@ import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Boundary
 
 /**
  * Overlaps, IsOverlapedBy
@@ -20,6 +21,8 @@ final class OverlapsSpec extends TestSpec: // with IntervalRelAssert {}
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
+
   "Overlap" when {
     import IntervalRelAssert.*
 
@@ -33,6 +36,15 @@ final class OverlapsSpec extends TestSpec: // with IntervalRelAssert {}
             yy.isOverlapedBy(xx) mustBe true
 
             assertOne(Rel.Overlaps)(xx, yy)
+
+            // a- < b+ && b- < a+
+            val a1 = Boundary.Left(ox1, ix1)
+            val b1 = Boundary.Left(oy1, iy1)
+
+            val a2 = Boundary.Right(ox2, ix2)
+            val b2 = Boundary.Right(oy2, iy2)
+
+            (ordB.lt(a1, b2) && ordB.lt(b1, a2)) mustBe true
           }
         }
       }

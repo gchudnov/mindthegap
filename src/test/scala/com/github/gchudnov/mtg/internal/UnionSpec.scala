@@ -25,6 +25,9 @@ final class UnionSpec extends TestSpec:
             val ww = yy.union(xx)
 
             zz.canonical mustBe ww.canonical
+
+            xx.merges(yy) mustBe (true)
+            yy.merges(xx) mustBe (true)
           }
         }
       }

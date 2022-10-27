@@ -37,16 +37,11 @@ final class StartsSpec extends TestSpec: // with IntervalRelAssert {}
 
             assertOne(Rel.Starts)(xx, yy)
 
-            // a- = b- && b.isSuperset(a+)
+            // a- = b- && b.isSuperset(a) && !a.equalsTo(b)
             val a1 = Boundary.Left(ox1, ix1)
             val b1 = Boundary.Left(oy1, iy1)
 
-            val a2 = Boundary.Right(ox2, ix2)
-            val b2 = Boundary.Right(oy2, iy2)
-
-            ordB.equiv(a1, b1) mustBe true
-
-            yy.isSuperset(Interval.make(a2.asLeft, a2.asRight)) mustBe true
+            (ordB.equiv(a1, b1) && yy.isSuperset(xx) && !xx.equalsTo(yy)) mustBe true
           }
         }
       }
@@ -62,6 +57,12 @@ final class StartsSpec extends TestSpec: // with IntervalRelAssert {}
             yy.starts(xx) mustBe true
 
             assertOne(Rel.IsStartedBy)(xx, yy)
+
+            // a- = b- && a.isSuperset(b) && !a.equalsTo(b)
+            val a1 = Boundary.Left(ox1, ix1)
+            val b1 = Boundary.Left(oy1, iy1)
+
+            (ordB.equiv(a1, b1) && xx.isSuperset(yy) && !xx.equalsTo(yy)) mustBe true
           }
         }
       }

@@ -4,6 +4,7 @@ import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Boundary
 
 /**
  * Meets, IsMetBy
@@ -20,6 +21,8 @@ final class MeetsSpec extends TestSpec: // with IntervalRelAssert {}
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
+
   "Meets" when {
     import IntervalRelAssert.*
 
@@ -33,6 +36,12 @@ final class MeetsSpec extends TestSpec: // with IntervalRelAssert {}
             yy.isMetBy(xx) mustBe true
 
             assertOne(Rel.Meets)(xx, yy)
+
+            // a+ = b-
+            val a2 = Boundary.Right(ox2, ix2)
+            val b1 = Boundary.Left(oy1, iy1)
+
+            ordB.equiv(a2, b1) mustBe true
           }
         }
       }
@@ -48,6 +57,12 @@ final class MeetsSpec extends TestSpec: // with IntervalRelAssert {}
             yy.meets(xx) mustBe true
 
             assertOne(Rel.IsMetBy)(xx, yy)
+
+            // b+ = a-
+            val a1 = Boundary.Left(ox1, ix1)
+            val b2 = Boundary.Right(oy2, iy2)
+
+            ordB.equiv(b2, a1) mustBe true
           }
         }
       }

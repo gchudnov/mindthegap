@@ -1,6 +1,7 @@
 package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Arbitraries.*
+import com.github.gchudnov.mtg.Boundary
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
@@ -20,6 +21,8 @@ final class DuringSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
+
   "During" when {
     import IntervalRelAssert.*
 
@@ -33,6 +36,15 @@ final class DuringSpec extends TestSpec:
             yy.contains(xx) mustBe true
 
             assertOne(Rel.During)(xx, yy)
+
+            // a- > b- && a+ < b+
+            val a1 = Boundary.Left(ox1, ix1)
+            val b1 = Boundary.Left(oy1, iy1)
+
+            val a2 = Boundary.Right(ox2, ix2)
+            val b2 = Boundary.Right(oy2, iy2)
+
+            (ordB.gt(a1, b1) && ordB.lt(a2, b2)) mustBe true
           }
         }
       }
@@ -48,6 +60,15 @@ final class DuringSpec extends TestSpec:
             yy.during(xx) mustBe true
 
             assertOne(Rel.Contains)(xx, yy)
+
+            // a- < b- && b+ < a+
+            val a1 = Boundary.Left(ox1, ix1)
+            val b1 = Boundary.Left(oy1, iy1)
+
+            val a2 = Boundary.Right(ox2, ix2)
+            val b2 = Boundary.Right(oy2, iy2)
+
+            (ordB.lt(a1, b1) && ordB.lt(b2, a2)) mustBe true
           }
         }
       }

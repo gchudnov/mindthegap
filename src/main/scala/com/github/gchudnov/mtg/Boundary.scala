@@ -81,3 +81,9 @@ object Boundary:
 
   given boundaryOrdering[T: Ordering: Domain]: Ordering[Boundary[T]] =
     new BoundaryOrdering
+
+  def left[T](value: Option[T], isInclude: Boolean): Boundary.Left[T] =
+    Boundary.Left(value, isInclude)
+
+  def right[T](value: Option[T], isInclude: Boolean): Boundary.Right[T] =
+    Boundary.Right(value, isInclude)

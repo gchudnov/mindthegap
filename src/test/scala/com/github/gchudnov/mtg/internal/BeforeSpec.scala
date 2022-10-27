@@ -1,6 +1,7 @@
 package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Arbitraries.*
+import com.github.gchudnov.mtg.Boundary
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
@@ -20,6 +21,8 @@ final class BeforeSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
+
   "Before" when {
     import IntervalRelAssert.*
 
@@ -33,6 +36,12 @@ final class BeforeSpec extends TestSpec:
             yy.after(xx) mustBe true
 
             assertOne(Rel.Before)(xx, yy)
+
+            // a+ < b-
+            val a2 = Boundary.Right(ox2, ix2)
+            val b1 = Boundary.Left(oy1, iy1)
+
+            ordB.lt(a2, b1) mustBe true
           }
         }
       }
@@ -48,6 +57,12 @@ final class BeforeSpec extends TestSpec:
             yy.before(xx) mustBe true
 
             assertOne(Rel.After)(xx, yy)
+
+            // a- > b+
+            val a1 = Boundary.Left(ox1, ix1)
+            val b2 = Boundary.Right(oy2, iy2)
+
+            ordB.gt(a1, b2) mustBe true
           }
         }
       }

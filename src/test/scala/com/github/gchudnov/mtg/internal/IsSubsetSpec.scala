@@ -4,6 +4,7 @@ import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Boundary
 
 /**
  * IsSubset
@@ -24,6 +25,8 @@ final class IsSubsetSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
+
   "IsSubset" when {
     import IntervalRelAssert.*
 
@@ -37,6 +40,9 @@ final class IsSubsetSpec extends TestSpec:
             yy.isSuperset(xx) mustBe true
 
             assertOneOf(Set(Rel.Starts, Rel.During, Rel.Finishes, Rel.EqualsTo))(xx, yy)
+
+            // b- <= a- && b+ >= a+
+            (ordB.lteq(yy.left, xx.left) && ordB.gteq(yy.right, xx.right)) mustBe true
           }
         }
       }
@@ -46,6 +52,8 @@ final class IsSubsetSpec extends TestSpec:
         Interval.open(4, 7).isSubset(Interval.open(2, 10)) mustBe (true)
         Interval.open(4, 7).isSubset(Interval.open(2, 7)) mustBe (true)
         Interval.open(4, 7).isSubset(Interval.open(4, 7)) mustBe (true)
+
+        Interval.closed(1, 10).isSubset(Interval.unbounded[Int]) mustBe(true)
       }
     }
   }

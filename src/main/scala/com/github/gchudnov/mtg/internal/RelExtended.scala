@@ -11,8 +11,9 @@ import com.github.gchudnov.mtg.Domain
  *   - IsSuperset
  *   - IsDisjoint
  *   - IsAdjacent
- *   - Merges, IsMergedBy
+ *   - Merges
  *   - IsLess
+ *   - IsGreater
  */
 private[mtg] transparent trait ExtendedRel[+T]:
   a: Interval[T] =>
@@ -132,7 +133,7 @@ private[mtg] transparent trait ExtendedRel[+T]:
    * }}}
    */
   final def merges[T1 >: T: Domain](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    a.nonEmpty && b.nonEmpty && ((bOrd.lteq(a.left, b.right) && bOrd.lteq(b.left, a.right)) || (bOrd.equiv(a.right.succ, b.left) || bOrd.equiv(b.right.succ, a.left)))
+    (a.isEmpty || b.isEmpty) || ((bOrd.lteq(a.left, b.right) && bOrd.lteq(b.left, a.right)) || (bOrd.equiv(a.right.succ, b.left) || bOrd.equiv(b.right.succ, a.left)))
 
   /**
    * IsMergedBy

@@ -32,6 +32,11 @@ private[mtg] transparent trait BasicOps[+T]:
     if a.isEmpty || b.isEmpty then Interval.empty[T]
     else Interval.make(ordT.max(a.left, b.left), ordT.min(a.right, b.right))
 
+  /*
+    if (a.nonEmpty && b.nonEmpty) && (ordT.lteq(a.left, b.right) && ordT.lteq(b.left, a.right)) then Interval.make(ordT.max(a.left, b.left), ordT.min(a.right, b.right))
+    else Interval.empty[T]
+   */
+
   /**
    * Span
    *
@@ -100,12 +105,12 @@ private[mtg] transparent trait BasicOps[+T]:
   /**
    * Gap (Complement)
    *
-   *   - A || B
+   *   - A ∥ B
    *
-   * A gap between two intervals `a` and `b`: `a || b := [min(a-, b-), max(a+, b+)]`.
+   * A gap between two intervals `a` and `b`: `a ∥ b := [min(a-, b-), max(a+, b+)]`.
    *
    * {{{
-   *   A || B := [min(a+, b+), max(a-, b-)]
+   *   A ∥ B := [min(a+, b+), max(a-, b-)]
    *
    *   [***********]                          | [5,10]
    *                          [***********]   | [15,20]
@@ -115,8 +120,9 @@ private[mtg] transparent trait BasicOps[+T]:
    * }}}
    */
   final def gap[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
-    if a.isEmpty || b.isEmpty then Interval.empty[T]
-    else Interval.make(ordT.min(a.right, b.right).succ.asLeft, ordT.max(a.left, b.left).pred.asRight)
+    if (a.nonEmpty && b.nonEmpty) && (ordT.lt(b.right, a.left) || ordT.lt(a.right, b.left)) then
+      Interval.make(ordT.min(a.right, b.right).succ.asLeft, ordT.max(a.left, b.left).pred.asRight)
+    else Interval.empty[T]
 
   /**
    * Minus
@@ -129,7 +135,7 @@ private[mtg] transparent trait BasicOps[+T]:
    * NOTE: a.minus(b) is defined only if and only if:
    *   - (a) `a` and `b` are disjoint;
    *   - (b) `a` contains either `b-` or `b+` but not both;
-   *   - (c) either b.starts(a) or b.finishes(a) is trye;
+   *   - (c) either b.starts(a) or b.finishes(a) is true;
    *
    * NOTE: a.minus(b) is undefined if:
    *   - either a.starts(b) or a.finishes(b);

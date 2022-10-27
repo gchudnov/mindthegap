@@ -26,6 +26,11 @@ final class SpanSpec extends TestSpec:
             val ww = yy.span(xx)
 
             zz.canonical mustBe ww.canonical
+
+            // [min(a-, b-), max(a+, b+)]
+            // given span `c`, `c` intersection with `a` = `a` AND `c` intersects with `b` = `b`
+            zz.intersection(xx).canonical mustBe xx.canonical
+            zz.intersection(yy).canonical mustBe yy.canonical
           }
         }
       }

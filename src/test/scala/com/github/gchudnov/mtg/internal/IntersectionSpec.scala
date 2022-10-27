@@ -26,6 +26,15 @@ final class IntersectionSpec extends TestSpec:
             val ww = yy.intersection(xx)
 
             zz.canonical mustBe ww.canonical
+
+            // TODO: (-inf, +inf) if A = (-inf, +inf], B = [-inf, +inf)
+            // TODO: things break with inf values, fix it
+            // // given the gap c, [-inf, c-) || (c+, +inf] must be the intersection
+            // val cLhs = Interval.make[Int](None, true, zz.left.effectiveValue, true)
+            // val cRhs = Interval.make[Int](zz.right.effectiveValue, true, None, true)
+
+            // val cc = cLhs.gap(cRhs)
+            // cc.canonical mustBe zz.canonical
           }
         }
       }
@@ -46,6 +55,16 @@ final class IntersectionSpec extends TestSpec:
 
           actual mustBe expected
         }
+      }
+
+      "(-inf, +inf) if A = (-inf, +inf], B = [-inf, +inf)" in {
+        val xx = Interval.make[Int](None, false, None, true)
+        val yy = Interval.make[Int](None, true, None, false)
+
+        val actual   = xx.intersection(yy)
+        val expected = Interval.make[Int](None, false, None, false)
+
+        actual mustBe expected
       }
 
       "(2, +∞] & (3, 5) = (3, 5) & (2, +∞]" in {

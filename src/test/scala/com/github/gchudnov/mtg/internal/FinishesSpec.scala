@@ -1,6 +1,7 @@
 package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Arbitraries.*
+import com.github.gchudnov.mtg.Boundary
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
@@ -20,6 +21,8 @@ final class FinishesSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
+
   "Finishes" when {
     import IntervalRelAssert.*
 
@@ -33,6 +36,12 @@ final class FinishesSpec extends TestSpec:
             yy.isFinishedBy(xx) mustBe true
 
             assertOne(Rel.Finishes)(xx, yy)
+
+            // a+ = b+ && b.isSuperset(a) && !a.equalsTo(b)
+            val a2 = Boundary.Right(ox2, ix2)
+            val b2 = Boundary.Right(oy2, iy2)
+
+            (ordB.equiv(a2, b2) && yy.isSuperset(xx) && !xx.equalsTo(yy)) mustBe true
           }
         }
       }
@@ -48,6 +57,12 @@ final class FinishesSpec extends TestSpec:
             yy.finishes(xx) mustBe true
 
             assertOne(Rel.IsFinishedBy)(xx, yy)
+
+            // a+ = b+ && a.isSuperset(b) && !a.equalsTo(b)
+            val a2 = Boundary.Right(ox2, ix2)
+            val b2 = Boundary.Right(oy2, iy2)
+
+            (ordB.equiv(a2, b2) && xx.isSuperset(yy) && !xx.equalsTo(yy)) mustBe true
           }
         }
       }
@@ -102,6 +117,10 @@ final class FinishesSpec extends TestSpec:
 
         // (-inf, +inf)  (-inf, +inf)
         Interval.unbounded[Int].finishes(Interval.unbounded[Int]) mustBe (false)
+
+        // (-inf, 2]  [-inf, 3)
+        Interval.make[Int](None, false, Some(2), true).finishes(Interval.make[Int](None, true, Some(3), false))
+        ordB.equiv(Boundary.Right(Some(2), true), Boundary.Right(Some(3), false)) mustBe true
       }
     }
   }
