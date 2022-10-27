@@ -4,6 +4,7 @@ import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Boundary
 
 final class IsAdjacentSpec extends TestSpec:
 
@@ -11,6 +12,8 @@ final class IsAdjacentSpec extends TestSpec:
   given intProb: IntProb   = intProb127
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
+
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
 
   "IsAdjacent" when {
     import IntervalRelAssert.*
@@ -25,6 +28,19 @@ final class IsAdjacentSpec extends TestSpec:
             yy.isAdjacent(xx) mustBe true
 
             assertOneOf(Set(Rel.Before, Rel.After))(xx, yy)
+
+            if xx.before(yy) then
+              // succ(a+) = b-
+              val b1 = Boundary.Left(oy1, iy1)
+              val a2 = Boundary.Right(ox2, ix2)
+
+              ordB.equiv(a2.succ, b1) mustBe (true)
+            else if xx.after(yy) then
+              // succ(b+) = a-
+              val a1 = Boundary.Left(ox1, ix1)
+              val b2 = Boundary.Right(oy2, iy2)
+
+              ordB.equiv(b2.succ, a1) mustBe (true)
           }
         }
       }

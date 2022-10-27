@@ -4,6 +4,7 @@ import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Boundary
 
 /**
  * Starts, IsStartedBy
@@ -20,6 +21,8 @@ final class StartsSpec extends TestSpec: // with IntervalRelAssert {}
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
+
   "Starts" when {
     import IntervalRelAssert.*
 
@@ -33,6 +36,17 @@ final class StartsSpec extends TestSpec: // with IntervalRelAssert {}
             yy.isStartedBy(xx) mustBe true
 
             assertOne(Rel.Starts)(xx, yy)
+
+            // a- = b- && b.isSuperset(a+)
+            val a1 = Boundary.Left(ox1, ix1)
+            val b1 = Boundary.Left(oy1, iy1)
+
+            val a2 = Boundary.Right(ox2, ix2)
+            val b2 = Boundary.Right(oy2, iy2)
+
+            ordB.equiv(a1, b1) mustBe true
+
+            yy.isSuperset(Interval.make(a2.asLeft, a2.asRight)) mustBe true
           }
         }
       }

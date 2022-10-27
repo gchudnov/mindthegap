@@ -81,11 +81,11 @@ final class IsLessSpec extends TestSpec:
         Interval.empty[Int].isGreater(Interval.empty[Int]) mustBe (false)
         Interval.empty[Int].equalsTo(Interval.empty[Int]) mustBe (false)
 
-        Interval.open(1, 5).isLess(Interval.empty[Int]) mustBe(false)
-        Interval.empty[Int].isLess(Interval.open(1, 5)) mustBe(false)
+        Interval.open(1, 5).isLess(Interval.empty[Int]) mustBe (false)
+        Interval.empty[Int].isLess(Interval.open(1, 5)) mustBe (false)
 
-        Interval.open(1, 5).isGreater(Interval.empty[Int]) mustBe(false)
-        Interval.empty[Int].isGreater(Interval.open(1, 5)) mustBe(false)
+        Interval.open(1, 5).isGreater(Interval.empty[Int]) mustBe (false)
+        Interval.empty[Int].isGreater(Interval.open(1, 5)) mustBe (false)
       }
     }
   }
