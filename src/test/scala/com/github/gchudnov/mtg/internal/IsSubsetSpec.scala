@@ -4,6 +4,7 @@ import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Boundary
 
 /**
  * IsSubset
@@ -24,26 +25,35 @@ final class IsSubsetSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  "IsSubset" when {
-    "isSubset" should {
-      "auto check" in {
-        import IntervalRelAssert.*
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
 
+  "IsSubset" when {
+    import IntervalRelAssert.*
+
+    "a.isSubset(b)" should {
+      "b.isSuperset(a)" in {
         forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
           whenever(xx.isSubset(yy)) {
+            yy.isSuperset(xx) mustBe true
+
             assertOneOf(Set(Rel.Starts, Rel.During, Rel.Finishes, Rel.EqualsTo))(xx, yy)
+
+            // b- <= a- && b+ >= a+
+            (ordB.lteq(yy.left, xx.left) && ordB.gteq(yy.right, xx.right)) mustBe true
           }
         }
       }
 
-      "manual check" in {
+      "valid in special cases" in {
         Interval.open(4, 7).isSubset(Interval.open(4, 10)) mustBe (true)
         Interval.open(4, 7).isSubset(Interval.open(2, 10)) mustBe (true)
         Interval.open(4, 7).isSubset(Interval.open(2, 7)) mustBe (true)
         Interval.open(4, 7).isSubset(Interval.open(4, 7)) mustBe (true)
+
+        Interval.closed(1, 10).isSubset(Interval.unbounded[Int]) mustBe(true)
       }
     }
   }

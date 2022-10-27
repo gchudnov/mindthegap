@@ -25,7 +25,7 @@ final class BasicRelSpec extends TestSpec:
         }
       }
 
-      "manual check" in {
+      "valid in special cases" in {
         val intervals = List(
           (Interval.rightOpen(5), Interval.rightOpen(5)) // (-inf, 5)  (5, +inf)
         )

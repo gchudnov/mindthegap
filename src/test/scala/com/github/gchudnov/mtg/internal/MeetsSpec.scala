@@ -4,6 +4,7 @@ import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Boundary
 
 /**
  * Meets, IsMetBy
@@ -20,22 +21,67 @@ final class MeetsSpec extends TestSpec: // with IntervalRelAssert {}
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  "Meets" when {
-    "meets & isMetBy" should {
-      "auto check" in {
-        import IntervalRelAssert.*
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
 
+  "Meets" when {
+    import IntervalRelAssert.*
+
+    "a.meets(b)" should {
+      "b.isMetBy(a)" in {
         forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
           whenever(xx.meets(yy)) {
+            yy.isMetBy(xx) mustBe true
+
             assertOne(Rel.Meets)(xx, yy)
+
+            // a+ = b-
+            val a2 = Boundary.Right(ox2, ix2)
+            val b1 = Boundary.Left(oy1, iy1)
+
+            ordB.equiv(a2, b1) mustBe true
           }
         }
       }
+    }
 
-      "manual check" in {
+    "a.isMetBy(b)" should {
+      "b.meets(a)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          whenever(xx.isMetBy(yy)) {
+            yy.meets(xx) mustBe true
+
+            assertOne(Rel.IsMetBy)(xx, yy)
+
+            // b+ = a-
+            val a1 = Boundary.Left(ox1, ix1)
+            val b2 = Boundary.Right(oy2, iy2)
+
+            ordB.equiv(b2, a1) mustBe true
+          }
+        }
+      }
+    }
+
+    "a.meets(b) AND b.isMetBy(a)" should {
+      "equal" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val actual   = xx.meets(yy)
+          val expected = yy.isMetBy(xx)
+
+          actual mustBe expected
+        }
+      }
+
+      "valid in special cases" in {
         // Empty
         Interval.empty[Int].meets(Interval.empty[Int]) mustBe (false)
         Interval.empty[Int].meets(Interval.point(0)) mustBe (false)

@@ -96,7 +96,7 @@ private[mtg] transparent trait BasicRel[+T]:
     b.overlaps(a)
 
   /**
-   * During, IncludedIn (d)
+   * During, ProperlyIncludedIn (d)
    *
    * {{{
    *   PI (Point-Interval):
@@ -120,7 +120,7 @@ private[mtg] transparent trait BasicRel[+T]:
     a.nonEmpty && b.isProper && bOrd.lt(b.left, a.left) && bOrd.lt(a.right, b.right)
 
   /**
-   * Contains, Includes (D)
+   * Contains, ProperlyIncludes (D)
    */
   final def contains[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     b.during(a)

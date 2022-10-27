@@ -4,6 +4,7 @@ import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Boundary
 
 /**
  * Overlaps, IsOverlapedBy
@@ -20,22 +21,64 @@ final class OverlapsSpec extends TestSpec: // with IntervalRelAssert {}
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  "Overlap" when {
-    "overlaps & isOverlapedBy" should {
-      "auto check" in {
-        import IntervalRelAssert.*
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
 
+  "Overlap" when {
+    import IntervalRelAssert.*
+
+    "a.overlaps(b)" should {
+      "b.isOverlapedBy(a)" in {
         forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
           whenever(xx.overlaps(yy)) {
+            yy.isOverlapedBy(xx) mustBe true
+
             assertOne(Rel.Overlaps)(xx, yy)
+
+            // a- < b+ && b- < a+
+            val a1 = Boundary.Left(ox1, ix1)
+            val b1 = Boundary.Left(oy1, iy1)
+
+            val a2 = Boundary.Right(ox2, ix2)
+            val b2 = Boundary.Right(oy2, iy2)
+
+            (ordB.lt(a1, b2) && ordB.lt(b1, a2)) mustBe true
           }
         }
       }
+    }
 
-      "manual check" in {
+    "a.isOverlapedBy(b)" should {
+      "b.overlaps(a)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          whenever(xx.isOverlapedBy(yy)) {
+            yy.overlaps(xx) mustBe true
+
+            assertOne(Rel.IsOverlapedBy)(xx, yy)
+          }
+        }
+      }
+    }
+
+    "a.overlaps(b) AND b.isOverlapedBy(a)" should {
+      "equal" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val actual   = xx.overlaps(yy)
+          val expected = yy.isOverlapedBy(xx)
+
+          actual mustBe expected
+        }
+      }
+
+      "valid in special cases" in {
         // Empty
         // {}  (-inf, +inf)
         Interval.empty[Int].overlaps(Interval.unbounded[Int]) mustBe (false)

@@ -4,6 +4,7 @@ import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Boundary
 
 /**
  * Starts, IsStartedBy
@@ -20,22 +21,67 @@ final class StartsSpec extends TestSpec: // with IntervalRelAssert {}
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  "Starts" when {
-    "starts & isStartedBy" should {
-      "auto check" in {
-        import IntervalRelAssert.*
+  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
 
+  "Starts" when {
+    import IntervalRelAssert.*
+
+    "a.starts(b)" should {
+      "b.isStartedBy(a)" in {
         forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
 
           whenever(xx.starts(yy)) {
+            yy.isStartedBy(xx) mustBe true
+
             assertOne(Rel.Starts)(xx, yy)
+
+            // a- = b- && b.isSuperset(a) && !a.equalsTo(b)
+            val a1 = Boundary.Left(ox1, ix1)
+            val b1 = Boundary.Left(oy1, iy1)
+
+            (ordB.equiv(a1, b1) && yy.isSuperset(xx) && !xx.equalsTo(yy)) mustBe true
           }
         }
       }
+    }
 
-      "manual check" in {
+    "a.isStartedBy(b)" should {
+      "b.starts(a)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          whenever(xx.isStartedBy(yy)) {
+            yy.starts(xx) mustBe true
+
+            assertOne(Rel.IsStartedBy)(xx, yy)
+
+            // a- = b- && a.isSuperset(b) && !a.equalsTo(b)
+            val a1 = Boundary.Left(ox1, ix1)
+            val b1 = Boundary.Left(oy1, iy1)
+
+            (ordB.equiv(a1, b1) && xx.isSuperset(yy) && !xx.equalsTo(yy)) mustBe true
+          }
+        }
+      }
+    }
+
+    "a.starts(b) AND b.isStartedBy(a)" should {
+      "equal" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val actual   = xx.starts(yy)
+          val expected = yy.isStartedBy(xx)
+
+          actual mustBe expected
+        }
+      }
+
+      "valid in special cases" in {
         // Empty
         Interval.empty[Int].starts(Interval.point(0)) mustBe (false)
         Interval.empty[Int].starts(Interval.closed(0, 1)) mustBe (false)

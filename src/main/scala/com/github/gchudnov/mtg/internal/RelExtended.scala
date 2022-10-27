@@ -11,8 +11,9 @@ import com.github.gchudnov.mtg.Domain
  *   - IsSuperset
  *   - IsDisjoint
  *   - IsAdjacent
- *   - Merges, IsMergedBy
+ *   - Merges
  *   - IsLess
+ *   - IsGreater
  */
 private[mtg] transparent trait ExtendedRel[+T]:
   a: Interval[T] =>
@@ -41,6 +42,8 @@ private[mtg] transparent trait ExtendedRel[+T]:
    * IsSuperset
    *
    * Checks whether A is a superset of B
+   *
+   * A ⊇ B
    *
    * {{{
    *   b- >= a-
@@ -130,7 +133,7 @@ private[mtg] transparent trait ExtendedRel[+T]:
    * }}}
    */
   final def merges[T1 >: T: Domain](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    a.nonEmpty && b.nonEmpty && ((bOrd.lteq(a.left, b.right) && bOrd.lteq(b.left, a.right)) || (bOrd.equiv(a.right.succ, b.left) || bOrd.equiv(b.right.succ, a.left)))
+    (a.isEmpty || b.isEmpty) || ((bOrd.lteq(a.left, b.right) && bOrd.lteq(b.left, a.right)) || (bOrd.equiv(a.right.succ, b.left) || bOrd.equiv(b.right.succ, a.left)))
 
   /**
    * IsMergedBy
@@ -141,7 +144,7 @@ private[mtg] transparent trait ExtendedRel[+T]:
   /**
    * IsLess
    *
-   * Checks whether A less-than B (Order Relation)
+   * Checks whether A is less-than B (Order Relation)
    *
    * A < B
    *
@@ -156,3 +159,22 @@ private[mtg] transparent trait ExtendedRel[+T]:
    */
   final def isLess[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
     a.nonEmpty && b.nonEmpty && bOrd.lt(a.left, b.left) && bOrd.lt(a.right, b.right)
+
+  /**
+   * IsGreater
+   *
+   * Checks whether A is greater-than B (Order Relation)
+   *
+   * A > B
+   *
+   * {{{
+   *   a- > b-
+   *   a+ > b+
+   *
+   *   after          | B
+   *   isMetBy        | M
+   *   isOverlappedBy | O
+   * }}}
+   */
+  final def isGreater[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+    a.nonEmpty && b.nonEmpty && bOrd.gt(a.left, b.left) && bOrd.gt(a.right, b.right)

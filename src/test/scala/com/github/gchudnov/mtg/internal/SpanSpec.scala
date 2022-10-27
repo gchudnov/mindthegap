@@ -14,6 +14,45 @@ final class SpanSpec extends TestSpec:
 
   "Span" when {
     "a.span(b)" should {
+
+      "b.span(a)" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val zz = xx.span(yy)
+
+          whenever(zz.nonEmpty) {
+            val ww = yy.span(xx)
+
+            zz.canonical mustBe ww.canonical
+
+            // [min(a-, b-), max(a+, b+)]
+            // given span `c`, `c` intersection with `a` = `a` AND `c` intersects with `b` = `b`
+            zz.intersection(xx).canonical mustBe xx.canonical
+            zz.intersection(yy).canonical mustBe yy.canonical
+          }
+        }
+      }
+    }
+
+    "a.span(b) AND b.span(a)" should {
+
+      /**
+       * A # B = B # A
+       */
+      "equal" in {
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+          val xx = Interval.make(ox1, ix1, ox2, ix2)
+          val yy = Interval.make(oy1, iy1, oy2, iy2)
+
+          val actual   = xx.span(yy).canonical
+          val expected = yy.span(xx).canonical
+
+          actual mustBe expected
+        }
+      }
+
       "∅ if A and B are empty" in {
         val a = Interval.empty[Int]
         val b = Interval.empty[Int]
@@ -192,33 +231,17 @@ final class SpanSpec extends TestSpec:
       }
     }
 
-    "A, B" should {
-
-      /**
-       * Commutative Property
-       */
-      "A # B = B # A" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
-
-          xx.span(yy).canonical mustBe yy.span(xx).canonical
-        }
-      }
-    }
-
     "A, B, C" should {
-
-      /**
-       * Associative Property
-       */
       "(A # B) # C = A # (B # C)" in {
         forAll(genOneOfIntArgs, genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2)), ((oz1, iz1), (oz2, iz2))) =>
           val xx = Interval.make(ox1, ix1, ox2, ix2)
           val yy = Interval.make(oy1, iy1, oy2, iy2)
           val zz = Interval.make(oz1, iz1, oz2, iz2)
 
-          ((xx.span(yy)).span(zz)).canonical mustBe xx.span(yy.span(zz)).canonical
+          val actual   = ((xx.span(yy)).span(zz)).canonical
+          val expected = xx.span(yy.span(zz)).canonical
+
+          actual mustBe expected
         }
       }
     }
