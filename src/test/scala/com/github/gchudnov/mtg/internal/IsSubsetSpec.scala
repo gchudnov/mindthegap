@@ -53,7 +53,7 @@ final class IsSubsetSpec extends TestSpec:
         Interval.open(4, 7).isSubset(Interval.open(2, 7)) mustBe (true)
         Interval.open(4, 7).isSubset(Interval.open(4, 7)) mustBe (true)
 
-        Interval.closed(1, 10).isSubset(Interval.unbounded[Int]) mustBe(true)
+        Interval.closed(1, 10).isSubset(Interval.unbounded[Int]) mustBe (true)
       }
     }
   }
