@@ -300,7 +300,7 @@ Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 Determines whether `a` is greater-than `b`.
 
 ```text
-  a.isGreater                      AAAAA            | a- < b- AND a+ < b+
+  a.isGreater                      AAAAA            | a- > b- AND a+ > b+
                                    :   :
   a.after(b)          B  BBBBBBBBB :   :            | a- > b+
   a.isMetBy(b)        M    BBBBBBBBB   :            | a- = b+
