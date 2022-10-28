@@ -8,7 +8,7 @@ final class ValueOrderingSpec extends TestSpec:
 
   "ValueOrdering" when {
     "ordV.compare(a, b)" should {
-      "return an expected results" in {
+      "return the expected results" in {
         ordV.compare(Value.InfNeg, Value.InfNeg) mustBe (0)
         ordV.compare(Value.InfNeg, Value.InfPos) mustBe (-1)
         ordV.compare(Value.InfNeg, Value.Finite(0)) mustBe (-1)

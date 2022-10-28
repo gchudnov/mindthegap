@@ -5,6 +5,42 @@ import com.github.gchudnov.mtg.TestSpec
 final class ValueSpec extends TestSpec:
 
   "Value" when {
+
+    "constructed" should {
+      "construct Value.Finite" in {
+        val actual   = Value.finite(1)
+        val expected = Value.Finite(1)
+
+        actual.isFinite mustBe (true)
+        actual.isInfNeg mustBe (false)
+        actual.isInfPos mustBe (false)
+
+        actual mustBe expected
+      }
+
+      "construct Value.InfNeg" in {
+        val actual   = Value.infNeg
+        val expected = Value.InfNeg
+
+        actual.isFinite mustBe (false)
+        actual.isInfNeg mustBe (true)
+        actual.isInfPos mustBe (false)
+
+        actual mustBe expected
+      }
+
+      "construct Value.InfPos" in {
+        val actual   = Value.infPos
+        val expected = Value.InfPos
+
+        actual.isFinite mustBe (false)
+        actual.isInfNeg mustBe (false)
+        actual.isInfPos mustBe (true)
+
+        actual mustBe expected
+      }
+    }
+
     "Value.Finite(x)" should {
       "check the properties" in {
         val x = Value.Finite(1)
