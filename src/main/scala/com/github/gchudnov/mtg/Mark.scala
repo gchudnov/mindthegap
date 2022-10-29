@@ -36,10 +36,8 @@ enum Mark[T]:
     this match
       case x @ At(_) =>
         x
-      case Pred(x) =>
-        Mark.At(x.eval)
-      case Succ(x) =>
-        Mark.At(x.eval)
+      case other =>
+        Mark.At(other.eval)
 
   def eval(using Domain[T]): Value[T] =
     this match

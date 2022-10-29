@@ -14,6 +14,15 @@ enum Value[+T]:
   def isInfPos: Boolean =
     this.ordinal == 2
 
+  def get: T =
+    this match
+      case Value.Finite(x) =>
+        x
+      case Value.InfNeg =>
+        throw new NoSuchElementException("InfNeg.get")
+      case Value.InfPos =>
+        throw new NoSuchElementException("InfPos.get")
+
   def succ[U >: T: Domain]: Value[U] =
     this match
       case Value.Finite(x) =>

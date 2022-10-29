@@ -14,26 +14,19 @@ object Arbitraries:
   val intProb127: IntProb = IntProb(empty = 1, point = 2, proper = 7)
 
   /**
-   * Parameters to contruct an integer interval `({a, b}, isIncludeA, IsIncludeB)`, where:
-   *
-   * {{{
-   *   a   -- Option[Int]: None if 'inf', Some(x) if a finite value.
-   *   b   -- Option[Int]: None if 'inf', Some(x) if a finite value.
-   *   '{' -- one of the boundaries: '[' (isIncludeA == true), '(' (isIncludeA == false).
-   *   '}' -- one of the boundaries: ']' (isIncludeB == true), ')' (isIncludeA == false).
-   * }}}
+   * Arguments to contruct an integer interval
    */
-  type IntArgs = ((Option[Int], Boolean), (Option[Int], Boolean))
+  case class IntArgs(left: Mark[Int], right: Mark[Int])
 
   /**
-   * Generate a tuple (a, a) where both values have the same value. | Point intervals
+   * Generate a tuple (a, a) where both values have the same value. | Point
    */
   private def genIntTupleEq(using ir: IntRange): Gen[(Int, Int)] =
     for x <- Gen.choose(ir.min, ir.max)
     yield (x, x)
 
   /**
-   * Generate a tuple (a, b), whre a < b. | Proper intervals
+   * Generate a tuple (a, b), whre a < b. | Proper
    */
   private def genIntTupleLteq(using ir: IntRange): Gen[(Int, Int)] =
     for
@@ -42,7 +35,7 @@ object Arbitraries:
     yield (x, y)
 
   /**
-   * Generate a tuple (a, b), whre a <= b. | Point, Proper intervals
+   * Generate a tuple (a, b), whre a <= b. | Point, Proper
    */
   private def genIntTupleLt(using ir: IntRange): Gen[(Int, Int)] =
     for
@@ -60,7 +53,7 @@ object Arbitraries:
     yield (x, y)
 
   /**
-   * Generate a tuple (a, b) where a and b are random. | Empty, Degenrate or Proper intervals
+   * Generate a tuple (a, b) where a and b are random. | Empty, Degenrate or Proper
    */
   private def genIntTupleAny(using ir: IntRange): Gen[(Int, Int)] =
     for
@@ -69,13 +62,13 @@ object Arbitraries:
     yield (x, y)
 
   /**
-   * Boolean Generator that produces true 50% of the time.
+   * Boolean Generator that produces 'true' 50% of the time.
    */
   private val genBoolEq: Gen[Boolean] =
     Gen.oneOf(true, false)
 
   /**
-   * Boolean Generator that produces true 75% of the time.
+   * Boolean Generator that produces 'true' 75% of the time.
    */
   private val genBool75: Gen[Boolean] =
     Gen.prob(0.75)
@@ -93,14 +86,14 @@ object Arbitraries:
       ab <- genIntTupleGt.map(toSome)
       ia <- genBoolEq
       ib <- genBoolEq
-    yield ((ab._1, ia), (ab._2, ib))
+    yield IntArgs(toLeft(ab._1, ia), toRight(ab._2, ib))
 
     // (a, a) = [a, a) = (a, a]
     val g2 = for
       ab <- genIntTupleEq.map(toSome)
       ia <- genBoolEq
       ib <- if (ia) then Gen.const(false) else genBoolEq // if we selected '[', the second boundary cannot be ']', otherwise it will produce a point interval.
-    yield ((ab._1, ia), (ab._2, ib))
+    yield IntArgs(toLeft(ab._1, ia), toRight(ab._2, ib))
 
     Gen.oneOf(g1, g2)
 
@@ -111,7 +104,7 @@ object Arbitraries:
    * }}}
    */
   def genPointIntArgs(using ir: IntRange): Gen[IntArgs] =
-    for ab <- genIntTupleEq.map(toSome) yield ((ab._1, true), (ab._2, true))
+    for ab <- genIntTupleEq.map(toSome) yield IntArgs(toLeft(ab._1, true), toRight(ab._2, true))
 
   /**
    * Generate Proper Intervals
@@ -128,7 +121,7 @@ object Arbitraries:
       ob <- Gen.option(Gen.const(ab._2))
       ia <- genBoolEq
       ib <- genBoolEq
-    yield ((oa, ia), (ob, ib))
+    yield IntArgs(toLeft(oa, ia), toRight(ob, ib))
 
   /**
    * Generate any interval tuple.
@@ -140,7 +133,7 @@ object Arbitraries:
       ob <- Gen.option(Gen.const(ab._2))
       ia <- genBoolEq
       ib <- genBoolEq
-    yield ((oa, ia), (ob, ib))
+    yield IntArgs(toLeft(oa, ia), toRight(ob, ib))
 
   /**
    * Generate one of the (Empty, Point, Proper) intervals
@@ -157,3 +150,25 @@ object Arbitraries:
    */
   private def toSome[T](t: Tuple2[T, T]): Tuple2[Option[T], Option[T]] =
     (Some(t._1), Some(t._2))
+
+  private def toLeft[T](value: Option[T], isInclude: Boolean): Mark[T] =
+    (value, isInclude) match
+      case (Some(x), true) =>
+        Mark.at(Value.finite(x))
+      case (Some(x), false) =>
+        Mark.succ(Value.finite(x))
+      case (None, true) =>
+        Mark.at(Value.infNeg)
+      case (None, false) =>
+        Mark.succ(Value.infNeg)
+
+  private def toRight[T](value: Option[T], isInclude: Boolean): Mark[T] =
+    (value, isInclude) match
+      case (Some(x), true) =>
+        Mark.at(Value.finite(x))
+      case (Some(x), false) =>
+        Mark.pred(Value.finite(x))
+      case (None, true) =>
+        Mark.at(Value.infPos)
+      case (None, false) =>
+        Mark.pred(Value.infPos)

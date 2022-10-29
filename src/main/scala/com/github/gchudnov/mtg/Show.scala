@@ -1,8 +1,5 @@
 package com.github.gchudnov.mtg
 
-trait Show[T]:
-  extension (t: T) def show: String
-
 object Show:
   private val infinite = '∞'
 
@@ -16,31 +13,47 @@ object Show:
   private val leftPoint  = '{'
   private val rightPoint = '}'
 
+  private val sep = ','
+
   private[mtg] def leftBound(isInclude: Boolean): Char =
     if isInclude then leftClosed else leftOpen
 
   private[mtg] def rightBound(isInclude: Boolean): Char =
     if isInclude then rightClosed else rightOpen
 
-  private[mtg] def leftValue(x: Option[?]): String =
-    x.fold(s"-${infinite}")(_.toString())
+  private[mtg] def str[T](x: Value[T]): String =
+    x match
+      case Value.InfNeg =>
+        s"-${infinite}"
+      case Value.InfPos =>
+        s"+${infinite}"
+      case Value.Finite(x) =>
+        x.toString()
 
-  private[mtg] def rightValue(x: Option[?]): String =
-    x.fold(s"+${infinite}")(_.toString())
-
-  given Show[Boundary[?]] with
-    extension (b: Boundary[?])
-      def show: String =
-        if b.isLeft then s"${leftBound(b.isInclude)}${leftValue(b.value)}"
-        else s"${rightValue(b.value)}${rightBound(b.isInclude)}"
-
-  given Show[Interval[?]] with
-    extension (i: Interval[?])
-      def show: String =
-        i match
-          case Interval.Empty =>
-            s"${empty}"
-          case Interval.Point(a) =>
-            s"${leftPoint}${a.toString()}${rightPoint}"
-          case Interval.Proper(l, r) =>
-            s"${l.show},${r.show}"
+  def asString[T: Domain](i: Interval[T])(using Ordering[Mark[T]]): String =
+    if i.isEmpty then empty.toString()
+    else if i.isPoint then
+      val p = str(i.left.eval)
+      s"${leftPoint}${p}${rightPoint}"
+    else
+      (i.left, i.right) match
+        case (Mark.At(x), Mark.At(y)) =>
+          val p = str(x)
+          val q = str(y)
+          s"${leftClosed}${p}${sep}${q}${rightClosed}"
+        case (Mark.At(x), Mark.Pred(yy)) =>
+          val p = str(x)
+          val q = str(yy.eval)
+          s"${leftClosed}${p}${sep}${q}${rightOpen}"
+        case (Mark.Succ(xx), Mark.Pred(yy)) =>
+          val p = str(xx.eval)
+          val q = str(yy.eval)
+          s"${leftOpen}${p}${sep}${q}${rightOpen}"
+        case (Mark.Succ(xx), Mark.At(y)) =>
+          val p = str(xx.eval)
+          val q = str(y)
+          s"${leftOpen}${p}${sep}${q}${rightClosed}"
+        case (xx, yy) =>
+          val p = str(xx.eval)
+          val q = str(yy.eval)
+          s"${leftClosed}${p}${sep}${q}${rightClosed}"

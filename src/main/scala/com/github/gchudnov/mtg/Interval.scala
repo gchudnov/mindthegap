@@ -50,258 +50,124 @@ import com.github.gchudnov.mtg.internal.StaticOps
  *   Unbounded            - Unbounded at both ends; (-∞, +∞) = R
  * }}}
  */
+final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
 
-enum Interval[+T] extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
-  case Empty extends Interval[Nothing]
-  case Point(a: T)
-  case Proper[T](l: Boundary.Left[T], r: Boundary.Right[T]) extends Interval[T]
+  def isEmpty(using ordM: Ordering[Mark[T]]): Boolean =
+    ordM.gt(left, right)
 
-  def isEmpty: Boolean =
-    this.ordinal == 0
+  def isPoint(using ordM: Ordering[Mark[T]]): Boolean =
+    ordM.equiv(left, right)
 
-  def isPoint: Boolean =
-    this.ordinal == 1
+  def isProper(using ordM: Ordering[Mark[T]]): Boolean =
+    ordM.lt(left, right)
 
-  def isProper: Boolean =
-    this.ordinal == 2
-
-  def nonEmpty: Boolean =
+  def nonEmpty(using Ordering[Mark[T]]): Boolean =
     !isEmpty
 
-  def nonPoint: Boolean =
+  def nonPoint(using Ordering[Mark[T]]): Boolean =
     !isPoint
 
-  def nonProper: Boolean =
+  def nonProper(using Ordering[Mark[T]]): Boolean =
     !isProper
-
-  def isUnbounded: Boolean =
-    this match
-      case Interval.Proper(l, r) =>
-        l.isUnbounded && r.isUnbounded
-      case _ =>
-        false
-
-  def isBounded: Boolean =
-    this match
-      case Interval.Proper(l, r) =>
-        l.isBounded && r.isBounded
-      case Interval.Point(_) =>
-        true
-      case _ =>
-        false
-
-  def left[U >: T]: Boundary.Left[U] =
-    this match
-      case Interval.Empty =>
-        throw new NoSuchElementException("Empty.left")
-      case Interval.Point(a) =>
-        Boundary.Left(Some(a), true)
-      case Interval.Proper[U](l, _) =>
-        l
-      case _ =>
-        throw new ClassCastException("Specified type is not compatible with the type of the Interval")
-
-  def right[U >: T]: Boundary.Right[U] =
-    this match
-      case Interval.Empty =>
-        throw new NoSuchElementException("Empty.right")
-      case Interval.Point(a) =>
-        Boundary.Right(Some(a), true)
-      case Interval.Proper[U](_, r) =>
-        r
-      case _ =>
-        throw new ClassCastException("Specified type is not compatible with the type of the Interval")
 
   /**
    * A canonical form of an interval is where the interval is closed on both starting and finishing sides.
    */
-  def canonical[U >: T: Domain]: Interval[U] =
-    this match
-      case Interval.Proper[U](l, r) =>
-        Interval.Proper(Boundary.Left(l.effectiveValue, true), Boundary.Right(r.effectiveValue, true))
-      case x =>
-        x
+  def canonical(using Domain[T]): Interval[T] =
+    Interval(left.at, right.at)
 
 object Interval extends StaticOps:
 
-  given intervalOrdering[T](using Ordering[Boundary[T]]): Ordering[Interval[T]] =
+  given intervalOrdering[T](using Ordering[Mark[T]]): Ordering[Interval[T]] =
     new IntervalOrdering[T]
 
   /**
    * ∅
    */
   def empty[T]: Interval[T] =
-    Interval.Empty
+    Interval(Mark.at(Value.InfPos), Mark.at(Value.InfNeg))
 
   /**
    * {x} = {x | a- = x = a+}
-   *
-   * @param a
-   *   point
-   * @return
-   *   a new interval
    */
-  def point[T](a: T): Interval[T] =
-    Interval.Point(a)
+  def point[T](x: Mark[T]): Interval[T] =
+    Interval(x, x)
+
+  def point[T](x: Value[T]): Interval[T] =
+    point(Mark.at(x))
+
+  def point[T](x: T): Interval[T] =
+    point(Mark.at(x))
 
   /**
    * {a-, a+}
-   *
-   * @param a
-   *   left boundary
-   * @param isIncludeA
-   *   whether to include left boundary in the interval or not
-   * @param b
-   *   right boundary
-   * @param isIncludeB
-   *   whether to include right boundary in the interval or not
-   * @return
-   *   a new interval
    */
-  def proper[T](a: Option[T], isIncludeA: Boolean, b: Option[T], isIncludeB: Boolean)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left(a, isIncludeA), Boundary.Right(b, isIncludeB))
-
-  /**
-   * {a-, a+}
-   *
-   * @param ba
-   *   left boundary
-   * @param bb
-   *   right boundary
-   * @return
-   *   a new interval
-   */
-  def proper[T](ba: Boundary.Left[T], bb: Boundary.Right[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    import Show.given
-    require(bOrd.lt(ba, bb), s"${ba.show},${bb.show}: left boundary must be less than the right boundary")
-    Proper(ba, bb)
+  def proper[T](x: Mark[T], y: Mark[T])(using ordM: Ordering[Mark[T]]): Interval[T] =
+    require(ordM.lt(x, y), s"left boundary '${x}' must be less than the right boundary '${y}'")
+    Interval(x, y)
 
   /**
    * (-∞, +∞)
    */
-  def unbounded[T](using Ordering[Boundary[T]]): Interval[T] =
-    proper[T](Boundary.Left(None, false), Boundary.Right(None, false))
+  def unbounded[T](using Ordering[Mark[T]]): Interval[T] =
+    proper[T](Mark.at(Value.InfNeg), Mark.at(Value.InfPos))
 
   /**
    * (a-, a+) = {x | a- < x < a+}
-   *
-   * @param a
-   *   left boundary
-   * @param b
-   *   right boundary
-   * @return
-   *   a new interval
    */
-  def open[T](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left(Some(a), false), Boundary.Right(Some(b), false))
+  def open[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.succ(x), Mark.pred(y))
 
   /**
    * [a-, a+] = {x | a- <= x <= a+}
-   *
-   * @param a
-   *   left boundary
-   * @param b
-   *   right boundary
-   * @return
-   *   a new interval
    */
-  def closed[T](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left(Some(a), true), Boundary.Right(Some(b), true))
+  def closed[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.at(x), Mark.at(y))
 
   /**
    * (a-, +∞) = {x | x > a-}
-   *
-   * @param a
-   *   left boundary
-   * @return
-   *   a new interval
    */
-  def leftOpen[T](a: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left(Some(a), false), Boundary.Right[T](None, false))
+  def leftOpen[T](x: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.succ(x), Mark.at(Value.InfPos))
 
   /**
    * [a-, +∞) = {x | x >= a-}
-   *
-   * @param a
-   *   left boundary
-   * @return
-   *   a new interval
    */
-  def leftClosed[T](a: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left(Some(a), true), Boundary.Right[T](None, false))
+  def leftClosed[T](x: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.at(x), Mark.at(Value.InfPos))
 
   /**
    * (-∞, a+) = {x | x < a+}
-   *
-   * @param a
-   *   right boundary
-   * @return
-   *   a new interval
    */
-  def rightOpen[T](b: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left[T](None, false), Boundary.Right(Some(b), false))
+  def rightOpen[T](x: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.at(Value.InfNeg), Mark.pred(x))
 
   /**
    * (-∞, a+] = {x | x < a+}
-   *
-   * @param a
-   *   right boundary
-   * @return
-   *   a new interval
    */
-  def rightClosed[T](b: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left[T](None, false), Boundary.Right(Some(b), true))
+  def rightClosed[T](x: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.at(Value.InfNeg), Mark.at(x))
 
   /**
    * [a-, a+) = {x | a- <= x < a+}
-   *
-   * @param a
-   *   right boundary
-   * @return
-   *   a new interval
    */
-  def leftClosedRightOpen[T](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left[T](Some(a), true), Boundary.Right(Some(b), false))
+  def leftClosedRightOpen[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.at(x), Mark.pred(y))
 
   /**
    * (a-, a+] = {x | a- < x <= a+}
-   *
-   * @param a
-   *   right boundary
-   * @return
-   *   a new interval
    */
-  def leftOpenRightClosed[T](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left[T](Some(a), false), Boundary.Right(Some(b), true))
+  def leftOpenRightClosed[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.succ(x), Mark.at(y))
 
   /**
    * Make an arbitraty interval
-   *
-   * @param a
-   *   left boundary
-   * @param isIncludeA
-   *   whether to include left boundary in the interval or not
-   * @param b
-   *   right boundary
-   * @param isIncludeB
-   *   whether to include right boundary in the interval or not
-   * @return
-   *   a new interval
    */
-  def make[T: Domain](a: Option[T], isIncludeA: Boolean, b: Option[T], isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    make(Boundary.Left(a, isIncludeA), Boundary.Right(b, isIncludeB))
+  def make[T](x: Value[T], y: Value[T]): Interval[T] =
+    make(Mark.at(x), Mark.at(y))
 
   /**
    * Make an arbitraty interval
-   *
-   * @param a
-   *   left boundary
-   * @param b
-   *   right boundary
-   * @return
-   *   a new interval
    */
-  def make[T: Domain](ba: Boundary.Left[T], bb: Boundary.Right[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    if bOrd.equiv(ba, bb) then point(ba.effectiveValue.get)
-    else if bOrd.lt(bb, ba) then empty[T]
-    else proper(ba, bb)
+  def make[T](x: Mark[T], y: Mark[T]): Interval[T] =
+    Interval(x, y)

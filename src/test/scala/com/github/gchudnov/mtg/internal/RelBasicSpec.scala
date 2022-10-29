@@ -13,24 +13,24 @@ final class BasicRelSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "BasicRel" when {
-    "satisfy one relation only" should {
-      import IntervalRelAssert.*
+    // "satisfy one relation only" should {
+    //   import IntervalRelAssert.*
 
-      "auto check" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //   "auto check" in {
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
+    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
+    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
 
-          assertAny(xx, yy)
-        }
-      }
+    //       assertAny(xx, yy)
+    //     }
+    //   }
 
-      "valid in special cases" in {
-        val intervals = List(
-          (Interval.rightOpen(5), Interval.rightOpen(5)) // (-inf, 5)  (5, +inf)
-        )
+    //   "valid in special cases" in {
+    //     val intervals = List(
+    //       (Interval.rightOpen(5), Interval.rightOpen(5)) // (-inf, 5)  (5, +inf)
+    //     )
 
-        intervals.foreach { case (xx, yy) => assertAny(xx, yy) }
-      }
-    }
+    //     intervals.foreach { case (xx, yy) => assertAny(xx, yy) }
+    //   }
+    // }
   }

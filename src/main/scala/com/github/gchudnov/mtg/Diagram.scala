@@ -79,8 +79,10 @@ object Diagram extends NumericDefaults:
 
   /**
    * View
+   * 
+   * TODO: instead of Numeric, we need to use Domain here and replace minus with d(...)
    */
-  final case class View[+T: Numeric](
+  final case class View[T: Numeric](
     left: Option[T], // left boundary of the view
     right: Option[T] // right boundary of the view
   ):
@@ -102,8 +104,8 @@ object Diagram extends NumericDefaults:
     def nonEmpty: Boolean =
       !isEmpty
 
-    def toInterval[T1 >: T: Domain](using Ordering[Boundary[T1]]): Interval[T1] =
-      Interval.make[T1](left, true, right, true)
+    def toInterval: Interval[T] =
+      Interval.make(left.map(Value.finite(_)).getOrElse(Value.infNeg), right.map(Value.finite(_)).getOrElse(Value.infPos))
 
   object View:
 
@@ -113,14 +115,14 @@ object Diagram extends NumericDefaults:
         right = None
       )
 
-    def make[T: Numeric: Domain](intervals: List[Interval[T]])(using Ordering[Boundary[T]]): View[T] =
+    def make[T: Numeric: Domain](intervals: List[Interval[T]])(using Ordering[Mark[T]]): View[T] =
       val xs: List[Interval[T]] = intervals.filter(_.nonEmpty)
 
-      val ls: List[Boundary[T]] = xs.map(_.left).filter(_.isBounded)
-      val rs: List[Boundary[T]] = xs.map(_.right).filter(_.isBounded)
+      val ls: List[Value[T]] = xs.map(_.left).map(_.eval).filter(_.isFinite)
+      val rs: List[Value[T]] = xs.map(_.right).map(_.eval).filter(_.isFinite)
 
-      val lMin: Option[T] = ls.minOption.flatMap(_.value)
-      val rMax: Option[T] = rs.maxOption.flatMap(_.value)
+      val lMin: Option[T] = ls.minOption.map(_.get)
+      val rMax: Option[T] = rs.maxOption.map(_.get)
 
       val (vMin, vMax) = (lMin, rMax) match
         case xy @ (Some(x), Some(y)) =>
@@ -160,13 +162,13 @@ object Diagram extends NumericDefaults:
 
       Label(x1, text)
 
-    def labels[T](i: Interval[T], span: Span): List[Label] =
+    def labels[T: Domain](i: Interval[T], span: Span)(using Ordering[Mark[T]]): List[Label] =
       if i.isEmpty then List.empty[Label]
-      else if i.isPoint then List(label(span.x0, Show.leftValue(i.left.value)))
+      else if i.isPoint then List(label(span.x0, Show.str(i.left.eval)))
       else
         List(
-          label(span.x0, Show.leftValue(i.left.value)),
-          label(span.x1, Show.rightValue(i.right.value))
+          label(span.x0, Show.str(i.left.eval)),
+          label(span.x1, Show.str(i.right.eval))
         )
 
     private def isIn(x: Int): Boolean =
@@ -205,20 +207,21 @@ object Diagram extends NumericDefaults:
     def translate(i: Interval[T]): Span
 
   object Translator:
-    def make[T: Numeric](view: View[T], canvas: Canvas): Translator[T] =
+    def make[T: Numeric: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Translator[T] =
       new BasicTranslater[T](view, canvas)
 
-  final class BasicTranslater[T: Numeric](view: View[T], canvas: Canvas) extends Translator[T]:
+  final class BasicTranslater[T: Numeric: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]) extends Translator[T]:
 
     private val ok: Option[Double] =
       view.size.map(vsz => canvas.size.toDouble / summon[Numeric[T]].toDouble(vsz))
 
-    private def translate(b: Boundary[T]): Int =
-      b.value match
-        case None =>
-          // -inf or +inf
-          if b.isLeft then canvas.left else canvas.right
-        case Some(x) =>
+    private def translate(value: Value[T], isLeft: Boolean)(using Domain[T]): Int =
+      value match
+        case Value.InfNeg =>
+          canvas.left
+        case Value.InfPos =>
+          canvas.right
+        case Value.Finite(x) =>
           ok match
             case Some(k) =>
               // finite view-boundaries
@@ -229,14 +232,32 @@ object Diagram extends NumericDefaults:
               Canvas.align((k * dd) + canvas.first)
             case None =>
               // one of the view-boundaries is inf
-              if b.isLeft then canvas.first else canvas.last
+              if isLeft then canvas.first else canvas.last
 
     override def translate(i: Interval[T]): Span =
       if i.isEmpty then Span.empty
       else
-        val x0 = translate(i.left)
-        val x1 = translate(i.right)
-        Span(x0 = x0, x1 = x1, includeX0 = i.left.isInclude, includeX1 = i.right.isInclude)
+      (i.left, i.right) match
+        case (Mark.At(x), Mark.At(y)) =>
+          val p = translate(x, true)
+          val q = translate(y, false)
+          Span(x0 = p, x1 = q, includeX0 = true, includeX1 = true)
+        case (Mark.At(x), Mark.Pred(yy)) =>
+          val p = translate(x, true)
+          val q = translate(yy.eval, false)
+          Span(x0 = p, x1 = q, includeX0 = true, includeX1 = false)
+        case (Mark.Succ(xx), Mark.Pred(yy)) =>
+          val p = translate(xx.eval, true)
+          val q = translate(yy.eval, false)
+          Span(x0 = p, x1 = q, includeX0 = false, includeX1 = false)
+        case (Mark.Succ(xx), Mark.At(y)) =>
+          val p = translate(xx.eval, true)
+          val q = translate(y, false)
+          Span(x0 = p, x1 = q, includeX0 = false, includeX1 = true)
+        case (xx, yy) =>
+          val p = translate(xx.eval, true)
+          val q = translate(yy.eval, false)
+          Span(x0 = p, x1 = q, includeX0 = true, includeX1 = true)
 
   /**
    * Tick
@@ -292,8 +313,8 @@ object Diagram extends NumericDefaults:
     val empty: Legend =
       Legend("")
 
-    def make[T](i: Interval[T]): Legend =
-      Legend(i.show)
+    def make[T: Domain](i: Interval[T])(using Ordering[Mark[T]]): Legend =
+      Legend(Show.asString(i))
 
   /**
    * Annotation Entry
@@ -461,7 +482,7 @@ object Diagram extends NumericDefaults:
   /**
    * Make a Diagram that can be rendered
    */
-  def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas, annotations: List[String])(using Ordering[Boundary[T]]): Diagram =
+  def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas, annotations: List[String])(using Ordering[Mark[T]]): Diagram =
     val effectiveView = if view.isEmpty then View.make(intervals) else view
     val translator    = Translator.make(effectiveView, canvas)
 
@@ -497,13 +518,13 @@ object Diagram extends NumericDefaults:
       labels = (d.labels ++ viewLabels).distinct.sortBy(_.pos)
     )
 
-  def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =
+  def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
     make(intervals, view = view, canvas = canvas, annotations = List.empty[String])
 
-  def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Boundary[T]]): Diagram =
+  def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
     make(intervals, view = View.empty[T], canvas = canvas, annotations = List.empty[String])
 
-  def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas, annotations: List[String])(using Ordering[Boundary[T]]): Diagram =
+  def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas, annotations: List[String])(using Ordering[Mark[T]]): Diagram =
     make(intervals, view = View.empty[T], canvas = canvas, annotations = annotations)
 
   /**

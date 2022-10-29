@@ -1,6 +1,6 @@
 package com.github.gchudnov.mtg.internal
 
-import com.github.gchudnov.mtg.Boundary
+import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 
@@ -25,6 +25,6 @@ private[mtg] transparent trait StaticsOps:
    *   1       4 5           10          15   |
    * }}}
    */
-  final def minus[T: Domain](a: Interval[T], b: Interval[T])(using ordT: Ordering[Boundary[T]]): List[Interval[T]] =
-    if a.contains(b) then List(Interval.make(a.left, b.left.pred.asRight), Interval.make(b.right.succ.asLeft, a.right))
+  final def minus[T: Domain](a: Interval[T], b: Interval[T])(using ordT: Ordering[Mark[T]]): List[Interval[T]] =
+    if a.contains(b) then List(Interval.make(a.left, b.left.pred), Interval.make(b.right.succ, a.right))
     else List(Interval.minus(a, b))

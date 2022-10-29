@@ -69,6 +69,15 @@ final class MarkSpec extends TestSpec:
 
         actual mustBe expected
       }
+
+      "x.at" in {
+        val x = Mark.at(1)
+
+        val actual   = x.at
+        val expected = Mark.at(1)
+
+        actual mustBe expected
+      }
     }
 
     "Mark.Pred" should {
@@ -119,6 +128,15 @@ final class MarkSpec extends TestSpec:
 
         actual mustBe expected
       }
+
+      "x.at" in {
+        val x = Mark.pred(1)
+
+        val actual   = x.at
+        val expected = Mark.at(0)
+
+        actual mustBe expected
+      }
     }
 
     "Mark.Succ" should {
@@ -166,6 +184,15 @@ final class MarkSpec extends TestSpec:
 
         val actual   = x.eval
         val expected = Value.Finite(2)
+
+        actual mustBe expected
+      }
+
+      "x.at" in {
+        val x = Mark.succ(1)
+
+        val actual   = x.at
+        val expected = Mark.at(2)
 
         actual mustBe expected
       }

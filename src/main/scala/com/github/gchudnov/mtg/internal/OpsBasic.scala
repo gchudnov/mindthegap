@@ -1,13 +1,13 @@
 package com.github.gchudnov.mtg.internal
 
-import com.github.gchudnov.mtg.Boundary
+import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 
 /**
  * Basic Interval Operations
  */
-private[mtg] transparent trait BasicOps[+T]:
+private[mtg] transparent trait BasicOps[T]:
   a: Interval[T] =>
 
   /**
@@ -28,12 +28,12 @@ private[mtg] transparent trait BasicOps[+T]:
    *   1               5      7          10   |
    * }}}
    */
-  final def intersection[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
+  final def intersection(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     if a.isEmpty || b.isEmpty then Interval.empty[T]
-    else Interval.make(ordT.max(a.left, b.left), ordT.min(a.right, b.right))
+    else Interval.make(ordM.max(a.left, b.left), ordM.min(a.right, b.right))
 
   /*
-    if (a.nonEmpty && b.nonEmpty) && (ordT.lteq(a.left, b.right) && ordT.lteq(b.left, a.right)) then Interval.make(ordT.max(a.left, b.left), ordT.min(a.right, b.right))
+    if (a.nonEmpty && b.nonEmpty) && (ordM.lteq(a.left, b.right) && ordM.lteq(b.left, a.right)) then Interval.make(ordM.max(a.left, b.left), ordM.min(a.right, b.right))
     else Interval.empty[T]
    */
 
@@ -64,10 +64,10 @@ private[mtg] transparent trait BasicOps[+T]:
    *   1               5      7          10   |
    * }}}
    */
-  final def span[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
+  final def span(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     if a.isEmpty then b
     else if b.isEmpty then a
-    else Interval.make(ordT.min(a.left, b.left), ordT.max(a.right, b.right))
+    else Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
 
   /**
    * Union
@@ -96,10 +96,10 @@ private[mtg] transparent trait BasicOps[+T]:
    *   1           4      6              10   |
    * }}}
    */
-  def union[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
+  def union(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     if a.isEmpty then b
     else if b.isEmpty then a
-    else if a.merges(b) then Interval.make(ordT.min(a.left, b.left), ordT.max(a.right, b.right))
+    else if a.merges(b) then Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
     else Interval.empty[T]
 
   /**
@@ -119,9 +119,9 @@ private[mtg] transparent trait BasicOps[+T]:
    *   5          10 11    14 15         20   |
    * }}}
    */
-  final def gap[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
-    if (a.nonEmpty && b.nonEmpty) && (ordT.lt(b.right, a.left) || ordT.lt(a.right, b.left)) then
-      Interval.make(ordT.min(a.right, b.right).succ.asLeft, ordT.max(a.left, b.left).pred.asRight)
+  final def gap(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
+    if (a.nonEmpty && b.nonEmpty) && (ordM.lt(b.right, a.left) || ordM.lt(a.right, b.left)) then
+      Interval.make(ordM.min(a.right, b.right).succ, ordM.max(a.left, b.left).pred)
     else Interval.empty[T]
 
   /**
@@ -159,10 +159,10 @@ private[mtg] transparent trait BasicOps[+T]:
    *   1         5           10          15   |
    * }}}
    */
-  final def minus[T1 >: T: Domain](b: Interval[T1])(using ordT: Ordering[Boundary[T1]]): Interval[T1] =
+  final def minus(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     if a.isEmpty then Interval.empty[T]
     else if b.isEmpty then a
-    else if (ordT.lt(a.left, b.left) && ordT.lteq(a.right, b.right)) then Interval.make(a.left, ordT.min(b.left.pred, a.right).asRight)
-    else if (ordT.gteq(a.left, b.left) && ordT.gt(a.right, b.right)) then Interval.make(ordT.max(b.right.succ, a.left).asLeft, a.right)
+    else if (ordM.lt(a.left, b.left) && ordM.lteq(a.right, b.right)) then Interval.make(a.left, ordM.min(b.left.pred, a.right))
+    else if (ordM.gteq(a.left, b.left) && ordM.gt(a.right, b.right)) then Interval.make(ordM.max(b.right.succ, a.left), a.right)
     else if a.contains(b) then throw new UnsupportedOperationException("a.minus(b) is not defined when a.contains(b) is true; use Intervals.minus(a, b) instead")
     else Interval.empty[T]

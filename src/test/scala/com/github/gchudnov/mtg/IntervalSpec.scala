@@ -1,7 +1,7 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.*
 import com.github.gchudnov.mtg.Arbitraries.*
+import com.github.gchudnov.mtg.*
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
@@ -14,6 +14,9 @@ final class IntervalSpec extends TestSpec:
   given intProb: IntProb   = intProb226
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
+
+  val ordM: Ordering[Mark[Int]]     = summon[Ordering[Mark[Int]]]
+  val ordI: Ordering[Interval[Int]] = summon[Ordering[Interval[Int]]]
 
   "Interval" when {
 
@@ -29,392 +32,263 @@ final class IntervalSpec extends TestSpec:
        * }}}
        */
       "create intervals" in {
-        forAll(genOneOfIntArgs) { case ((ox, ix), (oy, iy)) =>
-          val actual = Interval.make(ox, ix, oy, iy)
+        forAll(genOneOfIntArgs) { case args =>
+          val actual = Interval.make(args.left, args.right)
 
-          actual match
-            case Interval.Empty =>
-              actual.isEmpty mustBe (true)
-              actual.nonEmpty mustBe (false)
-              actual.isPoint mustBe (false)
-              actual.nonPoint mustBe (true)
-              actual.isProper mustBe (false)
-              actual.nonProper mustBe (true)
-
-            case Interval.Point(_) =>
-              actual.isEmpty mustBe (false)
-              actual.nonEmpty mustBe (true)
-              actual.isPoint mustBe (true)
-              actual.nonPoint mustBe (false)
-              actual.isProper mustBe (false)
-              actual.nonProper mustBe (true)
-
-              summon[Ordering[Boundary[Int]]].equiv(Boundary.Left(ox, ix), Boundary.Right(oy, iy)) mustBe (true)
-
-            case Interval.Proper(_, _) =>
-              actual.isEmpty mustBe (false)
-              actual.nonEmpty mustBe (true)
-              actual.isPoint mustBe (false)
-              actual.nonPoint mustBe (true)
-              actual.isProper mustBe (true)
-              actual.nonProper mustBe (false)
-
-              summon[Ordering[Boundary[Int]]].lt(Boundary.Left(ox, ix), Boundary.Right(oy, iy)) mustBe (true)
+          if ordM.gt(args.left, args.right) then
+            actual.isEmpty mustBe (true)
+            actual.nonEmpty mustBe (false)
+            actual.isPoint mustBe (false)
+            actual.nonPoint mustBe (true)
+            actual.isProper mustBe (false)
+            actual.nonProper mustBe (true)
+          else if ordM.equiv(args.left, args.right) then
+            actual.isEmpty mustBe (false)
+            actual.nonEmpty mustBe (true)
+            actual.isPoint mustBe (true)
+            actual.nonPoint mustBe (false)
+            actual.isProper mustBe (false)
+            actual.nonProper mustBe (true)
+          else
+            actual.isEmpty mustBe (false)
+            actual.nonEmpty mustBe (true)
+            actual.isPoint mustBe (false)
+            actual.nonPoint mustBe (true)
+            actual.isProper mustBe (true)
+            actual.nonProper mustBe (false)
         }
       }
 
       "handle edge cases" in {
         // [0, 0)
-        Interval.make(Some(0), true, Some(0), false) mustBe Interval.empty[Int]
+        Interval.make(Mark.at(0), Mark.pred(0)).isEmpty mustBe true
 
         // [-inf, +inf]
-        Interval.make[Int](None, true, None, true).isUnbounded mustBe true
+        Interval.make[Int](Mark.at(Value.infNeg), Mark.at(Value.infPos)).isProper mustBe true
 
         // (-inf, +inf)
-        Interval.make[Int](None, false, None, false) mustBe Interval.unbounded[Int]
+        Interval.make[Int](Mark.succ(Value.infNeg), Mark.pred(Value.infPos)).isProper mustBe true
 
         // (3, 5)
-        Interval.make(Some(3), false, Some(5), false) mustBe Interval.point(4)
+        Interval.make(Mark.succ(3), Mark.pred(5)).isPoint mustBe true
 
         // [4, 4]
-        Interval.make(Some(4), true, Some(4), true) mustBe Interval.point(4)
+        Interval.make(Mark.at(4), Mark.at(4)).isPoint mustBe true
 
         // (3, 4]
-        Interval.make(Some(3), false, Some(4), true) mustBe Interval.point(4)
+        Interval.make(Mark.succ(3), Mark.at(4)).isPoint mustBe true
 
         // [4, 5)
-        Interval.make(Some(4), true, Some(5), false) mustBe Interval.point(4)
-
-        // [-inf, inf]
-
+        Interval.make(Mark.at(4), Mark.pred(5)).isPoint mustBe true
       }
-    }
 
-    "factory methods" should {
+      "factory methods" should {
 
-      "Interval.empty[Int]" in {
-        val a = Interval.empty[Int]
+        "Interval.empty" in {
+          val a = Interval.empty[Int]
 
-        a.isEmpty mustBe (true)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (false)
+          a.isEmpty mustBe (true)
+          a.isPoint mustBe (false)
+          a.isProper mustBe (false)
 
-        a.nonEmpty mustBe (false)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (true)
+          a.nonEmpty mustBe (false)
+          a.nonPoint mustBe (true)
+          a.nonProper mustBe (true)
 
-        a.isBounded mustBe (false)
-        a.isUnbounded mustBe (false)
-
-        assertThrows[NoSuchElementException] {
-          a.left
+          a.left mustBe Mark.at(Value.infPos)
+          a.right mustBe Mark.at(Value.infNeg)
         }
 
-        assertThrows[NoSuchElementException] {
-          a.right
-        }
-      }
+        "Interval.point(x)" in {
+          val a = Interval.point(5)
 
-      "Interval.empty" in {
-        val a = Interval.empty
+          a.isEmpty mustBe (false)
+          a.isPoint mustBe (true)
+          a.isProper mustBe (false)
 
-        a.isEmpty mustBe (true)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (false)
+          a.nonEmpty mustBe (true)
+          a.nonPoint mustBe (false)
+          a.nonProper mustBe (true)
 
-        a.nonEmpty mustBe (false)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (true)
-
-        a.isBounded mustBe (false)
-        a.isUnbounded mustBe (false)
-
-        assertThrows[NoSuchElementException] {
-          a.left
+          ordM.equiv(a.left, Mark.at(5)) mustBe true
+          ordM.equiv(a.right, Mark.at(5)) mustBe true
         }
 
-        assertThrows[NoSuchElementException] {
-          a.right
+        "Interval.proper(x, y)" in {
+          // (1, 5)
+          val a = Interval.proper(Mark.succ(1), Mark.pred(5))
+
+          a.isEmpty mustBe (false)
+          a.isPoint mustBe (false)
+          a.isProper mustBe (true)
+
+          a.nonEmpty mustBe (true)
+          a.nonPoint mustBe (true)
+          a.nonProper mustBe (false)
+
+          ordI.equiv(a, Interval.closed(2, 4)) mustBe (true)
         }
+
+        "Interval.unbounded" in {
+          val a = Interval.unbounded[Int]
+
+          a.isEmpty mustBe (false)
+          a.isPoint mustBe (false)
+          a.isProper mustBe (true)
+
+          a.nonEmpty mustBe (true)
+          a.nonPoint mustBe (true)
+          a.nonProper mustBe (false)
+
+          ordM.equiv(a.left, Mark.at(Value.infNeg)) mustBe true
+          ordM.equiv(a.right, Mark.at(Value.infPos)) mustBe true
+        }
+
+        "Interval.open(x, y)" in {
+          val a = Interval.open(1, 5)
+
+          a.isEmpty mustBe (false)
+          a.isPoint mustBe (false)
+          a.isProper mustBe (true)
+
+          a.nonEmpty mustBe (true)
+          a.nonPoint mustBe (true)
+          a.nonProper mustBe (false)
+
+          ordM.equiv(a.left, Mark.succ(1)) mustBe true
+          ordM.equiv(a.right, Mark.pred(5)) mustBe true
+        }
+
+        "Interval.closed(x, y)" in {
+          val a = Interval.closed(1, 5)
+
+          a.isEmpty mustBe (false)
+          a.isPoint mustBe (false)
+          a.isProper mustBe (true)
+
+          a.nonEmpty mustBe (true)
+          a.nonPoint mustBe (true)
+          a.nonProper mustBe (false)
+
+          ordM.equiv(a.left, Mark.at(1)) mustBe true
+          ordM.equiv(a.right, Mark.at(5)) mustBe true
+        }
+
+        "Interval.leftOpen(x)" in {
+          val a = Interval.leftOpen(1)
+
+          a.isEmpty mustBe (false)
+          a.isPoint mustBe (false)
+          a.isProper mustBe (true)
+
+          a.nonEmpty mustBe (true)
+          a.nonPoint mustBe (true)
+          a.nonProper mustBe (false)
+
+          ordM.equiv(a.left, Mark.succ(1)) mustBe true
+          ordM.equiv(a.right, Mark.at(Value.infPos)) mustBe true
+        }
+
+        "Interval.leftClosed(x)" in {
+          val a = Interval.leftClosed(5)
+
+          a.isEmpty mustBe (false)
+          a.isPoint mustBe (false)
+          a.isProper mustBe (true)
+
+          a.nonEmpty mustBe (true)
+          a.nonPoint mustBe (true)
+          a.nonProper mustBe (false)
+
+          ordM.equiv(a.left, Mark.at(5)) mustBe true
+          ordM.equiv(a.right, Mark.at(Value.infPos)) mustBe true
+        }
+
+        "Interval.rightOpen(x)" in {
+          val a = Interval.rightOpen(1)
+
+          a.isEmpty mustBe (false)
+          a.isPoint mustBe (false)
+          a.isProper mustBe (true)
+
+          a.nonEmpty mustBe (true)
+          a.nonPoint mustBe (true)
+          a.nonProper mustBe (false)
+
+          ordM.equiv(a.left, Mark.at(Value.infNeg)) mustBe true
+          ordM.equiv(a.right, Mark.pred(1)) mustBe true
+        }
+
+        "Interval.rightClosed(x)" in {
+          val a = Interval.rightClosed(5)
+
+          a.isEmpty mustBe (false)
+          a.isPoint mustBe (false)
+          a.isProper mustBe (true)
+
+          a.nonEmpty mustBe (true)
+          a.nonPoint mustBe (true)
+          a.nonProper mustBe (false)
+
+          ordM.equiv(a.left, Mark.at(Value.infNeg)) mustBe true
+          ordM.equiv(a.right, Mark.at(5)) mustBe true
+        }
+
+        "Interval.leftClosedRightOpen(x, y)" in {
+          val a = Interval.leftClosedRightOpen(1, 10)
+
+          a.isEmpty mustBe (false)
+          a.isPoint mustBe (false)
+          a.isProper mustBe (true)
+
+          a.nonEmpty mustBe (true)
+          a.nonPoint mustBe (true)
+          a.nonProper mustBe (false)
+
+          ordM.equiv(a.left, Mark.at(1)) mustBe true
+          ordM.equiv(a.right, Mark.pred(10)) mustBe true
+        }
+
+        "Interval.leftOpenRightClosed(x, y)" in {
+          val a = Interval.leftOpenRightClosed(1, 10)
+
+          a.isEmpty mustBe (false)
+          a.isPoint mustBe (false)
+          a.isProper mustBe (true)
+
+          a.nonEmpty mustBe (true)
+          a.nonPoint mustBe (true)
+          a.nonProper mustBe (false)
+
+          ordM.equiv(a.left, Mark.succ(1)) mustBe true
+          ordM.equiv(a.right, Mark.at(10)) mustBe true
+        }
+
       }
 
-      "Interval.point(x)" in {
-        val a = Interval.point(5)
-
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (true)
-        a.isProper mustBe (false)
-
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (false)
-        a.nonProper mustBe (true)
-
-        a.isBounded mustBe (true)
-        a.isUnbounded mustBe (false)
-
-        a.left.isBounded mustBe (true)
-        a.left.isUnbounded mustBe (false)
-
-        a.right.isBounded mustBe (true)
-        a.right.isUnbounded mustBe (false)
-      }
-
-      "Interval.proper(x, y, w, z)" in {
-        val a = Interval.proper(Some(1), false, Some(5), false)
-
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
-
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
-
-        a.isBounded mustBe (true)
-        a.isUnbounded mustBe (false)
-
-        a.left.isBounded mustBe (true)
-        a.left.isUnbounded mustBe (false)
-
-        a.right.isBounded mustBe (true)
-        a.right.isUnbounded mustBe (false)
-      }
-
-      "Interval.proper(a, b)" in {
-        val a = Interval.proper(Boundary.Left(Some(1), true), Boundary.Right(Some(5), true))
-
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
-
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
-
-        a.isBounded mustBe (true)
-        a.isUnbounded mustBe (false)
-
-        a.left.isBounded mustBe (true)
-        a.left.isUnbounded mustBe (false)
-
-        a.right.isBounded mustBe (true)
-        a.right.isUnbounded mustBe (false)
-      }
-
-      "Interval.unbounded[Int]" in {
-        val a = Interval.unbounded[Int]
-
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
-
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
-
-        a.isBounded mustBe (false)
-        a.isUnbounded mustBe (true)
-
-        a.left.isBounded mustBe (false)
-        a.left.isUnbounded mustBe (true)
-
-        a.right.isBounded mustBe (false)
-        a.right.isUnbounded mustBe (true)
-      }
-
-      "Interval.open(x, y)" in {
-        val a = Interval.open(1, 5)
-
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
-
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
-
-        a.isBounded mustBe (true)
-        a.isUnbounded mustBe (false)
-
-        a.left.isBounded mustBe (true)
-        a.left.isUnbounded mustBe (false)
-
-        a.right.isBounded mustBe (true)
-        a.right.isUnbounded mustBe (false)
-      }
-
-      "Interval.closed(x, y)" in {
-        val a = Interval.closed(1, 5)
-
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
-
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
-
-        a.isBounded mustBe (true)
-        a.isUnbounded mustBe (false)
-
-        a.left.isBounded mustBe (true)
-        a.left.isUnbounded mustBe (false)
-
-        a.right.isBounded mustBe (true)
-        a.right.isUnbounded mustBe (false)
-      }
-
-      "Interval.leftOpen(x)" in {
-        val a = Interval.leftOpen(1)
-
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
-
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
-
-        a.isBounded mustBe (false)
-        a.isUnbounded mustBe (false)
-
-        a.left.isBounded mustBe (true)
-        a.left.isUnbounded mustBe (false)
-
-        a.right.isBounded mustBe (false)
-        a.right.isUnbounded mustBe (true)
-      }
-
-      "Interval.leftClosed(x)" in {
-        val a = Interval.leftClosed(5)
-
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
-
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
-
-        a.isBounded mustBe (false)
-        a.isUnbounded mustBe (false)
-
-        a.left.isBounded mustBe (true)
-        a.left.isUnbounded mustBe (false)
-
-        a.right.isBounded mustBe (false)
-        a.right.isUnbounded mustBe (true)
-      }
-
-      "Interval.rightOpen(x)" in {
-        val a = Interval.rightOpen(1)
-
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
-
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
-
-        a.isBounded mustBe (false)
-        a.isUnbounded mustBe (false)
-
-        a.left.isBounded mustBe (false)
-        a.left.isUnbounded mustBe (true)
-
-        a.right.isBounded mustBe (true)
-        a.right.isUnbounded mustBe (false)
-      }
-
-      "Interval.rightClosed(x)" in {
-        val a = Interval.rightClosed(5)
-
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
-
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
-
-        a.isBounded mustBe (false)
-        a.isUnbounded mustBe (false)
-
-        a.left.isBounded mustBe (false)
-        a.left.isUnbounded mustBe (true)
-
-        a.right.isBounded mustBe (true)
-        a.right.isUnbounded mustBe (false)
-      }
-
-      "Interval.leftClosedRightOpen(x, y)" in {
-        val a = Interval.leftClosedRightOpen(1, 10)
-
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
-
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
-
-        a.isBounded mustBe (true)
-        a.isUnbounded mustBe (false)
-
-        a.left.isBounded mustBe (true)
-        a.left.isUnbounded mustBe (false)
-
-        a.right.isBounded mustBe (true)
-        a.right.isUnbounded mustBe (false)
-      }
-
-      "Interval.leftOpenRightClosed(x, y)" in {
-        val a = Interval.leftOpenRightClosed(1, 10)
-
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
-
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
-
-        a.isBounded mustBe (true)
-        a.isUnbounded mustBe (false)
-
-        a.left.isBounded mustBe (true)
-        a.left.isUnbounded mustBe (false)
-
-        a.right.isBounded mustBe (true)
-        a.right.isUnbounded mustBe (false)
-      }
-
-    }
-
-    "canonical" should {
-      "represent" in {
-        // (1, 5) = [2, 4]
-        Interval.open(1, 5).canonical mustBe Interval.closed(2, 4)
-
-        // [2, 5) = [2, 4]
-        Interval.leftClosedRightOpen(2, 5).canonical mustBe Interval.closed(2, 4)
-
-        // (1, 4] = [2, 4]
-        Interval.leftOpenRightClosed(1, 4).canonical mustBe Interval.closed(2, 4)
-
-        // [2, 4] = [2, 4]
-        Interval.closed(2, 4).canonical mustBe Interval.closed(2, 4)
-
-        // {2} = {2}
-        Interval.point(2).canonical mustBe Interval.point(2)
-        Interval.make(Some(2), true, Some(2), true).canonical mustBe Interval.point(2)
-        Interval.make(Some(1), false, Some(3), false).canonical mustBe Interval.point(2)
-        Interval.make(Boundary.Left(Some(1), false), Boundary.Right(Some(3), false)).canonical mustBe Interval.point(2)
-      }
-
-      "double canonical is canonical" in {
-        Interval.open(1, 5).canonical.canonical mustBe Interval.closed(2, 4)
+      "canonical" should {
+        "represent an interval" in {
+          // (1, 5) = [2, 4]
+          Interval.open(1, 5).canonical mustBe Interval.closed(2, 4)
+
+          // [2, 5) = [2, 4]
+          Interval.leftClosedRightOpen(2, 5).canonical mustBe Interval.closed(2, 4)
+
+          // (1, 4] = [2, 4]
+          Interval.leftOpenRightClosed(1, 4).canonical mustBe Interval.closed(2, 4)
+
+          // [2, 4] = [2, 4]
+          Interval.closed(2, 4).canonical mustBe Interval.closed(2, 4)
+
+          // {2} = {2}
+          Interval.point(2).canonical mustBe Interval.point(2)
+          Interval.make(Mark.at(2), Mark.at(2)).canonical mustBe Interval.point(2)
+          Interval.make(Mark.succ(1), Mark.pred(3)).canonical mustBe Interval.point(2)
+        }
+
+        "double canonical is canonical" in {
+          Interval.open(1, 5).canonical.canonical mustBe Interval.closed(2, 4)
+        }
       }
     }
   }
