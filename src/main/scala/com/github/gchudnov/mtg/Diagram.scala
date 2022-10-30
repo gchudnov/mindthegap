@@ -116,21 +116,40 @@ object Diagram extends NumericDefaults:
         right = None
       )
 
-    def make[T: Numeric: Domain](intervals: List[Interval[T]])(using Ordering[Mark[T]]): View[T] =
-      val xs: List[Interval[T]] = intervals.filter(_.nonEmpty)
+    def make[T: Numeric: Domain](intervals: List[Interval[T]])(using ordT: Ordering[Value[T]]): View[T] =
+      val xs: List[Interval[T]] = intervals.filter(_.nonEmpty) // TODO: If Empty intervals are displayed, we will need to change this condition
 
-      val ps = xs.flatMap(x => List(x.left, x.right)).map(_.eval).filter(_.isFinite)
+      val ps = xs.flatMap(toLeftRightValues).filter(_.isFinite)
 
-      val lMin: Option[T] = ps.minOption.map(_.get)
-      val rMax: Option[T] = ps.maxOption.map(_.get)
-
-      val (vMin, vMax) = (lMin, rMax) match
+      val (vMin, vMax) = (ps.minOption, ps.maxOption) match
         case xy @ (Some(x), Some(y)) =>
-          if summon[Ordering[T]].equiv(x, y) then (Some(summon[Domain[T]].pred(x)), Some(summon[Domain[T]].succ(y))) else xy
+          if ordT.equiv(x, y) then (Some(x.pred), Some(y.succ)) else xy
         case xy =>
           xy
 
-      View(left = vMin, right = vMax)
+      val (p, q) = (vMin.map(_.get), vMax.map(_.get))
+      View(left = p, right = q)
+
+    private def toLeftRightValues[T: Domain](i: Interval[T]): List[Value[T]] =
+      List(toLeftValue(i.left), toRightValue(i.right))
+
+    private def toLeftValue[T: Domain](left: Mark[T]): Value[T] =
+      left match
+        case Mark.At(x) =>
+          x
+        case Mark.Pred(_) =>
+          left.eval
+        case Mark.Succ(xx) =>
+          xx.eval
+
+    private def toRightValue[T: Domain](right: Mark[T]): Value[T] =
+      right match
+        case Mark.At(y) =>
+          y
+        case Mark.Pred(yy) =>
+          yy.eval
+        case Mark.Succ(_) =>
+          right.eval
 
   /**
    * Canvas
@@ -166,22 +185,28 @@ object Diagram extends NumericDefaults:
       if i.isEmpty then List.empty[Label]
       else if i.isPoint then List(label(span.x0, Show.str(i.left.eval)))
       else
-        val (l, r) = (i.left, i.right) match
-          case (Mark.At(x), Mark.At(y)) =>
-            (x, y)
-          case (Mark.At(x), Mark.Pred(yy)) =>
-            (x, yy.eval)
-          case (Mark.Succ(xx), Mark.Pred(yy)) =>
-            (xx.eval, yy.eval)
-          case (Mark.Succ(xx), Mark.At(y)) =>
-            (xx.eval, y)
-          case (xx, yy) =>
-            (xx.eval, yy.eval)
-
         List(
-          label(span.x0, Show.str(l)),
-          label(span.x1, Show.str(r))
+          label(span.x0, toLeftLabel(i.left)),
+          label(span.x1, toRightLabel(i.right))
         )
+
+    private def toLeftLabel[T: Domain](left: Mark[T]): String =
+      left match
+        case Mark.At(x) =>
+          Show.str(x)
+        case Mark.Succ(xx) =>
+          Show.str(xx.eval)
+        case xx @ Mark.Pred(_) =>
+          Show.str(xx.eval)
+
+    private def toRightLabel[T: Domain](right: Mark[T]): String =
+      right match
+        case Mark.At(y) =>
+          Show.str(y)
+        case yy @ Mark.Succ(_) =>
+          Show.str(yy.eval)
+        case Mark.Pred(yy) =>
+          Show.str(yy.eval)
 
     private def isIn(x: Int): Boolean =
       (x >= 0 && x < width)
@@ -227,61 +252,62 @@ object Diagram extends NumericDefaults:
     private val ok: Option[Double] =
       view.size.map(vsz => canvas.size.toDouble / summon[Numeric[T]].toDouble(vsz))
 
-    private def translate(value: Value[T], isLeft: Boolean)(using Domain[T]): Int =
+    private def translateValue(value: Value[T]): Int =
       value match
         case Value.InfNeg =>
           canvas.left
         case Value.InfPos =>
           canvas.right
         case Value.Finite(x) =>
-          ok match
-            case Some(k) =>
-              // finite view-boundaries
-              val numT = summon[Numeric[T]]
-              val left = view.left.get // NOTE: .get is safe, otherwise `k` would be None
-              val dx   = numT.minus(x, left)
-              val dd   = numT.toDouble(dx)
-              Canvas.align((k * dd) + canvas.first)
-            case None =>
-              // one of the view-boundaries is inf
-              if isLeft then canvas.first else canvas.last
+          val k    = ok.get        // NOTE: it is not possible to have k indefined if we have at least one Finite point
+          val numT = summon[Numeric[T]]
+          val left = view.left.get // NOTE: .get is safe, otherwise `k` would be None
+          val dx   = numT.minus(x, left)
+          val dd   = numT.toDouble(dx)
+          Canvas.align((k * dd) + canvas.first)
 
     override def translate(i: Interval[T]): Span =
       if i.isEmpty then Span.empty
-      else
-        (i.left, i.right) match
-          case (Mark.At(x), Mark.At(y)) =>
-            val p  = translate(x, true)
-            val q  = translate(y, false)
-            val lb = if x.isInf then false else true
-            val rb = if y.isInf then false else true
-            Span.make(x0 = p, x1 = q, includeX0 = lb, includeX1 = rb)
-          case (Mark.At(x), Mark.Pred(yy)) =>
-            val p  = translate(x, true)
-            val q  = translate(yy.eval, false)
-            val lb = if x.isInf then false else true
-            val rb = false
-            Span.make(x0 = p, x1 = q, includeX0 = lb, includeX1 = rb)
-          case (Mark.Succ(xx), Mark.Pred(yy)) =>
-            val p  = translate(xx.eval, true)
-            val q  = translate(yy.eval, false)
-            val lb = false
-            val rb = false
-            Span.make(x0 = p, x1 = q, includeX0 = lb, includeX1 = rb)
-          case (Mark.Succ(xx), Mark.At(y)) =>
-            val p  = translate(xx.eval, true)
-            val q  = translate(y, false)
-            val lb = false
-            val rb = if y.isInf then false else true
-            Span.make(x0 = p, x1 = q, includeX0 = lb, includeX1 = rb)
-          case (xx, yy) =>
-            val x  = xx.eval
-            val y  = yy.eval
-            val p  = translate(x, true)
-            val q  = translate(y, false)
-            val lb = if x.isInf then false else true
-            val rb = if y.isInf then false else true
-            Span.make(x0 = p, x1 = q, includeX0 = lb, includeX1 = rb)
+      else if i.isPoint then
+        val p = translateValue(i.left.eval)
+        Span(x0 = p, x1 = p, includeX0 = true, includeX1 = true)
+      else Span.make(x0 = translateLeft(i.left), x1 = translateRight(i.right), includeX0 = includeLeft(i.left), includeX1 = includeRight(i.right))
+
+    private def translateLeft(left: Mark[T]): Int =
+      left match
+        case Mark.At(x) =>
+          translateValue(x)
+        case Mark.Succ(xx) =>
+          translateValue(xx.eval)
+        case xx @ Mark.Pred(_) =>
+          translateValue(xx.eval)
+
+    private def translateRight(right: Mark[T]): Int =
+      right match
+        case Mark.At(y) =>
+          translateValue(y)
+        case yy @ Mark.Succ(_) =>
+          translateValue(yy.eval)
+        case Mark.Pred(yy) =>
+          translateValue(yy.eval)
+
+    private def includeLeft(left: Mark[T]): Boolean =
+      left match
+        case Mark.At(x) =>
+          x.isFinite
+        case Mark.Succ(_) =>
+          false
+        case xx @ Mark.Pred(_) =>
+          xx.eval.isFinite
+
+    private def includeRight(right: Mark[T]): Boolean =
+      right match
+        case Mark.At(y) =>
+          y.isFinite
+        case yy @ Mark.Succ(_) =>
+          yy.eval.isFinite
+        case Mark.Pred(_) =>
+          false
 
   /**
    * Tick

@@ -21,7 +21,7 @@ final class BeforeSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  // val ordB: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
+  // val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "Before" when {
     // import IntervalRelAssert.*
@@ -41,7 +41,7 @@ final class BeforeSpec extends TestSpec:
     //         val a2 = Mark.Right(ox2, ix2)
     //         val b1 = Mark.Left(oy1, iy1)
 
-    //         ordB.lt(a2, b1) mustBe true
+    //         ordM.lt(a2, b1) mustBe true
     //       }
     //     }
     //   }
@@ -62,7 +62,7 @@ final class BeforeSpec extends TestSpec:
     //         val a1 = Mark.Left(ox1, ix1)
     //         val b2 = Mark.Right(oy2, iy2)
 
-    //         ordB.gt(a1, b2) mustBe true
+    //         ordM.gt(a1, b2) mustBe true
     //       }
     //     }
     //   }

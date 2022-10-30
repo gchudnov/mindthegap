@@ -97,7 +97,7 @@ final class DiagramSpec extends TestSpec:
         val a = Interval.leftOpen(5) // (5, +∞)
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram(40, 1, List(Span(2, 39, false, false)), List(Tick(2), Tick(39)), List(Label(2, "5"), Label(38, "+∞")), List(Legend("(5,+∞)")), List(Annotation("")))
+        val expected = Diagram(40, 1, List(Span(20, 39, false, false)), List(Tick(20), Tick(39)), List(Label(20, "5"), Label(38, "+∞")), List(Legend("(5,+∞)")), List(Annotation("")))
 
         actual mustBe expected
       }
@@ -106,7 +106,7 @@ final class DiagramSpec extends TestSpec:
         val a = Interval.leftClosed(5) // [5, +∞)
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram(40, 1, List(Span(2, 39, true, false)), List(Tick(2), Tick(39)), List(Label(2, "5"), Label(38, "+∞")), List(Legend("[5,+∞)")), List(Annotation("")))
+        val expected = Diagram(40, 1, List(Span(20, 39, true, false)), List(Tick(20), Tick(39)), List(Label(20, "5"), Label(38, "+∞")), List(Legend("[5,+∞)")), List(Annotation("")))
 
         actual mustBe expected
       }
@@ -115,7 +115,7 @@ final class DiagramSpec extends TestSpec:
         val a = Interval.rightOpen(5) // (-∞, 5)
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram(40, 1, List(Span(0, 37, false, false)), List(Tick(0), Tick(37)), List(Label(0, "-∞"), Label(37, "5")), List(Legend("(-∞,5)")), List(Annotation("")))
+        val expected = Diagram(40, 1, List(Span(0, 20, false, false)), List(Tick(0), Tick(20)), List(Label(0, "-∞"), Label(20, "5")), List(Legend("(-∞,5)")), List(Annotation("")))
 
         actual mustBe expected
       }
@@ -124,7 +124,7 @@ final class DiagramSpec extends TestSpec:
         val a = Interval.rightClosed(5) // (-∞, 5]
 
         val actual   = Diagram.make(List(a), view, canvas)
-        val expected = Diagram(40, 1, List(Span(0, 37, false, true)), List(Tick(0), Tick(37)), List(Label(0, "-∞"), Label(37, "5")), List(Legend("(-∞,5]")), List(Annotation("")))
+        val expected = Diagram(40, 1, List(Span(0, 20, false, true)), List(Tick(0), Tick(20)), List(Label(0, "-∞"), Label(20, "5")), List(Legend("(-∞,5]")), List(Annotation("")))
 
         actual mustBe expected
       }
@@ -666,9 +666,9 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.render(diagram, themeNoLegend)
         val expected = List(
-          "  (************************************)",
-          "--+------------------------------------+",
-          "  5                                   +∞"
+          "                    (******************)", 
+          "--------------------+------------------+", 
+          "                    5                 +∞"
         )
 
         actual mustBe expected
@@ -680,9 +680,9 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.render(diagram, themeNoLegend)
         val exptected = List(
-          "  [************************************)",
-          "--+------------------------------------+",
-          "  5                                   +∞"
+          "                    [******************)", 
+          "--------------------+------------------+", 
+          "                    5                 +∞"
         )
 
         actual mustBe exptected
@@ -694,9 +694,9 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.render(diagram, themeNoLegend)
         val expected = List(
-          "(************************************)  ",
-          "+------------------------------------+--",
-          "-∞                                   5  "
+          "(*******************)                   ", 
+          "+-------------------+-------------------", 
+          "-∞                  5                   "
         )
 
         actual mustBe expected
@@ -708,9 +708,9 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.render(diagram, themeNoLegend)
         val expected = List(
-          "(************************************]  ",
-          "+------------------------------------+--",
-          "-∞                                   5  "
+          "(*******************]                   ", 
+          "+-------------------+-------------------", 
+          "-∞                  5                   "
         )
 
         actual mustBe expected
@@ -737,7 +737,7 @@ final class DiagramSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "display several intervals with legend" in {
+      "display several intervals with a legend" in {
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
         val c = Interval.rightClosed(15)
@@ -758,7 +758,6 @@ final class DiagramSpec extends TestSpec:
         actual mustBe expected
       }
 
-      // TODO: WRONG, FIX IT
       "display several leftClosed intervals" in {
         val a = Interval.leftClosed(1)
         val b = Interval.leftClosed(2)
@@ -770,17 +769,16 @@ final class DiagramSpec extends TestSpec:
         val actual = Diagram.render(diagram, theme)
         val expected = List(
           "  [************************************) | [1,+∞)", 
-          "  [************************************) | [2,+∞)", 
-          "  [************************************) | [3,+∞)", 
-          "  [************************************) | [4,+∞)", 
-          "--+------------------------------------+ |", 
-          "  1                                   +∞ |"
+          "              [************************) | [2,+∞)", 
+          "                         [*************) | [3,+∞)", 
+          "                                     [*) | [4,+∞)", 
+          "--+-----------+----------+-----------+-+ |", 
+          "  1           2          3           4+∞ |"
         )
 
         actual mustBe expected
       }
 
-      // TODO: WRONG, FIX IT
       "display several rightClosed intervals" in {
         val a = Interval.rightClosed(1)
         val b = Interval.rightClosed(2)
@@ -791,12 +789,12 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.render(diagram, theme)
         val expected = List(
-          "(************************************]   | (-∞,1]", 
-          "(************************************]   | (-∞,2]", 
-          "(************************************]   | (-∞,3]", 
+          "(*]                                      | (-∞,1]", 
+          "(*************]                          | (-∞,2]", 
+          "(************************]               | (-∞,3]", 
           "(************************************]   | (-∞,4]", 
-          "+------------------------------------+-- |", 
-          "-∞                                   1   |"
+          "+-+-----------+----------+-----------+-- |", 
+          "-∞1           2          3           4   |"
         )
 
         actual mustBe expected
