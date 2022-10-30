@@ -1,8 +1,9 @@
 package com.github.gchudnov.mtg
 
-import Show.given
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.ListBuffer
+
+import Show.given
 
 /**
  * Diagram
@@ -79,7 +80,7 @@ object Diagram extends NumericDefaults:
 
   /**
    * View
-   * 
+   *
    * TODO: instead of Numeric, we need to use Domain here and replace minus with d(...)
    */
   final case class View[T: Numeric](
@@ -117,6 +118,8 @@ object Diagram extends NumericDefaults:
 
     def make[T: Numeric: Domain](intervals: List[Interval[T]])(using Ordering[Mark[T]]): View[T] =
       val xs: List[Interval[T]] = intervals.filter(_.nonEmpty)
+
+      // val
 
       val ls: List[Value[T]] = xs.map(_.left).map(_.eval).filter(_.isFinite)
       val rs: List[Value[T]] = xs.map(_.right).map(_.eval).filter(_.isFinite)
@@ -166,9 +169,21 @@ object Diagram extends NumericDefaults:
       if i.isEmpty then List.empty[Label]
       else if i.isPoint then List(label(span.x0, Show.str(i.left.eval)))
       else
+        val (l, r) = (i.left, i.right) match
+          case (Mark.At(x), Mark.At(y)) =>
+            (x, y)
+          case (Mark.At(x), Mark.Pred(yy)) =>
+            (x, yy.eval)
+          case (Mark.Succ(xx), Mark.Pred(yy)) =>
+            (xx.eval, yy.eval)
+          case (Mark.Succ(xx), Mark.At(y)) =>
+            (xx.eval, y)
+          case (xx, yy) =>
+            (xx.eval, yy.eval)
+
         List(
-          label(span.x0, Show.str(i.left.eval)),
-          label(span.x1, Show.str(i.right.eval))
+          label(span.x0, Show.str(l)),
+          label(span.x1, Show.str(r))
         )
 
     private def isIn(x: Int): Boolean =
@@ -237,27 +252,39 @@ object Diagram extends NumericDefaults:
     override def translate(i: Interval[T]): Span =
       if i.isEmpty then Span.empty
       else
-      (i.left, i.right) match
-        case (Mark.At(x), Mark.At(y)) =>
-          val p = translate(x, true)
-          val q = translate(y, false)
-          Span(x0 = p, x1 = q, includeX0 = true, includeX1 = true)
-        case (Mark.At(x), Mark.Pred(yy)) =>
-          val p = translate(x, true)
-          val q = translate(yy.eval, false)
-          Span(x0 = p, x1 = q, includeX0 = true, includeX1 = false)
-        case (Mark.Succ(xx), Mark.Pred(yy)) =>
-          val p = translate(xx.eval, true)
-          val q = translate(yy.eval, false)
-          Span(x0 = p, x1 = q, includeX0 = false, includeX1 = false)
-        case (Mark.Succ(xx), Mark.At(y)) =>
-          val p = translate(xx.eval, true)
-          val q = translate(y, false)
-          Span(x0 = p, x1 = q, includeX0 = false, includeX1 = true)
-        case (xx, yy) =>
-          val p = translate(xx.eval, true)
-          val q = translate(yy.eval, false)
-          Span(x0 = p, x1 = q, includeX0 = true, includeX1 = true)
+        (i.left, i.right) match
+          case (Mark.At(x), Mark.At(y)) =>
+            val p  = translate(x, true)
+            val q  = translate(y, false)
+            val lb = if x.isInf then false else true
+            val rb = if y.isInf then false else true
+            Span.make(x0 = p, x1 = q, includeX0 = lb, includeX1 = rb)
+          case (Mark.At(x), Mark.Pred(yy)) =>
+            val p  = translate(x, true)
+            val q  = translate(yy.eval, false)
+            val lb = if x.isInf then false else true
+            val rb = false
+            Span.make(x0 = p, x1 = q, includeX0 = lb, includeX1 = rb)
+          case (Mark.Succ(xx), Mark.Pred(yy)) =>
+            val p  = translate(xx.eval, true)
+            val q  = translate(yy.eval, false)
+            val lb = false
+            val rb = false
+            Span.make(x0 = p, x1 = q, includeX0 = lb, includeX1 = rb)
+          case (Mark.Succ(xx), Mark.At(y)) =>
+            val p  = translate(xx.eval, true)
+            val q  = translate(y, false)
+            val lb = false
+            val rb = if y.isInf then false else true
+            Span.make(x0 = p, x1 = q, includeX0 = lb, includeX1 = rb)
+          case (xx, yy) =>
+            val x  = xx.eval
+            val y  = yy.eval
+            val p  = translate(x, true)
+            val q  = translate(y, false)
+            val lb = if x.isInf then false else true
+            val rb = if y.isInf then false else true
+            Span.make(x0 = p, x1 = q, includeX0 = lb, includeX1 = rb)
 
   /**
    * Tick
@@ -298,6 +325,9 @@ object Diagram extends NumericDefaults:
   object Span:
     val empty: Span =
       Span(1, -1, true, true)
+
+    def make(x0: Int, x1: Int, includeX0: Boolean, includeX1: Boolean): Span =
+      Span(x0, x1, includeX0, includeX1)
 
   /**
    * Legend Entry

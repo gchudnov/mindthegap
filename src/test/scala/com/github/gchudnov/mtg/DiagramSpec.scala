@@ -758,6 +758,51 @@ final class DiagramSpec extends TestSpec:
         actual mustBe expected
       }
 
+      // TODO: WRONG, FIX IT
+      "display several leftClosed intervals" in {
+        val a = Interval.leftClosed(1)
+        val b = Interval.leftClosed(2)
+        val c = Interval.leftClosed(3)
+        val d = Interval.leftClosed(4)
+
+        val diagram = Diagram.make(List(a, b, c, d), view, canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "  [************************************) | [1,+∞)", 
+          "  [************************************) | [2,+∞)", 
+          "  [************************************) | [3,+∞)", 
+          "  [************************************) | [4,+∞)", 
+          "--+------------------------------------+ |", 
+          "  1                                   +∞ |"
+        )
+
+        actual mustBe expected
+      }
+
+      // TODO: WRONG, FIX IT
+      "display several rightClosed intervals" in {
+        val a = Interval.rightClosed(1)
+        val b = Interval.rightClosed(2)
+        val c = Interval.rightClosed(3)
+        val d = Interval.rightClosed(4)
+
+        val diagram = Diagram.make(List(a, b, c, d), view, canvas)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "(************************************]   | (-∞,1]", 
+          "(************************************]   | (-∞,2]", 
+          "(************************************]   | (-∞,3]", 
+          "(************************************]   | (-∞,4]", 
+          "+------------------------------------+-- |", 
+          "-∞                                   1   |"
+        )
+
+        actual mustBe expected
+      }
+
+
       "display overlapping intervals" in {
         val a = Interval.closed(1, 5)
         val b = Interval.closed(2, 6)

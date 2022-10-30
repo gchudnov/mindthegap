@@ -167,7 +167,7 @@ object Interval extends StaticOps:
     make(Mark.at(x), Mark.at(y))
 
   /**
-   * Make an arbitraty interval
+   * Make an arbitraty interval: it might be empty, point or proper.
    */
   def make[T](x: Mark[T], y: Mark[T]): Interval[T] =
     Interval(x, y)

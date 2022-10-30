@@ -15,7 +15,7 @@ final class ShowSpec extends TestSpec:
     "show" should {
 
       "represent an Empty interval" in {
-        val value    = Interval.empty[Int]
+        val value = Interval.empty[Int]
 
         val actual   = Show.asString(value)
         val expected = "∅"
@@ -24,7 +24,7 @@ final class ShowSpec extends TestSpec:
       }
 
       "represent a Point interval" in {
-        val value    = Interval.point(1)
+        val value = Interval.point(1)
 
         val actual   = Show.asString(value)
         val expected = "{1}"
@@ -43,11 +43,11 @@ final class ShowSpec extends TestSpec:
           (Interval.proper(Mark.at(Value.InfNeg), Mark.at(2)), "(-∞,2]"),
           (Interval.proper(Mark.succ(Value.InfNeg), Mark.pred(2)), "(-∞,2)"),
           (Interval.proper(Mark.at(1), Mark.at(Value.InfPos)), "[1,+∞)"),
-          (Interval.proper(Mark.at(1), Mark.pred(Value.InfPos)), "(1,+∞)"),
+          (Interval.proper(Mark.succ(1), Mark.pred(Value.InfPos)), "(1,+∞)"),
           (Interval.proper[Int](Mark.at(Value.InfNeg), Mark.at(Value.InfPos)), "(-∞,+∞)"),
           (Interval.proper[Int](Mark.at(Value.InfNeg), Mark.pred(Value.InfPos)), "(-∞,+∞)"),
           (Interval.proper[Int](Mark.succ(Value.InfNeg), Mark.at(Value.InfPos)), "(-∞,+∞)"),
-          (Interval.proper[Int](Mark.succ(Value.InfNeg), Mark.pred(Value.InfPos)), "(-∞,+∞)"),
+          (Interval.proper[Int](Mark.succ(Value.InfNeg), Mark.pred(Value.InfPos)), "(-∞,+∞)")
         )
 
         forAll(t) { (xx, expected) =>

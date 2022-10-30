@@ -14,6 +14,9 @@ enum Value[+T]:
   def isInfPos: Boolean =
     this.ordinal == 2
 
+  def isInf: Boolean =
+    isInfNeg || isInfPos
+
   def get: T =
     this match
       case Value.Finite(x) =>
