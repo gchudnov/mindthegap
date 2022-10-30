@@ -16,9 +16,9 @@ final class IntersectionSpec extends TestSpec:
 
     // "a.intersection(b)" should {
     //   "b.intersection(a)" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       val zz = xx.intersection(yy)
 
@@ -46,9 +46,9 @@ final class IntersectionSpec extends TestSpec:
     //    * A & B = B & A
     //    */
     //   "equal" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       val actual   = xx.intersection(yy).canonical
     //       val expected = yy.intersection(xx).canonical
@@ -278,9 +278,9 @@ final class IntersectionSpec extends TestSpec:
 
     // "A, B, C" should {
     //   "(A & B) & C = A & (B & C)" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2)), ((oz1, iz1), (oz2, iz2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY, ((oz1, iz1), (oz2, iz2))) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
     //       val zz = Interval.make(oz1, iz1, oz2, iz2)
 
     //       val actual   = ((xx.intersection(yy)).intersection(zz)).canonical

@@ -21,16 +21,16 @@ final class FinishesSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  // val ordB: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
+  // val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "Finishes" when {
     // import IntervalRelAssert.*
 
     // "a.finishes(b)" should {
     //   "b.finisedBy(a)" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       whenever(xx.finishes(yy)) {
     //         yy.isFinishedBy(xx) mustBe true
@@ -38,10 +38,10 @@ final class FinishesSpec extends TestSpec:
     //         assertOne(Rel.Finishes)(xx, yy)
 
     //         // a+ = b+ && b.isSuperset(a) && !a.equalsTo(b)
-    //         val a2 = Mark.Right(ox2, ix2)
-    //         val b2 = Mark.Right(oy2, iy2)
+    //         val a2 = argsX.right
+    //         val b2 = argsY.right
 
-    //         (ordB.equiv(a2, b2) && yy.isSuperset(xx) && !xx.equalsTo(yy)) mustBe true
+    //         (ordM.equiv(a2, b2) && yy.isSuperset(xx) && !xx.equalsTo(yy)) mustBe true
     //       }
     //     }
     //   }
@@ -49,9 +49,9 @@ final class FinishesSpec extends TestSpec:
 
     // "a.finisedBy(b)" should {
     //   "b.finishes(a)" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       whenever(xx.isFinishedBy(yy)) {
     //         yy.finishes(xx) mustBe true
@@ -59,10 +59,10 @@ final class FinishesSpec extends TestSpec:
     //         assertOne(Rel.IsFinishedBy)(xx, yy)
 
     //         // a+ = b+ && a.isSuperset(b) && !a.equalsTo(b)
-    //         val a2 = Mark.Right(ox2, ix2)
-    //         val b2 = Mark.Right(oy2, iy2)
+    //         val a2 = argsX.right
+    //         val b2 = argsY.right
 
-    //         (ordB.equiv(a2, b2) && xx.isSuperset(yy) && !xx.equalsTo(yy)) mustBe true
+    //         (ordM.equiv(a2, b2) && xx.isSuperset(yy) && !xx.equalsTo(yy)) mustBe true
     //       }
     //     }
     //   }
@@ -71,9 +71,9 @@ final class FinishesSpec extends TestSpec:
     // "a.finishes(b) AND b.isFinishedBy(a)" should {
 
     //   "equal" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       val actual   = xx.finishes(yy)
     //       val expected = yy.isFinishedBy(xx)
@@ -120,7 +120,7 @@ final class FinishesSpec extends TestSpec:
 
     //     // (-inf, 2]  [-inf, 3)
     //     Interval.make[Int](None, false, Some(2), true).finishes(Interval.make[Int](None, true, Some(3), false))
-    //     ordB.equiv(Mark.Right(Some(2), true), Mark.Right(Some(3), false)) mustBe true
+    //     ordM.equiv(Mark.Right(Some(2), true), Mark.Right(Some(3), false)) mustBe true
     //   }
     // }
   }

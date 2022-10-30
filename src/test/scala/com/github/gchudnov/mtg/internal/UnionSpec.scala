@@ -15,9 +15,9 @@ final class UnionSpec extends TestSpec:
   "Union" when {
     // "a.union(b)" should {
     //   "b.union(a)" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       val zz = xx.union(yy)
 
@@ -35,9 +35,9 @@ final class UnionSpec extends TestSpec:
 
     // "a.union(b) AND b.union(a)" should {
     //   "equal" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       val actual   = xx.union(yy).canonical
     //       val expected = yy.union(xx).canonical

@@ -25,16 +25,16 @@ final class IsSubsetSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  // val ordB: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
+  // val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "IsSubset" when {
     // import IntervalRelAssert.*
 
     // "a.isSubset(b)" should {
     //   "b.isSuperset(a)" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       whenever(xx.isSubset(yy)) {
     //         yy.isSuperset(xx) mustBe true
@@ -42,7 +42,7 @@ final class IsSubsetSpec extends TestSpec:
     //         assertOneOf(Set(Rel.Starts, Rel.During, Rel.Finishes, Rel.EqualsTo))(xx, yy)
 
     //         // b- <= a- && b+ >= a+
-    //         (ordB.lteq(yy.left, xx.left) && ordB.gteq(yy.right, xx.right)) mustBe true
+    //         (ordM.lteq(yy.left, xx.left) && ordM.gteq(yy.right, xx.right)) mustBe true
     //       }
     //     }
     //   }

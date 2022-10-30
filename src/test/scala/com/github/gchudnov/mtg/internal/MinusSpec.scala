@@ -14,16 +14,16 @@ final class MinusSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  // val ordB: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
+  // val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "Minus" when {
     // "a.minus(b)" should {
 
     //   // TODO: re-enable and fix when we fix infinity
     //   // "verify" in {
-    //   //   forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //   //     val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //   //     val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //   //   forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //   //     val xx = Interval.make(argsX.left, argsX.right)
+    //   //     val yy = Interval.make(argsY.left, argsY.right)
 
     //   //     whenever(xx.nonEmpty && yy.nonEmpty && !xx.contains(yy)) {
     //   //       val zz = xx.minus(yy)

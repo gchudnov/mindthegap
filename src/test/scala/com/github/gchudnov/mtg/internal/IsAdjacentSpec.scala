@@ -13,16 +13,16 @@ final class IsAdjacentSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  // val ordB: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
+  // val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "IsAdjacent" when {
     // import IntervalRelAssert.*
 
     // "a.isAdjacent(b)" should {
     //   "b.isAdjacent(a)" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       whenever(xx.isAdjacent(yy)) {
     //         yy.isAdjacent(xx) mustBe true
@@ -32,16 +32,16 @@ final class IsAdjacentSpec extends TestSpec:
     //         // succ(a+) = b- OR succ(b+) = a-
     //         if xx.before(yy) then
     //           // succ(a+) = b-
-    //           val b1 = Mark.Left(oy1, iy1)
-    //           val a2 = Mark.Right(ox2, ix2)
+    //           val b1 = argsY.left
+    //           val a2 = argsX.right
 
-    //           ordB.equiv(a2.succ, b1) mustBe (true)
+    //           ordM.equiv(a2.succ, b1) mustBe (true)
     //         else if xx.after(yy) then
     //           // succ(b+) = a-
-    //           val a1 = Mark.Left(ox1, ix1)
-    //           val b2 = Mark.Right(oy2, iy2)
+    //           val a1 = argsX.left
+    //           val b2 = argsY.right
 
-    //           ordB.equiv(b2.succ, a1) mustBe (true)
+    //           ordM.equiv(b2.succ, a1) mustBe (true)
     //       }
     //     }
     //   }
@@ -50,9 +50,9 @@ final class IsAdjacentSpec extends TestSpec:
     // "a.isAdjacent(b) AND b.isAdjacent(a)" should {
 
     //   "equal" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       val actual   = xx.isAdjacent(yy)
     //       val expected = yy.isAdjacent(xx)

@@ -13,7 +13,7 @@ final class IsSupersetSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  // val ordB: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
+  // val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "IsSuperset" when {
     // import IntervalRelAssert.*
@@ -21,9 +21,9 @@ final class IsSupersetSpec extends TestSpec:
     // "a.isSuperset(b)" should {
     //   "b.isSubset(a)" in {
 
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       whenever(xx.isSuperset(yy)) {
     //         yy.isSubset(xx) mustBe true
@@ -31,7 +31,7 @@ final class IsSupersetSpec extends TestSpec:
     //         assertOneOf(Set(Rel.IsStartedBy, Rel.Contains, Rel.IsFinishedBy, Rel.EqualsTo))(xx, yy)
 
     //         // a- <= b- && a+ >= b+
-    //         (ordB.lteq(xx.left, yy.left) && ordB.gteq(xx.right, yy.right)) mustBe true
+    //         (ordM.lteq(xx.left, yy.left) && ordM.gteq(xx.right, yy.right)) mustBe true
     //       }
     //     }
     //   }

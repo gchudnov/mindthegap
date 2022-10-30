@@ -21,16 +21,16 @@ final class OverlapsSpec extends TestSpec: // with IntervalRelAssert {}
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  // val ordB: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
+  // val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "Overlap" when {
     // import IntervalRelAssert.*
 
     // "a.overlaps(b)" should {
     //   "b.isOverlapedBy(a)" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       whenever(xx.overlaps(yy)) {
     //         yy.isOverlapedBy(xx) mustBe true
@@ -38,13 +38,13 @@ final class OverlapsSpec extends TestSpec: // with IntervalRelAssert {}
     //         assertOne(Rel.Overlaps)(xx, yy)
 
     //         // a- < b+ && b- < a+
-    //         val a1 = Mark.Left(ox1, ix1)
-    //         val b1 = Mark.Left(oy1, iy1)
+    //         val a1 = argsX.left
+    //         val b1 = argsY.left
 
-    //         val a2 = Mark.Right(ox2, ix2)
-    //         val b2 = Mark.Right(oy2, iy2)
+    //         val a2 = argsX.right
+    //         val b2 = argsY.right
 
-    //         (ordB.lt(a1, b2) && ordB.lt(b1, a2)) mustBe true
+    //         (ordM.lt(a1, b2) && ordM.lt(b1, a2)) mustBe true
     //       }
     //     }
     //   }
@@ -52,9 +52,9 @@ final class OverlapsSpec extends TestSpec: // with IntervalRelAssert {}
 
     // "a.isOverlapedBy(b)" should {
     //   "b.overlaps(a)" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       whenever(xx.isOverlapedBy(yy)) {
     //         yy.overlaps(xx) mustBe true
@@ -67,9 +67,9 @@ final class OverlapsSpec extends TestSpec: // with IntervalRelAssert {}
 
     // "a.overlaps(b) AND b.isOverlapedBy(a)" should {
     //   "equal" in {
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-    //       val xx = Interval.make(ox1, ix1, ox2, ix2)
-    //       val yy = Interval.make(oy1, iy1, oy2, iy2)
+    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+    //       val xx = Interval.make(argsX.left, argsX.right)
+    //       val yy = Interval.make(argsY.left, argsY.right)
 
     //       val actual   = xx.overlaps(yy)
     //       val expected = yy.isOverlapedBy(xx)

@@ -66,7 +66,7 @@ private[mtg] transparent trait BasicRel[T]:
   /**
    * IsMetBy (M)
    */
-  final def isMetBy(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def isMetBy(b: Interval[T])(using Ordering[Mark[T]]): Boolean =
     b.meets(a)
 
   /**
@@ -92,7 +92,7 @@ private[mtg] transparent trait BasicRel[T]:
   /**
    * IsOverlapedBy (O)
    */
-  final def isOverlapedBy(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def isOverlapedBy(b: Interval[T])(using Ordering[Mark[T]]): Boolean =
     b.overlaps(a)
 
   /**
