@@ -290,5 +290,39 @@ final class IntervalSpec extends TestSpec:
           Interval.open(1, 5).canonical.canonical mustBe Interval.closed(2, 4)
         }
       }
+
+      "normalize" should {
+        "provide a canonical form for intervals" in {
+          // [1, 5] -> [1, 5]
+          Interval.make(Mark.at(1), Mark.at(5)).normalize mustBe Interval.closed(1, 5)
+
+          // )1, 5] -> [0, 5]
+          Interval.make(Mark.pred(1), Mark.at(5)).normalize mustBe Interval.closed(0, 5)
+
+          // ))1, 5] -> [-1, 5]
+          Interval.make(Mark.pred(Mark.pred(1)), Mark.at(5)).normalize mustBe Interval.closed(-1, 5)
+
+          // (1, 5] -> (1, 5]
+          Interval.make(Mark.succ(1), Mark.at(5)).normalize mustBe Interval.leftOpenRightClosed(1, 5)
+
+          // ((1, 5] -> (2, 5]
+          Interval.make(Mark.succ(Mark.succ(1)), Mark.at(5)).normalize mustBe Interval.leftOpenRightClosed(2, 5)
+
+          // [1, 5) -> [1, 5)
+          Interval.make(Mark.at(1), Mark.pred(5)).normalize mustBe Interval.leftClosedRightOpen(1, 5)
+
+          // [1, 5)) -> [1, 4)
+          Interval.make(Mark.at(1), Mark.pred(Mark.pred(5))).normalize mustBe Interval.leftClosedRightOpen(1, 4)
+
+          // [1, 5( -> [1, 6]
+          Interval.make(Mark.at(1), Mark.succ(5)).normalize mustBe Interval.closed(1, 6)
+
+          // [1, 5(( -> [1, 7]
+          Interval.make(Mark.at(1), Mark.succ(Mark.succ(5))).normalize mustBe Interval.closed(1, 7)
+
+          // ))1, 5((
+          Interval.make(Mark.pred(Mark.pred(1)), Mark.succ(Mark.succ(5))).normalize mustBe Interval.closed(-1, 7)
+        }
+      }
     }
   }

@@ -15,6 +15,19 @@ object Show:
 
   private val sep = ','
 
+  def asString[T: Domain](i: Interval[T])(using Ordering[Mark[T]]): String =
+    if i.isEmpty then empty.toString()
+    else if i.isPoint then
+      val p = str(i.left.eval)
+      s"${leftPoint}${p}${rightPoint}"
+    else s"${showLeft(i.left)}${sep}${showRight(i.right)}"
+
+  private[mtg] def leftBound(isInclude: Boolean): Char =
+    if isInclude then leftClosed else leftOpen
+
+  private[mtg] def rightBound(isInclude: Boolean): Char =
+    if isInclude then rightClosed else rightOpen
+
   private[mtg] def str[T](x: Value[T]): String =
     x match
       case Value.InfNeg =>
@@ -24,42 +37,24 @@ object Show:
       case Value.Finite(x) =>
         x.toString()
 
-  def asString[T: Domain](i: Interval[T])(using Ordering[Mark[T]]): String =
-    if i.isEmpty then empty.toString()
-    else if i.isPoint then
-      val p = str(i.left.eval)
-      s"${leftPoint}${p}${rightPoint}"
-    else
-      (i.left, i.right) match
-        case (Mark.At(x), Mark.At(y)) =>
-          val p  = str(x)
-          val q  = str(y)
-          val lb = if x.isInf then leftOpen else leftClosed
-          val rb = if y.isInf then rightOpen else rightClosed
-          s"${lb}${p}${sep}${q}${rb}"
-        case (Mark.At(x), Mark.Pred(yy)) =>
-          val p  = str(x)
-          val q  = str(yy.eval)
-          val lb = if x.isInf then leftOpen else leftClosed
-          val rb = rightOpen
-          s"${lb}${p}${sep}${q}${rb}"
-        case (Mark.Succ(xx), Mark.Pred(yy)) =>
-          val p  = str(xx.eval)
-          val q  = str(yy.eval)
-          val lb = leftOpen
-          val rb = rightOpen
-          s"${lb}${p}${sep}${q}${rb}"
-        case (Mark.Succ(xx), Mark.At(y)) =>
-          val p  = str(xx.eval)
-          val q  = str(y)
-          val lb = leftOpen
-          val rb = if y.isInf then rightOpen else rightClosed
-          s"${lb}${p}${sep}${q}${rb}"
-        case (xx, yy) =>
-          val x  = xx.eval
-          val y  = yy.eval
-          val p  = str(x)
-          val q  = str(y)
-          val lb = if x.isInf then leftOpen else leftClosed
-          val rb = if y.isInf then rightOpen else rightClosed
-          s"${lb}${p}${sep}${q}${rb}"
+  private def showLeft[T: Domain](left: Mark[T]): String =
+    val (x, isInclude) = left match
+      case Mark.At(x) =>
+        (x, !x.isInf)
+      case Mark.Pred(_) =>
+        val x = left.eval
+        (x, !x.isInf)
+      case Mark.Succ(xx) =>
+        (xx.eval, false)
+    s"${leftBound(isInclude)}${str(x)}"
+
+  private def showRight[T: Domain](right: Mark[T]): String =
+    val (y, isInclude) = right match
+      case Mark.At(y) =>
+        (y, !y.isInf)
+      case Mark.Pred(yy) =>
+        (yy.eval, false)
+      case Mark.Succ(yy) =>
+        val y = right.eval
+        (y, !y.isInf)
+    s"${str(y)}${rightBound(isInclude)}"

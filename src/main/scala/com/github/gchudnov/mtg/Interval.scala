@@ -71,10 +71,48 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
     !isProper
 
   /**
-   * A canonical form of an interval is where the interval is closed on both starting and finishing sides.
+   * A canonical form of an interval is where the interval is closed on both starting and finishing sides:
+   *
+   * {{{
+   *  [a, b]
+   * }}}
    */
   def canonical(using Domain[T]): Interval[T] =
     Interval(left.at, right.at)
+
+  /**
+   * Reduces the amount of Succ and Pred values so that the interval is one of:
+   *
+   * {{{
+   *   [a, b]
+   *   [a, b)
+   *   (a, b)
+   *   (a, b]
+   * }}}
+   */
+  def normalize(using Domain[T]): Interval[T] =
+    val l = normalizeLeft
+    val r = normalizeRight
+    if l != left || r != right then Interval(l, r)
+    else this
+
+  private def normalizeLeft(using Domain[T]): Mark[T] =
+    left match
+      case Mark.At(_) =>
+        left
+      case Mark.Pred(_) =>
+        left.at
+      case Mark.Succ(xx) =>
+        Mark.Succ(xx.at)
+
+  private def normalizeRight(using Domain[T]): Mark[T] =
+    right match
+      case Mark.At(_) =>
+        right
+      case Mark.Pred(yy) =>
+        Mark.Pred(yy.at)
+      case Mark.Succ(_) =>
+        right.at
 
 object Interval extends StaticOps:
 

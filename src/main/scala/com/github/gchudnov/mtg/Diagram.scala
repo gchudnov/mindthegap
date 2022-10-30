@@ -119,13 +119,10 @@ object Diagram extends NumericDefaults:
     def make[T: Numeric: Domain](intervals: List[Interval[T]])(using Ordering[Mark[T]]): View[T] =
       val xs: List[Interval[T]] = intervals.filter(_.nonEmpty)
 
-      // val
+      val ps = xs.flatMap(x => List(x.left, x.right)).map(_.eval).filter(_.isFinite)
 
-      val ls: List[Value[T]] = xs.map(_.left).map(_.eval).filter(_.isFinite)
-      val rs: List[Value[T]] = xs.map(_.right).map(_.eval).filter(_.isFinite)
-
-      val lMin: Option[T] = ls.minOption.map(_.get)
-      val rMax: Option[T] = rs.maxOption.map(_.get)
+      val lMin: Option[T] = ps.minOption.map(_.get)
+      val rMax: Option[T] = ps.maxOption.map(_.get)
 
       val (vMin, vMax) = (lMin, rMax) match
         case xy @ (Some(x), Some(y)) =>
