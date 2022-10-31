@@ -122,18 +122,18 @@ final class DuringSpec extends TestSpec:
         // [5, 7] (-inf, +inf)
         Interval.closed(5, 7).during(Interval.unbounded[Int]) mustBe (true)
 
-        // [-∞,0]  [-∞,+∞)
-        Interval.proper(Mark.at(Value.infNeg), Mark.at(Value.finite(0))).during(Interval.proper(Mark.at(Value.infNeg), Mark.at(Value.infPos))) mustBe (false)
+        // (-∞,0]  (-∞,+∞)
+        Interval.rightClosed(0).during(Interval.unbounded[Int]) mustBe (false)
 
-        // [0, 2)  [-∞,+∞]
-        Interval.proper(Mark.at(Value.finite(0)), Mark.pred(Value.finite(2))).during(Interval.proper(Mark.at(Value.infNeg), Mark.at(Value.infPos))) mustBe (true)
+        // [0, 2)  (-∞,+∞)
+        Interval.closed(0, 2).during(Interval.unbounded[Int]) mustBe (true)
 
-        // [0]  [-∞,+∞)
-        Interval.point(0).during(Interval.proper(Mark.at(Value.infNeg), Mark.at(Value.infPos))) mustBe (true)
+        // [0]  (-∞,+∞)
+        Interval.point(0).during(Interval.unbounded[Int]) mustBe (true)
 
-        // (3,10), (0,+∞]
-        Interval.open(3, 10).during(Interval.proper(Mark.succ(Value.finite(0)), Mark.at(Value.infPos))) mustBe (true)
-        Interval.proper(Mark.succ(Value.finite(0)), Mark.at(Value.infPos)).contains(Interval.open(3, 10)) mustBe (true)
+        // (3,10), (0,+∞)
+        Interval.open(3, 10).during(Interval.leftOpen(0)) mustBe (true)
+        Interval.leftOpen(0).contains(Interval.open(3, 10)) mustBe (true)
       }
     }
   }

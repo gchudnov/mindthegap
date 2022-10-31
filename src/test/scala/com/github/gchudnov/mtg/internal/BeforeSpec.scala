@@ -104,9 +104,9 @@ final class BeforeSpec extends TestSpec:
         Interval.point(5).before(Interval.leftClosed(6)) mustBe (true)
         Interval.point(5).before(Interval.unbounded[Int]) mustBe (false)
 
-        // [-∞,0], {4}
-        Interval.point(4).after(Interval.proper[Int](Mark.at(Value.infNeg), Mark.at(Value.finite(0)))) mustBe (true)
-        Interval.proper[Int](Mark.at(Value.infNeg), Mark.at(Value.finite(0))).before(Interval.point(4)) mustBe (true)
+        // (-∞,0], {4}
+        Interval.point(4).after(Interval.rightClosed(0)) mustBe (true)
+        Interval.rightClosed(0).before(Interval.point(4)) mustBe (true)
 
         // Proper
         Interval.open(4, 7).before(Interval.open(4, 7)) mustBe (false)

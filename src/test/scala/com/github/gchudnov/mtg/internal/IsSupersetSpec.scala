@@ -2,9 +2,9 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
-import com.github.gchudnov.mtg.Mark
 
 final class IsSupersetSpec extends TestSpec:
 
@@ -13,36 +13,36 @@ final class IsSupersetSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  // val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
+  val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "IsSuperset" when {
-    // import IntervalRelAssert.*
+    import IntervalRelAssert.*
 
-    // "a.isSuperset(b)" should {
-    //   "b.isSubset(a)" in {
+    "a.isSuperset(b)" should {
+      "b.isSubset(a)" in {
 
-    //     forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
-    //       val xx = Interval.make(argsX.left, argsX.right)
-    //       val yy = Interval.make(argsY.left, argsY.right)
+        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-    //       whenever(xx.isSuperset(yy)) {
-    //         yy.isSubset(xx) mustBe true
+          whenever(xx.isSuperset(yy)) {
+            yy.isSubset(xx) mustBe true
 
-    //         assertOneOf(Set(Rel.IsStartedBy, Rel.Contains, Rel.IsFinishedBy, Rel.EqualsTo))(xx, yy)
+            assertOneOf(Set(Rel.IsStartedBy, Rel.Contains, Rel.IsFinishedBy, Rel.EqualsTo))(xx, yy)
 
-    //         // a- <= b- && a+ >= b+
-    //         (ordM.lteq(xx.left, yy.left) && ordM.gteq(xx.right, yy.right)) mustBe true
-    //       }
-    //     }
-    //   }
+            // a- <= b- && a+ >= b+
+            (ordM.lteq(xx.left, yy.left) && ordM.gteq(xx.right, yy.right)) mustBe true
+          }
+        }
+      }
 
-    //   "valid in special cases" in {
-    //     Interval.open(4, 10).isSuperset(Interval.open(4, 7)) mustBe (true)
-    //     Interval.open(2, 10).isSuperset(Interval.open(4, 7)) mustBe (true)
-    //     Interval.open(2, 7).isSuperset(Interval.open(4, 7)) mustBe (true)
-    //     Interval.open(4, 7).isSuperset(Interval.open(4, 7)) mustBe (true)
+      "valid in special cases" in {
+        Interval.open(4, 10).isSuperset(Interval.open(4, 7)) mustBe (true)
+        Interval.open(2, 10).isSuperset(Interval.open(4, 7)) mustBe (true)
+        Interval.open(2, 7).isSuperset(Interval.open(4, 7)) mustBe (true)
+        Interval.open(4, 7).isSuperset(Interval.open(4, 7)) mustBe (true)
 
-    //     Interval.unbounded[Int].isSuperset(Interval.closed(1, 10)) mustBe (true)
-    //   }
-    // }
+        Interval.unbounded[Int].isSuperset(Interval.closed(1, 10)) mustBe (true)
+      }
+    }
   }
