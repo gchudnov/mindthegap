@@ -209,4 +209,4 @@ private[mtg] transparent trait BasicRel[T]:
    * }}}
    */
   final def equalsTo(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
-    a.nonEmpty && b.nonEmpty && ordM.equiv(a.left, b.left) && ordM.equiv(a.right, b.right)
+    ordM.equiv(a.left, b.left) && ordM.equiv(a.right, b.right)

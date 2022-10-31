@@ -1,5 +1,6 @@
 # TODO
 
+- add tests for negative intervals
 - add laws tests
 - add laws to the documentation??
 - add COUNT -- or size to get the cardinality, add it to Domain (Ordinal)

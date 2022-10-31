@@ -29,13 +29,7 @@ private[mtg] transparent trait BasicOps[T]:
    * }}}
    */
   final def intersection(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
-    if a.isEmpty || b.isEmpty then Interval.empty[T]
-    else Interval.make(ordM.max(a.left, b.left), ordM.min(a.right, b.right))
-
-  /*
-    if (a.nonEmpty && b.nonEmpty) && (ordM.lteq(a.left, b.right) && ordM.lteq(b.left, a.right)) then Interval.make(ordM.max(a.left, b.left), ordM.min(a.right, b.right))
-    else Interval.empty[T]
-   */
+    Interval.make(ordM.max(a.left, b.left), ordM.min(a.right, b.right))
 
   /**
    * Span
@@ -65,9 +59,13 @@ private[mtg] transparent trait BasicOps[T]:
    * }}}
    */
   final def span(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
-    if a.isEmpty then b
-    else if b.isEmpty then a
-    else Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
+    (a.isEmpty, b.isEmpty) match
+      case (true, true) | (false, false) =>
+        Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
+      case (true, false) =>
+        b
+      case (false, true) =>
+        a
 
   /**
    * Union
@@ -97,10 +95,14 @@ private[mtg] transparent trait BasicOps[T]:
    * }}}
    */
   def union(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
-    if a.isEmpty then b
-    else if b.isEmpty then a
-    else if a.merges(b) then Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
-    else Interval.empty[T]
+    (a.isEmpty, b.isEmpty) match
+      case (true, true) | (false, false) =>
+        if a.merges(b) then Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
+        else Interval.empty[T]
+      case (true, false) =>
+        b
+      case (false, true) =>
+        a
 
   /**
    * Gap (Complement)
@@ -120,8 +122,7 @@ private[mtg] transparent trait BasicOps[T]:
    * }}}
    */
   final def gap(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
-    if (a.nonEmpty && b.nonEmpty) && (ordM.lt(b.right, a.left) || ordM.lt(a.right, b.left)) then
-      Interval.make(ordM.min(a.right, b.right).succ, ordM.max(a.left, b.left).pred)
+    if (a.nonEmpty && b.nonEmpty) && (ordM.lt(b.right, a.left) || ordM.lt(a.right, b.left)) then Interval.make(ordM.min(a.right, b.right).succ, ordM.max(a.left, b.left).pred)
     else Interval.empty[T]
 
   /**

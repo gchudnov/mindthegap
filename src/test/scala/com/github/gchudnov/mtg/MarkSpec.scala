@@ -137,6 +137,15 @@ final class MarkSpec extends TestSpec:
 
         actual mustBe expected
       }
+
+      "Pred(At(Finite(-3)) == Finite(-4)" in {
+        val x = Mark.pred(Mark.at(Value.finite(-3)))
+
+        val actual = x.eval
+        val expected = Value.finite(-4)
+
+        actual mustBe(expected)
+      }
     }
 
     "Mark.Succ" should {

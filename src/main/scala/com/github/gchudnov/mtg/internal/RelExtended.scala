@@ -158,7 +158,7 @@ private[mtg] transparent trait ExtendedRel[T]:
    * }}}
    */
   final def isLess(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
-    a.nonEmpty && b.nonEmpty && ordM.lt(a.left, b.left) && ordM.lt(a.right, b.right)
+    ordM.lt(a.left, b.left) && ordM.lt(a.right, b.right)
 
   /**
    * IsGreater
@@ -177,4 +177,4 @@ private[mtg] transparent trait ExtendedRel[T]:
    * }}}
    */
   final def isGreater(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
-    a.nonEmpty && b.nonEmpty && ordM.gt(a.left, b.left) && ordM.gt(a.right, b.right)
+    ordM.gt(a.left, b.left) && ordM.gt(a.right, b.right)
