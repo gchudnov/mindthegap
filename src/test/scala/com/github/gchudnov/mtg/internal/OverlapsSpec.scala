@@ -28,7 +28,7 @@ final class OverlapsSpec extends TestSpec:
 
     "a.overlaps(b)" should {
       "b.isOverlapedBy(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -52,7 +52,7 @@ final class OverlapsSpec extends TestSpec:
 
     "a.isOverlapedBy(b)" should {
       "b.overlaps(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -67,7 +67,7 @@ final class OverlapsSpec extends TestSpec:
 
     "a.overlaps(b) AND b.isOverlapedBy(a)" should {
       "equal" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 

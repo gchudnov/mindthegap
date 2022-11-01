@@ -28,7 +28,7 @@ final class IsLessSpec extends TestSpec:
 
     "a.isLess(b)" should {
       "b.isGreater(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -43,7 +43,7 @@ final class IsLessSpec extends TestSpec:
 
     "a.isGreater(b)" should {
       "b.isLess(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -59,7 +59,7 @@ final class IsLessSpec extends TestSpec:
     "a.isLess(b) AND b.isGreater(a)" should {
 
       "verify" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 

@@ -32,7 +32,7 @@ final class IntervalSpec extends TestSpec:
        * }}}
        */
       "create intervals" in {
-        forAll(genOneOfIntArgs) { case args =>
+        forAll(genAnyIntArgs) { case args =>
           val actual = Interval.make(args.left, args.right)
 
           if ordM.gt(args.left, args.right) then

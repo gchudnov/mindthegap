@@ -20,7 +20,7 @@ final class IsDisjointSpec extends TestSpec:
 
     "a.isDisjoint(b)" should {
       "b.isDisjoint(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -44,7 +44,7 @@ final class IsDisjointSpec extends TestSpec:
 
     "a.isDisjoint(b) AND b.isDisjoint(a)" should {
       "equal" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 

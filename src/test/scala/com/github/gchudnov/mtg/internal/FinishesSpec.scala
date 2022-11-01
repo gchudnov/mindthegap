@@ -28,7 +28,7 @@ final class FinishesSpec extends TestSpec:
 
     "a.finishes(b)" should {
       "b.finisedBy(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -49,7 +49,7 @@ final class FinishesSpec extends TestSpec:
 
     "a.finisedBy(b)" should {
       "b.finishes(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -71,7 +71,7 @@ final class FinishesSpec extends TestSpec:
     "a.finishes(b) AND b.isFinishedBy(a)" should {
 
       "equal" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 

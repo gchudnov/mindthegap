@@ -28,7 +28,7 @@ final class StartsSpec extends TestSpec:
 
     "a.starts(b)" should {
       "b.isStartedBy(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -49,7 +49,7 @@ final class StartsSpec extends TestSpec:
 
     "a.isStartedBy(b)" should {
       "b.starts(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -70,7 +70,7 @@ final class StartsSpec extends TestSpec:
 
     "a.starts(b) AND b.isStartedBy(a)" should {
       "equal" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 

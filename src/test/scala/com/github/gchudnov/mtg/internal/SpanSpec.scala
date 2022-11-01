@@ -17,7 +17,7 @@ final class SpanSpec extends TestSpec:
     "a.span(b)" should {
 
       "b.span(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -199,7 +199,9 @@ final class SpanSpec extends TestSpec:
 
         actual mustBe expected
       }
+    }
 
+    "negative intervals" should {
       "[4, 1] if [2, 1] # [4, 3]" in {
         // [2, 1]
         val a = Interval.make(Value.finite(2), Value.finite(1))
@@ -231,6 +233,35 @@ final class SpanSpec extends TestSpec:
       }
     }
 
+    "A, B" should {
+      "A # B = B # A" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          val actual   = xx.span(yy).canonical
+          val expected = yy.span(xx).canonical
+
+          actual mustBe expected
+        }
+      }
+    }
+
+    "A, B, C" should {
+      "(A # B) # C = A # (B # C)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY, argsZ) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+          val zz = Interval.make(argsZ.left, argsZ.right)
+
+          val actual   = ((xx.span(yy)).span(zz)).canonical
+          val expected = xx.span(yy.span(zz)).canonical
+
+          actual mustBe expected
+        }
+      }
+    }
+
     "Interval" should {
       "Interval.span(a, b)" in {
         val a = Interval.closed(1, 5)  // [1, 5]
@@ -245,35 +276,6 @@ final class SpanSpec extends TestSpec:
         c2 mustBe c1
 
         c1 mustBe expected
-      }
-    }
-
-    "A, B" should {
-      "A # B = B # A" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          val actual   = xx.span(yy).canonical
-          val expected = yy.span(xx).canonical
-
-          actual mustBe expected
-        }
-      }
-    }
-
-    "A, B, C" should {
-      "(A # B) # C = A # (B # C)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY, argsZ) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-          val zz = Interval.make(argsZ.left, argsZ.right)
-
-          val actual   = ((xx.span(yy)).span(zz)).canonical
-          val expected = xx.span(yy.span(zz)).canonical
-
-          actual mustBe expected
-        }
       }
     }
   }

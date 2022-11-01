@@ -16,7 +16,7 @@ final class UnionSpec extends TestSpec:
   "Union" when {
     "a.union(b)" should {
       "b.union(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -195,7 +195,9 @@ final class UnionSpec extends TestSpec:
 
         actual mustBe expected
       }
+    }
 
+    "negative intervals" should {
       "[9, 1] if [2, 1] U [4, 3]" in {
         // [2, 1]
         val a = Interval.make(Value.finite(2), Value.finite(1))
@@ -227,6 +229,20 @@ final class UnionSpec extends TestSpec:
       }
     }
 
+    "A, B" should {
+      "A U B = B U A" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          val actual   = xx.union(yy).canonical
+          val expected = yy.union(xx).canonical
+
+          actual mustBe expected
+        }
+      }
+    }
+
     "Interval" should {
       "Interval.union(a, b)" in {
         val a = Interval.closed(1, 5)  // [1, 5]
@@ -241,20 +257,6 @@ final class UnionSpec extends TestSpec:
         c2 mustBe c1
 
         c1 mustBe expected
-      }
-    }
-
-    "A, B" should {
-      "A U B = B U A" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          val actual   = xx.union(yy).canonical
-          val expected = yy.union(xx).canonical
-
-          actual mustBe expected
-        }
       }
     }
   }

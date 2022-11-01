@@ -19,7 +19,7 @@ final class IntersectionSpec extends TestSpec:
 
     "a.intersection(b)" should {
       "b.intersection(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -226,15 +226,17 @@ final class IntersectionSpec extends TestSpec:
 
         actual mustBe expected
       }
+    }
 
+    "negative intervals" should {
       "[2, 3] if [2, 1] & [4, 3]" in {
         // [2, 1]
         val a = Interval.make(Value.finite(2), Value.finite(1))
-        a.isEmpty mustBe(true)
+        a.isEmpty mustBe (true)
 
         // [4, 3]
         val b = Interval.make(Value.finite(4), Value.finite(3))
-        b.isEmpty mustBe(true)
+        b.isEmpty mustBe (true)
 
         val actual   = a.intersection(b)
         val expected = Interval.make(Value.finite(4), Value.finite(1)) // [2, 3]
@@ -245,39 +247,76 @@ final class IntersectionSpec extends TestSpec:
       "[2, 1] if [2, 1] & [3, 4]" in {
         // [2, 1]
         val a = Interval.make(Value.finite(2), Value.finite(1))
-        a.isEmpty mustBe(true)
+        a.isEmpty mustBe (true)
 
         // [3, 4]
         val b = Interval.make(Value.finite(3), Value.finite(4))
-        b.isEmpty mustBe(false)
+        b.isEmpty mustBe (false)
 
         val actual   = a.intersection(b)
-        val expected = Interval.make(Value.finite(2), Value.finite(1)) // [2, 1]
+        val expected = Interval.make(Value.finite(3), Value.finite(1)) // [3, 1]
 
         actual mustBe expected
       }
-    }
 
-    "Interval" should {
-      "Interval.intersection(a, b)" in {
-        val a = Interval.rightClosed(2) // (-∞, 2]
-        val b = Interval.closed(1, 10)  // [1, 10]
+      "empty & real is empty" in {
+        forAll(genEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val expected = Interval.closed(1, 2) // [1, 2]
+          xx.isEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
 
-        val c1 = Interval.intersection(a, b).canonical
-        val c2 = Interval.intersection(b, a).canonical
+          val actual1 = xx.intersection(yy).canonical
+          val actual2 = yy.intersection(xx).canonical
 
-        c1 mustBe c2
-        c2 mustBe c1
+          actual1.isEmpty mustBe true
+          actual2.isEmpty mustBe true
 
-        c1 mustBe expected
+          actual1 mustBe actual2
+        }
+      }
+
+      "real & empty is empty" in {
+        forAll(genNonEmptyIntArgs, genEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.nonEmpty mustBe (true)
+          yy.isEmpty mustBe (true)
+
+          val actual1 = xx.intersection(yy).canonical
+          val actual2 = yy.intersection(xx).canonical
+
+          actual1.isEmpty mustBe true
+          actual2.isEmpty mustBe true
+
+          actual1 mustBe actual2
+        }
+      }
+
+      "empty & empty is empty" in {
+        forAll(genEmptyIntArgs, genEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.isEmpty mustBe (true)
+          yy.isEmpty mustBe (true)
+
+          val actual1 = xx.intersection(yy).canonical
+          val actual2 = yy.intersection(xx).canonical
+
+          actual1.isEmpty mustBe true
+          actual2.isEmpty mustBe true
+
+          actual1 mustBe actual2
+        }
       }
     }
 
     "A, B" should {
       "A & B = B & A" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -302,7 +341,7 @@ final class IntersectionSpec extends TestSpec:
 
     "A, B, C" should {
       "(A & B) & C = A & (B & C)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY, argsZ) =>
+        forAll(genAnyIntArgs, genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY, argsZ) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
           val zz = Interval.make(argsZ.left, argsZ.right)
@@ -312,6 +351,23 @@ final class IntersectionSpec extends TestSpec:
 
           actual mustBe expected
         }
+      }
+    }
+
+    "Interval" should {
+      "Interval.intersection(a, b)" in {
+        val a = Interval.rightClosed(2) // (-∞, 2]
+        val b = Interval.closed(1, 10)  // [1, 10]
+
+        val expected = Interval.closed(1, 2) // [1, 2]
+
+        val c1 = Interval.intersection(a, b).canonical
+        val c2 = Interval.intersection(b, a).canonical
+
+        c1 mustBe c2
+        c2 mustBe c1
+
+        c1 mustBe expected
       }
     }
   }

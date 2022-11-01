@@ -15,7 +15,7 @@ final class GapSpec extends TestSpec:
   "Gap" when {
     "a.gap(b)" should {
       "b.gap(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
@@ -219,6 +219,23 @@ final class GapSpec extends TestSpec:
       }
     }
 
+    "negative intervals" should {
+    }
+
+    "A, B" should {
+      "A ∥ B = B ∥ A" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          val actual   = xx.gap(yy).canonical
+          val expected = yy.gap(xx).canonical
+
+          actual mustBe expected
+        }
+      }
+    }
+
     "Interval" should {
       "Interval.gap(a, b)" in {
         val a = Interval.closed(1, 5)  // [1, 5]
@@ -233,20 +250,6 @@ final class GapSpec extends TestSpec:
         c2 mustBe c1
 
         c1 mustBe expected
-      }
-    }
-
-    "A, B" should {
-      "A ∥ B = B ∥ A" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          val actual   = xx.gap(yy).canonical
-          val expected = yy.gap(xx).canonical
-
-          actual mustBe expected
-        }
       }
     }
   }
