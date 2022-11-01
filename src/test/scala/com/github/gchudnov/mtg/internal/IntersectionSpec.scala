@@ -18,32 +18,6 @@ final class IntersectionSpec extends TestSpec:
   "Intersection" when {
 
     "a.intersection(b)" should {
-      "b.intersection(a)" in {
-        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          val zz = xx.intersection(yy)
-
-          whenever(zz.nonEmpty) {
-            val ww = yy.intersection(xx)
-
-            zz.canonical mustBe ww.canonical
-
-            // TODO: (-inf, +inf) if A = (-inf, +inf], B = [-inf, +inf)
-            // TODO: things break with inf values, fix it
-            // // given the gap c, [-inf, c-) || (c+, +inf] must be the intersection
-            // val cLhs = Interval.make[Int](None, true, zz.left.effectiveValue, true)
-            // val cRhs = Interval.make[Int](zz.right.effectiveValue, true, None, true)
-
-            // val cc = cLhs.gap(cRhs)
-            // cc.canonical mustBe zz.canonical
-          }
-        }
-      }
-    }
-
-    "a.intersection(b)" should {
 
       "∅ if A and B are empty" in {
         val a = Interval.empty[Int]
@@ -229,6 +203,82 @@ final class IntersectionSpec extends TestSpec:
     }
 
     "negative intervals" should {
+      "empty & real is empty" in {
+        forAll(genEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.isEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
+
+          val actual = xx.intersection(yy).canonical
+          val expected = yy.intersection(xx).canonical
+
+          actual.isEmpty mustBe true
+          expected.isEmpty mustBe true
+
+          actual mustBe expected
+        }
+      }
+
+      "empty & empty is empty" in {
+        forAll(genEmptyIntArgs, genEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.isEmpty mustBe (true)
+          yy.isEmpty mustBe (true)
+
+          val actual = xx.intersection(yy).canonical
+          val expected = yy.intersection(xx).canonical
+
+          actual.isEmpty mustBe true
+          expected.isEmpty mustBe true
+
+          actual mustBe expected
+        }
+      }
+
+      "real & real is empty IF disjoint" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.nonEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
+
+          whenever(xx.isDisjoint(yy)) {
+            val actual = xx.intersection(yy).canonical
+            val expected = yy.intersection(xx).canonical
+
+            actual.isEmpty mustBe true
+            expected.isEmpty mustBe true
+
+            actual mustBe expected
+          }
+        }
+      }
+
+      "real & real is real IF !disjoint" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.nonEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
+
+          whenever(!xx.isDisjoint(yy)) {
+            val actual = xx.intersection(yy).canonical
+            val expected = yy.intersection(xx).canonical
+
+            actual.isEmpty mustBe false
+            expected.isEmpty mustBe false
+
+            actual mustBe expected
+          }
+        }        
+      }      
+
       "[2, 3] if [2, 1] & [4, 3]" in {
         // [2, 1]
         val a = Interval.make(Value.finite(2), Value.finite(1))
@@ -257,61 +307,7 @@ final class IntersectionSpec extends TestSpec:
         val expected = Interval.make(Value.finite(3), Value.finite(1)) // [3, 1]
 
         actual mustBe expected
-      }
-
-      "empty & real is empty" in {
-        forAll(genEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          xx.isEmpty mustBe (true)
-          yy.nonEmpty mustBe (true)
-
-          val actual1 = xx.intersection(yy).canonical
-          val actual2 = yy.intersection(xx).canonical
-
-          actual1.isEmpty mustBe true
-          actual2.isEmpty mustBe true
-
-          actual1 mustBe actual2
-        }
-      }
-
-      "real & empty is empty" in {
-        forAll(genNonEmptyIntArgs, genEmptyIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          xx.nonEmpty mustBe (true)
-          yy.isEmpty mustBe (true)
-
-          val actual1 = xx.intersection(yy).canonical
-          val actual2 = yy.intersection(xx).canonical
-
-          actual1.isEmpty mustBe true
-          actual2.isEmpty mustBe true
-
-          actual1 mustBe actual2
-        }
-      }
-
-      "empty & empty is empty" in {
-        forAll(genEmptyIntArgs, genEmptyIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          xx.isEmpty mustBe (true)
-          yy.isEmpty mustBe (true)
-
-          val actual1 = xx.intersection(yy).canonical
-          val actual2 = yy.intersection(xx).canonical
-
-          actual1.isEmpty mustBe true
-          actual2.isEmpty mustBe true
-
-          actual1 mustBe actual2
-        }
-      }
+      }      
     }
 
     "A, B" should {
@@ -326,6 +322,15 @@ final class IntersectionSpec extends TestSpec:
           actual mustBe expected
         }
       }
+
+      // TODO: (-inf, +inf) if A = (-inf, +inf], B = [-inf, +inf)
+      // TODO: things break with inf values, fix it
+      // // given the gap c, [-inf, c-) || (c+, +inf] must be the intersection
+      // val cLhs = Interval.make[Int](None, true, zz.left.effectiveValue, true)
+      // val cRhs = Interval.make[Int](zz.right.effectiveValue, true, None, true)
+
+      // val cc = cLhs.gap(cRhs)
+      // cc.canonical mustBe zz.canonical
 
       "(2, +∞) & (3, 5) = (3, 5) & (2, +∞)" in {
         val a = Interval.leftOpen(2)  // (2, +∞]

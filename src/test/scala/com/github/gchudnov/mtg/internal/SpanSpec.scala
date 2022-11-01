@@ -14,29 +14,6 @@ final class SpanSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Span" when {
-    "a.span(b)" should {
-
-      "b.span(a)" in {
-        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          val zz = xx.span(yy)
-
-          whenever(zz.nonEmpty) {
-            val ww = yy.span(xx)
-
-            zz.canonical mustBe ww.canonical
-
-            if xx.nonEmpty && yy.nonEmpty then
-              // [min(a-, b-), max(a+, b+)]
-              // given span `c`, `c` intersection with `a` = `a` AND `c` intersects with `b` = `b`
-              zz.intersection(xx).canonical mustBe xx.canonical
-              zz.intersection(yy).canonical mustBe yy.canonical
-          }
-        }
-      }
-    }
 
     "a.span(b)" should {
 
@@ -202,7 +179,58 @@ final class SpanSpec extends TestSpec:
     }
 
     "negative intervals" should {
-      "[4, 1] if [2, 1] # [4, 3]" in {
+      "empty # real is real" in {
+        forAll(genEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.isEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
+
+          val actual = xx.span(yy).canonical
+          val expected = yy.span(xx).canonical
+
+          actual.isEmpty mustBe false
+          expected.isEmpty mustBe false
+
+          actual mustBe expected
+        }
+      }
+
+      "empty # empty is (real or empty)" in {
+        forAll(genEmptyIntArgs, genEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.isEmpty mustBe (true)
+          yy.isEmpty mustBe (true)
+
+          val actual = xx.span(yy).canonical
+          val expected = yy.span(xx).canonical
+
+          actual mustBe expected
+        }
+      }
+
+      "real & real is real" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.nonEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
+
+          val actual = xx.span(yy).canonical
+          val expected = yy.span(xx).canonical
+
+          actual.isEmpty mustBe false
+          expected.isEmpty mustBe false
+
+          actual mustBe expected
+        }
+      }
+
+      "[2, 3] if [2, 1] # [4, 3]" in {
         // [2, 1]
         val a = Interval.make(Value.finite(2), Value.finite(1))
         a.isEmpty mustBe(true)
@@ -212,12 +240,12 @@ final class SpanSpec extends TestSpec:
         b.isEmpty mustBe(true)
 
         val actual   = a.span(b)
-        val expected = Interval.make(Value.finite(4), Value.finite(1)) // [4, 1]
+        val expected = Interval.make(Value.finite(2), Value.finite(3)) // [2, 3]
 
         actual mustBe expected
       }
 
-      "[3, 4] if [2, 1] # [3, 4]" in {
+      "[2, 4] if [2, 1] # [3, 4]" in {
         // [2, 1]
         val a = Interval.make(Value.finite(2), Value.finite(1))
         a.isEmpty mustBe(true)
@@ -227,7 +255,7 @@ final class SpanSpec extends TestSpec:
         b.isEmpty mustBe(false)
 
         val actual   = a.span(b)
-        val expected = Interval.make(Value.finite(3), Value.finite(4)) // [3, 4]
+        val expected = Interval.make(Value.finite(2), Value.finite(4)) // [2, 4]
 
         actual mustBe expected
       }
@@ -246,6 +274,11 @@ final class SpanSpec extends TestSpec:
         }
       }
     }
+
+    // // [min(a-, b-), max(a+, b+)]
+    // // given span `c`, `c` intersection with `a` = `a` AND `c` intersects with `b` = `b`
+    // zz.intersection(xx).canonical mustBe xx.canonical
+    // zz.intersection(yy).canonical mustBe yy.canonical    
 
     "A, B, C" should {
       "(A # B) # C = A # (B # C)" in {

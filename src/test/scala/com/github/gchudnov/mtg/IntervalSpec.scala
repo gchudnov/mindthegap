@@ -81,283 +81,341 @@ final class IntervalSpec extends TestSpec:
         // [4, 5)
         Interval.make(Mark.at(4), Mark.pred(5)).isPoint mustBe true
       }
+    }
 
-      "factory methods" should {
+    "factory methods" should {
 
-        "Interval.empty" in {
-          val a = Interval.empty[Int]
+      "Interval.empty" in {
+        val a = Interval.empty[Int]
 
-          a.isEmpty mustBe (true)
-          a.isPoint mustBe (false)
-          a.isProper mustBe (false)
+        a.isEmpty mustBe (true)
+        a.isPoint mustBe (false)
+        a.isProper mustBe (false)
 
-          a.nonEmpty mustBe (false)
-          a.nonPoint mustBe (true)
-          a.nonProper mustBe (true)
+        a.nonEmpty mustBe (false)
+        a.nonPoint mustBe (true)
+        a.nonProper mustBe (true)
 
-          a.left mustBe Mark.at(Value.infPos)
-          a.right mustBe Mark.at(Value.infNeg)
-        }
-
-        "Interval.point(x)" in {
-          val a = Interval.point(5)
-
-          a.isEmpty mustBe (false)
-          a.isPoint mustBe (true)
-          a.isProper mustBe (false)
-
-          a.nonEmpty mustBe (true)
-          a.nonPoint mustBe (false)
-          a.nonProper mustBe (true)
-
-          ordM.equiv(a.left, Mark.at(5)) mustBe true
-          ordM.equiv(a.right, Mark.at(5)) mustBe true
-        }
-
-        "Interval.proper(x, y)" in {
-          // (1, 5)
-          val a = Interval.proper(Mark.succ(1), Mark.pred(5))
-
-          a.isEmpty mustBe (false)
-          a.isPoint mustBe (false)
-          a.isProper mustBe (true)
-
-          a.nonEmpty mustBe (true)
-          a.nonPoint mustBe (true)
-          a.nonProper mustBe (false)
-
-          ordI.equiv(a, Interval.closed(2, 4)) mustBe (true)
-        }
-
-        "Interval.unbounded" in {
-          val a = Interval.unbounded[Int]
-
-          a.isEmpty mustBe (false)
-          a.isPoint mustBe (false)
-          a.isProper mustBe (true)
-
-          a.nonEmpty mustBe (true)
-          a.nonPoint mustBe (true)
-          a.nonProper mustBe (false)
-
-          ordM.equiv(a.left, Mark.at(Value.infNeg)) mustBe true
-          ordM.equiv(a.right, Mark.at(Value.infPos)) mustBe true
-        }
-
-        "Interval.open(x, y)" in {
-          val a = Interval.open(1, 5)
-
-          a.isEmpty mustBe (false)
-          a.isPoint mustBe (false)
-          a.isProper mustBe (true)
-
-          a.nonEmpty mustBe (true)
-          a.nonPoint mustBe (true)
-          a.nonProper mustBe (false)
-
-          ordM.equiv(a.left, Mark.succ(1)) mustBe true
-          ordM.equiv(a.right, Mark.pred(5)) mustBe true
-        }
-
-        "Interval.closed(x, y)" in {
-          val a = Interval.closed(1, 5)
-
-          a.isEmpty mustBe (false)
-          a.isPoint mustBe (false)
-          a.isProper mustBe (true)
-
-          a.nonEmpty mustBe (true)
-          a.nonPoint mustBe (true)
-          a.nonProper mustBe (false)
-
-          ordM.equiv(a.left, Mark.at(1)) mustBe true
-          ordM.equiv(a.right, Mark.at(5)) mustBe true
-        }
-
-        "Interval.leftOpen(x)" in {
-          val a = Interval.leftOpen(1)
-
-          a.isEmpty mustBe (false)
-          a.isPoint mustBe (false)
-          a.isProper mustBe (true)
-
-          a.nonEmpty mustBe (true)
-          a.nonPoint mustBe (true)
-          a.nonProper mustBe (false)
-
-          ordM.equiv(a.left, Mark.succ(1)) mustBe true
-          ordM.equiv(a.right, Mark.at(Value.infPos)) mustBe true
-        }
-
-        "Interval.leftClosed(x)" in {
-          val a = Interval.leftClosed(5)
-
-          a.isEmpty mustBe (false)
-          a.isPoint mustBe (false)
-          a.isProper mustBe (true)
-
-          a.nonEmpty mustBe (true)
-          a.nonPoint mustBe (true)
-          a.nonProper mustBe (false)
-
-          ordM.equiv(a.left, Mark.at(5)) mustBe true
-          ordM.equiv(a.right, Mark.at(Value.infPos)) mustBe true
-        }
-
-        "Interval.rightOpen(x)" in {
-          val a = Interval.rightOpen(1)
-
-          a.isEmpty mustBe (false)
-          a.isPoint mustBe (false)
-          a.isProper mustBe (true)
-
-          a.nonEmpty mustBe (true)
-          a.nonPoint mustBe (true)
-          a.nonProper mustBe (false)
-
-          ordM.equiv(a.left, Mark.at(Value.infNeg)) mustBe true
-          ordM.equiv(a.right, Mark.pred(1)) mustBe true
-        }
-
-        "Interval.rightClosed(x)" in {
-          val a = Interval.rightClosed(5)
-
-          a.isEmpty mustBe (false)
-          a.isPoint mustBe (false)
-          a.isProper mustBe (true)
-
-          a.nonEmpty mustBe (true)
-          a.nonPoint mustBe (true)
-          a.nonProper mustBe (false)
-
-          ordM.equiv(a.left, Mark.at(Value.infNeg)) mustBe true
-          ordM.equiv(a.right, Mark.at(5)) mustBe true
-        }
-
-        "Interval.leftClosedRightOpen(x, y)" in {
-          val a = Interval.leftClosedRightOpen(1, 10)
-
-          a.isEmpty mustBe (false)
-          a.isPoint mustBe (false)
-          a.isProper mustBe (true)
-
-          a.nonEmpty mustBe (true)
-          a.nonPoint mustBe (true)
-          a.nonProper mustBe (false)
-
-          ordM.equiv(a.left, Mark.at(1)) mustBe true
-          ordM.equiv(a.right, Mark.pred(10)) mustBe true
-        }
-
-        "Interval.leftOpenRightClosed(x, y)" in {
-          val a = Interval.leftOpenRightClosed(1, 10)
-
-          a.isEmpty mustBe (false)
-          a.isPoint mustBe (false)
-          a.isProper mustBe (true)
-
-          a.nonEmpty mustBe (true)
-          a.nonPoint mustBe (true)
-          a.nonProper mustBe (false)
-
-          ordM.equiv(a.left, Mark.succ(1)) mustBe true
-          ordM.equiv(a.right, Mark.at(10)) mustBe true
-        }
-
+        a.left mustBe Mark.at(Value.infPos)
+        a.right mustBe Mark.at(Value.infNeg)
       }
 
-      "canonical" should {
-        "represent an interval" in {
-          // (1, 5) = [2, 4]
-          Interval.open(1, 5).canonical mustBe Interval.closed(2, 4)
+      "Interval.point(x)" in {
+        val a = Interval.point(5)
 
-          // [2, 5) = [2, 4]
-          Interval.leftClosedRightOpen(2, 5).canonical mustBe Interval.closed(2, 4)
+        a.isEmpty mustBe (false)
+        a.isPoint mustBe (true)
+        a.isProper mustBe (false)
 
-          // (1, 4] = [2, 4]
-          Interval.leftOpenRightClosed(1, 4).canonical mustBe Interval.closed(2, 4)
+        a.nonEmpty mustBe (true)
+        a.nonPoint mustBe (false)
+        a.nonProper mustBe (true)
 
-          // [2, 4] = [2, 4]
-          Interval.closed(2, 4).canonical mustBe Interval.closed(2, 4)
-
-          // {2} = {2}
-          Interval.point(2).canonical mustBe Interval.point(2)
-          Interval.make(Mark.at(2), Mark.at(2)).canonical mustBe Interval.point(2)
-          Interval.make(Mark.succ(1), Mark.pred(3)).canonical mustBe Interval.point(2)
-        }
-
-        "double canonical is canonical" in {
-          Interval.open(1, 5).canonical.canonical mustBe Interval.closed(2, 4)
-        }
+        ordM.equiv(a.left, Mark.at(5)) mustBe true
+        ordM.equiv(a.right, Mark.at(5)) mustBe true
       }
 
-      "normalize" should {
-        "provide a canonical form for intervals" in {
-          // [1, 5] -> [1, 5]
-          Interval.make(Mark.at(1), Mark.at(5)).normalize mustBe Interval.closed(1, 5)
+      "Interval.proper(x, y)" in {
+        // (1, 5)
+        val a = Interval.proper(Mark.succ(1), Mark.pred(5))
 
-          // )1, 5] -> [0, 5]
-          Interval.make(Mark.pred(1), Mark.at(5)).normalize mustBe Interval.closed(0, 5)
+        a.isEmpty mustBe (false)
+        a.isPoint mustBe (false)
+        a.isProper mustBe (true)
 
-          // ))1, 5] -> [-1, 5]
-          Interval.make(Mark.pred(Mark.pred(1)), Mark.at(5)).normalize mustBe Interval.closed(-1, 5)
+        a.nonEmpty mustBe (true)
+        a.nonPoint mustBe (true)
+        a.nonProper mustBe (false)
 
-          // (1, 5] -> (1, 5]
-          Interval.make(Mark.succ(1), Mark.at(5)).normalize mustBe Interval.leftOpenRightClosed(1, 5)
-
-          // ((1, 5] -> (2, 5]
-          Interval.make(Mark.succ(Mark.succ(1)), Mark.at(5)).normalize mustBe Interval.leftOpenRightClosed(2, 5)
-
-          // [1, 5) -> [1, 5)
-          Interval.make(Mark.at(1), Mark.pred(5)).normalize mustBe Interval.leftClosedRightOpen(1, 5)
-
-          // [1, 5)) -> [1, 4)
-          Interval.make(Mark.at(1), Mark.pred(Mark.pred(5))).normalize mustBe Interval.leftClosedRightOpen(1, 4)
-
-          // [1, 5( -> [1, 6]
-          Interval.make(Mark.at(1), Mark.succ(5)).normalize mustBe Interval.closed(1, 6)
-
-          // [1, 5(( -> [1, 7]
-          Interval.make(Mark.at(1), Mark.succ(Mark.succ(5))).normalize mustBe Interval.closed(1, 7)
-
-          // ))1, 5((
-          Interval.make(Mark.pred(Mark.pred(1)), Mark.succ(Mark.succ(5))).normalize mustBe Interval.closed(-1, 7)
-        }
+        ordI.equiv(a, Interval.closed(2, 4)) mustBe (true)
       }
 
-      "swap" should {
-        "swap left and right in positive interval" in {
-          val a = Interval.make(Mark.at(1), Mark.at(5))
+      "Interval.unbounded" in {
+        val a = Interval.unbounded[Int]
 
-          val actual   = a.swap
-          val expected = Interval.make(Mark.at(5), Mark.at(1))
+        a.isEmpty mustBe (false)
+        a.isPoint mustBe (false)
+        a.isProper mustBe (true)
 
-          a.isEmpty mustBe (false)
-          actual.isEmpty mustBe (true)
+        a.nonEmpty mustBe (true)
+        a.nonPoint mustBe (true)
+        a.nonProper mustBe (false)
 
-          actual mustBe (expected)
-        }
+        ordM.equiv(a.left, Mark.at(Value.infNeg)) mustBe true
+        ordM.equiv(a.right, Mark.at(Value.infPos)) mustBe true
+      }
 
-        "swap left and right in negative interval" in {
-          val a = Interval.make(Mark.at(5), Mark.at(1))
+      "Interval.open(x, y)" in {
+        val a = Interval.open(1, 5)
 
-          val actual   = a.swap
-          val expected = Interval.make(Mark.at(1), Mark.at(5))
+        a.isEmpty mustBe (false)
+        a.isPoint mustBe (false)
+        a.isProper mustBe (true)
 
-          a.isEmpty mustBe (true)
-          actual.isEmpty mustBe (false)
+        a.nonEmpty mustBe (true)
+        a.nonPoint mustBe (true)
+        a.nonProper mustBe (false)
 
-          actual mustBe (expected)
-        }
+        ordM.equiv(a.left, Mark.succ(1)) mustBe true
+        ordM.equiv(a.right, Mark.pred(5)) mustBe true
+      }
 
-        "double-swap restores the original interval" in {
-          val a = Interval.make(Mark.at(5), Mark.at(1))
+      "Interval.closed(x, y)" in {
+        val a = Interval.closed(1, 5)
 
-          val actual   = a.swap.swap
-          val expected = a
+        a.isEmpty mustBe (false)
+        a.isPoint mustBe (false)
+        a.isProper mustBe (true)
 
-          actual mustBe (expected)
-        }
+        a.nonEmpty mustBe (true)
+        a.nonPoint mustBe (true)
+        a.nonProper mustBe (false)
+
+        ordM.equiv(a.left, Mark.at(1)) mustBe true
+        ordM.equiv(a.right, Mark.at(5)) mustBe true
+      }
+
+      "Interval.leftOpen(x)" in {
+        val a = Interval.leftOpen(1)
+
+        a.isEmpty mustBe (false)
+        a.isPoint mustBe (false)
+        a.isProper mustBe (true)
+
+        a.nonEmpty mustBe (true)
+        a.nonPoint mustBe (true)
+        a.nonProper mustBe (false)
+
+        ordM.equiv(a.left, Mark.succ(1)) mustBe true
+        ordM.equiv(a.right, Mark.at(Value.infPos)) mustBe true
+      }
+
+      "Interval.leftClosed(x)" in {
+        val a = Interval.leftClosed(5)
+
+        a.isEmpty mustBe (false)
+        a.isPoint mustBe (false)
+        a.isProper mustBe (true)
+
+        a.nonEmpty mustBe (true)
+        a.nonPoint mustBe (true)
+        a.nonProper mustBe (false)
+
+        ordM.equiv(a.left, Mark.at(5)) mustBe true
+        ordM.equiv(a.right, Mark.at(Value.infPos)) mustBe true
+      }
+
+      "Interval.rightOpen(x)" in {
+        val a = Interval.rightOpen(1)
+
+        a.isEmpty mustBe (false)
+        a.isPoint mustBe (false)
+        a.isProper mustBe (true)
+
+        a.nonEmpty mustBe (true)
+        a.nonPoint mustBe (true)
+        a.nonProper mustBe (false)
+
+        ordM.equiv(a.left, Mark.at(Value.infNeg)) mustBe true
+        ordM.equiv(a.right, Mark.pred(1)) mustBe true
+      }
+
+      "Interval.rightClosed(x)" in {
+        val a = Interval.rightClosed(5)
+
+        a.isEmpty mustBe (false)
+        a.isPoint mustBe (false)
+        a.isProper mustBe (true)
+
+        a.nonEmpty mustBe (true)
+        a.nonPoint mustBe (true)
+        a.nonProper mustBe (false)
+
+        ordM.equiv(a.left, Mark.at(Value.infNeg)) mustBe true
+        ordM.equiv(a.right, Mark.at(5)) mustBe true
+      }
+
+      "Interval.leftClosedRightOpen(x, y)" in {
+        val a = Interval.leftClosedRightOpen(1, 10)
+
+        a.isEmpty mustBe (false)
+        a.isPoint mustBe (false)
+        a.isProper mustBe (true)
+
+        a.nonEmpty mustBe (true)
+        a.nonPoint mustBe (true)
+        a.nonProper mustBe (false)
+
+        ordM.equiv(a.left, Mark.at(1)) mustBe true
+        ordM.equiv(a.right, Mark.pred(10)) mustBe true
+      }
+
+      "Interval.leftOpenRightClosed(x, y)" in {
+        val a = Interval.leftOpenRightClosed(1, 10)
+
+        a.isEmpty mustBe (false)
+        a.isPoint mustBe (false)
+        a.isProper mustBe (true)
+
+        a.nonEmpty mustBe (true)
+        a.nonPoint mustBe (true)
+        a.nonProper mustBe (false)
+
+        ordM.equiv(a.left, Mark.succ(1)) mustBe true
+        ordM.equiv(a.right, Mark.at(10)) mustBe true
+      }
+
+    }
+
+    "canonical" should {
+      "represent an interval" in {
+        // (1, 5) = [2, 4]
+        Interval.open(1, 5).canonical mustBe Interval.closed(2, 4)
+
+        // [2, 5) = [2, 4]
+        Interval.leftClosedRightOpen(2, 5).canonical mustBe Interval.closed(2, 4)
+
+        // (1, 4] = [2, 4]
+        Interval.leftOpenRightClosed(1, 4).canonical mustBe Interval.closed(2, 4)
+
+        // [2, 4] = [2, 4]
+        Interval.closed(2, 4).canonical mustBe Interval.closed(2, 4)
+
+        // {2} = {2}
+        Interval.point(2).canonical mustBe Interval.point(2)
+        Interval.make(Mark.at(2), Mark.at(2)).canonical mustBe Interval.point(2)
+        Interval.make(Mark.succ(1), Mark.pred(3)).canonical mustBe Interval.point(2)
+      }
+
+      "double canonical is canonical" in {
+        Interval.open(1, 5).canonical.canonical mustBe Interval.closed(2, 4)
+      }
+    }
+
+    "normalize" should {
+      "provide a canonical form for intervals" in {
+        // [1, 5] -> [1, 5]
+        Interval.make(Mark.at(1), Mark.at(5)).normalize mustBe Interval.closed(1, 5)
+
+        // )1, 5] -> [0, 5]
+        Interval.make(Mark.pred(1), Mark.at(5)).normalize mustBe Interval.closed(0, 5)
+
+        // ))1, 5] -> [-1, 5]
+        Interval.make(Mark.pred(Mark.pred(1)), Mark.at(5)).normalize mustBe Interval.closed(-1, 5)
+
+        // (1, 5] -> (1, 5]
+        Interval.make(Mark.succ(1), Mark.at(5)).normalize mustBe Interval.leftOpenRightClosed(1, 5)
+
+        // ((1, 5] -> (2, 5]
+        Interval.make(Mark.succ(Mark.succ(1)), Mark.at(5)).normalize mustBe Interval.leftOpenRightClosed(2, 5)
+
+        // [1, 5) -> [1, 5)
+        Interval.make(Mark.at(1), Mark.pred(5)).normalize mustBe Interval.leftClosedRightOpen(1, 5)
+
+        // [1, 5)) -> [1, 4)
+        Interval.make(Mark.at(1), Mark.pred(Mark.pred(5))).normalize mustBe Interval.leftClosedRightOpen(1, 4)
+
+        // [1, 5( -> [1, 6]
+        Interval.make(Mark.at(1), Mark.succ(5)).normalize mustBe Interval.closed(1, 6)
+
+        // [1, 5(( -> [1, 7]
+        Interval.make(Mark.at(1), Mark.succ(Mark.succ(5))).normalize mustBe Interval.closed(1, 7)
+
+        // ))1, 5((
+        Interval.make(Mark.pred(Mark.pred(1)), Mark.succ(Mark.succ(5))).normalize mustBe Interval.closed(-1, 7)
+      }
+    }
+
+    "swap" should {
+      "swap left and right in positive interval" in {
+        val a = Interval.make(Mark.at(1), Mark.at(5))
+
+        val actual   = a.swap
+        val expected = Interval.make(Mark.at(5), Mark.at(1))
+
+        a.isEmpty mustBe (false)
+        actual.isEmpty mustBe (true)
+
+        actual mustBe (expected)
+      }
+
+      "swap left and right in negative interval" in {
+        val a = Interval.make(Mark.at(5), Mark.at(1))
+
+        val actual   = a.swap
+        val expected = Interval.make(Mark.at(1), Mark.at(5))
+
+        a.isEmpty mustBe (true)
+        actual.isEmpty mustBe (false)
+
+        actual mustBe (expected)
+      }
+
+      "double-swap restores the original interval" in {
+        val a = Interval.make(Mark.at(5), Mark.at(1))
+
+        val actual   = a.swap.swap
+        val expected = a
+
+        actual mustBe (expected)
+      }
+    }
+
+    "inflate" should {
+      "make an interval out of point" in {
+        val a = Interval.point(1)
+
+        val actual   = a.inflate.canonical
+        val expected = Interval.closed(0, 2)
+
+        actual mustBe (expected)
+      }
+
+      "expand a real interval" in {
+        val a = Interval.closed(1, 2)
+
+        val actual   = a.inflate.canonical
+        val expected = Interval.closed(0, 3)
+
+        actual mustBe (expected)
+      }
+
+      "expand an empty interval" in {
+        val a = Interval.closed(1, 2).swap
+
+        val actual   = a.inflate.canonical
+        val expected = Interval.closed(0, 3).swap
+
+        actual mustBe (expected)
+      }
+    }
+
+    "deflate" should {
+      "make an empty interval out of point" in {
+        val a = Interval.point(1)
+
+        val actual   = a.deflate.canonical
+        val expected = Interval.closed(0, 2).swap
+
+        actual mustBe (expected)
+      }
+
+      "shrink a real interval" in {
+        val a = Interval.closed(1, 2)
+
+        val actual   = a.deflate.canonical
+        val expected = Interval.closed(1, 2).swap
+
+        actual mustBe (expected)
+      }
+
+      "expand an empty interval" in {
+        val a = Interval.closed(1, 2).swap
+
+        val actual   = a.deflate.canonical
+        val expected = Interval.closed(0, 3).swap
+
+        actual mustBe (expected)
       }
     }
   }

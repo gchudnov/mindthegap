@@ -105,6 +105,26 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
     if l != left || r != right then Interval(l, r)
     else this
 
+  /**
+   * Inflate the interval
+   *
+   * {{{
+   *   ifnlate([1, 2]) = [0, 3]
+   * }}}
+   */
+  def inflate: Interval[T] =
+    Interval(Mark.Pred(left), Mark.Succ(right))
+
+  /**
+   * Deflate the interval
+   *
+   * {{{
+   *   deflate([1, 2]) = [2, 1]
+   * }}}
+   */
+  def deflate: Interval[T] =
+    Interval(Mark.Succ(left), Mark.Pred(right))
+
   private def normalizeLeft(using Domain[T]): Mark[T] =
     left match
       case Mark.At(_) =>
