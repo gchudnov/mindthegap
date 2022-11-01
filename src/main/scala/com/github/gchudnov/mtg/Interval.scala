@@ -71,6 +71,15 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
     !isProper
 
   /**
+   * Swap left and right boundary
+   * {{{
+   *   [a, b] -> [b, a]
+   * }}}
+   */
+  def swap: Interval[T] =
+    Interval(right, left)
+
+  /**
    * A canonical form of an interval is where the interval is closed on both starting and finishing sides:
    *
    * {{{

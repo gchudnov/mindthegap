@@ -28,10 +28,11 @@ final class SpanSpec extends TestSpec:
 
             zz.canonical mustBe ww.canonical
 
-            // [min(a-, b-), max(a+, b+)]
-            // given span `c`, `c` intersection with `a` = `a` AND `c` intersects with `b` = `b`
-            zz.intersection(xx).canonical mustBe xx.canonical
-            zz.intersection(yy).canonical mustBe yy.canonical
+            if xx.nonEmpty && yy.nonEmpty then
+              // [min(a-, b-), max(a+, b+)]
+              // given span `c`, `c` intersection with `a` = `a` AND `c` intersects with `b` = `b`
+              zz.intersection(xx).canonical mustBe xx.canonical
+              zz.intersection(yy).canonical mustBe yy.canonical
           }
         }
       }
@@ -199,7 +200,7 @@ final class SpanSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[9, 1] if [2, 1] # [4, 3]" in {
+      "[4, 1] if [2, 1] # [4, 3]" in {
         // [2, 1]
         val a = Interval.make(Value.finite(2), Value.finite(1))
         a.isEmpty mustBe(true)
@@ -209,12 +210,12 @@ final class SpanSpec extends TestSpec:
         b.isEmpty mustBe(true)
 
         val actual   = a.span(b)
-        val expected = Interval.make(Value.finite(9), Value.finite(1)) // [9, 1]
+        val expected = Interval.make(Value.finite(4), Value.finite(1)) // [4, 1]
 
         actual mustBe expected
       }
 
-      "[8, 1] if [2, 1] # [3, 4]" in {
+      "[3, 4] if [2, 1] # [3, 4]" in {
         // [2, 1]
         val a = Interval.make(Value.finite(2), Value.finite(1))
         a.isEmpty mustBe(true)
@@ -224,7 +225,7 @@ final class SpanSpec extends TestSpec:
         b.isEmpty mustBe(false)
 
         val actual   = a.span(b)
-        val expected = Interval.make(Value.finite(8), Value.finite(1)) // [8, 1]
+        val expected = Interval.make(Value.finite(3), Value.finite(4)) // [3, 4]
 
         actual mustBe expected
       }

@@ -227,7 +227,7 @@ final class IntersectionSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[4, 1] if [2, 1] & [4, 3]" in {
+      "[2, 3] if [2, 1] & [4, 3]" in {
         // [2, 1]
         val a = Interval.make(Value.finite(2), Value.finite(1))
         a.isEmpty mustBe(true)
@@ -237,12 +237,12 @@ final class IntersectionSpec extends TestSpec:
         b.isEmpty mustBe(true)
 
         val actual   = a.intersection(b)
-        val expected = Interval.make(Value.finite(4), Value.finite(1)) // [4, 1]
+        val expected = Interval.make(Value.finite(4), Value.finite(1)) // [2, 3]
 
         actual mustBe expected
       }
 
-      "[3, 1] if [2, 1] & [3, 4]" in {
+      "[2, 1] if [2, 1] & [3, 4]" in {
         // [2, 1]
         val a = Interval.make(Value.finite(2), Value.finite(1))
         a.isEmpty mustBe(true)
@@ -252,7 +252,7 @@ final class IntersectionSpec extends TestSpec:
         b.isEmpty mustBe(false)
 
         val actual   = a.intersection(b)
-        val expected = Interval.make(Value.finite(3), Value.finite(1)) // [3, 1]
+        val expected = Interval.make(Value.finite(2), Value.finite(1)) // [2, 1]
 
         actual mustBe expected
       }

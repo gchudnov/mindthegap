@@ -324,5 +324,40 @@ final class IntervalSpec extends TestSpec:
           Interval.make(Mark.pred(Mark.pred(1)), Mark.succ(Mark.succ(5))).normalize mustBe Interval.closed(-1, 7)
         }
       }
+
+      "swap" should {
+        "swap left and right in positive interval" in {
+          val a = Interval.make(Mark.at(1), Mark.at(5))
+
+          val actual   = a.swap
+          val expected = Interval.make(Mark.at(5), Mark.at(1))
+
+          a.isEmpty mustBe (false)
+          actual.isEmpty mustBe (true)
+
+          actual mustBe (expected)
+        }
+
+        "swap left and right in negative interval" in {
+          val a = Interval.make(Mark.at(5), Mark.at(1))
+
+          val actual   = a.swap
+          val expected = Interval.make(Mark.at(1), Mark.at(5))
+
+          a.isEmpty mustBe (true)
+          actual.isEmpty mustBe (false)
+
+          actual mustBe (expected)
+        }
+
+        "double-swap restores the original interval" in {
+          val a = Interval.make(Mark.at(5), Mark.at(1))
+
+          val actual   = a.swap.swap
+          val expected = a
+
+          actual mustBe (expected)
+        }
+      }
     }
   }
