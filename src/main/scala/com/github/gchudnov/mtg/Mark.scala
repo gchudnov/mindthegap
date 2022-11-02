@@ -57,22 +57,22 @@ object Mark:
     Mark.At(x)
 
   def at[T](value: T): Mark.At[T] =
-    at(Value.Finite(value))
+    at(Value.finite(value))
 
   def pred[T](x: Mark[T]): Mark.Pred[T] =
     Pred(x)
 
   def pred[T](x: Value[T]): Mark.Pred[T] =
-    pred(Mark.At(x))
+    pred(Mark.at(x))
 
   def pred[T](value: T): Mark.Pred[T] =
-    pred(Value.Finite(value))
+    pred(Value.finite(value))
 
   def succ[T](x: Mark[T]): Mark.Succ[T] =
     Succ(x)
 
   def succ[T](x: Value[T]): Mark.Succ[T] =
-    succ(Mark.At(x))
+    succ(Mark.at(x))
 
   def succ[T](value: T): Mark.Succ[T] =
-    succ(Value.Finite(value))
+    succ(Value.finite(value))

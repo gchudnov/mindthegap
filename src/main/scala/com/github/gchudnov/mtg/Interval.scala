@@ -1,8 +1,8 @@
 package com.github.gchudnov.mtg
 
+import com.github.gchudnov.mtg.internal.BasicOps
 import com.github.gchudnov.mtg.internal.BasicRel
 import com.github.gchudnov.mtg.internal.ExtendedRel
-import com.github.gchudnov.mtg.internal.BasicOps
 import com.github.gchudnov.mtg.internal.StaticOps
 
 /**
@@ -80,6 +80,26 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
     Interval(right, left)
 
   /**
+   * Inflate the interval
+   *
+   * {{{
+   *   ifnlate([1, 2]) = [0, 3]
+   * }}}
+   */
+  def inflate: Interval[T] =
+    Interval(left.pred, right.succ)
+
+  /**
+   * Deflate the interval
+   *
+   * {{{
+   *   deflate([1, 2]) = [2, 1]
+   * }}}
+   */
+  def deflate: Interval[T] =
+    Interval(left.succ, right.pred)
+
+  /**
    * A canonical form of an interval is where the interval is closed on both starting and finishing sides:
    *
    * {{{
@@ -104,26 +124,6 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
     val r = normalizeRight
     if l != left || r != right then Interval(l, r)
     else this
-
-  /**
-   * Inflate the interval
-   *
-   * {{{
-   *   ifnlate([1, 2]) = [0, 3]
-   * }}}
-   */
-  def inflate: Interval[T] =
-    Interval(Mark.Pred(left), Mark.Succ(right))
-
-  /**
-   * Deflate the interval
-   *
-   * {{{
-   *   deflate([1, 2]) = [2, 1]
-   * }}}
-   */
-  def deflate: Interval[T] =
-    Interval(Mark.Succ(left), Mark.Pred(right))
 
   private def normalizeLeft(using Domain[T]): Mark[T] =
     left match

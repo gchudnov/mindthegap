@@ -24,6 +24,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.empty[Int]
 
+        actual.isEmpty mustBe(true)
         actual mustBe expected
       }
 
@@ -34,6 +35,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -44,6 +46,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -54,6 +57,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 30)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -64,6 +68,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 30)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -74,6 +79,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -84,6 +90,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -94,6 +101,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -104,6 +112,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(5, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -114,6 +123,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -124,6 +134,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -134,6 +145,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -144,6 +156,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -154,6 +167,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(5, 15)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -164,6 +178,7 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -174,12 +189,13 @@ final class SpanSpec extends TestSpec:
         val actual   = a.span(b)
         val expected = Interval.closed(1, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
     }
 
     "negative intervals" should {
-      "empty # real is real" in {
+      "empty # proper is proper" in {
         forAll(genEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
@@ -197,7 +213,7 @@ final class SpanSpec extends TestSpec:
         }
       }
 
-      "empty # empty is (real or empty)" in {
+      "empty # empty is (proper or empty)" in {
         forAll(genEmptyIntArgs, genEmptyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
@@ -212,7 +228,7 @@ final class SpanSpec extends TestSpec:
         }
       }
 
-      "real & real is real" in {
+      "proper & proper is proper" in {
         forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)

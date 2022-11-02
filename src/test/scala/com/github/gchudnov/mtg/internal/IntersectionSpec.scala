@@ -26,6 +26,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.empty[Int]
 
+        actual.isEmpty mustBe(true)
         actual mustBe expected
       }
 
@@ -36,6 +37,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.empty[Int]
 
+        actual.isEmpty mustBe(true)
         actual mustBe expected
       }
 
@@ -46,6 +48,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.empty[Int]
 
+        actual.isEmpty mustBe(true)
         actual mustBe expected
       }
 
@@ -56,8 +59,8 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.make(Value.finite(20), Value.finite(10))
 
-        actual mustBe expected
         actual.isEmpty mustBe true
+        actual mustBe expected
       }
 
       "∅ if A after B" in {
@@ -67,8 +70,8 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.make(Value.finite(20), Value.finite(10))
 
-        actual mustBe expected
         actual.isEmpty mustBe true
+        actual mustBe expected
       }
 
       "[max(a-, b-), min(a+, b+)] if A starts B" in {
@@ -78,6 +81,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.closed(1, 5)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -88,6 +92,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.closed(5, 7)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -98,6 +103,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.closed(5, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -108,6 +114,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.closed(5, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -118,6 +125,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.closed(5, 7)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -128,6 +136,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.point(5)
 
+        actual.isPoint mustBe(true)
         actual mustBe expected
       }
 
@@ -138,6 +147,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.closed(1, 5)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -148,6 +158,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.point(5)
 
+        actual.isPoint mustBe(true)
         actual mustBe expected
       }
 
@@ -158,6 +169,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.closed(7, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -168,6 +180,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.closed(7, 10)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -178,6 +191,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.closed(5, 7)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
 
@@ -188,6 +202,7 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.empty[Int]
 
+        actual.isEmpty mustBe(true)
         actual mustBe expected
       }
 
@@ -198,12 +213,13 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.closed(1, 2)
 
+        actual.isProper mustBe(true)
         actual mustBe expected
       }
     }
 
     "negative intervals" should {
-      "empty & real is empty" in {
+      "empty & proper is empty" in {
         forAll(genEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
@@ -239,7 +255,7 @@ final class IntersectionSpec extends TestSpec:
         }
       }
 
-      "real & real is empty IF disjoint" in {
+      "proper & proper is empty IF disjoint" in {
         forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
@@ -259,7 +275,7 @@ final class IntersectionSpec extends TestSpec:
         }
       }
 
-      "real & real is real IF !disjoint" in {
+      "proper & proper is proper IF !disjoint" in {
         forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)

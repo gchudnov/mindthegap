@@ -138,7 +138,7 @@ private[mtg] transparent trait BasicOps[T]:
    * }}}
    */
   final def gap(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
-    Interval.make(ordM.min(a.right, b.right).succ, ordM.max(a.left, b.left).pred)
+    Interval.make(ordM.min(a.right, b.right), ordM.max(a.left, b.left)).deflate
 
     // if (a.nonEmpty && b.nonEmpty) && (ordM.lt(b.right, a.left) || ordM.lt(a.right, b.left)) then Interval.make(ordM.min(a.right, b.right).succ, ordM.max(a.left, b.left).pred)
     // else Interval.empty[T]

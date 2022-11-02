@@ -2,7 +2,9 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.TestSpec
+import com.github.gchudnov.mtg.Value
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
 final class GapSpec extends TestSpec:
@@ -13,78 +15,61 @@ final class GapSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Gap" when {
-    "a.gap(b)" should {
-      "b.gap(a)" in {
-        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          val zz = xx.gap(yy)
-
-          whenever(zz.nonEmpty) {
-            val ww = yy.gap(xx)
-
-            zz.canonical mustBe ww.canonical
-
-            // gap should be not intersecting with `a` or `b`
-            zz.intersects(xx) mustBe false
-            zz.intersects(yy) mustBe false
-
-            // gap must be adjacent
-            zz.isAdjacent(xx) mustBe true
-            zz.isAdjacent(yy) mustBe true
-          }
-        }
-      }
-    }
 
     "a.gap(b)" should {
 
       "∅ if A = (-inf, 0], B = (-inf, 0)" in {
-        val xx = Interval.rightClosed(0)
-        val yy = Interval.rightOpen(0)
+        val a = Interval.rightClosed(0)
+        val b = Interval.rightOpen(0)
 
-        val zz = xx.gap(yy)
+        val actual   = a.gap(b).canonical
+        val expected = Interval.make(Mark.at(Value.finite(0)), Mark.at(Value.infNeg)) // [0, -inf)
 
-        zz mustBe Interval.empty[Int]
+        actual.isEmpty mustBe (true)
+        actual mustBe expected
       }
 
       "∅ if A = (-inf, inf), B = (-inf, inf)" in {
-        val xx = Interval.unbounded[Int]
-        val yy = Interval.unbounded[Int]
+        val a = Interval.unbounded[Int]
+        val b = Interval.unbounded[Int]
 
-        val zz = xx.gap(yy)
+        val actual   = a.gap(b).canonical
+        val expected = Interval.empty[Int] // (+inf, -inf)
 
-        zz mustBe Interval.empty[Int]
-      }
-
-      "∅ if A and B are empty" in {
-        val a = Interval.empty[Int]
-        val b = Interval.empty[Int]
-
-        val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
-
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
 
-      "∅ if A is empty" in {
+      "proper if A and B are empty" in {
+        val a = Interval.empty[Int]
+        val b = Interval.empty[Int]
+
+        val actual   = a.gap(b).canonical
+        val expected = Interval.unbounded[Int] // (-inf, +inf)
+
+        actual.isProper mustBe (true)
+        actual mustBe expected
+      }
+
+      "proper if A is empty" in {
         val a = Interval.empty[Int]
         val b = Interval.closed(1, 10)
 
-        val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val actual   = a.gap(b).canonical
+        val expected = Interval.unbounded[Int] // (-inf, +inf)
 
+        actual.isProper mustBe (true)
         actual mustBe expected
       }
 
-      "∅ if B is empty" in {
+      "proper if B is empty" in {
         val a = Interval.closed(1, 10)
         val b = Interval.empty[Int]
 
-        val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val actual   = a.gap(b).canonical
+        val expected = Interval.unbounded[Int] // (-inf, +inf)
 
+        actual.isProper mustBe (true)
         actual mustBe expected
       }
 
@@ -92,9 +77,10 @@ final class GapSpec extends TestSpec:
         val a = Interval.closed(1, 10)
         val b = Interval.closed(20, 30)
 
-        val actual   = a.gap(b)
-        val expected = Interval.closed(11, 19)
+        val actual   = a.gap(b).canonical
+        val expected = Interval.closed(11, 19) // [11, 19]
 
+        actual.isProper mustBe (true)
         actual mustBe expected
       }
 
@@ -102,9 +88,10 @@ final class GapSpec extends TestSpec:
         val a = Interval.closed(20, 30)
         val b = Interval.closed(1, 10)
 
-        val actual   = a.gap(b)
-        val expected = Interval.closed(11, 19)
+        val actual   = a.gap(b).canonical
+        val expected = Interval.closed(11, 19) // [11, 19]
 
+        actual.isProper mustBe (true)
         actual mustBe expected
       }
 
@@ -113,8 +100,9 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(1, 10)
 
         val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.make(Mark.succ(Value.finite(5)), Mark.pred(Value.finite(1))) // (5, 1)
 
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
 
@@ -123,8 +111,9 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(1, 10)
 
         val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.make(Mark.succ(Value.finite(7)), Mark.pred(Value.finite(5))) // (7, 5)
 
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
 
@@ -133,8 +122,9 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(1, 10)
 
         val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval(Mark.succ(Value.finite(10)), Mark.pred(Value.finite(5))) // (10, 5)
 
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
 
@@ -143,8 +133,9 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(5, 10)
 
         val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.make(Mark.succ(Value.finite(10)), Mark.pred(Value.finite(5))) // (10, 5)
 
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
 
@@ -153,8 +144,9 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(1, 7)
 
         val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.make(Mark.succ(Value.finite(7)), Mark.pred(Value.finite(5))) // (7, 5)
 
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
 
@@ -163,8 +155,9 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(1, 5)
 
         val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.make(Mark.succ(Value.finite(5)), Mark.pred(Value.finite(5))) // (5, 5)
 
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
 
@@ -173,8 +166,9 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(1, 5)
 
         val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.make(Mark.succ(Value.finite(5)), Mark.pred(Value.finite(1)))
 
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
 
@@ -183,8 +177,9 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(5, 10)
 
         val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.make(Mark.succ(Value.finite(5)), Mark.pred(Value.finite(5))) // (5, 5)
 
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
 
@@ -193,8 +188,9 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(7, 15)
 
         val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.make(Mark.succ(Value.finite(10)), Mark.pred(Value.finite(7))) // (10, 7)
 
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
 
@@ -203,8 +199,9 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(7, 10)
 
         val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.make(Mark.succ(Value.finite(10)), Mark.pred(Value.finite(7))) // (10, 7)
 
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
 
@@ -213,13 +210,15 @@ final class GapSpec extends TestSpec:
         val b = Interval.closed(5, 7)
 
         val actual   = a.gap(b)
-        val expected = Interval.empty[Int]
+        val expected = Interval.make(Mark.succ(Value.finite(7)), Mark.pred(Value.finite(5))) // (7, 5)
 
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
     }
 
     "negative intervals" should {
+      // TODO: ADD TESTS HERE
     }
 
     "A, B" should {
@@ -235,6 +234,14 @@ final class GapSpec extends TestSpec:
         }
       }
     }
+
+    // // gap should be not intersecting with `a` or `b`
+    // zz.intersects(xx) mustBe false
+    // zz.intersects(yy) mustBe false
+
+    // // gap must be adjacent
+    // zz.isAdjacent(xx) mustBe true
+    // zz.isAdjacent(yy) mustBe true
 
     "Interval" should {
       "Interval.gap(a, b)" in {

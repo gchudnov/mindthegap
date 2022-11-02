@@ -384,7 +384,16 @@ final class IntervalSpec extends TestSpec:
         val a = Interval.closed(1, 2).swap
 
         val actual   = a.inflate.canonical
-        val expected = Interval.closed(0, 3).swap
+        val expected = Interval.closed(1, 2)
+
+        actual mustBe (expected)
+      }
+
+      "inflate, deflate produces the original interval" in {
+        val a = Interval.closed(1, 2)
+
+        val actual   = a.inflate.deflate.canonical
+        val expected = a
 
         actual mustBe (expected)
       }
@@ -414,6 +423,15 @@ final class IntervalSpec extends TestSpec:
 
         val actual   = a.deflate.canonical
         val expected = Interval.closed(0, 3).swap
+
+        actual mustBe (expected)
+      }
+
+      "deflate, inflate produces the original interval" in {
+        val a = Interval.closed(1, 2)
+
+        val actual   = a.deflate.inflate.canonical
+        val expected = a
 
         actual mustBe (expected)
       }
