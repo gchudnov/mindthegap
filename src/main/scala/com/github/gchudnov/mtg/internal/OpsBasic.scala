@@ -111,14 +111,25 @@ private[mtg] transparent trait BasicOps[T]:
    * }}}
    */
   def union(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
-    (a.isEmpty, b.isEmpty) match
-      case (true, true) | (false, false) =>
-        if a.merges(b) then Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
-        else Interval.empty[T]
-      case (true, false) =>
+    if a.merges(b) then
+      if a.isEmpty then
         b
-      case (false, true) =>
+      else if b.isEmpty then
         a
+      else
+        Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
+    else
+      Interval.empty[T]
+
+
+    // (a.isEmpty, b.isEmpty) match
+    //   case (true, true) | (false, false) =>
+    //     if a.merges(b) then Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
+    //     else Interval.empty[T]
+    //   case (true, false) =>
+    //     b
+    //   case (false, true) =>
+    //     a
 
   /**
    * Gap (Complement)

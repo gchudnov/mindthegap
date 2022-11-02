@@ -218,7 +218,102 @@ final class GapSpec extends TestSpec:
     }
 
     "negative intervals" should {
-      // TODO: ADD TESTS HERE
+      "empty ∥ proper is (proper OR point OR empty)" in {
+        forAll(genEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.isEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
+
+          val actual   = xx.gap(yy).canonical
+          val expected = yy.gap(xx).canonical
+
+          (actual.isEmpty, actual.isPoint, actual.isProper) mustBe (expected.isEmpty, expected.isPoint, expected.isProper)
+
+          actual mustBe expected
+        }
+      }
+
+      "empty ∥ empty is (proper OR point OR empty)" in {
+        forAll(genEmptyIntArgs, genEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.isEmpty mustBe (true)
+          yy.isEmpty mustBe (true)
+
+          val actual   = xx.gap(yy).canonical
+          val expected = yy.gap(xx).canonical
+
+          (actual.isEmpty || actual.isProper) mustBe true
+          (expected.isEmpty || expected.isProper) mustBe true
+
+          (actual.isEmpty, actual.isPoint, actual.isProper) mustBe (expected.isEmpty, expected.isPoint, expected.isProper)
+
+          actual mustBe expected
+        }
+      }
+
+      "proper & proper is non-empty IF (disjoint AND !adjacent)" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.nonEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
+
+          whenever(xx.isDisjoint(yy) && !xx.isAdjacent(yy)) {
+            val actual   = xx.gap(yy).canonical
+            val expected = yy.gap(xx).canonical
+
+            actual.nonEmpty mustBe true
+            expected.nonEmpty mustBe true
+
+            actual mustBe expected
+          }
+        }
+      }
+
+      "proper & proper is empty IF adjacent" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.nonEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
+
+          whenever(xx.isAdjacent(yy)) {
+            val actual   = xx.gap(yy).canonical
+            val expected = yy.gap(xx).canonical
+
+            actual.isEmpty mustBe true
+            expected.isEmpty mustBe true
+
+            actual mustBe expected
+          }
+        }
+      }
+
+      "proper & proper is empty IF !disjoint" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.nonEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
+
+          whenever(!xx.isDisjoint(yy)) {
+            val actual   = xx.gap(yy).canonical
+            val expected = yy.gap(xx).canonical
+
+            actual.isEmpty mustBe true
+            expected.isEmpty mustBe true
+
+            actual mustBe expected
+          }
+        }
+      }
     }
 
     "A, B" should {

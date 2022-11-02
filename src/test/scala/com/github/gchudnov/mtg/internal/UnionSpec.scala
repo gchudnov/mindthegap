@@ -14,25 +14,6 @@ final class UnionSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Union" when {
-    "a.union(b)" should {
-      "b.union(a)" in {
-        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          val zz = xx.union(yy)
-
-          whenever(zz.nonEmpty) {
-            val ww = yy.union(xx)
-
-            zz.canonical mustBe ww.canonical
-
-            xx.merges(yy) mustBe (true)
-            yy.merges(xx) mustBe (true)
-          }
-        }
-      }
-    }
 
     "a.union(b)" should {
 
@@ -198,6 +179,8 @@ final class UnionSpec extends TestSpec:
     }
 
     "negative intervals" should {
+      // TODO: ADD MORE TESTS
+
       "[9, 1] if [2, 1] U [4, 3]" in {
         // [2, 1]
         val a = Interval.make(Value.finite(2), Value.finite(1))
