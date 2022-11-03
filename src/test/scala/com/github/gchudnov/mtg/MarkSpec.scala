@@ -141,10 +141,10 @@ final class MarkSpec extends TestSpec:
       "Pred(At(Finite(-3)) == Finite(-4)" in {
         val x = Mark.pred(Mark.at(Value.finite(-3)))
 
-        val actual = x.eval
+        val actual   = x.eval
         val expected = Value.finite(-4)
 
-        actual mustBe(expected)
+        actual mustBe (expected)
       }
     }
 

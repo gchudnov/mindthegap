@@ -293,7 +293,7 @@ final class IntervalSpec extends TestSpec:
     }
 
     "normalize" should {
-      "provide a canonical form for intervals" in {
+      "provide a normal form of the intervals" in {
         // [1, 5] -> [1, 5]
         Interval.make(Mark.at(1), Mark.at(5)).normalize mustBe Interval.closed(1, 5)
 
@@ -399,6 +399,82 @@ final class IntervalSpec extends TestSpec:
       }
     }
 
+    "inflateLeft" should {
+      "make a real out of point" in {
+        val a = Interval.point(1)
+
+        val actual   = a.inflateLeft.canonical
+        val expected = Interval.closed(0, 1)
+
+        actual mustBe (expected)
+      }
+
+      "expand a real interval" in {
+        val a = Interval.closed(1, 2)
+
+        val actual   = a.inflateLeft.canonical
+        val expected = Interval.closed(0, 2)
+
+        actual mustBe (expected)
+      }
+
+      "expand an empty interval" in {
+        val a = Interval.closed(1, 2).swap
+
+        val actual   = a.inflateLeft.canonical
+        val expected = Interval.point(1)
+
+        actual mustBe (expected)
+      }
+
+      "inflate, deflate produces the original interval" in {
+        val a = Interval.closed(1, 2)
+
+        val actual   = a.inflateLeft.deflateLeft.canonical
+        val expected = a.canonical
+
+        actual mustBe (expected)
+      }
+    }
+
+    "inflateRight" should {
+      "make a real out of point" in {
+        val a = Interval.point(1)
+
+        val actual   = a.inflateRight.canonical
+        val expected = Interval.closed(1, 2)
+
+        actual mustBe (expected)
+      }
+
+      "expand a real interval" in {
+        val a = Interval.closed(1, 2)
+
+        val actual   = a.inflateRight.canonical
+        val expected = Interval.closed(1, 3)
+
+        actual mustBe (expected)
+      }
+
+      "expand an empty interval" in {
+        val a = Interval.closed(1, 2).swap
+
+        val actual   = a.inflateRight.canonical
+        val expected = Interval.point(2)
+
+        actual mustBe (expected)
+      }
+
+      "inflate, deflate produces the original interval" in {
+        val a = Interval.closed(1, 2)
+
+        val actual   = a.inflateRight.deflateRight.canonical
+        val expected = a.canonical
+
+        actual mustBe (expected)
+      }
+    }
+
     "deflate" should {
       "make an empty interval out of point" in {
         val a = Interval.point(1)
@@ -431,7 +507,83 @@ final class IntervalSpec extends TestSpec:
         val a = Interval.closed(1, 2)
 
         val actual   = a.deflate.inflate.canonical
-        val expected = a
+        val expected = a.canonical
+
+        actual mustBe (expected)
+      }
+    }
+
+    "deflateLeft" should {
+      "make an empty interval out of point" in {
+        val a = Interval.point(1)
+
+        val actual   = a.deflateLeft.canonical
+        val expected = Interval.closed(1, 2).swap.canonical
+
+        actual mustBe (expected)
+      }
+
+      "shrink a real interval" in {
+        val a = Interval.closed(1, 2)
+
+        val actual   = a.deflateLeft.canonical
+        val expected = Interval.point(2)
+
+        actual mustBe (expected)
+      }
+
+      "expand an empty interval" in {
+        val a = Interval.closed(1, 2).swap
+
+        val actual   = a.deflateLeft.canonical
+        val expected = Interval.closed(1, 3).swap
+
+        actual mustBe (expected)
+      }
+
+      "inflate, deflate produces the original interval" in {
+        val a = Interval.closed(1, 2)
+
+        val actual   = a.deflateLeft.inflateLeft.canonical
+        val expected = a.canonical
+
+        actual mustBe (expected)
+      }
+    }
+
+    "deflateRight" should {
+      "make an empty interval out of point" in {
+        val a = Interval.point(1)
+
+        val actual   = a.deflateRight.canonical
+        val expected = Interval.closed(0, 1).swap.canonical
+
+        actual mustBe (expected)
+      }
+
+      "shrink a real interval" in {
+        val a = Interval.closed(1, 2)
+
+        val actual   = a.deflateRight.canonical
+        val expected = Interval.point(1)
+
+        actual mustBe (expected)
+      }
+
+      "expand an empty interval" in {
+        val a = Interval.closed(1, 2).swap
+
+        val actual   = a.deflateRight.canonical
+        val expected = Interval.closed(0, 2).swap
+
+        actual mustBe (expected)
+      }
+
+      "inflate, deflate produces the original interval" in {
+        val a = Interval.closed(1, 2)
+
+        val actual   = a.deflateRight.inflateRight.canonical
+        val expected = a.canonical
 
         actual mustBe (expected)
       }

@@ -208,7 +208,7 @@ final class GapSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          whenever(xx.equals(yy)) {
+          whenever(xx.equalsTo(yy) && xx.nonEmpty && yy.nonEmpty) {
             val actual   = xx.gap(yy).canonical
             val expected = xx.gap(yy).canonical
 

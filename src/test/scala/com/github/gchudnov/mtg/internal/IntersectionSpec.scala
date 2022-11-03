@@ -125,7 +125,7 @@ final class IntersectionSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          whenever(xx.equals(yy)) {
+          whenever(xx.equalsTo(yy) && xx.nonEmpty && yy.nonEmpty) {
             val actual   = xx.intersection(yy).canonical
             val expected = xx.intersection(yy).canonical
 

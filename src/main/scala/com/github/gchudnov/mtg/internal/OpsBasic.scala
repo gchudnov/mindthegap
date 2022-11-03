@@ -30,17 +30,6 @@ private[mtg] transparent trait BasicOps[T]:
    */
   final def intersection(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     Interval.make(ordM.max(a.left, b.left), ordM.min(a.right, b.right))
-    // (a.isEmpty, b.isEmpty) match {
-    //   case (false, false) =>
-    //     Interval.make(ordM.max(a.left, b.left), ordM.min(a.right, b.right))
-    //   case (true, false) =>
-    //     a
-    //   case (false, true) =>
-    //     b
-    //   case (true, true) =>
-    //     a.swap.intersection(b.swap).swap
-    //}
-
 
   /**
    * Span
@@ -72,18 +61,6 @@ private[mtg] transparent trait BasicOps[T]:
   final def span(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
 
-    // (a.isEmpty, b.isEmpty) match
-    //   case (false, false) =>
-    //     Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
-    //   case (true, false) =>
-    //     b
-    //   case (false, true) =>
-    //     a
-    //   case (true, true) =>
-    //     Interval.make(ordM.max(a.left, b.left), ordM.min(a.right, b.right))
-
-      // x.swap.span(y.swap).swap
-
   /**
    * Union
    *
@@ -113,26 +90,11 @@ private[mtg] transparent trait BasicOps[T]:
    */
   def union(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     if a.merges(b) then
-      if a.isEmpty && b.isEmpty then
-        a.span(b)
-      else if a.isEmpty then
-        b
-      else if b.isEmpty then
-        a
-      else
-        a.span(b)
-    else
-      Interval.empty[T]
-
-
-    // (a.isEmpty, b.isEmpty) match
-    //   case (true, true) | (false, false) =>
-    //     if a.merges(b) then Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
-    //     else Interval.empty[T]
-    //   case (true, false) =>
-    //     b
-    //   case (false, true) =>
-    //     a
+      if a.isEmpty && b.isEmpty then a.span(b)
+      else if a.isEmpty then b
+      else if b.isEmpty then a
+      else a.span(b)
+    else Interval.empty[T]
 
   /**
    * Gap (Complement)
@@ -154,9 +116,6 @@ private[mtg] transparent trait BasicOps[T]:
   final def gap(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     Interval.make(ordM.min(a.right, b.right), ordM.max(a.left, b.left)).deflate
 
-    // if (a.nonEmpty && b.nonEmpty) && (ordM.lt(b.right, a.left) || ordM.lt(a.right, b.left)) then Interval.make(ordM.min(a.right, b.right).succ, ordM.max(a.left, b.left).pred)
-    // else Interval.empty[T]
-    
   /**
    * Minus
    *

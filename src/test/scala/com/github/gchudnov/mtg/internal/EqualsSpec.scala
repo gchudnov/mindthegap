@@ -53,11 +53,10 @@ final class EqualsSpec extends TestSpec:
             val a2 = argsX.right
             val b2 = argsY.right
 
-            val bothEmpty    = xx.isEmpty && yy.isEmpty
             val eqBoundaries = (ordM.equiv(a1, b1) && ordM.equiv(a2, b2))
 
             yy.equalsTo(xx) mustBe true
-            (bothEmpty || eqBoundaries) mustBe true
+            eqBoundaries mustBe true
 
             assertOne(Rel.EqualsTo)(xx, yy)
           }
@@ -66,7 +65,7 @@ final class EqualsSpec extends TestSpec:
 
       "valid in special cases" in {
         // Empty
-        Interval.empty[Int].equalsTo(Interval.empty[Int]) mustBe (false)
+        Interval.empty[Int].equalsTo(Interval.empty[Int]) mustBe (true)
         Interval.empty[Int].equalsTo(Interval.point(0)) mustBe (false)
         Interval.empty[Int].equalsTo(Interval.closed(0, 1)) mustBe (false)
 
