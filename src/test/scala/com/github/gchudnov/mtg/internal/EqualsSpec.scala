@@ -2,9 +2,9 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
-import com.github.gchudnov.mtg.Boundary
 
 /**
  * Equals
@@ -21,7 +21,7 @@ final class EqualsSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
+  val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "Equals" when {
     import IntervalRelAssert.*
@@ -29,9 +29,9 @@ final class EqualsSpec extends TestSpec:
     "a.equals(b)" should {
 
       "b.equals(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           val actual   = xx.equalsTo(yy)
           val expected = yy.equalsTo(xx)
@@ -41,23 +41,22 @@ final class EqualsSpec extends TestSpec:
       }
 
       "a- = b- AND a+ = b+" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.equalsTo(yy)) {
             // a- = b- && a+ = b+
-            val a1 = Boundary.Left(ox1, ix1)
-            val b1 = Boundary.Left(oy1, iy1)
+            val a1 = argsX.left
+            val b1 = argsY.left
 
-            val a2 = Boundary.Right(ox2, ix2)
-            val b2 = Boundary.Right(oy2, iy2)
+            val a2 = argsX.right
+            val b2 = argsY.right
 
-            val bothEmpty    = xx.isEmpty && yy.isEmpty
-            val eqBoundaries = (ordB.equiv(a1, b1) && ordB.equiv(a2, b2))
+            val eqBoundaries = (ordM.equiv(a1, b1) && ordM.equiv(a2, b2))
 
             yy.equalsTo(xx) mustBe true
-            (bothEmpty || eqBoundaries) mustBe true
+            eqBoundaries mustBe true
 
             assertOne(Rel.EqualsTo)(xx, yy)
           }
@@ -66,7 +65,7 @@ final class EqualsSpec extends TestSpec:
 
       "valid in special cases" in {
         // Empty
-        Interval.empty[Int].equalsTo(Interval.empty[Int]) mustBe (false)
+        Interval.empty[Int].equalsTo(Interval.empty[Int]) mustBe (true)
         Interval.empty[Int].equalsTo(Interval.point(0)) mustBe (false)
         Interval.empty[Int].equalsTo(Interval.closed(0, 1)) mustBe (false)
 

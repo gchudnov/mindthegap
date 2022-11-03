@@ -1,9 +1,10 @@
 package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Arbitraries.*
-import com.github.gchudnov.mtg.Boundary
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.TestSpec
+import com.github.gchudnov.mtg.Value
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
 /**
@@ -21,16 +22,16 @@ final class DuringSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
+  val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "During" when {
     import IntervalRelAssert.*
 
     "a.during(b)" should {
       "b.contains(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.during(yy)) {
             yy.contains(xx) mustBe true
@@ -38,13 +39,13 @@ final class DuringSpec extends TestSpec:
             assertOne(Rel.During)(xx, yy)
 
             // a- > b- && a+ < b+
-            val a1 = Boundary.Left(ox1, ix1)
-            val b1 = Boundary.Left(oy1, iy1)
+            val a1 = argsX.left
+            val b1 = argsY.left
 
-            val a2 = Boundary.Right(ox2, ix2)
-            val b2 = Boundary.Right(oy2, iy2)
+            val a2 = argsX.right
+            val b2 = argsY.right
 
-            (ordB.gt(a1, b1) && ordB.lt(a2, b2)) mustBe true
+            (ordM.gt(a1, b1) && ordM.lt(a2, b2)) mustBe true
           }
         }
       }
@@ -52,9 +53,9 @@ final class DuringSpec extends TestSpec:
 
     "a.contains(b)" should {
       "b.during(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.contains(yy)) {
             yy.during(xx) mustBe true
@@ -62,13 +63,13 @@ final class DuringSpec extends TestSpec:
             assertOne(Rel.Contains)(xx, yy)
 
             // a- < b- && b+ < a+
-            val a1 = Boundary.Left(ox1, ix1)
-            val b1 = Boundary.Left(oy1, iy1)
+            val a1 = argsX.left
+            val b1 = argsY.left
 
-            val a2 = Boundary.Right(ox2, ix2)
-            val b2 = Boundary.Right(oy2, iy2)
+            val a2 = argsX.right
+            val b2 = argsY.right
 
-            (ordB.lt(a1, b1) && ordB.lt(b2, a2)) mustBe true
+            (ordM.lt(a1, b1) && ordM.lt(b2, a2)) mustBe true
           }
         }
       }
@@ -77,9 +78,9 @@ final class DuringSpec extends TestSpec:
     "a.during(b) AND b.contains(a)" should {
 
       "equal" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           val actual   = xx.during(yy)
           val expected = yy.contains(xx)
@@ -121,18 +122,18 @@ final class DuringSpec extends TestSpec:
         // [5, 7] (-inf, +inf)
         Interval.closed(5, 7).during(Interval.unbounded[Int]) mustBe (true)
 
-        // [-∞,0]  [-∞,+∞)
-        Interval.proper(None, true, Some(0), true).during(Interval.proper[Int](None, true, None, false)) mustBe (false)
+        // (-∞,0]  (-∞,+∞)
+        Interval.rightClosed(0).during(Interval.unbounded[Int]) mustBe (false)
 
-        // [0, 2)  [-∞,+∞]
-        Interval.proper(Some(0), true, Some(2), false).during(Interval.proper[Int](None, true, None, true)) mustBe (true)
+        // [0, 2)  (-∞,+∞)
+        Interval.closed(0, 2).during(Interval.unbounded[Int]) mustBe (true)
 
-        // [0]  [-∞,+∞)
-        Interval.point(0).during(Interval.proper[Int](None, true, None, false)) mustBe (true)
+        // [0]  (-∞,+∞)
+        Interval.point(0).during(Interval.unbounded[Int]) mustBe (true)
 
-        // (3,+∞), (0,+∞]
-        Interval.leftOpen(3).during(Interval.proper(Some(0), false, None, true)) mustBe (true)
-        Interval.proper(Some(0), false, None, true).contains(Interval.leftOpen(3)) mustBe (true)
+        // (3,10), (0,+∞)
+        Interval.open(3, 10).during(Interval.leftOpen(0)) mustBe (true)
+        Interval.leftOpen(0).contains(Interval.open(3, 10)) mustBe (true)
       }
     }
   }

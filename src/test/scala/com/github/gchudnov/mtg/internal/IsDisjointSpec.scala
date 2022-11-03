@@ -2,9 +2,9 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
-import com.github.gchudnov.mtg.Boundary
 
 final class IsDisjointSpec extends TestSpec:
 
@@ -13,16 +13,16 @@ final class IsDisjointSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
+  val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "IsDisjoint" when {
     import IntervalRelAssert.*
 
     "a.isDisjoint(b)" should {
       "b.isDisjoint(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.isDisjoint(yy)) {
             yy.isDisjoint(xx) mustBe true
@@ -30,13 +30,13 @@ final class IsDisjointSpec extends TestSpec:
             assertOneOf(Set(Rel.Before, Rel.After))(xx, yy)
 
             // a+ < b- || a- > b+
-            val a1 = Boundary.Left(ox1, ix1)
-            val b1 = Boundary.Left(oy1, iy1)
+            val a1 = argsX.left
+            val b1 = argsY.left
 
-            val a2 = Boundary.Right(ox2, ix2)
-            val b2 = Boundary.Right(oy2, iy2)
+            val a2 = argsX.right
+            val b2 = argsY.right
 
-            (ordB.lt(xx.right, yy.left) || ordB.gt(xx.left, yy.right)) mustBe true
+            (ordM.lt(xx.right, yy.left) || ordM.gt(xx.left, yy.right)) mustBe true
           }
         }
       }
@@ -44,9 +44,9 @@ final class IsDisjointSpec extends TestSpec:
 
     "a.isDisjoint(b) AND b.isDisjoint(a)" should {
       "equal" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           val actual   = xx.isDisjoint(yy)
           val expected = yy.isDisjoint(xx)

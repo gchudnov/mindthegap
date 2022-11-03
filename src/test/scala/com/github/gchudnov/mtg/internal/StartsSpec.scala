@@ -2,9 +2,9 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
-import com.github.gchudnov.mtg.Boundary
 
 /**
  * Starts, IsStartedBy
@@ -14,23 +14,23 @@ import com.github.gchudnov.mtg.Boundary
  *   BBBBBB
  * }}}
  */
-final class StartsSpec extends TestSpec: // with IntervalRelAssert {}
+final class StartsSpec extends TestSpec:
 
   given intRange: IntRange = intRange5
   given intProb: IntProb   = intProb127
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
+  val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "Starts" when {
     import IntervalRelAssert.*
 
     "a.starts(b)" should {
       "b.isStartedBy(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.starts(yy)) {
             yy.isStartedBy(xx) mustBe true
@@ -38,10 +38,10 @@ final class StartsSpec extends TestSpec: // with IntervalRelAssert {}
             assertOne(Rel.Starts)(xx, yy)
 
             // a- = b- && b.isSuperset(a) && !a.equalsTo(b)
-            val a1 = Boundary.Left(ox1, ix1)
-            val b1 = Boundary.Left(oy1, iy1)
+            val a1 = argsX.left
+            val b1 = argsY.left
 
-            (ordB.equiv(a1, b1) && yy.isSuperset(xx) && !xx.equalsTo(yy)) mustBe true
+            (ordM.equiv(a1, b1) && yy.isSuperset(xx) && !xx.equalsTo(yy)) mustBe true
           }
         }
       }
@@ -49,9 +49,9 @@ final class StartsSpec extends TestSpec: // with IntervalRelAssert {}
 
     "a.isStartedBy(b)" should {
       "b.starts(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.isStartedBy(yy)) {
             yy.starts(xx) mustBe true
@@ -59,10 +59,10 @@ final class StartsSpec extends TestSpec: // with IntervalRelAssert {}
             assertOne(Rel.IsStartedBy)(xx, yy)
 
             // a- = b- && a.isSuperset(b) && !a.equalsTo(b)
-            val a1 = Boundary.Left(ox1, ix1)
-            val b1 = Boundary.Left(oy1, iy1)
+            val a1 = argsX.left
+            val b1 = argsY.left
 
-            (ordB.equiv(a1, b1) && xx.isSuperset(yy) && !xx.equalsTo(yy)) mustBe true
+            (ordM.equiv(a1, b1) && xx.isSuperset(yy) && !xx.equalsTo(yy)) mustBe true
           }
         }
       }
@@ -70,9 +70,9 @@ final class StartsSpec extends TestSpec: // with IntervalRelAssert {}
 
     "a.starts(b) AND b.isStartedBy(a)" should {
       "equal" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           val actual   = xx.starts(yy)
           val expected = yy.isStartedBy(xx)

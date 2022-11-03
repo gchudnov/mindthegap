@@ -15,44 +15,43 @@ final class ShowSpec extends TestSpec:
     "show" should {
 
       "represent an Empty interval" in {
-        val value    = Interval.empty[Int]
-        val actual   = value.show
+        val value = Interval.empty[Int]
+
+        val actual   = Show.asString(value)
         val expected = "∅"
 
         actual mustBe expected
       }
 
       "represent a Point interval" in {
-        val value    = Interval.point(1)
-        val actual   = value.show
+        val value = Interval.point(1)
+
+        val actual   = Show.asString(value)
         val expected = "{1}"
 
         actual mustBe expected
       }
 
       "represent a Proper interval" in {
+        // NOTE: it is not possible to have closed boundaries for infinity: [-∞,+∞]
         val t = Table(
           ("x", "expected"),
-          (Interval.proper(Some(1), true, Some(2), true), "[1,2]"),
-          (Interval.proper(Some(1), true, Some(3), false), "[1,3)"),
-          (Interval.proper(Some(1), false, Some(3), true), "(1,3]"),
-          (Interval.proper(Some(1), false, Some(4), false), "(1,4)"),
-          (Interval.proper(None, true, Some(2), true), "[-∞,2]"),
-          (Interval.proper(None, true, Some(2), false), "[-∞,2)"),
-          (Interval.proper(None, false, Some(2), true), "(-∞,2]"),
-          (Interval.proper(None, false, Some(2), false), "(-∞,2)"),
-          (Interval.proper(Some(1), true, None, true), "[1,+∞]"),
-          (Interval.proper(Some(1), true, None, false), "[1,+∞)"),
-          (Interval.proper(Some(1), false, None, true), "(1,+∞]"),
-          (Interval.proper(Some(1), false, None, false), "(1,+∞)"),
-          (Interval.proper[Int](None, true, None, true), "[-∞,+∞]"),
-          (Interval.proper[Int](None, true, None, false), "[-∞,+∞)"),
-          (Interval.proper[Int](None, false, None, true), "(-∞,+∞]"),
-          (Interval.proper[Int](None, false, None, false), "(-∞,+∞)")
+          (Interval.proper(Mark.at(1), Mark.at(2)), "[1,2]"),
+          (Interval.proper(Mark.at(1), Mark.pred(3)), "[1,3)"),
+          (Interval.proper(Mark.succ(1), Mark.at(3)), "(1,3]"),
+          (Interval.proper(Mark.succ(1), Mark.pred(4)), "(1,4)"),
+          (Interval.proper(Mark.at(Value.InfNeg), Mark.at(2)), "(-∞,2]"),
+          (Interval.proper(Mark.succ(Value.InfNeg), Mark.pred(2)), "(-∞,2)"),
+          (Interval.proper(Mark.at(1), Mark.at(Value.InfPos)), "[1,+∞)"),
+          (Interval.proper(Mark.succ(1), Mark.pred(Value.InfPos)), "(1,+∞)"),
+          (Interval.proper[Int](Mark.at(Value.InfNeg), Mark.at(Value.InfPos)), "(-∞,+∞)"),
+          (Interval.proper[Int](Mark.at(Value.InfNeg), Mark.pred(Value.InfPos)), "(-∞,+∞)"),
+          (Interval.proper[Int](Mark.succ(Value.InfNeg), Mark.at(Value.InfPos)), "(-∞,+∞)"),
+          (Interval.proper[Int](Mark.succ(Value.InfNeg), Mark.pred(Value.InfPos)), "(-∞,+∞)")
         )
 
-        forAll(t) { (x, expected) =>
-          val actual = x.show
+        forAll(t) { (xx, expected) =>
+          val actual = Show.asString(xx)
           actual mustBe expected
         }
       }

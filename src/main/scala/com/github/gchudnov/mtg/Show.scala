@@ -1,8 +1,5 @@
 package com.github.gchudnov.mtg
 
-trait Show[T]:
-  extension (t: T) def show: String
-
 object Show:
   private val infinite = '∞'
 
@@ -16,31 +13,48 @@ object Show:
   private val leftPoint  = '{'
   private val rightPoint = '}'
 
+  private val sep = ','
+
+  def asString[T: Domain](i: Interval[T])(using Ordering[Mark[T]]): String =
+    if i.isEmpty then empty.toString()
+    else if i.isPoint then
+      val p = str(i.left.eval)
+      s"${leftPoint}${p}${rightPoint}"
+    else s"${showLeft(i.left)}${sep}${showRight(i.right)}"
+
   private[mtg] def leftBound(isInclude: Boolean): Char =
     if isInclude then leftClosed else leftOpen
 
   private[mtg] def rightBound(isInclude: Boolean): Char =
     if isInclude then rightClosed else rightOpen
 
-  private[mtg] def leftValue(x: Option[?]): String =
-    x.fold(s"-${infinite}")(_.toString())
+  private[mtg] def str[T](x: Value[T]): String =
+    x match
+      case Value.InfNeg =>
+        s"-${infinite}"
+      case Value.InfPos =>
+        s"+${infinite}"
+      case Value.Finite(x) =>
+        x.toString()
 
-  private[mtg] def rightValue(x: Option[?]): String =
-    x.fold(s"+${infinite}")(_.toString())
+  private def showLeft[T: Domain](left: Mark[T]): String =
+    val (x, isInclude) = left match
+      case Mark.At(x) =>
+        (x, !x.isInf)
+      case Mark.Pred(_) =>
+        val x = left.eval
+        (x, !x.isInf)
+      case Mark.Succ(xx) =>
+        (xx.eval, false)
+    s"${leftBound(isInclude)}${str(x)}"
 
-  given Show[Boundary[?]] with
-    extension (b: Boundary[?])
-      def show: String =
-        if b.isLeft then s"${leftBound(b.isInclude)}${leftValue(b.value)}"
-        else s"${rightValue(b.value)}${rightBound(b.isInclude)}"
-
-  given Show[Interval[?]] with
-    extension (i: Interval[?])
-      def show: String =
-        i match
-          case Interval.Empty =>
-            s"${empty}"
-          case Interval.Point(a) =>
-            s"${leftPoint}${a.toString()}${rightPoint}"
-          case Interval.Proper(l, r) =>
-            s"${l.show},${r.show}"
+  private def showRight[T: Domain](right: Mark[T]): String =
+    val (y, isInclude) = right match
+      case Mark.At(y) =>
+        (y, !y.isInf)
+      case Mark.Pred(yy) =>
+        (yy.eval, false)
+      case Mark.Succ(yy) =>
+        val y = right.eval
+        (y, !y.isInf)
+    s"${str(y)}${rightBound(isInclude)}"

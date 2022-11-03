@@ -3,6 +3,7 @@ package com.github.gchudnov.mtg.internal
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
+import com.github.gchudnov.mtg.Value
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
 final class IntersectionSpec extends TestSpec:
@@ -12,230 +13,218 @@ final class IntersectionSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
+  val ordI: Ordering[Interval[Int]] = summon[Ordering[Interval[Int]]]
+
   "Intersection" when {
 
     "a.intersection(b)" should {
-      "b.intersection(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
 
-          val zz = xx.intersection(yy)
+      "∅ if A and B are empty" in {
+        forAll(genEmptyIntArgs, genEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-          whenever(zz.nonEmpty) {
-            val ww = yy.intersection(xx)
-
-            zz.canonical mustBe ww.canonical
-
-            // TODO: (-inf, +inf) if A = (-inf, +inf], B = [-inf, +inf)
-            // TODO: things break with inf values, fix it
-            // // given the gap c, [-inf, c-) || (c+, +inf] must be the intersection
-            // val cLhs = Interval.make[Int](None, true, zz.left.effectiveValue, true)
-            // val cRhs = Interval.make[Int](zz.right.effectiveValue, true, None, true)
-
-            // val cc = cLhs.gap(cRhs)
-            // cc.canonical mustBe zz.canonical
-          }
-        }
-      }
-    }
-
-    "a.intersection(b) AND b.intersection(a)" should {
-
-      /**
-       * A & B = B & A
-       */
-      "equal" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+          xx.isEmpty mustBe (true)
+          yy.isEmpty mustBe (true)
 
           val actual   = xx.intersection(yy).canonical
           val expected = yy.intersection(xx).canonical
+
+          actual.isEmpty mustBe true
+          expected.isEmpty mustBe true
 
           actual mustBe expected
         }
       }
 
-      "(-inf, +inf) if A = (-inf, +inf], B = [-inf, +inf)" in {
-        val xx = Interval.make[Int](None, false, None, true)
-        val yy = Interval.make[Int](None, true, None, false)
+      "∅ if A is empty, B is non-empty" in {
+        forAll(genEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = xx.intersection(yy)
-        val expected = Interval.make[Int](None, false, None, false)
+          xx.isEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
 
-        actual mustBe expected
-      }
+          val actual   = xx.intersection(yy).canonical
+          val expected = yy.intersection(xx).canonical
 
-      "(2, +∞] & (3, 5) = (3, 5) & (2, +∞]" in {
-        val a = Interval.leftOpen(2)                          // (2, +∞]
-        val b = Interval.make(Some(3), false, Some(5), false) // (3, 5)
+          actual.isEmpty mustBe true
+          expected.isEmpty mustBe true
 
-        val c1 = a.intersection(b).canonical
-        val c2 = b.intersection(a).canonical
-
-        c1 mustBe c2
-        c2 mustBe c1
-      }
-
-      "∅ if A and B are empty" in {
-        val a = Interval.empty[Int]
-        val b = Interval.empty[Int]
-
-        val actual   = a.intersection(b)
-        val expected = Interval.empty[Int]
-
-        actual mustBe expected
-      }
-
-      "∅ if A is empty" in {
-        val a = Interval.empty[Int]
-        val b = Interval.closed(1, 10)
-
-        val actual   = a.intersection(b)
-        val expected = Interval.empty[Int]
-
-        actual mustBe expected
-      }
-
-      "∅ if B is empty" in {
-        val a = Interval.closed(1, 10)
-        val b = Interval.empty[Int]
-
-        val actual   = a.intersection(b)
-        val expected = Interval.empty[Int]
-
-        actual mustBe expected
+          actual mustBe expected
+        }
       }
 
       "∅ if A before B" in {
-        val a = Interval.closed(1, 10)
-        val b = Interval.closed(20, 30)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.empty[Int]
+          whenever(xx.before(yy)) {
+            val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe true
+          }
+        }
       }
 
       "∅ if A after B" in {
-        val a = Interval.closed(20, 30)
-        val b = Interval.closed(1, 10)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.empty[Int]
+          whenever(xx.after(yy)) {
+            val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe true
+          }
+        }
       }
 
-      "[max(a-, b-), min(a+, b+)] if A starts B" in {
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(1, 10)
+      "[,] if A starts B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.closed(1, 5)
+          whenever(xx.starts(yy)) {
+            val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe false
+          }
+        }
       }
 
-      "[max(a-, b-), min(a+, b+)] if A during B" in {
-        val a = Interval.closed(5, 7)
-        val b = Interval.closed(1, 10)
+      "[,] if A during B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.closed(5, 7)
+          whenever(xx.during(yy)) {
+            val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe false
+          }
+        }
       }
 
-      "[max(a-, b-), min(a+, b+)] if A finishes B" in {
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(1, 10)
+      "[,] if A finishes B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.closed(5, 10)
+          whenever(xx.finishes(yy)) {
+            val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe false
+          }
+        }
       }
 
-      "[max(a-, b-), min(a+, b+)] if A equals B" in {
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(5, 10)
+      "[,] if A equals B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.closed(5, 10)
+          whenever(xx.equalsTo(yy) && xx.nonEmpty && yy.nonEmpty) {
+            val actual   = xx.intersection(yy).canonical
+            val expected = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe false
+
+            actual mustBe expected
+          }
+        }
       }
 
-      "[max(a-, b-), min(a+, b+)] if A is-overlapped-by B" in {
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(1, 7)
+      "[,] if A is-overlapped-by B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.closed(5, 7)
+          whenever(xx.isOverlapedBy(yy)) {
+            val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe false
+          }
+        }
       }
 
-      "[max(a-, b-), min(a+, b+)] if A is-met-by B" in {
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(1, 5)
+      "[,] if A is-met-by B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.point(5)
+          whenever(xx.isMetBy(yy)) {
+            val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe false
+          }
+        }
       }
 
-      "[max(a-, b-), min(a+, b+)] if A is-started-by B" in {
-        val a = Interval.closed(1, 10)
-        val b = Interval.closed(1, 5)
+      "[,] if A is-started-by B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.closed(1, 5)
+          whenever(xx.isStartedBy(yy)) {
+            val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe false
+          }
+        }
       }
 
-      "[max(a-, b-), min(a+, b+)] in A meets B" in {
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(5, 10)
+      "[,] in A meets B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.point(5)
+          whenever(xx.meets(yy)) {
+            val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe false
+          }
+        }
       }
 
-      "[max(a-, b-), min(a+, b+)] in A overlaps B" in {
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(7, 15)
+      "[,] in A overlaps B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.closed(7, 10)
+          whenever(xx.overlaps(yy)) {
+            val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe false
+          }
+        }
       }
 
-      "[max(a-, b-), min(a+, b+)] in A is-finished-by B" in {
-        val a = Interval.closed(1, 10)
-        val b = Interval.closed(7, 10)
+      "[,] in A is-finished-by B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.closed(7, 10)
+          whenever(xx.isFinishedBy(yy)) {
+            val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe false
+          }
+        }
       }
 
-      "[max(a-, b-), min(a+, b+)] if A contains B" in {
-        val a = Interval.closed(1, 10)
-        val b = Interval.closed(5, 7)
+      "[,] if A contains B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.closed(5, 7)
+          whenever(xx.contains(yy)) {
+            val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+            actual.isEmpty mustBe false
+          }
+        }
       }
 
       "∅ if A = unbounded, B = empty" in {
@@ -245,17 +234,102 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.empty[Int]
 
+        actual.isEmpty mustBe (true)
         actual mustBe expected
       }
 
       "B if A = unbounded, B = non-empty" in {
-        val a = Interval.unbounded[Int]
-        val b = Interval.closed(1, 2)
+        forAll(genNonEmptyIntArgs) { case (argsY) =>
+          val xx = Interval.unbounded[Int]
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.intersection(b)
-        val expected = Interval.closed(1, 2)
+          val actual = xx.intersection(yy).canonical
 
-        actual mustBe expected
+          actual.isEmpty mustBe false
+        }
+      }
+
+      "∅ if A and B non-empty and disjoint" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.nonEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
+
+          whenever(xx.isDisjoint(yy)) {
+            val actual   = xx.intersection(yy).canonical
+            val expected = yy.intersection(xx).canonical
+
+            actual.isEmpty mustBe true
+            expected.isEmpty mustBe true
+
+            actual mustBe expected
+          }
+        }
+      }
+
+      "non-empty if A and B are non-empty and !disjoint" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          xx.nonEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
+
+          whenever(!xx.isDisjoint(yy)) {
+            val actual   = xx.intersection(yy).canonical
+            val expected = yy.intersection(xx).canonical
+
+            actual.isEmpty mustBe false
+            expected.isEmpty mustBe false
+
+            actual mustBe expected
+          }
+        }
+      }
+    }
+
+    "A, B" should {
+      "A & B = B & A" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          val actual   = xx.intersection(yy).canonical
+          val expected = yy.intersection(xx).canonical
+
+          actual mustBe expected
+
+          // (a & b).swap == (a ∥ b).inflate
+          actual.swap.canonical mustBe xx.gap(yy).inflate.canonical
+        }
+      }
+
+      "(2, +∞) & (3, 5) = (3, 5) & (2, +∞)" in {
+        val a = Interval.leftOpen(2)  // (2, +∞]
+        val b = Interval.closed(3, 5) // (3, 5)
+
+        val c1 = a.intersection(b).canonical
+        val c2 = b.intersection(a).canonical
+
+        c1 mustBe c2
+        c2 mustBe c1
+      }
+    }
+
+    "A, B, C" should {
+      "(A & B) & C = A & (B & C)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY, argsZ) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+          val zz = Interval.make(argsZ.left, argsZ.right)
+
+          val actual   = ((xx.intersection(yy)).intersection(zz)).canonical
+          val expected = xx.intersection(yy.intersection(zz)).canonical
+
+          actual mustBe expected
+        }
       }
     }
 
@@ -273,21 +347,6 @@ final class IntersectionSpec extends TestSpec:
         c2 mustBe c1
 
         c1 mustBe expected
-      }
-    }
-
-    "A, B, C" should {
-      "(A & B) & C = A & (B & C)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2)), ((oz1, iz1), (oz2, iz2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
-          val zz = Interval.make(oz1, iz1, oz2, iz2)
-
-          val actual   = ((xx.intersection(yy)).intersection(zz)).canonical
-          val expected = xx.intersection(yy.intersection(zz)).canonical
-
-          actual mustBe expected
-        }
       }
     }
   }

@@ -5,6 +5,17 @@ import org.scalacheck.Gen
 object Arbitraries:
 
   final case class IntRange(min: Int, max: Int)
+
+  /**
+   * Probabilities & Frequencies
+   *
+   * @param empty
+   *   frequency of an empty interval: (empty / (empty + point + proper))
+   * @param point
+   *   frequency of an point interval: (point / (empty + point + proper))
+   * @param proper
+   *   frequency of an proper interval: (proper / (empty + point + proper))
+   */
   final case class IntProb(empty: Int, point: Int, proper: Int)
 
   val intRange10: IntRange = IntRange(min = -10, max = 10)
@@ -14,37 +25,30 @@ object Arbitraries:
   val intProb127: IntProb = IntProb(empty = 1, point = 2, proper = 7)
 
   /**
-   * Parameters to contruct an integer interval `({a, b}, isIncludeA, IsIncludeB)`, where:
-   *
-   * {{{
-   *   a   -- Option[Int]: None if 'inf', Some(x) if a finite value.
-   *   b   -- Option[Int]: None if 'inf', Some(x) if a finite value.
-   *   '{' -- one of the boundaries: '[' (isIncludeA == true), '(' (isIncludeA == false).
-   *   '}' -- one of the boundaries: ']' (isIncludeB == true), ')' (isIncludeA == false).
-   * }}}
+   * Arguments to contruct an integer interval
    */
-  type IntArgs = ((Option[Int], Boolean), (Option[Int], Boolean))
+  case class IntArgs(left: Mark[Int], right: Mark[Int])
 
   /**
-   * Generate a tuple (a, a) where both values have the same value. | Point intervals
+   * Generate a tuple (a, a) where both values have the same value. | Point
    */
   private def genIntTupleEq(using ir: IntRange): Gen[(Int, Int)] =
     for x <- Gen.choose(ir.min, ir.max)
     yield (x, x)
 
   /**
-   * Generate a tuple (a, b), whre a < b. | Proper intervals
+   * Generate a tuple (a, b), whre a < b. | Proper
    */
-  private def genIntTupleLteq(using ir: IntRange): Gen[(Int, Int)] =
+  private def genIntTupleLt(using ir: IntRange): Gen[(Int, Int)] =
     for
       x <- Gen.choose(ir.min, ir.max - 1)
       y <- Gen.choose(x + 1, ir.max)
     yield (x, y)
 
   /**
-   * Generate a tuple (a, b), whre a <= b. | Point, Proper intervals
+   * Generate a tuple (a, b), whre a <= b. | Point, Proper
    */
-  private def genIntTupleLt(using ir: IntRange): Gen[(Int, Int)] =
+  private def genIntTupleLtEq(using ir: IntRange): Gen[(Int, Int)] =
     for
       x <- Gen.choose(ir.min, ir.max)
       y <- Gen.choose(x, ir.max)
@@ -60,7 +64,7 @@ object Arbitraries:
     yield (x, y)
 
   /**
-   * Generate a tuple (a, b) where a and b are random. | Empty, Degenrate or Proper intervals
+   * Generate a tuple (a, b) where a and b are random. | Empty, Degenrate or Proper
    */
   private def genIntTupleAny(using ir: IntRange): Gen[(Int, Int)] =
     for
@@ -69,13 +73,13 @@ object Arbitraries:
     yield (x, y)
 
   /**
-   * Boolean Generator that produces true 50% of the time.
+   * Boolean Generator that produces 'true' 50% of the time.
    */
-  private val genBoolEq: Gen[Boolean] =
+  private val genBool50: Gen[Boolean] =
     Gen.oneOf(true, false)
 
   /**
-   * Boolean Generator that produces true 75% of the time.
+   * Boolean Generator that produces 'true' 75% of the time.
    */
   private val genBool75: Gen[Boolean] =
     Gen.prob(0.75)
@@ -85,22 +89,24 @@ object Arbitraries:
    *
    * {{{
    *   [b, a] = (b, a) = [b, a) = (b, a] = (a, a) = [a, a) = (a, a] = {} = ∅
+   *
+   *   where b > a
    * }}}
    */
   def genEmptyIntArgs(using ir: IntRange): Gen[IntArgs] =
     // [b, a] = (b, a) = [b, a) = (b, a]
     val g1 = for
       ab <- genIntTupleGt.map(toSome)
-      ia <- genBoolEq
-      ib <- genBoolEq
-    yield ((ab._1, ia), (ab._2, ib))
+      ia <- genBool50
+      ib <- genBool50
+    yield IntArgs(toLeft(ab._1, ia), toRight(ab._2, ib))
 
     // (a, a) = [a, a) = (a, a]
     val g2 = for
       ab <- genIntTupleEq.map(toSome)
-      ia <- genBoolEq
-      ib <- if (ia) then Gen.const(false) else genBoolEq // if we selected '[', the second boundary cannot be ']', otherwise it will produce a point interval.
-    yield ((ab._1, ia), (ab._2, ib))
+      ia <- genBool50
+      ib <- if (ia) then Gen.const(false) else genBool50 // if we selected '[', the second boundary cannot be ']', otherwise it will produce a point interval.
+    yield IntArgs(toLeft(ab._1, ia), toRight(ab._2, ib))
 
     Gen.oneOf(g1, g2)
 
@@ -111,7 +117,7 @@ object Arbitraries:
    * }}}
    */
   def genPointIntArgs(using ir: IntRange): Gen[IntArgs] =
-    for ab <- genIntTupleEq.map(toSome) yield ((ab._1, true), (ab._2, true))
+    for ab <- genIntTupleEq.map(toSome) yield IntArgs(toLeft(ab._1, true), toRight(ab._2, true))
 
   /**
    * Generate Proper Intervals
@@ -119,33 +125,46 @@ object Arbitraries:
    * Neither Empty nor Point
    * {{{
    *   {a, b}
+   *
+   *   where a < b
+   *
+   *   NOTE:
+   *   (A) if d(b-a) == 1, both boundaries can be only inclusive, otherwise we will get a negative (empty) interval or a point:
+   *     [1, 2] ok | proper
+   *     (1, 2) x  | empty
+   *     (1, 2] x  | point
+   *     [1, 2) x  | point
+   *
+   *   (B) if d(b-a) == 2, then if first boundary is (, the second cannot be ), otherwise it will be a point
+   *     [1, 3] ok | proper
+   *     (1, 3) x  | point
+   *     (1, 3] ok | proper
+   *     [1, 3) ok | proper
    * }}}
    */
   def genProperIntArgs(using ir: IntRange): Gen[IntArgs] =
     for
-      ab <- genIntTupleLteq
+      ab <- genIntTupleLt
       oa <- Gen.option(Gen.const(ab._1))
       ob <- Gen.option(Gen.const(ab._2))
-      ia <- genBoolEq
-      ib <- genBoolEq
-    yield ((oa, ia), (ob, ib))
+      d   = ab._2 - ab._1
+      ia <- if (d == 1) then Gen.const(true) else genBool50
+      ib <- if (d == 1) then Gen.const(true) else if ((d == 2) && !ia) then Gen.const(true) else genBool50
+    yield IntArgs(toLeft(oa, ia), toRight(ob, ib))
 
   /**
-   * Generate any interval tuple.
+   * Generate non-empty intervals (Point or Proper)
    */
-  def genAnyIntArgs(using ir: IntRange): Gen[IntArgs] =
-    for
-      ab <- genIntTupleAny
-      oa <- Gen.option(Gen.const(ab._1))
-      ob <- Gen.option(Gen.const(ab._2))
-      ia <- genBoolEq
-      ib <- genBoolEq
-    yield ((oa, ia), (ob, ib))
+  def genNonEmptyIntArgs(using ir: IntRange, ip: IntProb): Gen[IntArgs] =
+    Gen.frequency(
+      ip.point  -> genPointIntArgs,
+      ip.proper -> genProperIntArgs
+    )
 
   /**
    * Generate one of the (Empty, Point, Proper) intervals
    */
-  def genOneOfIntArgs(using ir: IntRange, ip: IntProb): Gen[IntArgs] =
+  def genAnyIntArgs(using ir: IntRange, ip: IntProb): Gen[IntArgs] =
     Gen.frequency(
       ip.empty  -> genEmptyIntArgs,
       ip.point  -> genPointIntArgs,
@@ -153,7 +172,41 @@ object Arbitraries:
     )
 
   /**
+   * Generate any interval tuple.
+   */
+  def genRandomIntArgs(using ir: IntRange): Gen[IntArgs] =
+    for
+      ab <- genIntTupleAny
+      oa <- Gen.option(Gen.const(ab._1))
+      ob <- Gen.option(Gen.const(ab._2))
+      ia <- genBool50
+      ib <- genBool50
+    yield IntArgs(toLeft(oa, ia), toRight(ob, ib))
+
+  /**
    * Converts a tuple of values to the tuple of some values.
    */
   private def toSome[T](t: Tuple2[T, T]): Tuple2[Option[T], Option[T]] =
     (Some(t._1), Some(t._2))
+
+  private def toLeft[T](value: Option[T], isInclude: Boolean): Mark[T] =
+    (value, isInclude) match
+      case (Some(x), true) =>
+        Mark.at(Value.finite(x))
+      case (Some(x), false) =>
+        Mark.succ(Value.finite(x))
+      case (None, true) =>
+        Mark.at(Value.infNeg)
+      case (None, false) =>
+        Mark.succ(Value.infNeg)
+
+  private def toRight[T](value: Option[T], isInclude: Boolean): Mark[T] =
+    (value, isInclude) match
+      case (Some(x), true) =>
+        Mark.at(Value.finite(x))
+      case (Some(x), false) =>
+        Mark.pred(Value.finite(x))
+      case (None, true) =>
+        Mark.at(Value.infPos)
+      case (None, false) =>
+        Mark.pred(Value.infPos)

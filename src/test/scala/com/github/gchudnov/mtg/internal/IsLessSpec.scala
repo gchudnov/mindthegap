@@ -28,14 +28,14 @@ final class IsLessSpec extends TestSpec:
 
     "a.isLess(b)" should {
       "b.isGreater(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.isLess(yy)) {
             yy.isGreater(xx) mustBe true
 
-            assertOneOf(Set(Rel.Before, Rel.Meets, Rel.Overlaps))(xx, yy)
+            if (xx.nonEmpty && yy.nonEmpty) then assertOneOf(Set(Rel.Before, Rel.Meets, Rel.Overlaps, Rel.Contains, Rel.IsFinishedBy))(xx, yy)
           }
         }
       }
@@ -43,14 +43,14 @@ final class IsLessSpec extends TestSpec:
 
     "a.isGreater(b)" should {
       "b.isLess(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.isGreater(yy)) {
             yy.isLess(xx) mustBe true
 
-            assertOneOf(Set(Rel.After, Rel.IsMetBy, Rel.IsOverlapedBy))(xx, yy)
+            if (xx.nonEmpty && yy.nonEmpty) then assertOneOf(Set(Rel.After, Rel.IsMetBy, Rel.IsOverlapedBy, Rel.During, Rel.Finishes))(xx, yy)
           }
         }
       }
@@ -59,9 +59,9 @@ final class IsLessSpec extends TestSpec:
     "a.isLess(b) AND b.isGreater(a)" should {
 
       "verify" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(!xx.equalsTo(yy)) {
             val actual   = xx.isLess(yy)
@@ -72,20 +72,43 @@ final class IsLessSpec extends TestSpec:
         }
       }
 
-      "valid in special cases" in {
+      "valid in edge cases" in {
         Interval.open(4, 7).isLess(Interval.open(10, 15)) mustBe (true)
         Interval.open(4, 7).isLess(Interval.open(6, 15)) mustBe (true)
         Interval.open(4, 7).isLess(Interval.open(5, 15)) mustBe (true)
 
+        // empty
         Interval.empty[Int].isLess(Interval.empty[Int]) mustBe (false)
         Interval.empty[Int].isGreater(Interval.empty[Int]) mustBe (false)
-        Interval.empty[Int].equalsTo(Interval.empty[Int]) mustBe (false)
+        Interval.empty[Int].equalsTo(Interval.empty[Int]) mustBe (true)
 
-        Interval.open(1, 5).isLess(Interval.empty[Int]) mustBe (false)
+        Interval.open(1, 5).isLess(Interval.empty[Int]) mustBe (true)
         Interval.empty[Int].isLess(Interval.open(1, 5)) mustBe (false)
 
         Interval.open(1, 5).isGreater(Interval.empty[Int]) mustBe (false)
-        Interval.empty[Int].isGreater(Interval.open(1, 5)) mustBe (false)
+        Interval.empty[Int].isGreater(Interval.open(1, 5)) mustBe (true)
+
+        // unbounded
+        Interval.unbounded[Int].isLess(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].isGreater(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].equalsTo(Interval.unbounded[Int]) mustBe (true)
+
+        Interval.open(1, 5).isLess(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].isLess(Interval.open(1, 5)) mustBe (true)
+
+        Interval.open(1, 5).isGreater(Interval.unbounded[Int]) mustBe (true)
+        Interval.unbounded[Int].isGreater(Interval.open(1, 5)) mustBe (false)
+
+        // unbounded, empty
+        Interval.unbounded[Int].isLess(Interval.empty[Int]) mustBe (true)
+        Interval.unbounded[Int].isGreater(Interval.empty[Int]) mustBe (false)
+        Interval.unbounded[Int].equalsTo(Interval.empty[Int]) mustBe (false)
+
+        Interval.empty[Int].isLess(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].isLess(Interval.empty[Int]) mustBe (true)
+
+        Interval.empty[Int].isGreater(Interval.unbounded[Int]) mustBe (true)
+        Interval.unbounded[Int].isGreater(Interval.empty[Int]) mustBe (false)
       }
     }
   }

@@ -1,307 +1,369 @@
 package com.github.gchudnov.mtg
 
+import com.github.gchudnov.mtg.internal.BasicOps
 import com.github.gchudnov.mtg.internal.BasicRel
 import com.github.gchudnov.mtg.internal.ExtendedRel
-import com.github.gchudnov.mtg.internal.BasicOps
 import com.github.gchudnov.mtg.internal.StaticOps
 
 /**
- * An Interval
+ * Interval
  *
- * Classification of Intervals:
- * {{{
- *   - Empty                            | [a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅
- *   - Point                            | {x} = {x | a- = x = a+}
- *   - Proper and Bounded
- *     - Open                           | (a-, a+) = {x | a- < x < a+}
- *     - Closed                         | [a-, a+] = {x | a- <= x <= a+}
- *     - LeftClosedRightOpen            | [a-, a+) = {x | a- <= x < a+}
- *     - LeftOpenRightClosed            | (a-, a+] = {x | a- < x <= a+}
- *   - LeftBounded and RightUnbounded
- *     - LeftOpen                       | (a-, +∞) = {x | x > a-}
- *     - LeftClosed                     | [a-, +∞) = {x | x >= a-}
- *   - LeftUnbounded and RightBounded
- *     - RightOpen                      | (-∞, a+) = {x | x < a+}
- *     - RightClosed                    | (-∞, a+] = {x | x < a+}
- *   - Unbounded                        | (-∞, +∞) = R
- * }}}
+ * An interval is Bounded, if it is both Left- and Right-bounded; and is said to be Unbounded otherwise. Bounded intervals are also commonly known as finite intervals.
  *
- * NOTE: Point -- other names are Singleton, Degenerate.
+ * An empty interval has starting value greater than the ending value.
  *
- * {{{
- *   Proper               - An interval that is neither Empty nor Point is said to be Proper.
- *   LeftBounded          - An interval is left-bounded, if there is a value that is smaller than all its elements.
- *   RightBounded         - An interval is right-bounded, if there is s value that is larger than all its elements.
- *   Bounded              - An interval is Bounded, if it is both Left- and Right-bounded; and is said to be Unbounded otherwise.
- *                          Bounded intervals are also commonly known as finite intervals.
- *   LeftUnbounded        - (+inf, ...
- *   RightUnbounded       - ..., +inf)
- *   HalfOpen             - includes only one of its endpoints, e.g. (0, 1]. [0, 1).
- *   Empty                - [a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅.
- *   Point                - Consists of a single real number: {x} = {x | a- = x = a+}.
- *   Open                 - does not include its endpoints, and is indicated with parentheses, e.g. (0, 1); (a-, a+) = {x | a- < x < a+}
- *   Closed               - an interval which includes all its limit points, e.g. [0, 1]; [a-, a+] = {x | a- <= x <= a+}
- *   LeftClosedRightOpen  - [a-, a+) = {x | a- <= x < a+}
- *   LeftOpenRightClosed  - (a-, a+] = {x | a- < x <= a+}
- *   LeftOpen             - LeftBounded and RightUnbounded; (a-, +∞) = {x | x > a-}.
- *   LeftClosed           - LeftBounded and RightUnbounded; [a-, +∞) = {x | x >= a-}.
- *   RightOpen            - LeftUnbounded and RightBounded; (-∞, a+) = {x | x < a+}.
- *   RightClosed          - LeftUnbounded and RightBounded; (-∞, a+] = {x | x < a+}.
- *   Unbounded            - Unbounded at both ends; (-∞, +∞) = R
- * }}}
+ * Point is a gegenerate interval that consists of a single value.
+ *
+ * An interval that is neither Empty nor Point is said to be Proper.
  */
-
-enum Interval[+T] extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
-  case Empty extends Interval[Nothing]
-  case Point(a: T)
-  case Proper[T](l: Boundary.Left[T], r: Boundary.Right[T]) extends Interval[T]
-
-  def isEmpty: Boolean =
-    this.ordinal == 0
-
-  def isPoint: Boolean =
-    this.ordinal == 1
-
-  def isProper: Boolean =
-    this.ordinal == 2
-
-  def nonEmpty: Boolean =
-    !isEmpty
-
-  def nonPoint: Boolean =
-    !isPoint
-
-  def nonProper: Boolean =
-    !isProper
-
-  def isUnbounded: Boolean =
-    this match
-      case Interval.Proper(l, r) =>
-        l.isUnbounded && r.isUnbounded
-      case _ =>
-        false
-
-  def isBounded: Boolean =
-    this match
-      case Interval.Proper(l, r) =>
-        l.isBounded && r.isBounded
-      case Interval.Point(_) =>
-        true
-      case _ =>
-        false
-
-  def left[U >: T]: Boundary.Left[U] =
-    this match
-      case Interval.Empty =>
-        throw new NoSuchElementException("Empty.left")
-      case Interval.Point(a) =>
-        Boundary.Left(Some(a), true)
-      case Interval.Proper[U](l, _) =>
-        l
-      case _ =>
-        throw new ClassCastException("Specified type is not compatible with the type of the Interval")
-
-  def right[U >: T]: Boundary.Right[U] =
-    this match
-      case Interval.Empty =>
-        throw new NoSuchElementException("Empty.right")
-      case Interval.Point(a) =>
-        Boundary.Right(Some(a), true)
-      case Interval.Proper[U](_, r) =>
-        r
-      case _ =>
-        throw new ClassCastException("Specified type is not compatible with the type of the Interval")
+final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
 
   /**
-   * A canonical form of an interval is where the interval is closed on both starting and finishing sides.
+   * Returns true if the interval is empty and false otherwise.
    */
-  def canonical[U >: T: Domain]: Interval[U] =
-    this match
-      case Interval.Proper[U](l, r) =>
-        Interval.Proper(Boundary.Left(l.effectiveValue, true), Boundary.Right(r.effectiveValue, true))
-      case x =>
-        x
+  def isEmpty(using ordM: Ordering[Mark[T]]): Boolean =
+    ordM.gt(left, right)
+
+  /**
+   * Returns true if the interval is degenerate (a point) or false otherwise.
+   */
+  def isPoint(using ordM: Ordering[Mark[T]]): Boolean =
+    ordM.equiv(left, right)
+
+  /**
+   * Returns true if the itnerval is proper and false otherwise.
+   */
+  def isProper(using ordM: Ordering[Mark[T]]): Boolean =
+    ordM.lt(left, right)
+
+  /**
+   * Returns true if the interval is non-empty and false otherwise.
+   */
+  def nonEmpty(using Ordering[Mark[T]]): Boolean =
+    !isEmpty
+
+  /**
+   * Returns true if the interval is not a point and false otherwise.
+   */
+  def nonPoint(using Ordering[Mark[T]]): Boolean =
+    !isPoint
+
+  /**
+   * Returns true, if interval is not proper and false otherwise.
+   */
+  def nonProper(using Ordering[Mark[T]]): Boolean =
+    !isProper
+
+  /**
+   * Swap left and right boundary.
+   *
+   * Can be used to create an empty interval out of a non-empty one or vice-versa.
+   *
+   * {{{
+   *   [a-, a+] -> [a+, a-]
+   * }}}
+   */
+  def swap: Interval[T] =
+    Interval(right, left)
+
+  /**
+   * Inflate
+   *
+   * Applies pred and succ functions to the left and right boudaries of an interval extending it.
+   *
+   * {{{
+   *   [a-, a+] -> [pred(a-), succ(a+)]
+   *
+   * Example:
+   *   ifnlate([1, 2]) = [0, 3]
+   * }}}
+   */
+  def inflate: Interval[T] =
+    Interval(left.pred, right.succ)
+
+  /**
+   * Inflate only the left side of the interval
+   *
+   * {{{
+   *   [a-, a+] -> [pred(a-), a+]
+   *
+   * Example:
+   *   ifnlateLeft([1, 2]) = [0, 2]
+   * }}}
+   */
+  def inflateLeft: Interval[T] =
+    Interval(left.pred, right)
+
+  /**
+   * Inflate only the right side of the interval
+   *
+   * {{{
+   *   [a-, a+] -> [a-, succ(a+)]
+   *
+   * Example:
+   *   ifnlateLeft([1, 2]) = [0, 3]
+   * }}}
+   */
+  def inflateRight: Interval[T] =
+    Interval(left, right.succ)
+
+  /**
+   * Deflate
+   *
+   * Applies succ and pred functions to the left and right boudaries of an interval reducing it it.
+   *
+   * When deflating, the operation might produce an empty interval, where left boundary is greater than the right boundary.
+   *
+   * {{{
+   *   [a-, a+] -> [succ(a-), pred(a+)]
+   *
+   * Example:
+   *   deflate([1, 2]) = [2, 1]
+   * }}}
+   */
+  def deflate: Interval[T] =
+    Interval(left.succ, right.pred)
+
+  /**
+   * Deflate the left side of the interval
+   *
+   * {{{
+   *   [a-, a+] -> [succ(a-), a+]
+   *
+   * Example:
+   *   deflateLeft([1, 2]) = [2, 2]
+   * }}}
+   */
+  def deflateLeft: Interval[T] =
+    Interval(left.succ, right)
+
+  /**
+   * Deflate the right side of the interval
+   *
+   * {{{
+   *   [a-, a+] -> [a-, pred(a+)]
+   *
+   * Example:
+   *   deflateRight([1, 2]) = [1, 1]
+   * }}}
+   */
+  def deflateRight: Interval[T] =
+    Interval(left, right.pred)
+
+  /**
+   * Canonical
+   *
+   * A canonical form of an interval is where the interval is closed on both starting and finishing sides:
+   *
+   * {{{
+   *  [a-, a+]
+   * }}}
+   */
+  def canonical(using Domain[T]): Interval[T] =
+    Interval(left.at, right.at)
+
+  /**
+   * Normalize
+   *
+   * Reduces the amount of `succ` and `pred` operations so that the interval is represented in one of the following ways:
+   *
+   * {{{
+   *   [a-, a+]
+   *   [a-, a+)
+   *   (a-, a+)
+   *   (a-, a+]
+   * }}}
+   */
+  def normalize(using Domain[T]): Interval[T] =
+    val l = normalizeLeft
+    val r = normalizeRight
+    if l != left || r != right then Interval(l, r)
+    else this
+
+  private def normalizeLeft(using Domain[T]): Mark[T] =
+    left match
+      case Mark.At(_) =>
+        left
+      case Mark.Pred(_) =>
+        left.at
+      case Mark.Succ(xx) =>
+        Mark.Succ(xx.at)
+
+  private def normalizeRight(using Domain[T]): Mark[T] =
+    right match
+      case Mark.At(_) =>
+        right
+      case Mark.Pred(yy) =>
+        Mark.Pred(yy.at)
+      case Mark.Succ(_) =>
+        right.at
 
 object Interval extends StaticOps:
 
-  given intervalOrdering[T](using Ordering[Boundary[T]]): Ordering[Interval[T]] =
+  given intervalOrdering[T](using Ordering[Mark[T]]): Ordering[Interval[T]] =
     new IntervalOrdering[T]
 
   /**
+   * Empty
+   *
+   * An empty interval has starting value greater than the ending value.
+   *
    * ∅
+   *
+   * {{{
+   *   [a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅.
+   * }}}
    */
   def empty[T]: Interval[T] =
-    Interval.Empty
+    Interval(Mark.at(Value.InfPos), Mark.at(Value.InfNeg))
 
   /**
-   * {x} = {x | a- = x = a+}
+   * Point
    *
-   * @param a
-   *   point
-   * @return
-   *   a new interval
-   */
-  def point[T](a: T): Interval[T] =
-    Interval.Point(a)
-
-  /**
-   * {a-, a+}
+   * A degenerate interval where the left boundary is equal to the right boundary.
    *
-   * @param a
-   *   left boundary
-   * @param isIncludeA
-   *   whether to include left boundary in the interval or not
-   * @param b
-   *   right boundary
-   * @param isIncludeB
-   *   whether to include right boundary in the interval or not
-   * @return
-   *   a new interval
+   * {{{
+   *   {x} = {x | a- = x = a+}
+   * }}}
    */
-  def proper[T](a: Option[T], isIncludeA: Boolean, b: Option[T], isIncludeB: Boolean)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left(a, isIncludeA), Boundary.Right(b, isIncludeB))
+  def point[T](x: Mark[T]): Interval[T] =
+    Interval(x, x)
+
+  def point[T](x: Value[T]): Interval[T] =
+    point(Mark.at(x))
+
+  def point[T](x: T): Interval[T] =
+    point(Mark.at(x))
 
   /**
-   * {a-, a+}
+   * Proper
    *
-   * @param ba
-   *   left boundary
-   * @param bb
-   *   right boundary
-   * @return
-   *   a new interval
-   */
-  def proper[T](ba: Boundary.Left[T], bb: Boundary.Right[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    import Show.given
-    require(bOrd.lt(ba, bb), s"${ba.show},${bb.show}: left boundary must be less than the right boundary")
-    Proper(ba, bb)
-
-  /**
-   * (-∞, +∞)
-   */
-  def unbounded[T](using Ordering[Boundary[T]]): Interval[T] =
-    proper[T](Boundary.Left(None, false), Boundary.Right(None, false))
-
-  /**
-   * (a-, a+) = {x | a- < x < a+}
+   * An interval that is neither Empty nor Point is said to be Proper.
    *
-   * @param a
-   *   left boundary
-   * @param b
-   *   right boundary
-   * @return
-   *   a new interval
+   * {{{
+   *   {a-, a+}
+   * }}}
    */
-  def open[T](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left(Some(a), false), Boundary.Right(Some(b), false))
+  def proper[T](x: Mark[T], y: Mark[T])(using ordM: Ordering[Mark[T]]): Interval[T] =
+    require(ordM.lt(x, y), s"left boundary '${x}' must be less than the right boundary '${y}'")
+    Interval(x, y)
 
   /**
-   * [a-, a+] = {x | a- <= x <= a+}
+   * Unbounded
    *
-   * @param a
-   *   left boundary
-   * @param b
-   *   right boundary
-   * @return
-   *   a new interval
+   * An interval is unbounded if is has no left and right bounds.
+   *
+   * {{{
+   *   (-∞, +∞)
+   * }}}
    */
-  def closed[T](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left(Some(a), true), Boundary.Right(Some(b), true))
+  def unbounded[T](using Ordering[Mark[T]]): Interval[T] =
+    proper[T](Mark.at(Value.InfNeg), Mark.at(Value.InfPos))
 
   /**
-   * (a-, +∞) = {x | x > a-}
+   * Open
    *
-   * @param a
-   *   left boundary
-   * @return
-   *   a new interval
+   * Does not include its endpoints, and is indicated with parentheses, e.g. (0, 5).
+   *
+   * {{{
+   *   (a-, a+) = {x | a- < x < a+}
+   * }}}
    */
-  def leftOpen[T](a: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left(Some(a), false), Boundary.Right[T](None, false))
+  def open[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.succ(x), Mark.pred(y))
 
   /**
-   * [a-, +∞) = {x | x >= a-}
+   * Closed
    *
-   * @param a
-   *   left boundary
-   * @return
-   *   a new interval
+   * A closed intervals
+   *
+   * {{{
+   *   [a-, a+] = {x | a- <= x <= a+}
+   * }}}
    */
-  def leftClosed[T](a: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left(Some(a), true), Boundary.Right[T](None, false))
+  def closed[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.at(x), Mark.at(y))
 
   /**
-   * (-∞, a+) = {x | x < a+}
+   * LeftOpen
    *
-   * @param a
-   *   right boundary
-   * @return
-   *   a new interval
+   * An interval is left-bounded, if there is a value that is smaller than all its elements.
+   *
+   * {{{
+   *   (a-, +∞) = {x | x > a-}
+   * }}}
    */
-  def rightOpen[T](b: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left[T](None, false), Boundary.Right(Some(b), false))
+  def leftOpen[T](x: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.succ(x), Mark.at(Value.InfPos))
 
   /**
-   * (-∞, a+] = {x | x < a+}
+   * LeftClosed
    *
-   * @param a
-   *   right boundary
-   * @return
-   *   a new interval
+   * An interval is left-bounded, if there is a value that is smaller than all its elements.
+   *
+   * {{{
+   *   [a-, +∞) = {x | x >= a-}
+   * }}}
    */
-  def rightClosed[T](b: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left[T](None, false), Boundary.Right(Some(b), true))
+  def leftClosed[T](x: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.at(x), Mark.at(Value.InfPos))
 
   /**
-   * [a-, a+) = {x | a- <= x < a+}
+   * RightOpen
    *
-   * @param a
-   *   right boundary
-   * @return
-   *   a new interval
+   * An interval is right-bounded, if there is s value that is larger than all its elements.
+   *
+   * {{{
+   *   (-∞, a+) = {x | x < a+}
+   * }}}
    */
-  def leftClosedRightOpen[T](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left[T](Some(a), true), Boundary.Right(Some(b), false))
+  def rightOpen[T](x: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.at(Value.InfNeg), Mark.pred(x))
 
   /**
-   * (a-, a+] = {x | a- < x <= a+}
+   * RightClosed
    *
-   * @param a
-   *   right boundary
-   * @return
-   *   a new interval
+   * An interval is right-bounded, if there is s value that is larger than all its elements.
+   *
+   * {{{
+   *   (-∞, a+] = {x | x < a+}
+   * }}}
    */
-  def leftOpenRightClosed[T](a: T, b: T)(using Ordering[Boundary[T]]): Interval[T] =
-    proper(Boundary.Left[T](Some(a), false), Boundary.Right(Some(b), true))
+  def rightClosed[T](x: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.at(Value.InfNeg), Mark.at(x))
+
+  /**
+   * LeftClosedRightOpen
+   *
+   * An interval closed on the left side and open on the right side.
+   *
+   * {{{
+   *   [a-, a+) = {x | a- <= x < a+}
+   * }}}
+   */
+  def leftClosedRightOpen[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.at(x), Mark.pred(y))
+
+  /**
+   * LeftOpenRightClosed
+   *
+   * An interval open on the left side and closed on the right side.
+   *
+   * {{{
+   *   (a-, a+] = {x | a- < x <= a+}
+   * }}}
+   */
+  def leftOpenRightClosed[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
+    proper(Mark.succ(x), Mark.at(y))
 
   /**
    * Make an arbitraty interval
-   *
-   * @param a
-   *   left boundary
-   * @param isIncludeA
-   *   whether to include left boundary in the interval or not
-   * @param b
-   *   right boundary
-   * @param isIncludeB
-   *   whether to include right boundary in the interval or not
-   * @return
-   *   a new interval
    */
-  def make[T: Domain](a: Option[T], isIncludeA: Boolean, b: Option[T], isIncludeB: Boolean)(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    make(Boundary.Left(a, isIncludeA), Boundary.Right(b, isIncludeB))
+  def make[T](x: Value[T], y: Value[T]): Interval[T] =
+    make(Mark.at(x), Mark.at(y))
 
   /**
-   * Make an arbitraty interval
-   *
-   * @param a
-   *   left boundary
-   * @param b
-   *   right boundary
-   * @return
-   *   a new interval
+   * Make an arbitraty interval.
    */
-  def make[T: Domain](ba: Boundary.Left[T], bb: Boundary.Right[T])(using bOrd: Ordering[Boundary[T]]): Interval[T] =
-    if bOrd.equiv(ba, bb) then point(ba.effectiveValue.get)
-    else if bOrd.lt(bb, ba) then empty[T]
-    else proper(ba, bb)
+  def make[T](x: Mark[T], y: Mark[T]): Interval[T] =
+    Interval(x, y)

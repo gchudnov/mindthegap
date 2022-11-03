@@ -1,6 +1,6 @@
 package com.github.gchudnov.mtg.internal
 
-import com.github.gchudnov.mtg.Boundary
+import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 
@@ -15,7 +15,7 @@ import com.github.gchudnov.mtg.Domain
  *   - IsLess
  *   - IsGreater
  */
-private[mtg] transparent trait ExtendedRel[+T]:
+private[mtg] transparent trait ExtendedRel[T]:
   a: Interval[T] =>
 
   /**
@@ -35,8 +35,8 @@ private[mtg] transparent trait ExtendedRel[+T]:
    *   equals   | e
    * }}}
    */
-  final def isSubset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    a.nonEmpty && b.nonEmpty && bOrd.gteq(a.left, b.left) && bOrd.lteq(a.right, b.right)
+  final def isSubset(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+    a.nonEmpty && b.nonEmpty && ordM.gteq(a.left, b.left) && ordM.lteq(a.right, b.right)
 
   /**
    * IsSuperset
@@ -55,8 +55,8 @@ private[mtg] transparent trait ExtendedRel[+T]:
    *   equals         | e
    * }}}
    */
-  final def isSuperset[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    a.nonEmpty && b.nonEmpty && bOrd.gteq(b.left, a.left) && bOrd.lteq(b.right, a.right)
+  final def isSuperset(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+    a.nonEmpty && b.nonEmpty && ordM.gteq(b.left, a.left) && ordM.lteq(b.right, a.right)
 
   /**
    * IsDisjoint
@@ -72,8 +72,8 @@ private[mtg] transparent trait ExtendedRel[+T]:
    *
    * before | b after | B }}}
    */
-  final def isDisjoint[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    a.nonEmpty && b.nonEmpty && (bOrd.lt(a.right, b.left) || bOrd.gt(a.left, b.right))
+  final def isDisjoint(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+    a.nonEmpty && b.nonEmpty && (ordM.lt(a.right, b.left) || ordM.gt(a.left, b.right))
 
   /**
    * IsAdjacent
@@ -87,8 +87,8 @@ private[mtg] transparent trait ExtendedRel[+T]:
    *   after  | B
    * }}}
    */
-  final def isAdjacent[T1 >: T: Domain](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    a.nonEmpty && b.nonEmpty && (bOrd.equiv(a.right.succ, b.left) || bOrd.equiv(b.right.succ, a.left))
+  final def isAdjacent[T1 >: T: Domain](b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+    a.nonEmpty && b.nonEmpty && (ordM.equiv(a.right.succ, b.left) || ordM.equiv(b.right.succ, a.left))
 
   /**
    * Intersects
@@ -108,13 +108,13 @@ private[mtg] transparent trait ExtendedRel[+T]:
    *   equals(a, b)     e        BBBBB            |  a- = b- ; a+ = b+
    * }}}
    */
-  final def intersects[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    a.nonEmpty && b.nonEmpty && bOrd.lteq(a.left, b.right) && bOrd.lteq(b.left, a.right)
+  final def intersects(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+    a.nonEmpty && b.nonEmpty && ordM.lteq(a.left, b.right) && ordM.lteq(b.left, a.right)
 
   /**
    * IsIntersectedBy
    */
-  final def isIntersectedBy[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isIntersectedBy(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
     b.intersects(a)
 
   /**
@@ -132,13 +132,13 @@ private[mtg] transparent trait ExtendedRel[+T]:
    *   isAdjacent(a,b)
    * }}}
    */
-  final def merges[T1 >: T: Domain](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    (a.isEmpty || b.isEmpty) || ((bOrd.lteq(a.left, b.right) && bOrd.lteq(b.left, a.right)) || (bOrd.equiv(a.right.succ, b.left) || bOrd.equiv(b.right.succ, a.left)))
+  final def merges[T1 >: T: Domain](b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+    (a.isEmpty || b.isEmpty) || ((ordM.lteq(a.left, b.right) && ordM.lteq(b.left, a.right)) || (ordM.equiv(a.right.succ, b.left) || ordM.equiv(b.right.succ, a.left)))
 
   /**
    * IsMergedBy
    */
-  final def isMergedBy[T1 >: T: Domain](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
+  final def isMergedBy[T1 >: T: Domain](b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
     b.merges(a)
 
   /**
@@ -157,8 +157,8 @@ private[mtg] transparent trait ExtendedRel[+T]:
    *   overlaps       | o
    * }}}
    */
-  final def isLess[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    a.nonEmpty && b.nonEmpty && bOrd.lt(a.left, b.left) && bOrd.lt(a.right, b.right)
+  final def isLess(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+    ordM.lt(a.left, b.left)
 
   /**
    * IsGreater
@@ -176,5 +176,5 @@ private[mtg] transparent trait ExtendedRel[+T]:
    *   isOverlappedBy | O
    * }}}
    */
-  final def isGreater[T1 >: T](b: Interval[T1])(using bOrd: Ordering[Boundary[T1]]): Boolean =
-    a.nonEmpty && b.nonEmpty && bOrd.gt(a.left, b.left) && bOrd.gt(a.right, b.right)
+  final def isGreater(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+    b.isLess(a)

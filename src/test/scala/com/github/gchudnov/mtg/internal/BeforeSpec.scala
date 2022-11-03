@@ -1,9 +1,10 @@
 package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Arbitraries.*
-import com.github.gchudnov.mtg.Boundary
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.TestSpec
+import com.github.gchudnov.mtg.Value
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
 /**
@@ -21,16 +22,16 @@ final class BeforeSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordB: Ordering[Boundary[Int]] = summon[Ordering[Boundary[Int]]]
+  val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
   "Before" when {
     import IntervalRelAssert.*
 
     "a.before(b)" should {
       "b.after(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.before(yy)) {
             yy.after(xx) mustBe true
@@ -38,10 +39,10 @@ final class BeforeSpec extends TestSpec:
             assertOne(Rel.Before)(xx, yy)
 
             // a+ < b-
-            val a2 = Boundary.Right(ox2, ix2)
-            val b1 = Boundary.Left(oy1, iy1)
+            val a2 = argsX.right
+            val b1 = argsY.left
 
-            ordB.lt(a2, b1) mustBe true
+            ordM.lt(a2, b1) mustBe true
           }
         }
       }
@@ -49,9 +50,9 @@ final class BeforeSpec extends TestSpec:
 
     "a.after(b)" should {
       "b.before(a)" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.after(yy)) {
             yy.before(xx) mustBe true
@@ -59,10 +60,10 @@ final class BeforeSpec extends TestSpec:
             assertOne(Rel.After)(xx, yy)
 
             // a- > b+
-            val a1 = Boundary.Left(ox1, ix1)
-            val b2 = Boundary.Right(oy2, iy2)
+            val a1 = argsX.left
+            val b2 = argsY.right
 
-            ordB.gt(a1, b2) mustBe true
+            ordM.gt(a1, b2) mustBe true
           }
         }
       }
@@ -71,9 +72,9 @@ final class BeforeSpec extends TestSpec:
     "a.before(b) AND b.after(a)" should {
 
       "equal" in {
-        forAll(genOneOfIntArgs, genOneOfIntArgs) { case (((ox1, ix1), (ox2, ix2)), ((oy1, iy1), (oy2, iy2))) =>
-          val xx = Interval.make(ox1, ix1, ox2, ix2)
-          val yy = Interval.make(oy1, iy1, oy2, iy2)
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
           val actual   = xx.before(yy)
           val expected = yy.after(xx)
@@ -103,9 +104,9 @@ final class BeforeSpec extends TestSpec:
         Interval.point(5).before(Interval.leftClosed(6)) mustBe (true)
         Interval.point(5).before(Interval.unbounded[Int]) mustBe (false)
 
-        // [-∞,0], {4}
-        Interval.point(4).after(Interval.proper[Int](None, true, Some(0), true)) mustBe (true)
-        Interval.proper[Int](None, true, Some(0), true).before(Interval.point(4)) mustBe (true)
+        // (-∞,0], {4}
+        Interval.point(4).after(Interval.rightClosed(0)) mustBe (true)
+        Interval.rightClosed(0).before(Interval.point(4)) mustBe (true)
 
         // Proper
         Interval.open(4, 7).before(Interval.open(4, 7)) mustBe (false)

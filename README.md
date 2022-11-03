@@ -14,60 +14,14 @@ Add the following dependency to your `build.sbt`:
 libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "x.y.z"
 ```
 
-## Intervals
+### Interval Creation
 
-One can distinguish an _empty_, _point_ and _proper_ intervals:
-
-- A _proper_ interval is an ordered pair of points with the first point less than the second: `a- < a+`.
-- A _point_ is a degenerate interval where first point is equal to the second: `a- = a+`.
-- An _empty_ interval is the one where first point is greater than the second: `a+ < a-`.
-
-For any interval `a`, We denote the lesser endpoint is denoted by `a-` and the greater by `a+`.
-We assume for a proper interval `a` that `a- < a+`.
-
-A canonical form of an interval is where the interval is _closed_ on both starting and finishing sides.
-
-Intervals might be open / closed on both ends, bounded and unbonded:
-
-- Empty | `[a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅`
-- Point | `{x} = {x | a- = x = a+}`
-- Proper and Bounded
-  - Open | `(a-, a+) = {x | a- < x < a+}`
-  - Closed | `[a-, a+] = {x | a- <= x <= a+}`
-  - LeftClosedRightOpen | `[a-, a+) = {x | a- <= x < a+}`
-  - LeftOpenRightClosed | `(a-, a+] = {x | a- < x <= a+}`
-- LeftBounded and RightUnbounded
-  - LeftOpen | `(a-, +∞) = {x | x > a-}`
-  - LeftClosed | `[a-, +∞) = {x | x >= a-}`
-- LeftUnbounded and RightBounded
-  - RightOpen | `(-∞, a+) = {x | x < a+}`
-  - RightClosed | `(-∞, a+] = {x | x < a+}`
-- Unbounded | `(-∞, +∞) = R`
-
-### Make
-
-`Interval.make` is a universal method that can be used to create an _empty_, _point_ or a _proper_ intervals.
+To create an interval one of the factory functions can be used:
 
 ```scala
-// empty: ∅ = [5, 2)
-val a1 = Interval.make(5, true, 2, false)
-val a2 = Interval.make(Boundary.Left(5, true), Boundary.Right(2, false))
+import com.github.gchudnov.mtg.*
 
-// point: {5} = [5, 5]
-val b1 = Interval.make(5, true, 5, true)
-val b2 = Interval.make(Boundary.Left(5, true), Boundary.Right(5, true))
-
-// proper: [1, 5]
-val c1 = Interval.make(1, true, 5, true)
-val c2 = Interval.make(Boundary.Left(1, true), Boundary.Right(5, true))
-```
-
-### Special Factory Methods
-
-In addition, there are a number of specialized methods for interval creation.
-
-```scala
-Interval.empty[Int]                 // ∅
+Interval.empty[Int]                 // ∅ = (+∞, -∞)
 Interval.point(5)                   // {5}
 Interval.open(1, 5)                 // (1, 5)
 Interval.closed(1, 5)               // [1, 5]
@@ -80,14 +34,116 @@ Interval.rightClosed(5)             // (-∞, 5]
 Interval.unbounded[Int]             // (-∞, +∞)
 ```
 
-`.canonical` is used to get a canonical interval:
+A special factory low-level method, `Interval.make` can be used to create an interval by providing boundaries.
+
+```scala
+Interval.make(Mark.at(0), Mark.pred(0))   // [0, 0)
+Interval.make(Mark.succ(3), Mark.pred(5)) // (3, 5)
+```
+
+### Interval Operations
+
+`a.isEmpty`, `a.isPoint`, `a.isProper` (`a.nonEmpty`, `a.nonPoint`, `a.nonProper`) are used to check the type of an interval.
+
+```scala
+Interval.open(1, 5).isEmpty  // false
+Interval.open(1, 5).isProper // true
+```
+
+`a.canonical` - converts an an interval to the canonical form where left and right boundaries on an interval are closed.
 
 ```scala
 Interval.open(1, 5).canonical      // (1, 5) -> [2, 4]
 Interval.closed(1, 5).canonical    // [1, 5] -> [1, 5]
 ```
 
-## Relations
+`a.normalize` can be used to optimize an interval, reducing the amoung of _successors_ (`succ`) and _predecessors_ `pred`, that might be produced by some of the algorithms. The method is rarely needed to be called explicitly.
+
+```scala
+Interval.make(Mark.pred(Mark.pred(1)), Mark.at(5)).normalize // [pred(pred(1)), 5] -> [-1, 5]
+Interval.make(Mark.succ(Mark.succ(1)), Mark.at(5)).normalize // [succ(succ(1)), 5] -> (2, 5]
+```
+
+`a.swap` is used to swap left and right boudary, e.g. to convert an empty to non-empty interval or vice versa.
+
+```scala
+Interval.closed(1, 5).swap // [1, 5] -> [5, 1]
+```
+
+`a.inflate` can be used to inflate an interval, extending its size. In addition there are methods `.inflateLeft` and `.inflateRight` that can be applied to the left and right ends of an interval.
+
+```scala
+Interval.closed(1, 2).inflate // [1, 2] -> [0, 3]
+```
+
+`a.deflate` can be used to deflate an interval, reducing its size. In addition there are methods `.deflateLeft` and `.deflateRight` that can be applied to the left and right ends of an interval.
+
+```scala
+Interval.closed(1, 2).deflate // [1, 2] -> [2, 1]
+```
+
+### Interval Relations
+
+A relation between two of the interval can be verified.
+
+
+## Theory
+
+An **interval** is defined by a pair `{a-, a+}`, whose elements represent a starting `a-` and ending `a+` values on a discrete linear infinite domain `D`.
+Interval is a convex set that contains all elements between `a-` and `a+`.
+
+![domain.png](res/domain.png)
+
+For each element of the domain, there is only one _successor_ and _predecessor_ and no other elements in-between.
+
+A pair `{a-, a+} ∈ D × D` corresponds to a point on a two-dimensional plane.
+
+Given _successor_, `succ()` and _predecessor_, `pred` concept, we can define intervals as:
+
+- closed interval `[a-, a+]` is represented as-is `[a-, a+]`
+- right-open interval`[a-, a+)` is represented as `[a-, pred(a+)]`
+- left-open interval `(a-, a+]` is represented as `[succ(a-), a+]`
+- open interval `(a-, a+)` is represented as `[succ(a-), pred(a+)]`
+
+In this way we consider a closed interval as a _canonical_ form.
+
+### Non-Empty and Empty Intervals
+
+A pair `{a-, a+} ∈ D × D` represents a non-empty interval if `a- ≤ a+`; otherwise, the interval is empty.
+If left boundary `a-` is equal to the right boundary, `a+`, we call it as a _degenerate_ interval or a _point_.
+
+One can distinguish an _empty_, _point_ and _proper_ intervals:
+
+- A _proper_ interval is an ordered pair of elements where the first element is less than the second: `a- < a+`.
+- A _point_ is a degenerate interval where first element is equal to the second: `a- = a+`.
+- An _empty_ interval is the one where first element is greater than the second: `a- > a+`.
+
+Looking at the two-dimensional plane on the diagram above, _proper_ intervals correspond the are above the line `a+ = a-`, _point_ intervals
+are located on the line `a+ = a-` and all empty intervals are below the line `a+ = a-`.
+
+### Classification of Intervals
+
+Intervals could be further classifed in the following way:
+
+- empty : `[a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅`
+- point : `{x} = {x | a- = x = a+}`
+- proper
+  - bounded
+    - open : `(a-, a+) = {x | a- < x < a+}`
+    - closed : `[a-, a+] = {x | a- <= x <= a+}`
+    - left-closed, right-open : `[a-, a+) = {x | a- <= x < a+}`
+    - left-open, right-closed : `(a-, a+] = {x | a- < x <= a+}`
+  - left-bounded, right-unbounded
+    - left-open : `(a-, +∞) = {x | x > a-}`
+    - left-closed : `[a-, +∞) = {x | x >= a-}`
+  - left-unbounded, right-bounded
+    - right-open : `(-∞, a+) = {x | x < a+}`
+    - right-closed : `(-∞, a+] = {x | x < a+}`
+  - unbounded : `(-∞, +∞) = R`
+
+### Relations
+
+TODO: clarify better
 
 The library support the following relations:
 
@@ -289,6 +345,8 @@ Determines whether `a` is less-than `b`.
   a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
 ```
 
+TODO: ADD CONTAINS, isFinishedBy
+
 ```scala
 Interval.open(4, 7).isLess(Interval.open(10, 15)) // true
 Interval.open(4, 7).isLess(Interval.open(6, 15))  // true
@@ -300,12 +358,14 @@ Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 Determines whether `a` is greater-than `b`.
 
 ```text
-  a.isGreater                      AAAAA            | a- < b- AND a+ < b+
+  a.isGreater                      AAAAA            | a- > b- AND a+ > b+
                                    :   :
   a.after(b)          B  BBBBBBBBB :   :            | a- > b+
   a.isMetBy(b)        M    BBBBBBBBB   :            | a- = b+
   a.isOverlappedBy(b) O      BBBBBBBBB :            | b- < a- < b+ < a+
 ```
+
+TODO: ADD during, finithses
 
 ```scala
 Interval.open(10, 15).isGreater(Interval.open(4, 7)) // true
