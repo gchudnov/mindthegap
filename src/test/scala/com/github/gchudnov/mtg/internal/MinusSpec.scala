@@ -19,62 +19,53 @@ final class MinusSpec extends TestSpec:
   "Minus" when {
     "a.minus(b)" should {
 
-      // TODO: re-enable and fix when we fix infinity
-      // "verify" in {
-      //   forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
-      //     val xx = Interval.make(argsX.left, argsX.right)
-      //     val yy = Interval.make(argsY.left, argsY.right)
-
-      //     whenever(xx.nonEmpty && yy.nonEmpty && !xx.contains(yy)) {
-      //       val zz = xx.minus(yy)
-
-      //       if zz.nonEmpty then
-      //         // NOTE: a.minus(b) is defined only if and only if:
-      //         //   - (a) `a` and `b` are disjoint;
-      //         //   - (b) `a` contains either `b-` or `b+` but not both;
-      //         //   - (c) either b.starts(a) or b.finishes(a) is true;
-      //         // xx.intersects(yy) && !xx.isSuperset(yy) mustBe true
-      //       else
-      //         // NOTE: a.minus(b) is undefined if:
-      //         //   - either a.starts(b) or a.finishes(b);
-      //         //   - either `a` or `b` is properly included in the other;
-      //         // xx.isSubset(yy) mustBe true
-      //     }
-
-      //   }
-      // }
-
       "∅ if A and B are empty" in {
-        val a = Interval.empty[Int]
-        val b = Interval.empty[Int]
+        forAll(genEmptyIntArgs, genEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.minus(b)
-        val expected = Interval.empty[Int]
+          xx.isEmpty mustBe (true)
+          yy.isEmpty mustBe (true)
 
-        actual mustBe expected
+          val actual   = xx.minus(yy).canonical
+
+          actual.isEmpty mustBe true
+        }
       }
 
       "∅ if A is empty" in {
-        val a = Interval.empty[Int]
-        val b = Interval.closed(1, 10)
+        forAll(genEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.minus(b)
-        val expected = Interval.empty[Int]
+          xx.isEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
 
-        actual mustBe expected
+          val actual   = xx.minus(yy).canonical
+
+          actual.isEmpty mustBe true
+        }
       }
 
       "A if B is empty" in {
-        val a = Interval.closed(1, 10)
-        val b = Interval.empty[Int]
+        forAll(genNonEmptyIntArgs, genEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        val actual   = a.minus(b)
-        val expected = Interval.closed(1, 10)
+          xx.isEmpty mustBe (false)
+          yy.isEmpty mustBe (true)
 
-        actual mustBe expected
+          val actual   = xx.minus(yy).canonical
+          val expedted = xx.canonical
+
+          actual.isEmpty mustBe false
+          actual mustBe(expedted)
+        }
       }
 
-      "[a-, a+] if A before B" in {
+      "[,] if A before B" in {
+        // TODO: CONTINUE
+
         val a = Interval.closed(1, 10)
         val b = Interval.closed(20, 30)
 
@@ -84,7 +75,7 @@ final class MinusSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "[a-, a+] if A after B" in {
+      "[,] if A after B" in {
         val a = Interval.closed(20, 30)
         val b = Interval.closed(1, 10)
 

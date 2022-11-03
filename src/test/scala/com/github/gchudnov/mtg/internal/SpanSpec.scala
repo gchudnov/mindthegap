@@ -17,203 +17,7 @@ final class SpanSpec extends TestSpec:
 
     "a.span(b)" should {
 
-      "∅ if A and B are empty" in {
-        val a = Interval.empty[Int]
-        val b = Interval.empty[Int]
-
-        val actual   = a.span(b)
-        val expected = Interval.empty[Int]
-
-        actual.isEmpty mustBe(true)
-        actual mustBe expected
-      }
-
-      "B if A is empty" in {
-        val a = Interval.empty[Int]
-        val b = Interval.closed(1, 10)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 10)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "A if B is empty" in {
-        val a = Interval.closed(1, 10)
-        val b = Interval.empty[Int]
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 10)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] if A before B" in {
-        val a = Interval.closed(1, 10)
-        val b = Interval.closed(20, 30)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 30)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] if A after B" in {
-        val a = Interval.closed(20, 30)
-        val b = Interval.closed(1, 10)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 30)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] if A starts B" in {
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(1, 10)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 10)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] if A during B" in {
-        val a = Interval.closed(5, 7)
-        val b = Interval.closed(1, 10)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 10)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] if A finishes B" in {
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(1, 10)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 10)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] if A equals B" in {
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(5, 10)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(5, 10)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] if A is-overlapped-by B" in {
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(1, 7)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 10)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] if A is-met-by B" in {
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(1, 5)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 10)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] if A is-started-by B" in {
-        val a = Interval.closed(1, 10)
-        val b = Interval.closed(1, 5)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 10)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] in A meets B" in {
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(5, 10)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 10)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] in A overlaps B" in {
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(7, 15)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(5, 15)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] in A is-finished-by B" in {
-        val a = Interval.closed(1, 10)
-        val b = Interval.closed(7, 10)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 10)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-
-      "[min(a-, b-), max(a+, b+)] if A contains B" in {
-        val a = Interval.closed(1, 10)
-        val b = Interval.closed(5, 7)
-
-        val actual   = a.span(b)
-        val expected = Interval.closed(1, 10)
-
-        actual.isProper mustBe(true)
-        actual mustBe expected
-      }
-    }
-
-    "negative intervals" should {
-      "empty # proper is proper" in {
-        forAll(genEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          xx.isEmpty mustBe (true)
-          yy.nonEmpty mustBe (true)
-
-          val actual = xx.span(yy).canonical
-          val expected = yy.span(xx).canonical
-
-          actual.isEmpty mustBe false
-          expected.isEmpty mustBe false
-
-          actual mustBe expected
-        }
-      }
-
-      "empty # empty is (proper or empty)" in {
+      "any if A and B are empty" in {
         forAll(genEmptyIntArgs, genEmptyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
@@ -221,22 +25,22 @@ final class SpanSpec extends TestSpec:
           xx.isEmpty mustBe (true)
           yy.isEmpty mustBe (true)
 
-          val actual = xx.span(yy).canonical
+          val actual   = xx.span(yy).canonical
           val expected = yy.span(xx).canonical
 
           actual mustBe expected
         }
       }
 
-      "proper & proper is proper" in {
-        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+      "[,] if A is empty" in {
+        forAll(genEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.nonEmpty mustBe (true)
+          xx.isEmpty mustBe (true)
           yy.nonEmpty mustBe (true)
 
-          val actual = xx.span(yy).canonical
+          val actual   = xx.span(yy).canonical
           val expected = yy.span(xx).canonical
 
           actual.isEmpty mustBe false
@@ -246,34 +50,206 @@ final class SpanSpec extends TestSpec:
         }
       }
 
-      "[2, 3] if [2, 1] # [4, 3]" in {
-        // [2, 1]
-        val a = Interval.make(Value.finite(2), Value.finite(1))
-        a.isEmpty mustBe(true)
+      "[,] if A and B are non-empty" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        // [4, 3]
-        val b = Interval.make(Value.finite(4), Value.finite(3))
-        b.isEmpty mustBe(true)
+          xx.nonEmpty mustBe (true)
+          yy.nonEmpty mustBe (true)
 
-        val actual   = a.span(b)
-        val expected = Interval.make(Value.finite(2), Value.finite(3)) // [2, 3]
+          val actual   = xx.span(yy).canonical
+          val expected = yy.span(xx).canonical
 
-        actual mustBe expected
+          actual.isEmpty mustBe false
+          expected.isEmpty mustBe false
+
+          actual mustBe expected
+        }
       }
 
-      "[2, 4] if [2, 1] # [3, 4]" in {
-        // [2, 1]
-        val a = Interval.make(Value.finite(2), Value.finite(1))
-        a.isEmpty mustBe(true)
+      "[,] if A before B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
 
-        // [3, 4]
-        val b = Interval.make(Value.finite(3), Value.finite(4))
-        b.isEmpty mustBe(false)
+          whenever(xx.before(yy)) {
+            val actual = xx.span(yy).canonical
 
-        val actual   = a.span(b)
-        val expected = Interval.make(Value.finite(2), Value.finite(4)) // [2, 4]
+            actual.isEmpty mustBe false
+          }
+        }
+      }
 
-        actual mustBe expected
+      "[,] if A after B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.after(yy)) {
+            val actual = xx.span(yy).canonical
+
+            actual.isEmpty mustBe false
+          }
+        }
+      }
+
+      "[,] if A starts B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.starts(yy)) {
+            val actual = xx.span(yy).canonical
+            val expected = yy.canonical
+
+            actual.isEmpty mustBe false
+            actual mustBe(expected)
+          }
+        }
+      }
+
+      "[,] if A during B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.during(yy)) {
+            val actual = xx.span(yy).canonical
+            val expected = yy.canonical
+
+            actual.isEmpty mustBe false
+            actual mustBe(expected)
+          }
+        }
+      }
+
+      "[,] if A finishes B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.finishes(yy)) {
+            val actual = xx.span(yy).canonical
+            val expected = yy.canonical
+
+            actual.isEmpty mustBe false
+            actual mustBe(expected)
+          }
+        }
+      }
+
+      "[,] if A equals B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.equals(yy)) {
+            val actual   = xx.span(yy).canonical
+            val expected = xx.span(yy).canonical
+
+            actual.isEmpty mustBe false
+
+            actual mustBe expected
+          }
+        }
+      }
+
+      "[,] if A is-overlapped-by B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.isOverlapedBy(yy)) {
+            val actual = xx.span(yy).canonical
+
+            actual.isEmpty mustBe false
+          }
+        }
+      }
+
+      "[,] if A is-met-by B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.isMetBy(yy)) {
+            val actual = xx.span(yy).canonical
+
+            actual.isEmpty mustBe false
+          }
+        }
+      }
+
+      "[,] if A is-started-by B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.isStartedBy(yy)) {
+            val actual = xx.span(yy).canonical
+            val expected = xx.canonical
+
+            actual.isEmpty mustBe false
+            actual mustBe(expected)
+          }
+        }
+      }
+
+      "[,] in A meets B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.meets(yy)) {
+            val actual = xx.span(yy).canonical
+
+            actual.isEmpty mustBe false
+          }
+        }
+      }
+
+      "[,] in A overlaps B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.overlaps(yy)) {
+            val actual = xx.span(yy).canonical
+
+            actual.isEmpty mustBe false
+          }
+        }
+      }
+
+      "[,] in A is-finished-by B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.isFinishedBy(yy)) {
+            val actual = xx.span(yy).canonical
+            val expected = xx.canonical
+
+            actual.isEmpty mustBe false
+            actual mustBe(expected)
+          }
+        }
+      }
+
+      "[,] if A contains B" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.contains(yy)) {
+            val actual = xx.span(yy).canonical
+            val expected = xx.canonical
+
+            actual.isEmpty mustBe false
+            actual mustBe(expected)
+          }
+        }
       }
     }
 
@@ -290,11 +266,6 @@ final class SpanSpec extends TestSpec:
         }
       }
     }
-
-    // // [min(a-, b-), max(a+, b+)]
-    // // given span `c`, `c` intersection with `a` = `a` AND `c` intersects with `b` = `b`
-    // zz.intersection(xx).canonical mustBe xx.canonical
-    // zz.intersection(yy).canonical mustBe yy.canonical    
 
     "A, B, C" should {
       "(A # B) # C = A # (B # C)" in {

@@ -71,6 +71,7 @@ private[mtg] transparent trait BasicOps[T]:
    */
   final def span(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
+
     // (a.isEmpty, b.isEmpty) match
     //   case (false, false) =>
     //     Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
@@ -88,7 +89,7 @@ private[mtg] transparent trait BasicOps[T]:
    *
    *   - A ∪ B
    *
-   * A union of two intervals `a` and `b`: `[min(a-,b-), max(a+,b+)]` if `merges(a, b)` and `∅` otherwise.
+   * A union of two intervals `a` and `b`: `[min(a-,b-), max(a+,b+)]` if `merges(a, b)` and undefined otherwise.
    *
    * {{{
    *   A union B := [min(a-,b-), max(a+,b+)] if merges(a, b) else ∅
@@ -112,12 +113,14 @@ private[mtg] transparent trait BasicOps[T]:
    */
   def union(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     if a.merges(b) then
-      if a.isEmpty then
+      if a.isEmpty && b.isEmpty then
+        a.span(b)
+      else if a.isEmpty then
         b
       else if b.isEmpty then
         a
       else
-        Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
+        a.span(b)
     else
       Interval.empty[T]
 
