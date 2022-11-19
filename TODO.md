@@ -2,6 +2,10 @@
 
 ## PROJECT
 
+- how to make svg that adapts to light / dark theme?
+  - use it for the domain
+  - use it for the relations
+
 - add inflate, deflate, swap documentation
 - explain empty in the documentation
 - add tests for negative intervals

@@ -3,6 +3,12 @@ date = 2022-11-19
 draft = false
 +++
 
-## MY-HEADER
+A library to work with [intervals](/intervals), [relations](/relations) between them and [algorithms](/algorithms).
 
-this is a very long text that we want to display on the page
+### Usage
+
+Add the following dependency to your `build.sbt`:
+
+```scala
+libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "x.y.z"
+```
