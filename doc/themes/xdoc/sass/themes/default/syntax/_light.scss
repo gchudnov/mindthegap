@@ -1,16 +1,16 @@
 @mixin lightSyntax {
-  --code-zola-color: #80cbc4;
+  --code-zola-color: #263238;
   --code-zola-background-color: #fafafa;
   --code-zola-text-color: #92a9b0;
   --code-zola-invalid-color: #ffffff;
   --code-zola-error-color: #e53935;
-  --code-zola-constant-color: #91b859;
-  --code-zola-keyword-color: #7c4dff;
+  --code-zola-constant-color: #a31515;
+  --code-zola-keyword-color: #0000ff;
   --code-zola-operator-color: #39adb5;
   --code-zola-tag-color: #ff5370;
-  --code-zola-function-color: #6182b8;
-  --code-zola-parameter-color: #f76d47;
-  --code-zola-type-color: #ffb62c;
+  --code-zola-function-color: #795E26;
+  --code-zola-parameter-color: #267f99;
+  --code-zola-type-color: #267f99;
   --code-zola-style-type-color: #8796b0;
   --code-zola-line-number-color: #c17e70;
   --code-zola-raw-markdown-color: #e7eaec;
