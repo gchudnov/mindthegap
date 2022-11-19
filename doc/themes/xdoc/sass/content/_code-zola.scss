@@ -8,7 +8,7 @@
 }
 .z-comment,
 .z-punctuation.z-definition.z-comment {
-  color: var(--code-zola-text);
+  color: var(--code-zola-text-color);
 }
 .z-variable,
 .z-string .z-constant.z-other.z-placeholder {
@@ -384,7 +384,7 @@
   color: var(--code-zola-raw-markdown-color);
 }
 .z-text.z-html.z-markdown .z-punctuation.z-definition {
-  color: var(--code-zola-text);
+  color: var(--code-zola-text-color);
 }
 .z-text.z-html.z-markdown .z-meta.z-disable-markdown .z-punctuation.z-definition {
   color: var(--code-zola-operator-color);
