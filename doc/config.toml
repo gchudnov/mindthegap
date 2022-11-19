@@ -55,7 +55,7 @@ code = "xdoc-bundle.min.js"
 
 [extra.logo]
 embed = "icon.svg"
-title = "MindTheGap"
+title = "Mind The Gap"
 
 [extra.theme]
 dark = "#191919"

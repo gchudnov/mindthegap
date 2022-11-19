@@ -141,7 +141,7 @@
             {{ load_data(path=config.extra.logo.embed, format="plain") | safe }}
           </a>
         </li>
-        <li><b>{{ config.extra.logo.title | safe }}</b></li>
+        <li><a class="secondary" href="{{ config.base_url | safe }}"><b>{{ config.extra.logo.title | safe }}</b></a></li>
       </ul>
       <ul>
         {%- for it in config.extra.nav -%}
