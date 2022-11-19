@@ -1,7 +1,9 @@
 # TODO
 
+## PROJECT
+
 - add inflate, deflate, swap documentation
-- emplain empty in the documentation
+- explain empty in the documentation
 - add tests for negative intervals
 - add laws tests
 - add laws to the documentation??

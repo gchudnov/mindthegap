@@ -1,0 +1,181 @@
+@import "../../functions";
+@import "syntax/dark";
+
+// Default: Dark theme
+@mixin dark {
+  --background-color: #{mix($black, $grey-900, 37.5%)};
+
+  // Texts colors
+  --color: #{$grey-200};
+  --h1-color: #{$grey-50};
+  --h2-color: #{mix($grey-100, $grey-50)};
+  --h3-color: #{$grey-100};
+  --h4-color: #{mix($grey-200, $grey-100)};
+  --h5-color: #{$grey-200};
+  --h6-color: #{mix($grey-300, $grey-200)};
+
+  // Muted colors
+  --muted-color: #{$grey-500};
+  --muted-border-color: #{mix($grey-900, $grey-800, 75%)};
+
+  --muted: #{$grey-800};
+  --muted-hover: #{$grey-700};
+  --muted-focus: #{rgba($grey-600, 0.25)};
+  --muted-inverse: #{$black};
+
+  // Primary colors
+  --primary: #{$primary-600};
+  --primary-hover: #{$primary-500};
+  --primary-focus: #{rgba($primary-600, 0.25)};
+  --primary-inverse: #{$white};
+
+  // Secondary colors
+  --secondary: #{$grey-600};
+  --secondary-hover: #{$grey-500};
+  --secondary-focus: #{rgba($grey-500, 0.25)};
+  --secondary-inverse: #{$white};
+
+  // Contrast colors
+  --contrast: #{$grey-50};
+  --contrast-hover: #{$white};
+  --contrast-focus: #{rgba($grey-500, 0.25)};
+  --contrast-inverse: #{$black};
+
+  // Highlighted text (<mark>)
+  --mark-background-color: #{mix($grey-300, $amber-300)};
+  --mark-color: #{mix($black, $grey-900, 37.5%)};
+
+  // Inserted (<ins>) & Deleted (<ins>)
+  --ins-color: #{$green-700};
+  --del-color: #{$red-800};
+
+  // Blockquote
+  --blockquote-border-color: var(--muted-border-color);
+  --blockquote-footer-color: var(--muted-color);
+
+  // Button
+  // To disable box-shadow, remove the var or set to '0 0 0 rgba(0, 0, 0, 0)'
+  // Don't use, 'none, 'false, 'null', '0', etc.
+  --button-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  --button-hover-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+
+  // Form elements
+  --form-element-background-color: #{mix($black, $grey-900, 37.5%)};
+  --form-element-border-color: #{mix($grey-800, $grey-700)};
+  --form-element-color: var(--color);
+  --form-element-placeholder-color: var(--muted-color);
+  --form-element-active-background-color: var(--form-element-background-color);
+  --form-element-active-border-color: var(--primary);
+  --form-element-focus-color: var(--primary-focus);
+  --form-element-disabled-background-color: #{$grey-800};
+  --form-element-disabled-border-color: #{$grey-700};
+  --form-element-disabled-opacity: 0.5;
+  --form-element-invalid-border-color: #{$red-900};
+  --form-element-invalid-active-border-color: #{$red-800};
+  --form-element-invalid-focus-color: #{rgba($red-800, 0.25)};
+  --form-element-valid-border-color: #{$green-800};
+  --form-element-valid-active-border-color: #{$green-700};
+  --form-element-valid-focus-color: #{rgba($green-700, 0.25)};
+
+  // Switch (input[type="checkbox"][role="switch"])
+  --switch-background-color: #{mix($grey-800, $grey-700)};
+  --switch-color: var(--primary-inverse);
+  --switch-checked-background-color: var(--primary);
+
+  // Range (input[type="range"])
+  --range-border-color: #{mix($grey-900, $grey-800)};
+  --range-active-border-color: #{$grey-800};
+  --range-thumb-border-color: var(--background-color);
+  --range-thumb-color: var(--secondary);
+  --range-thumb-hover-color: var(--secondary-hover);
+  --range-thumb-active-color: var(--primary);
+
+  // Table
+  --table-border-color: var(--muted-border-color);
+  --table-row-stripped-background-color: #{rgba($grey-500, 0.05)};
+
+  // Code
+  --code-background-color: #{mix($black, $grey-900, 12.5%)};
+  --code-color: var(--muted-color);
+  --code-kbd-background-color: var(--contrast);
+  --code-kbd-color: var(--contrast-inverse);
+  --code-tag-color: #{hsl(330, 30%, 50%)};
+  --code-property-color: #{hsl(185, 30%, 50%)};
+  --code-value-color: #{hsl(40, 10%, 50%)};
+  --code-comment-color: #{mix($grey-700, $grey-600)};
+
+  @include darkSyntax;
+
+  // Accordion (<details>)
+  --accordion-border-color: var(--muted-border-color);
+  --accordion-active-summary-color: var(--primary);
+  --accordion-close-summary-color: var(--color);
+  --accordion-open-summary-color: var(--muted-color);
+
+  // Card (<article>)
+  $box-shadow-elevation: 1rem;
+  $box-shadow-blur-strengh: 6rem;
+  $box-shadow-opacity: 0.06;
+  --card-background-color: #{mix($black, $grey-900, 25%)};
+  --card-border-color: var(--card-background-color);
+  --card-box-shadow:
+    #{($box-shadow-elevation * 0.5 * 0.029)} #{($box-shadow-elevation * 0.029)} #{($box-shadow-blur-strengh * 0.029)} #{rgba($black, ($box-shadow-opacity * 0.283))},
+    #{($box-shadow-elevation * 0.5 * 0.067)} #{($box-shadow-elevation * 0.067)} #{($box-shadow-blur-strengh * 0.067)} #{rgba($black, ($box-shadow-opacity * 0.4))},
+    #{($box-shadow-elevation * 0.5 * 0.125)} #{($box-shadow-elevation * 0.125)} #{($box-shadow-blur-strengh * 0.125)} #{rgba($black, ($box-shadow-opacity * 0.5))},
+    #{($box-shadow-elevation * 0.5 * 0.225)} #{($box-shadow-elevation * 0.225)} #{($box-shadow-blur-strengh * 0.225)} #{rgba($black, ($box-shadow-opacity * 0.6))},
+    #{($box-shadow-elevation * 0.5 * 0.417)} #{($box-shadow-elevation * 0.417)} #{($box-shadow-blur-strengh * 0.417)} #{rgba($black, ($box-shadow-opacity * 0.717))},
+    #{($box-shadow-elevation * 0.5)} #{$box-shadow-elevation} #{$box-shadow-blur-strengh} #{rgba($black, $box-shadow-opacity)},
+    0 0 0 0.0625rem #{rgba($black, ($box-shadow-opacity * 0.25) )};
+  --card-sectionning-background-color: #{mix($black, $grey-900, 12.5%)};
+
+  // Dropdown (<details role="list">)
+  --dropdown-background-color: #{$grey-900};
+  --dropdown-border-color: #{mix($grey-900, $grey-800)};
+  --dropdown-box-shadow: var(--card-box-shadow);
+  --dropdown-color: var(--color);
+  --dropdown-hover-background-color: #{rgba(mix($grey-900, $grey-800), 0.75)};
+
+  // Modal (<dialog>)
+  --modal-overlay-background-color: #{rgba(mix($grey-900, $grey-800), 0.8)};
+
+  // Progress
+  --progress-background-color: #{mix($grey-900, $grey-800)};
+  --progress-color: var(--primary);
+
+  // Loading ([aria-busy=true])
+  --loading-spinner-opacity: 0.5;
+
+  // Tooltip ([data-tooltip])
+  --tooltip-background-color: var(--contrast);
+  --tooltip-color: var(--contrast-inverse);
+
+  // Icons
+  --icon-checkbox: #{make-icon("checkbox", $grey-300, 4, "none")};
+  // --icon-chevron: #{make-icon("chevron", $grey-300, 2, "none")};
+  // --icon-chevron-button: #{make-icon("chevron-button", $white, 2, "none")};
+  // --icon-chevron-button-inverse: #{make-icon("chevron-button-inverse", $black, 2, "none")};
+  --icon-close: #{make-icon("close", $grey-500, 4, "none")};
+  // --icon-date: #{make-icon("date", $grey-300, 2, "none")};
+  --icon-external: #{make-icon("external", $grey-300, 2, "none")};
+  // --icon-github: #{make-icon("github", $grey-500, 2, "none")};
+  // --icon-invalid: #{make-icon("invalid", $red-900, 2, "none")};
+  // --icon-minus: #{make-icon("minus", $white, 4, "none")};
+  // --icon-moon: #{make-icon("moon", $grey-500, 2, "none")};
+  // --icon-rss: #{make-icon("rss", $grey-500, 2, "none")};
+  --icon-search: #{make-icon("search", $grey-300, 2, "none")};
+  // --icon-sun: #{make-icon("sun", $grey-500, 2, "none")};
+  // --icon-time: #{make-icon("time", $grey-300, 2, "none")};
+  // --icon-valid: #{make-icon("valid", $grey-800, 3, "none")};
+  --icon-theme-switch: #{make-icon("moon", $grey-300, 2, "none")};
+
+  --icon-stroke-color: #{to-rgb($grey-100)};
+  --icon-stroke-inverse-color: #{to-rgb($grey-700)};
+
+  // Document
+  color-scheme: dark;
+
+  // Nav
+  --nav-background-color: #{rgba(darken($grey-900, 6%), 0.8)};
+  --nav-border-color: #{rgba($grey-500, 0.2)};
+  --nav-logo-color: #{mix($black, $grey-900)};
+}

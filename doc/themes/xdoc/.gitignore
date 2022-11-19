@@ -1,0 +1,26 @@
+# exclude source-maps
+static/*.map
+
+# icons
+static/icon*
+
+# manifest
+static/site.webmanifest
+
+# theme
+static/theme-init.min.js
+
+# math
+static/katex-bundle.min.js
+static/katex.min.css
+static/fonts/KaTeX*
+
+# fonts
+static/fonts/Roboto*
+
+# search
+static/search-bundle.min.js
+static/search-facade.js
+
+# bundle
+static/xdoc-bundle.min.js

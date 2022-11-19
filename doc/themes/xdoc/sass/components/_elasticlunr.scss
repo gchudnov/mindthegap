@@ -1,0 +1,92 @@
+#search-form {
+  div:empty {
+    display: none;
+  }
+}
+
+#search-suggestions {
+  z-index: 10;
+  background: var(--background-color);
+  border: 2px solid var(--muted-border-color);
+  position: absolute;
+  right: calc(var(--spacing) * 2);
+  max-height: 16rem;
+  overflow: auto;
+}
+#search-suggestions a,
+#search-results a {
+  display: block;
+  text-decoration: none;
+  padding: var(--spacing);
+  margin: 0 var(--spacing);
+}
+#search-suggestions a:hover,
+#search-suggestions a:focus,
+#search-results a:hover,
+#search-results a:focus {
+  background: var(--primary-focus);
+}
+#search-suggestions span,
+#search-results span {
+  line-height: 1.5;
+  display: block;
+}
+#search-suggestions span:first-child, 
+#search-results span:first-child {
+  font-weight: calc(var(--font-weight) * 1.5);
+}
+#search-suggestions span:nth-child(2),
+#search-results span:nth-child(2) {
+  color: var(--primary);
+}
+
+#search-form-close {
+  display: flex;
+
+  > h2 {
+    margin-bottom: 0;
+  }
+
+  > button {
+    @include button-icon-round;
+
+    display: inline-block;
+    margin-right: var(--spacing);
+
+    &::after {
+      @include mask-icon("close");
+      background-color: var(--icon-stroke-inverse-color);
+    }
+  }
+}
+
+// nav > div > form > div:last-of-type {//parent div of suggestions div
+//   display: block;
+//   position: relative;
+//   width: 100%;
+// }
+// .searchd {
+//   display: flex;
+//   align-items: center;
+//   white-space: nowrap;
+// }
+// .searchd > input {
+//   max-width: 15.3rem;
+//   padding-right:2.4rem;//inlayed search icon
+// }
+// .searchd > button {
+//   margin-left: -2.4rem;//inlayed search icon
+// }
+// @if map-get($breakpoints, "md") {
+//   @media (max-width: map-get($breakpoints, "md")) {
+//     .searchd > input {
+//       max-width: 100%;
+//       flex-grow: 1;
+//     }
+//     #suggestions {
+//       position: static;
+//       left: 0;
+//       width: 100%;
+//     }
+//   }
+// }

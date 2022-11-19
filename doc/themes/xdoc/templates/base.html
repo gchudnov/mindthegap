@@ -1,0 +1,36 @@
+{%- import 'macros/head.html' as macros_head %}
+{%- import 'macros/footer.html' as macros_footer %}
+<!DOCTYPE html>
+<html lang="{{ config.extra.language_region }}">
+<head>
+  {{- macros_head::theme_init() }}
+  {{- macros_head::stylesheets() }}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  {{- macros_head::javascript_defer() }}
+  <base href="{{ config.base_url | safe }}" />
+  {{- macros_head::feed() }}
+  {%- block seo %}
+  {%- endblock seo %}
+  {{- macros_head::favicons() }}
+  <noscript><link rel="stylesheet" href="{{ get_url(path='nojs.css', trailing_slash=false) | safe }}" /></noscript>
+</head>
+<body>
+{%- block header %}
+  <header>
+    {{- macros_head::nav() }}
+  </header>
+{%- endblock header %}
+  <main class="container">
+  {%- block content %}
+  {%- endblock content %}
+  </main>
+{%- block footer %}
+  <footer>
+    {{- macros_footer::footer() }}
+  </footer>
+{%- endblock footer %}
+{%- block scroll_top %}
+{%- endblock scroll_top %}
+</body>
+</html>

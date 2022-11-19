@@ -1,0 +1,11 @@
+name = "xdoc"
+description = "A zola-theme for documentation."
+license = "MIT"
+homepage = "https://github.com/gchudnov/zola-xdoc/"
+min_version = "0.16.1"
+
+[extra]
+
+[author]
+name = "Grigorii Chudnov <g.chudnov@gmail.com>"
+homepage = "https://github.com/gchudnov/"

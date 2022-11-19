@@ -1,0 +1,52 @@
+// Output color in RGB format
+@function to-rgb($color) {
+  @return unquote("rgb(#{red($color)}, #{green($color)}, #{blue($color)})");
+}
+
+// replace value in a string
+@function str-replace($text, $search, $replace: "") {
+  $index: str-index($text, $search);
+  @if $index {
+    @return str-slice($text, 1, $index - 1) + $replace + str-replace(str-slice($text, $index + str-length($search)), $search, $replace);
+  }
+  @return $text;
+}
+
+// encode URL
+@function url-encode($text) {
+  $kv: (
+    "%": "%25",
+    "<": "%3C",
+    ">": "%3E",
+    " ": "%20",
+    "!": "%21",
+    "*": "%2A",
+    "'": "%27",
+    '"': "%22",
+    "(": "%28",
+    ")": "%29",
+    ";": "%3B",
+    ":": "%3A",
+    "@": "%40",
+    "&": "%26",
+    "=": "%3D",
+    "+": "%2B",
+    "$": "%24",
+    ",": "%2C",
+    "/": "%2F",
+    "?": "%3F",
+    "#": "%23",
+    "[": "%5B",
+    "]": "%5D"
+  );
+  $new: $text;
+  @each $search, $replace in $kv {
+    $new: str-replace($new, $search, $replace);
+  }
+  @return $new;
+}
+
+// make an inline SVG
+@function inline-svg($text) {
+  @return url("data:image/svg+xml,#{url-encode($text)}");
+}

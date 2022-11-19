@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{%- block seo %}
+  {{ super() }}
+  {%- set caption = "404 Page not found" %}
+  {%- set subcaption = config.title %}
+  {{- macros_head::seo(caption=caption, subcaption=subcaption, is_noindex=true) }}
+{%- endblock seo -%}
+
+{%- block content %}
+    <div>
+      <h1>Page not found :(</h1>
+      <p>The page you are looking for doesn't exist or has been moved.</p>
+      <p>Try searching, or go to <a href="{{ config.base_url | safe }}">home page</a>.</p>
+    </div>
+{%- endblock content %}

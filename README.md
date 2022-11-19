@@ -711,7 +711,7 @@ List(b, a).sorted // List(a, b)  // [0, 10], [20, 30]
 
 ## Keywords
 
-Allen’s Interval Algebra, Interval Arithmetic, Interval Relations, Infinite Temporal Intervals, Temporal Algorithms
+Allen's Interval Algebra, Interval Arithmetic, Interval Relations, Infinite Temporal Intervals, Temporal Algorithms
 
 ## Contact
 

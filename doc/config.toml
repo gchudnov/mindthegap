@@ -1,16 +1,83 @@
-# The URL the site will be built for
-base_url = "https://gchudnov.github.io/mindthegap/"
+base_url = "https://gchudnov.github.io/mindthegap"
 
-# Whether to automatically compile all Sass files in the sass directory
+title = "mindthegap"
+description = "Intervals, Relations and Algorithms"
+
+default_language = "en"
+
+theme = "xdoc"
+
+output_dir = "public"
+
 compile_sass = true
+minify_html = false
 
-# Whether to build a search index to be used later on by a JavaScript library
-build_search_index = false
+generate_feed = false
+feed_filename = "atom.xml"
+
+taxonomies = []
+
+build_search_index = true
+
+[search]                
+include_title = true        # include title of page/section in index
+include_description = false # include description of page/section in index
+include_content = true      # include rendered content of page/section in index
 
 [markdown]
-# Whether to do syntax highlighting
-# Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
-highlight_code = false
+highlight_code = true
+highlight_theme = "css"
+render_emoji = false
+external_links_target_blank = true # rel="noopener"
+external_links_no_follow = false   # rel="nofollow"
+external_links_no_referrer = false # rel="noreferrer"
+smart_punctuation = false          # `...` to `…`, `"quote"` to `“curly”` etc
 
 [extra]
-# Put all your custom variables here
+short_name = "mtg"
+author = "Grigorii Chudnov"
+
+stylesheets = [ "xdoc.css" ]
+integrity = false
+
+language_region = "en-US"
+caption_separator = "|"
+
+nav = [
+    {path = "/intervals/", name = "Intervals", trailing_slash = false, blank = false},
+    {path = "/relations/", name = "Relations", trailing_slash = false, blank = false},
+    {path = "/algorithms/", name = "Algorithms", trailing_slash = false, blank = false},
+]
+
+[extra.bundle]
+theme_init = "theme-init.min.js"
+code = "xdoc-bundle.min.js"
+
+[extra.logo]
+embed = "icon.svg"
+title = "MindTheGap"
+
+[extra.theme]
+dark = "#191919"
+light = "#fafafa"
+icon = "icon.svg"
+
+[extra.opengraph]
+show = true
+twitter = true
+banner = "icon-512.png"
+
+[extra.social]
+show = true
+feed = false
+github = "gchudnov/mindthegap"
+
+[extra.copyright]
+year_start=2022
+license_type="MIT License"
+license_url="https://github.com/gchudnov/mindthegap/blob/main/LICENSE"
+
+[extra.math]
+show = false
+code = "katex-bundle.min.js"
+style = "katex.min.css"
