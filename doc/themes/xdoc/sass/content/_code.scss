@@ -30,8 +30,8 @@ pre,
 code,
 kbd {
   border-radius: var(--border-radius);
-  // background: var(--code-background-color);
-  // color: var(--code-color);
+  background: var(--code-background-color);
+  color: var(--code-color);
   font-weight: var(--font-weight);
   line-height: initial;
 }
