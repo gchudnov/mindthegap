@@ -52,9 +52,9 @@ Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) // true
 
 // overlaps (o), isOverlappedBy (O)
 Interval.open(1, 10).overlaps(Interval.open(5, 20))      // true
-Interval.open(5, 30).isOverlapedBy(Interval.open(1, 10)) // true
+Interval.open(5, 30).isOverlappedBy(Interval.open(1, 10)) // true
 
-// starts (s), isSatrtedBy (S)
+// starts (s), isStartedBy (S)
 Interval.closed(1, 2).starts(Interval.closed(1, 10))      // true
 Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) // true
 
@@ -66,47 +66,27 @@ Interval.leftClosedRightOpen(-1, 5).isFinishedBy(Interval.leftClosedRightOpen(0,
 Interval.open(4, 7).equalsTo(Interval.open(4, 7)) // true
 ```
 
-### Before
+### Before / After
 
 TBD
 
-### Meets
+### Meets / IsMetBy
 
 TBD
 
-### Overlaps
+### Overlaps / IsOverlappedBy
 
 TBD
 
-### Starts
+### Starts / IsStartedBy
 
 TBD
 
-### During
+### During / Contains
 
 TBD
 
-### After
-
-TBD
-
-### IsMetBy
-
-TBD
-
-### IsOverlappedBy
-
-TBD
-
-### IsStartedBy
-
-TBD
-
-### Contains
-
-TBD
-
-### IsFinishedBy
+### Finishes / IsFinishedBy
 
 TBD
 

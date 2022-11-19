@@ -7,7 +7,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 import com.github.gchudnov.mtg.Mark
 
 /**
- * Overlaps, IsOverlapedBy
+ * Overlaps, IsOverlappedBy
  *
  * {{{
  *   AAAA
@@ -27,13 +27,13 @@ final class OverlapsSpec extends TestSpec:
     import IntervalRelAssert.*
 
     "a.overlaps(b)" should {
-      "b.isOverlapedBy(a)" in {
+      "b.isOverlappedBy(a)" in {
         forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.overlaps(yy)) {
-            yy.isOverlapedBy(xx) mustBe true
+            yy.isOverlappedBy(xx) mustBe true
 
             assertOne(Rel.Overlaps)(xx, yy)
 
@@ -50,29 +50,29 @@ final class OverlapsSpec extends TestSpec:
       }
     }
 
-    "a.isOverlapedBy(b)" should {
+    "a.isOverlappedBy(b)" should {
       "b.overlaps(a)" in {
         forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          whenever(xx.isOverlapedBy(yy)) {
+          whenever(xx.isOverlappedBy(yy)) {
             yy.overlaps(xx) mustBe true
 
-            assertOne(Rel.IsOverlapedBy)(xx, yy)
+            assertOne(Rel.IsOverlappedBy)(xx, yy)
           }
         }
       }
     }
 
-    "a.overlaps(b) AND b.isOverlapedBy(a)" should {
+    "a.overlaps(b) AND b.isOverlappedBy(a)" should {
       "equal" in {
         forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
           val actual   = xx.overlaps(yy)
-          val expected = yy.isOverlapedBy(xx)
+          val expected = yy.isOverlappedBy(xx)
 
           actual mustBe expected
         }
@@ -98,7 +98,7 @@ final class OverlapsSpec extends TestSpec:
         // Proper
         // (1, 10)  (5, 20)
         Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
-        Interval.open(5, 30).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
+        Interval.open(5, 30).isOverlappedBy(Interval.open(1, 10)) mustBe (true)
 
         // (1, 10)  (2, 11)
         Interval.open(1, 10).overlaps(Interval.open(2, 11)) mustBe (true)
@@ -122,19 +122,19 @@ final class OverlapsSpec extends TestSpec:
         Interval.open(1, 10).overlaps(Interval.open(-10, 20)) mustBe (false)
 
         // (1, 10)  (2, 11)
-        Interval.open(1, 10).isOverlapedBy(Interval.open(2, 11)) mustBe (false)
+        Interval.open(1, 10).isOverlappedBy(Interval.open(2, 11)) mustBe (false)
 
         // (1, 10)  (2, 10)
-        Interval.open(1, 10).isOverlapedBy(Interval.open(2, 10)) mustBe (false)
+        Interval.open(1, 10).isOverlappedBy(Interval.open(2, 10)) mustBe (false)
 
         // (2, 12)  (1, 10)
-        Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
+        Interval.open(2, 12).isOverlappedBy(Interval.open(1, 10)) mustBe (true)
 
         // (1, 12)  (1, 10)
-        Interval.open(1, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (false)
+        Interval.open(1, 12).isOverlappedBy(Interval.open(1, 10)) mustBe (false)
 
         // (2, 12)  (1, 10)
-        Interval.open(2, 12).isOverlapedBy(Interval.open(1, 10)) mustBe (true)
+        Interval.open(2, 12).isOverlappedBy(Interval.open(1, 10)) mustBe (true)
 
         // (1, 10)  (5, 20)
         Interval.open(1, 10).overlaps(Interval.open(5, 20)) mustBe (true)
@@ -161,16 +161,16 @@ final class OverlapsSpec extends TestSpec:
         // (-inf, +inf) (1, 10)
         Interval.unbounded[Int].overlaps(Interval.open(1, 10)) mustBe (false)
         Interval.open(1, 10).overlaps(Interval.unbounded[Int]) mustBe (false)
-        Interval.unbounded[Int].isOverlapedBy(Interval.open(1, 10)) mustBe (false)
-        Interval.open(1, 10).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].isOverlappedBy(Interval.open(1, 10)) mustBe (false)
+        Interval.open(1, 10).isOverlappedBy(Interval.unbounded[Int]) mustBe (false)
 
         // (-inf, +inf) {2}
-        Interval.unbounded[Int].isOverlapedBy(Interval.point(2)) mustBe (false)
-        Interval.point(2).isOverlapedBy(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].isOverlappedBy(Interval.point(2)) mustBe (false)
+        Interval.point(2).isOverlappedBy(Interval.unbounded[Int]) mustBe (false)
 
         // (-inf, 2)  (-2, +inf)
         Interval.rightOpen(2).overlaps(Interval.leftOpen(-2)) mustBe (true)
-        Interval.leftOpen(-2).isOverlapedBy(Interval.rightOpen(2)) mustBe (true)
+        Interval.leftOpen(-2).isOverlappedBy(Interval.rightOpen(2)) mustBe (true)
       }
     }
   }

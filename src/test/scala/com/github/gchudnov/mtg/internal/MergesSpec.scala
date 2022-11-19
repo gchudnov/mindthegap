@@ -32,7 +32,7 @@ final class MergesSpec extends TestSpec:
                 Rel.Meets,
                 Rel.IsMetBy,
                 Rel.Overlaps,
-                Rel.IsOverlapedBy,
+                Rel.IsOverlappedBy,
                 Rel.During,
                 Rel.Contains,
                 Rel.Starts,

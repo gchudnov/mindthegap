@@ -12,36 +12,36 @@ trait IntervalRelAssert:
 
   private def relFnMap[T](using Ordering[Mark[T]]) =
     Map(
-      Rel.Before        -> ((xx: Interval[T], yy: Interval[T]) => xx.before(yy)),
-      Rel.After         -> ((xx: Interval[T], yy: Interval[T]) => xx.after(yy)),
-      Rel.Meets         -> ((xx: Interval[T], yy: Interval[T]) => xx.meets(yy)),
-      Rel.IsMetBy       -> ((xx: Interval[T], yy: Interval[T]) => xx.isMetBy(yy)),
-      Rel.Overlaps      -> ((xx: Interval[T], yy: Interval[T]) => xx.overlaps(yy)),
-      Rel.IsOverlapedBy -> ((xx: Interval[T], yy: Interval[T]) => xx.isOverlapedBy(yy)),
-      Rel.During        -> ((xx: Interval[T], yy: Interval[T]) => xx.during(yy)),
-      Rel.Contains      -> ((xx: Interval[T], yy: Interval[T]) => xx.contains(yy)),
-      Rel.Starts        -> ((xx: Interval[T], yy: Interval[T]) => xx.starts(yy)),
-      Rel.IsStartedBy   -> ((xx: Interval[T], yy: Interval[T]) => xx.isStartedBy(yy)),
-      Rel.Finishes      -> ((xx: Interval[T], yy: Interval[T]) => xx.finishes(yy)),
-      Rel.IsFinishedBy  -> ((xx: Interval[T], yy: Interval[T]) => xx.isFinishedBy(yy)),
-      Rel.EqualsTo      -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy))
+      Rel.Before         -> ((xx: Interval[T], yy: Interval[T]) => xx.before(yy)),
+      Rel.After          -> ((xx: Interval[T], yy: Interval[T]) => xx.after(yy)),
+      Rel.Meets          -> ((xx: Interval[T], yy: Interval[T]) => xx.meets(yy)),
+      Rel.IsMetBy        -> ((xx: Interval[T], yy: Interval[T]) => xx.isMetBy(yy)),
+      Rel.Overlaps       -> ((xx: Interval[T], yy: Interval[T]) => xx.overlaps(yy)),
+      Rel.IsOverlappedBy -> ((xx: Interval[T], yy: Interval[T]) => xx.isOverlappedBy(yy)),
+      Rel.During         -> ((xx: Interval[T], yy: Interval[T]) => xx.during(yy)),
+      Rel.Contains       -> ((xx: Interval[T], yy: Interval[T]) => xx.contains(yy)),
+      Rel.Starts         -> ((xx: Interval[T], yy: Interval[T]) => xx.starts(yy)),
+      Rel.IsStartedBy    -> ((xx: Interval[T], yy: Interval[T]) => xx.isStartedBy(yy)),
+      Rel.Finishes       -> ((xx: Interval[T], yy: Interval[T]) => xx.finishes(yy)),
+      Rel.IsFinishedBy   -> ((xx: Interval[T], yy: Interval[T]) => xx.isFinishedBy(yy)),
+      Rel.EqualsTo       -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy))
     )
 
   private val invRels: Map[Rel, Rel] = Map(
     // forward
     Rel.Before   -> Rel.After,
     Rel.Meets    -> Rel.IsMetBy,
-    Rel.Overlaps -> Rel.IsOverlapedBy,
+    Rel.Overlaps -> Rel.IsOverlappedBy,
     Rel.During   -> Rel.Contains,
     Rel.Starts   -> Rel.IsStartedBy,
     Rel.Finishes -> Rel.IsFinishedBy,
     // backward
-    Rel.After         -> Rel.Before,
-    Rel.IsMetBy       -> Rel.Meets,
-    Rel.IsOverlapedBy -> Rel.Overlaps,
-    Rel.Contains      -> Rel.During,
-    Rel.IsStartedBy   -> Rel.Starts,
-    Rel.IsFinishedBy  -> Rel.Finishes,
+    Rel.After          -> Rel.Before,
+    Rel.IsMetBy        -> Rel.Meets,
+    Rel.IsOverlappedBy -> Rel.Overlaps,
+    Rel.Contains       -> Rel.During,
+    Rel.IsStartedBy    -> Rel.Starts,
+    Rel.IsFinishedBy   -> Rel.Finishes,
     // dual
     Rel.EqualsTo -> Rel.EqualsTo
   )
@@ -98,16 +98,16 @@ trait IntervalRelAssert:
 object IntervalRelAssert extends IntervalRelAssert:
 
   enum Rel(name: String):
-    case Before        extends Rel("b")
-    case After         extends Rel("B")
-    case Meets         extends Rel("m")
-    case IsMetBy       extends Rel("M")
-    case Overlaps      extends Rel("o")
-    case IsOverlapedBy extends Rel("O")
-    case During        extends Rel("d")
-    case Contains      extends Rel("D")
-    case Starts        extends Rel("s")
-    case IsStartedBy   extends Rel("S")
-    case Finishes      extends Rel("f")
-    case IsFinishedBy  extends Rel("F")
-    case EqualsTo      extends Rel("e")
+    case Before         extends Rel("b")
+    case After          extends Rel("B")
+    case Meets          extends Rel("m")
+    case IsMetBy        extends Rel("M")
+    case Overlaps       extends Rel("o")
+    case IsOverlappedBy extends Rel("O")
+    case During         extends Rel("d")
+    case Contains       extends Rel("D")
+    case Starts         extends Rel("s")
+    case IsStartedBy    extends Rel("S")
+    case Finishes       extends Rel("f")
+    case IsFinishedBy   extends Rel("F")
+    case EqualsTo       extends Rel("e")

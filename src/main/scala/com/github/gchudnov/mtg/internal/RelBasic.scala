@@ -90,9 +90,9 @@ private[mtg] transparent trait BasicRel[T]:
     a.isProper && b.isProper && ordM.lt(a.left, b.left) && ordM.lt(b.left, a.right) && ordM.lt(a.right, b.right)
 
   /**
-   * IsOverlapedBy (O)
+   * IsOverlappedBy (O)
    */
-  final def isOverlapedBy(b: Interval[T])(using Ordering[Mark[T]]): Boolean =
+  final def isOverlappedBy(b: Interval[T])(using Ordering[Mark[T]]): Boolean =
     b.overlaps(a)
 
   /**

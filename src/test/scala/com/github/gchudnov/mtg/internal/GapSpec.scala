@@ -224,7 +224,7 @@ final class GapSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          whenever(xx.isOverlapedBy(yy)) {
+          whenever(xx.isOverlappedBy(yy)) {
             val actual = xx.gap(yy).canonical
 
             actual.isEmpty mustBe true
