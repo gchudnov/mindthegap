@@ -43,7 +43,7 @@ are located on the line `a+ = a-` and all empty intervals are below the line `a+
 
 ## Classification
 
-Intervals could be further classifed in the following way:
+Intervals could be further classified in the following way:
 
 - empty : `[a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅`
 - point : `{x} = {x | a- = x = a+}`
