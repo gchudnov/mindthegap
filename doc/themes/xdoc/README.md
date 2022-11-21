@@ -24,7 +24,7 @@ npm install
 
 ### 2. Set Environment-Variables
 
-Set environemnt variables:
+Set environment variables:
 
 ```bash
 export XDOC_ROOT_DIR=$(readlink -f .)
@@ -103,7 +103,7 @@ The command downloads [KaTeX](https://github.com/KaTeX/) and bundles it with `/s
 
 ### 5. Bundle Roboto-Font
 
-Bundle roboto Font
+Bundle roboto font
 
 ```bash
 npm run roboto

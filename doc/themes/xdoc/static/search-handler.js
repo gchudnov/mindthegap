@@ -60,12 +60,11 @@
   function onKeyDown(e) {
     if (e.code === "Escape") {
       searchInput.blur();
-      suggestions.classList.add("d-none");
       cleanSuggestions();
     }
 
     const focusableSuggestions = suggestions.querySelectorAll("a");
-    if (suggestions.classList.contains("d-none") || focusableSuggestions.length === 0) {
+    if (focusableSuggestions.length === 0) {
       return;
     }
 
@@ -157,7 +156,6 @@
 
   function makeSuggestions(results, terms) {
     cleanSuggestions();
-    suggestions.classList.remove("d-none");
 
     results.forEach((page) => {
       if (page.doc.body !== "") {
@@ -322,7 +320,6 @@
   document.addEventListener("keydown", onKeyDown);
   document.addEventListener("click", (e) => {
     if (!suggestions.contains(e.target)) {
-      suggestions.classList.add("d-none");
     }
   });
 

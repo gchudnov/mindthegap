@@ -11,8 +11,8 @@
       }
 
       const searchScript = document.createElement("script");
-      searchScript.src = baseUrl + "/search-bundle.min.js?h=pTpXmp4d3X2FBsXeYPAnnADZPyCQUNvi7H5vSF5P/zs=";
-      searchScript.setAttribute("integrity", "sha384-Lx0+HNzlBUOt1PYEaMdMIA5ckVGpZbgy4A9dnZJ3t+SOYrngogC7tlZ9AI5/hmQS");
+      searchScript.src = baseUrl + "/search-bundle.min.js?h=q882iyFaddLgTGTYUHhLUpmQf/cQZkzVneQbZ8sYdCQ=";
+      searchScript.setAttribute("integrity", "sha384-igemy5nrgHPRoEmsQBCYa7nW4hvpNdxz49CW0B3XBFVkKnq+kqyH7kxC0fakEejl");
 
       document.head.appendChild(searchScript);
     }, { once: true });

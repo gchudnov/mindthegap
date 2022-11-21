@@ -22,7 +22,7 @@
     if (prevY != asideY) {
       navEl.style.top = asideY ? `${asideY}px` : null;
       navEl.style.position = asideY ? "relative" : null;
-      console.log("set");
+
       prevY = asideY;
     } else {
       // no-op
