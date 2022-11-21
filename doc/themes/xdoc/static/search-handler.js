@@ -10,11 +10,13 @@
 
   const searchInput = document.getElementById("search-input");
   const suggestions = document.getElementById("search-suggestions");
+  const backdrop = document.getElementById("search-backdrop");
 
   let mainStash = null;
 
   function cleanSuggestions() {
     suggestions.innerHTML = "";
+    backdrop.style.display = "none";
   }
 
   function cleanSearchInput() {
@@ -39,7 +41,7 @@
     suggestionsClone.id = "search-results";
 
     const headerDiv = document.createElement("div");
-    headerDiv.innerHTML = `<form id="search-form-close" name="closeSearch"><button type="submit"></button><h2>Results For: ${searchValue}</h2></form>`; 
+    headerDiv.innerHTML = `<form id="search-form-close" name="closeSearch"><button type="submit"></button><h2>Results For: ${searchValue}</h2></form>`;
 
     suggestionsClone.insertBefore(headerDiv, suggestionsClone.firstChild);
 
@@ -68,7 +70,7 @@
       return;
     }
 
-    const activeElement = document.activeElement
+    const activeElement = document.activeElement;
     const focusable = [...focusableSuggestions];
     const index = focusable.indexOf(activeElement);
 
@@ -157,8 +159,10 @@
   function makeSuggestions(results, terms) {
     cleanSuggestions();
 
+    let hasResults = false;
     results.forEach((page) => {
       if (page.doc.body !== "") {
+        hasResults = true;
         const teaser = makeTeaser(page.doc.body, terms);
 
         const entry = document.createElement("div");
@@ -167,6 +171,10 @@
         suggestions.appendChild(entry);
       }
     });
+
+    if (hasResults) {
+      backdrop.style.display = "block";
+    }
   }
 
   function onSearchInput(e) {
@@ -310,7 +318,7 @@
   }
 
   // initialization
-  const searchForm = document.getElementById('search-form');
+  const searchForm = document.getElementById("search-form");
   if (searchForm) {
     searchForm.onsubmit = () => {
       return doSearch();

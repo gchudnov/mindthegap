@@ -168,6 +168,7 @@
   // --icon-valid: #{make-icon("valid", $grey-800, 3, "none")};
   --icon-theme-switch: #{make-icon("moon", $grey-300, 2, "none")};
 
+  --icon-stroke-light: #{to-rgb($grey-100)};
   --icon-stroke-color: #{to-rgb($grey-100)};
   --icon-stroke-inverse-color: #{to-rgb($grey-700)};
 

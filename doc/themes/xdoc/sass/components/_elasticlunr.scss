@@ -2,6 +2,8 @@
   div:empty {
     display: none;
   }
+
+  position: relative;
 }
 
 #search-suggestions {
@@ -9,7 +11,7 @@
   background: var(--background-color);
   border: 2px solid var(--muted-border-color);
   position: absolute;
-  right: calc(var(--spacing) * 2);
+  right: 10px; //calc(var(--spacing) * 2);
   max-height: 16rem;
   overflow: auto;
 }
@@ -31,13 +33,13 @@
   line-height: 1.5;
   display: block;
 }
-#search-suggestions span:first-child, 
+#search-suggestions span:first-child,
 #search-results span:first-child {
   font-weight: calc(var(--font-weight) * 1.5);
 }
 #search-suggestions span:nth-child(2),
 #search-results span:nth-child(2) {
-  color: var(--primary);
+  color: var(--secondary);
 }
 
 #search-form-close {
@@ -55,38 +57,22 @@
 
     &::after {
       @include mask-icon("close");
-      background-color: var(--icon-stroke-inverse-color);
+      background-color: var(--icon-stroke-light);
     }
   }
 }
 
-// nav > div > form > div:last-of-type {//parent div of suggestions div
-//   display: block;
-//   position: relative;
-//   width: 100%;
-// }
-// .searchd {
-//   display: flex;
-//   align-items: center;
-//   white-space: nowrap;
-// }
-// .searchd > input {
-//   max-width: 15.3rem;
-//   padding-right:2.4rem;//inlayed search icon
-// }
-// .searchd > button {
-//   margin-left: -2.4rem;//inlayed search icon
-// }
-// @if map-get($breakpoints, "md") {
-//   @media (max-width: map-get($breakpoints, "md")) {
-//     .searchd > input {
-//       max-width: 100%;
-//       flex-grow: 1;
-//     }
-//     #suggestions {
-//       position: static;
-//       left: 0;
-//       width: 100%;
-//     }
-//   }
-// }
+#search-backdrop {
+  z-index: 1;
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: black;
+  opacity: 0.5;
+  height: 100vh;
+  margin: 0 0;
+  padding: 0 0;
+}

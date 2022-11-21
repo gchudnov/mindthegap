@@ -3,9 +3,6 @@
   const docEl = document.querySelector("body > main > section > div[role='document']");
   const navEl = document.querySelector("body > main > section > aside > nav");
 
-  const navHeight = navEl.clientHeight;
-  const docRc = getClientRect(docEl);
-
   let prevY = null;
 
   function getClientRect(el) {
@@ -14,6 +11,9 @@
   }
 
   function updateAsideYOffset() {
+    const navHeight = navEl.clientHeight;
+    const docRc = getClientRect(docEl);
+
     let asideY = null;
     if (window.scrollY >= docRc.bottom - navHeight) {
       asideY = docRc.bottom - navHeight;
@@ -29,8 +29,10 @@
     }
   }
 
-  document.addEventListener("scroll", updateAsideYOffset);
-  document.addEventListener("resize", updateAsideYOffset);
+  if (navEl) {
+    document.addEventListener("scroll", updateAsideYOffset);
+    document.addEventListener("resize", updateAsideYOffset);
 
-  updateAsideYOffset();
+    updateAsideYOffset();
+  }
 })();
