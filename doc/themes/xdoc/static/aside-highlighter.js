@@ -1,5 +1,4 @@
 // Aside Highlighter
-
 (() => {
   const LEVELS = [2, 3];
 

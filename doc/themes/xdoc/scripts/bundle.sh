@@ -16,6 +16,7 @@ terser \
   "${XDOC_STATIC_DIR}/theme-switcher.js" \
   "${XDOC_STATIC_DIR}/code-copy.js" \
   "${XDOC_STATIC_DIR}/aside-highlighter.js" \
+  "${XDOC_STATIC_DIR}/aside-positioner.js" \
   "${XDOC_STATIC_DIR}/scroll-to-top.js" \
   -c -m -o "${XDOC_STATIC_DIR}/${BUNDLE_NAME}" \
   --source-map "url='${BUNDLE_NAME}.map'"

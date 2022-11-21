@@ -1,5 +1,9 @@
 # TODO
 
+## XDOC
+
+- TODO: close <search> when we click outside of the drop-down options.
+
 ## PROJECT
 
 - how to make svg that adapts to light / dark theme?
