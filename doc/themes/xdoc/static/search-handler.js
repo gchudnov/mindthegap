@@ -23,6 +23,11 @@
     searchInput.value = "";
   }
 
+  function cleanSearch() {
+    cleanSuggestions();
+    cleanSearchInput();
+  }
+
   // in page results when press enter or click search icon from search box
   function doCloseSearch() {
     const main = document.querySelector("main");
@@ -47,8 +52,7 @@
 
     main.innerHTML = suggestionsClone.outerHTML;
 
-    cleanSuggestions();
-    cleanSearchInput();
+    cleanSearch();
 
     if (document.body.contains(document.closeSearch)) {
       document.closeSearch.onsubmit = () => {
@@ -328,6 +332,7 @@
   document.addEventListener("keydown", onKeyDown);
   document.addEventListener("click", (e) => {
     if (!suggestions.contains(e.target)) {
+      cleanSearch();
     }
   });
 
