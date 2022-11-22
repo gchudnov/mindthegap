@@ -2,8 +2,8 @@
 
 ## XDOC
 
-- TODO: close <search> when we click outside of the drop-down options.
-- TODO: ADD SCROLL DEBOUNCE?
+- aside is not positioned properly when we scroll it
+- make svg adaptive
 
 ## PROJECT
 
