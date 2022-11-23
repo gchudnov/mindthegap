@@ -2,7 +2,6 @@
 
 ## XDOC
 
-- aside is not positioned properly when we scroll it
 - make svg adaptive
 
 ## PROJECT
