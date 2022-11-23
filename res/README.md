@@ -1,18 +1,31 @@
-## RESOURCES
+# RESOURCES
 
 - [dark mode in SVG](http://jgraph.github.io/drawio-github/DARK-MODE.html)
 
-NOTE: The creation of SVGs relies on [drawio](https://github.com/jgraph/drawio) in this project.
+## Creating a new theme-aware SVG
 
-### WHEN CREATING AN SVG
+### 0. Ensure SVGO
 
-0. Generate styles to embed in SVG. This needs to be done only once.
+Ensure that [svgo](https://github.com/svg/svgo) is available in the system *globally*.
+
+
+### 0. Create an SVG
+
+Create an SVG using [drawio](https://github.com/jgraph/drawio). When selecting colors, select only the ones available in the palette (and black / white).
+These colors will have styles overriding.
+
+### 1. Generate styles to embed in SVG. 
 
 ```bash
 ./svginit.sh
 ```
 
 It will generate a css-file, the contents of this file needs to be embedded to SVGs, used in the project to allow them to adapt to dark / light theme of the documentation.
+
+This needs to be done only once.
+
+
+
 
 1. Set `id="dark"` to the root <svg> element:
 
