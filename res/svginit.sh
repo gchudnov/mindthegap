@@ -49,18 +49,45 @@ for name in "${SHADABLES[@]}"; do
   INVERSIONS["${key1}"]=${key0}  
 done
 
-# variables
-VARS=()
-for name in "${SHADABLES[@]}"; do
-  for shade in "${SHADES[@]}"; do
-    key="${shade}-${name}"
-    VARS+=("${key}")
-  done
-done
-VARS+=("white" "black")
-
 # targets
 TARGETS=()
+
+# strokes
+STROKES=("#ffffff")
+for key in "${STROKES[@]}"; do
+  [[ ! " ${TARGETS[*]} " =~ " ${key} " ]] && TARGETS+=("${key}")
+done
+
+# fills
+FILLS=("#ffffff" "#000000")
+for key in "${FILLS[@]}"; do
+  [[ ! " ${TARGETS[*]} " =~ " ${key} " ]] && TARGETS+=("${key}")
+done
+
+# text-colors
+TEXT_COLORS=()
+for key in "${TEXT_COLORS[@]}"; do
+  [[ ! " ${TARGETS[*]} " =~ " ${key} " ]] && TARGETS+=("${key}")
+done
+
+# border-colors
+BORDER_COLORS=()
+for key in "${BORDER_COLORS[@]}"; do
+  [[ ! " ${TARGETS[*]} " =~ " ${key} " ]] && TARGETS+=("${key}")
+done
+
+# background-colors
+BACKGROUND_COLORS=("#0d1117")
+for key in "${BACKGROUND_COLORS[@]}"; do
+  [[ ! " ${TARGETS[*]} " =~ " ${key} " ]] && TARGETS+=("${key}")
+done
+
+# variables
+VARS=()
+for target in "${TARGETS[@]}"; do
+  name=${VALUES[${target}]}
+  VARS+=("${name}")
+done
 
 
 # DEBUG - colors
@@ -78,34 +105,45 @@ TARGETS=()
 
 # # create the header of the styles with variables
 STYLES="<style type=\"text/css\">\n"
-# STYLES+=":root {\n"
-# for key in "${VARS[@]}"; do
-#   color="--${key}-color"
-#   STYLES+="  ${color}: ${COLORS[$key]};\n"
-# done
-# STYLES+="}\n\n"
+STYLES+=":root {\n"
+for name in "${VARS[@]}"; do
+  value=${COLORS[${name}]}
+  color="--${name}-color"
 
-# # common styles
-# STYLES+="svg:target[style^=\"background-color:\"] { background-color: var(--dark-primary-color) !important; }\n"
-# STYLES+=":target g[filter=\"url(#dropShadow)\"] { filter: none !important; }\n\n"
+  STYLES+="  ${color}: ${value};\n"
+done
+STYLES+="}\n"
 
-# # style per name
-# for name in "${NAMES[@]}"; do
-#   dark_name="dark-${name}"
-#   light_name="light-${name}"
+# common styles
+STYLES+="svg:target[style^=\"background-color:\"] { background-color: var(--dark-primary-color) !important; }\n"
+STYLES+=":target g[filter=\"url(#dropShadow)\"] { filter: none !important; }\n\n"
 
-#   STYLES+=":target [stroke=${COLORS[$dark_name]}] { stroke: var(--${light_name}-color); }\n"
-# done
+# stroke
+for value in "${STROKES[@]}"; do
+  name=${VALUES[${value}]}
+  inversion=${INVERSIONS[${name}]}
+
+  inverse_var="--${inversion}-color"
+
+  STYLES+=":target [stroke=${value}] { stroke: var(${inverse_var}); }\n"
+done
+
+# fills
+for value in "${FILLS[@]}"; do
+  name=${VALUES[${value}]}
+  inversion=${INVERSIONS[${name}]}
+
+  inverse_var="--${inversion}-color"
+
+  STYLES+=":target [fill=${value}] { fill: var(${inverse_var}); }\n"
+  STYLES+=":target g[fill=${value}] text { fill: var(${inverse_var}); }\n"
+done
 
 STYLES+="</style>\n"
 
 printf "${STYLES}"
 
-# :target [stroke="rgb(0, 0, 0)"] { stroke: var(--light-primary-color); }
-# :target [stroke="rgb(255, 255, 255)"] { stroke: var(--dark-primary-color); }
-# :target [fill="rgb(0, 0, 0)"] { fill: var(--light-primary-color); }
-# :target [fill="rgb(255, 255, 255)"] { fill: var(--dark-primary-color); }
-# :target g[fill="rgb(0, 0, 0)"] text { fill: var(--light-primary-color); }
+# 
 # :target div[data-drawio-colors*="color: rgb(0, 0, 0)"] div { color: var(--light-primary-color) !important; }
 # :target div[data-drawio-colors*="border-color: rgb(0, 0, 0)"] { border-color: var(--light-primary-color) !important; }
 # :target div[data-drawio-colors*="border-color: rgb(0, 0, 0)"] div { border-color: var(--light-primary-color) !important; }
