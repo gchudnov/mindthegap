@@ -8,6 +8,18 @@
 
 Ensure that [svgo](https://github.com/svg/svgo) is available in the system *globally*.
 
+```bash
+
+```
+
+### 1. Build Theme-Aware Styles
+
+```bash
+
+```
+
+
+
 
 ### 0. Create an SVG
 
