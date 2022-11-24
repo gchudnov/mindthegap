@@ -49,6 +49,9 @@ for name in "${SHADABLES[@]}"; do
   INVERSIONS["${key1}"]=${key0}  
 done
 
+# preprocess SVG to normalize colors
+
+
 # targets
 TARGETS=()
 
@@ -139,16 +142,41 @@ for value in "${FILLS[@]}"; do
   STYLES+=":target g[fill=${value}] text { fill: var(${inverse_var}); }\n"
 done
 
+# text colors
+for value in "${TEXT_COLORS[@]}"; do
+  name=${VALUES[${value}]}
+  inversion=${INVERSIONS[${name}]}
+
+  inverse_var="--${inversion}-color"
+
+  STYLES+=":target div[data-drawio-colors*=\"color: ${value}\"] div { color: var(${inverse_var}) !important; }\n"
+done
+
+# border-colors
+for value in "${BORDER_COLORS[@]}"; do
+  name=${VALUES[${value}]}
+  inversion=${INVERSIONS[${name}]}
+
+  inverse_var="--${inversion}-color"
+
+  STYLES+=":target div[data-drawio-colors*=\"border-color: ${value}\"] { border-color: var(${inverse_var}) !important; }\n"
+  STYLES+=":target div[data-drawio-colors*=\"border-color: ${value}\"] div { border-color: var(${inverse_var}) !important; }\n"
+done
+
+# background-colors
+for value in "${BACKGROUND_COLORS[@]}"; do
+  name=${VALUES[${value}]}
+  inversion=${INVERSIONS[${name}]}
+
+  inverse_var="--${inversion}-color"
+
+  STYLES+=":target div[data-drawio-colors*=\"background-color: ${value}\"] { background-color: var(${inverse_var}) !important; }\n"
+  STYLES+=":target div[data-drawio-colors*=\"background-color: ${value}\"] div { background-color: var(${inverse_var}) !important; }\n"
+done
+
 STYLES+="</style>\n"
 
 printf "${STYLES}"
-
-# 
-# :target div[data-drawio-colors*="color: rgb(0, 0, 0)"] div { color: var(--light-primary-color) !important; }
-# :target div[data-drawio-colors*="border-color: rgb(0, 0, 0)"] { border-color: var(--light-primary-color) !important; }
-# :target div[data-drawio-colors*="border-color: rgb(0, 0, 0)"] div { border-color: var(--light-primary-color) !important; }
-# :target div[data-drawio-colors*="background-color: rgb(255, 255, 255)"] { background-color: var(--dark-primary-color) !important; }
-# :target div[data-drawio-colors*="background-color: rgb(255, 255, 255)"] div { background-color: var(--dark-primary-color) !important; }
 
 # SVGO - first to convert hex
 # shorthex

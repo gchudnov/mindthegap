@@ -9,13 +9,13 @@
 Ensure that [svgo](https://github.com/svg/svgo) is available in the system *globally*.
 
 ```bash
-
+npm -g install svgo
 ```
 
 ### 1. Build Theme-Aware Styles
 
 ```bash
-
+SVG_INIT_PATH=/home/gchudnov/Projects/mindthegap/res/domain.svg ./svginit.sh
 ```
 
 
