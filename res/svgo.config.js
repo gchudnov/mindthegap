@@ -211,17 +211,103 @@ function themeColors(ast, params, info) {
     { white: "dark-primary", dark: "light-primary" }
   );
 
-  console.log(info.colors);
+  // console.log(info.colors);
 
   return {
     element: {
       enter: (node, parentNode) => {
+        if (node.name === 'svg' && parentNode.type === 'root') {
+          // remove defs with styles
+          node.children.reduce((acc, child) => {
+            if (child.name === 'defs' && child.attributes.hasOwnProperty('id') && child.attributes["id"] === "styles") {
+              console.log({child, cs: child.children, css: child.children[0].children });
+              // no-op
+            } else {
+              acc.push(child);
+            }
+            return acc;
+          }, []);
+
+          // add new defs
+          const fills = [];
+
+          const strokes = [];
+
+          const colors = [];
+
+          const borderColors = [];
+
+          const backgroundColors = [];
+
+          const defs = {
+
+          };
+        }
       }
     }
   };  
 }
 
 /*
+{
+  child: {
+    type: 'element',
+    name: 'defs',
+    attributes: { id: 'styles' },
+    children: [ [Object] ]
+  },
+  cs: [
+    {
+      type: 'element',
+      name: 'style',
+      attributes: {},
+      children: [Array]
+    }
+  ],
+  css: [
+    {
+      type: 'text',
+      value: ':root{--light-color:#c9d1d9;--dark-color:#0d1117}svg:target[style^="background-color:"]{background-color:var(--dark-color)!important}:target [stroke="rgb(0, 0, 0)"]{stroke:var(--light-color)}:target [stroke="rgb(255, 255, 255)"]{stroke:var(--dark-color)}:target [fill="rgb(0, 0, 0)"]{fill:var(--light-color)}:target [fill="rgb(255, 255, 255)"]{fill:var(--dark-color)}:target div[data-drawio-colors*="color: rgb(0, 0, 0)"] div{color:var(--light-color)!important}:target div[data-drawio-colors*="border-color: rgb(0, 0, 0)"],:target div[data-drawio-colors*="border-color: rgb(0, 0, 0)"] div{border-color:var(--light-color)!important}:target div[data-drawio-colors*="background-color: rgb(255, 255, 255)"],:target div[data-drawio-colors*="background-color: rgb(255, 255, 255)"] div{background-color:var(--dark-color)!important}'
+    }
+  ]
+
+
+
+{
+  child: {
+    type: 'element',
+    name: 'defs',
+    attributes: {},
+    children: [ [Object] ]
+  }
+}
+
+
+{
+  fill: [ '#f5f5f5' ],
+  stroke: [ '#000000' ],
+  color: [ '#000000' ],
+  borderColor: [],
+  backgroundColor: []
+}
+
+
+{
+  child: {
+    type: 'element',
+    name: 'path',
+    attributes: {
+      stroke: '#000',
+      'stroke-miterlimit': '10',
+      d: 'm325.88 170-7 3.5 1.75-3.5-1.75-3.5Z',
+      'pointer-events': 'all'
+    },
+    children: [],
+    pathJS: [ [Object], [Object], [Object], [Object], [Object] ]
+  }
+}
+
+
 {
   node: {
     type: 'element',
