@@ -50,7 +50,7 @@ for name in "${SHADABLES[@]}"; do
 done
 
 # preprocess SVG to normalize colors
-
+npx svgo --multipass --config="./svgo.config.js" /home/gchudnov/Projects/mindthegap/res/domain.svg
 
 # targets
 TARGETS=()
@@ -177,6 +177,3 @@ done
 STYLES+="</style>\n"
 
 printf "${STYLES}"
-
-# SVGO - first to convert hex
-# shorthex
