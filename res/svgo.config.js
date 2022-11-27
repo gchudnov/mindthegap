@@ -78,20 +78,23 @@ function normalizeColors(ast, params, info) {
   return {
     element: {
       enter: (node, parentNode) => {
-        Object.entries(node.attributes).reduce((acc, [name, value]) => {
-          // #rgb -> #rrggbb
-          value = value.replace(xRGB, (match, r, g, b) => {
-            return "#" + r.repeat(2) + g.repeat(2) + b.repeat(2);
-          });
+        node.attributes = Object.entries(node.attributes).reduce(
+          (acc, [name, value]) => {
+            // #rgb -> #rrggbb
+            value = value.replace(xRGB, (match, r, g, b) => {
+              return "#" + r.repeat(2) + g.repeat(2) + b.repeat(2);
+            });
 
-          // rgb(a, b, c) => #rrggbb
-          value = value.replace(rRGB, (match, r, g, b) => {
-            return rgbToHex(r, g, b);
-          });
+            // rgb(a, b, c) => #rrggbb
+            value = value.replace(rRGB, (match, r, g, b) => {
+              return rgbToHex(r, g, b);
+            });
 
-          acc[name] = value;
-          return acc;
-        }, {});
+            acc[name] = value;
+            return acc;
+          },
+          {}
+        );
       },
     },
   };
@@ -107,7 +110,7 @@ function attributeColors(ast, params, info) {
   const rBorderColor = /border-color\s*:\s*(#([0-9a-fA-F]{2}){3})/g;
   const rBackgroundColor = /background-color\s*:\s*(#([0-9a-fA-F]{2}){3})/g;
 
-  const attrs = {
+  const colors = {
     fill: [],
     stroke: [],
     color: [],
@@ -115,11 +118,11 @@ function attributeColors(ast, params, info) {
     backgroundColor: [],
   };
 
-  info.attrs = attrs;
+  info.colors = colors;
 
   const addColor = (kind, value) => {
-    if(!attrs[kind].includes(value)) {
-      attrs[kind].push(value);
+    if (!colors[kind].includes(value)) {
+      colors[kind].push(value);
     }
   };
 
@@ -127,33 +130,30 @@ function attributeColors(ast, params, info) {
     element: {
       enter: (node, parentNode) => {
         Object.entries(node.attributes).forEach(([name, value]) => {
-
           // fill="#rrggbb"
-          if(name == "fill" && value.match(rHEX)) {
+          if (name == "fill" && value.match(rHEX)) {
             addColor("fill", value);
           }
 
           // stroke="#rrggbb"
-          if(name == "stroke" && value.match(rHEX)) {
+          if (name == "stroke" && value.match(rHEX)) {
             addColor("stroke", value);
-          }          
+          }
 
           // color: #rrggbb
           [...value.matchAll(rColor)].forEach((m) => {
-            addColor("color", m[1]);            
+            addColor("color", m[1]);
           });
 
           // border-color: #rrggbb
           [...value.matchAll(rBorderColor)].forEach((m) => {
-            addColor("borderColor", m[1]);            
+            addColor("borderColor", m[1]);
           });
 
           // background-color: #rrggbb
           [...value.matchAll(rBackgroundColor)].forEach((m) => {
-            addColor("backgroundColor", m[1]);            
+            addColor("backgroundColor", m[1]);
           });
-
-          console.log(attrs);
         });
       },
     },
@@ -182,8 +182,8 @@ function themeColors(ast, params, info) {
     "light-violet": "#e1d5e7", // violet
     "dark-violet": "#9673a6",
 
-    "white": "#ffffff", // white
-    "black": "#000000", // black
+    white: "#ffffff", // white
+    black: "#000000", // black
   };
 
   const values = Object.fromEntries(
@@ -211,6 +211,14 @@ function themeColors(ast, params, info) {
     { white: "dark-primary", dark: "light-primary" }
   );
 
+  console.log(info.colors);
+
+  return {
+    element: {
+      enter: (node, parentNode) => {
+      }
+    }
+  };  
 }
 
 /*
