@@ -208,10 +208,15 @@ function themeColors(ast, params, info) {
         [`dark-${name}`]: `light-${name}`,
       });
     },
-    { white: "dark-primary", dark: "light-primary" }
+    { white: "dark-primary", black: "light-primary" }
   );
 
-  // console.log(info.colors);
+  const toInverse = (code) => {
+    const name = values[code];
+    const inversion = inversions[name];
+    if (!inversion) { console.log(`ERROR: Inversion of the color '${code}' is not defined. Update the script to define it.`); }
+    return inversion;
+  };
 
   return {
     element: {
@@ -229,15 +234,78 @@ function themeColors(ast, params, info) {
           }, []);
 
           // add new defs
-          const fills = [];
+          const codes = Array.from(new Set([].concat(info.colors.fill, info.colors.stroke, info.colors.color, info.colors.borderColor, info.colors.backgroundColor)));
+          
+          codes.push(colors["light-primary"]); // to force the opposite in to the variables, `dark-primary`
 
-          const strokes = [];
+          const {vars, varValues} = codes.reduce((acc, code) => {
+            const inversion = toInverse(code);
 
-          const colors = [];
+            acc.vars.push(`--${inversion}-color`);
+            acc.varValues.push(colors[inversion]);
 
-          const borderColors = [];
+            return acc;
+          }, { vars: [], varValues: [] });
 
-          const backgroundColors = [];
+          const styles = [];
+
+          styles.push(":root {");
+          styles.push(...[...Array(vars.length).keys()].map((i) => {  return `${vars[i]}: ${varValues[i]};`; }));
+          styles.push("}");
+
+          styles.push("svg:target[style^=\"background-color:\"] { background-color: var(--dark-primary-color) !important; }");
+          styles.push(":target g[filter=\"url(#dropShadow)\"] { filter: none !important; }");
+
+          // fill
+          const fillStyles = info.colors.fill.flatMap((code) => {
+            const inversion = toInverse(code);
+            return [
+              `:target [fill=${code}] { fill: var(--${inversion}-color); }`,
+              `:target g[fill=${code}] text { fill: var(--${inversion}-color); }`,
+            ];
+          });
+          styles.push(...fillStyles);
+
+          // stroke
+          const strokeStyles = info.colors.stroke.flatMap((code) => {
+            const inversion = toInverse(code);
+            return [
+              `:target [stroke=${code}] { stroke: var(--${inversion}-color); }`
+            ];
+          });
+          styles.push(...strokeStyles);
+
+          // color
+          const colorStyles = info.colors.color.flatMap((code) => {
+            const inversion = toInverse(code);
+            return [
+              `:target div[data-drawio-colors*=\"color: ${code}\"] div { color: var(--${inversion}-color) !important; }`
+            ];
+          });
+          styles.push(...colorStyles);
+
+          // border-color
+          const borderColorStyles = info.colors.borderColor.flatMap((code) => {
+            const inversion = toInverse(code);
+            return [
+              `:target div[data-drawio-colors*=\"border-color: ${code}\"] { border-color: var(--${inversion}-color) !important; }`,
+              `:target div[data-drawio-colors*=\"border-color: ${code}\"] div { border-color: var(--${inversion}-color) !important; }`
+            ];
+          });
+          styles.push(...borderColorStyles);
+
+          // background-color
+          const backgroundColorStyles = info.colors.backgroundColor.flatMap((code) => {
+            const inversion = toInverse(code);
+            return [
+              `:target div[data-drawio-colors*=\"background-color: ${code}\"] { background-color: var(--${inversion}-color) !important; }`,
+              `:target div[data-drawio-colors*=\"background-color: ${code}\"] div { background-color: var(--${inversion}-color) !important; }`
+            ];
+          });
+          styles.push(...backgroundColorStyles);
+
+          console.log({codes, vars, varValues});
+          console.log({styles});
 
           const defs = {
 
