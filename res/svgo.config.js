@@ -214,18 +214,32 @@ function themeColors(ast, params, info) {
   const toInverse = (code) => {
     const name = values[code];
     const inversion = inversions[name];
-    if (!inversion) { console.log(`ERROR: Inversion of the color '${code}' is not defined. Update the script to define it.`); }
+    if (!inversion) {
+      console.log(
+        `ERROR: Inversion of the color '${code}' is not defined. Update the script to define it.`
+      );
+    }
     return inversion;
   };
+
+  const hasTheme = info.hasOwnProperty("hasTheme") && info["hasTheme"] == true;
 
   return {
     element: {
       enter: (node, parentNode) => {
-        if (node.name === 'svg' && parentNode.type === 'root') {
+        if (node.name === "svg" && parentNode.type === "root") {
+          if (hasTheme) {
+            // the theme was already set, do nothing
+            return;
+          }
+
           // remove defs with styles
-          node.children.reduce((acc, child) => {
-            if (child.name === 'defs' && child.attributes.hasOwnProperty('id') && child.attributes["id"] === "styles") {
-              console.log({child, cs: child.children, css: child.children[0].children });
+          node.children = node.children.reduce((acc, child) => {
+            if (
+              child.name === "defs" &&
+              child.attributes.hasOwnProperty("id") &&
+              child.attributes["id"] === "styles"
+            ) {
               // no-op
             } else {
               acc.push(child);
@@ -234,27 +248,48 @@ function themeColors(ast, params, info) {
           }, []);
 
           // add new defs
-          const codes = Array.from(new Set([].concat(info.colors.fill, info.colors.stroke, info.colors.color, info.colors.borderColor, info.colors.backgroundColor)));
-          
+          const codes = Array.from(
+            new Set(
+              [].concat(
+                info.colors.fill,
+                info.colors.stroke,
+                info.colors.color,
+                info.colors.borderColor,
+                info.colors.backgroundColor
+              )
+            )
+          );
+
           codes.push(colors["light-primary"]); // to force the opposite in to the variables, `dark-primary`
 
-          const {vars, varValues} = codes.reduce((acc, code) => {
-            const inversion = toInverse(code);
+          const { vars, varValues } = codes.reduce(
+            (acc, code) => {
+              const inversion = toInverse(code);
 
-            acc.vars.push(`--${inversion}-color`);
-            acc.varValues.push(colors[inversion]);
+              acc.vars.push(`--${inversion}-color`);
+              acc.varValues.push(colors[inversion]);
 
-            return acc;
-          }, { vars: [], varValues: [] });
+              return acc;
+            },
+            { vars: [], varValues: [] }
+          );
 
           const styles = [];
 
           styles.push(":root {");
-          styles.push(...[...Array(vars.length).keys()].map((i) => {  return `${vars[i]}: ${varValues[i]};`; }));
+          styles.push(
+            ...[...Array(vars.length).keys()].map((i) => {
+              return `${vars[i]}: ${varValues[i]};`;
+            })
+          );
           styles.push("}");
 
-          styles.push("svg:target[style^=\"background-color:\"] { background-color: var(--dark-primary-color) !important; }");
-          styles.push(":target g[filter=\"url(#dropShadow)\"] { filter: none !important; }");
+          styles.push(
+            'svg:target[style^="background-color:"] { background-color: var(--dark-primary-color) !important; }'
+          );
+          styles.push(
+            ':target g[filter="url(#dropShadow)"] { filter: none !important; }'
+          );
 
           // fill
           const fillStyles = info.colors.fill.flatMap((code) => {
@@ -270,7 +305,7 @@ function themeColors(ast, params, info) {
           const strokeStyles = info.colors.stroke.flatMap((code) => {
             const inversion = toInverse(code);
             return [
-              `:target [stroke=${code}] { stroke: var(--${inversion}-color); }`
+              `:target [stroke=${code}] { stroke: var(--${inversion}-color); }`,
             ];
           });
           styles.push(...strokeStyles);
@@ -279,7 +314,7 @@ function themeColors(ast, params, info) {
           const colorStyles = info.colors.color.flatMap((code) => {
             const inversion = toInverse(code);
             return [
-              `:target div[data-drawio-colors*=\"color: ${code}\"] div { color: var(--${inversion}-color) !important; }`
+              `:target div[data-drawio-colors*=\"color: ${code}\"] div { color: var(--${inversion}-color) !important; }`,
             ];
           });
           styles.push(...colorStyles);
@@ -289,113 +324,48 @@ function themeColors(ast, params, info) {
             const inversion = toInverse(code);
             return [
               `:target div[data-drawio-colors*=\"border-color: ${code}\"] { border-color: var(--${inversion}-color) !important; }`,
-              `:target div[data-drawio-colors*=\"border-color: ${code}\"] div { border-color: var(--${inversion}-color) !important; }`
+              `:target div[data-drawio-colors*=\"border-color: ${code}\"] div { border-color: var(--${inversion}-color) !important; }`,
             ];
           });
           styles.push(...borderColorStyles);
 
           // background-color
-          const backgroundColorStyles = info.colors.backgroundColor.flatMap((code) => {
-            const inversion = toInverse(code);
-            return [
-              `:target div[data-drawio-colors*=\"background-color: ${code}\"] { background-color: var(--${inversion}-color) !important; }`,
-              `:target div[data-drawio-colors*=\"background-color: ${code}\"] div { background-color: var(--${inversion}-color) !important; }`
-            ];
-          });
+          const backgroundColorStyles = info.colors.backgroundColor.flatMap(
+            (code) => {
+              const inversion = toInverse(code);
+              return [
+                `:target div[data-drawio-colors*=\"background-color: ${code}\"] { background-color: var(--${inversion}-color) !important; }`,
+                `:target div[data-drawio-colors*=\"background-color: ${code}\"] div { background-color: var(--${inversion}-color) !important; }`,
+              ];
+            }
+          );
           styles.push(...backgroundColorStyles);
 
-          console.log({codes, vars, varValues});
-          console.log({styles});
+          console.log({styles: styles});
 
           const defs = {
-
+            type: "element",
+            name: "defs",
+            attributes: { id: "styles" },
+            children: [
+              {
+                type: "element",
+                name: "style",
+                attributes: { type: "text/css}" },
+                children: [
+                  {
+                    type: "text",
+                    value: styles.join(""),
+                  },
+                ],
+              },
+            ],
           };
+
+          node.children.unshift(defs);
+          info.hasTheme = true;
         }
-      }
-    }
-  };  
-}
-
-/*
-{
-  child: {
-    type: 'element',
-    name: 'defs',
-    attributes: { id: 'styles' },
-    children: [ [Object] ]
-  },
-  cs: [
-    {
-      type: 'element',
-      name: 'style',
-      attributes: {},
-      children: [Array]
-    }
-  ],
-  css: [
-    {
-      type: 'text',
-      value: ':root{--light-color:#c9d1d9;--dark-color:#0d1117}svg:target[style^="background-color:"]{background-color:var(--dark-color)!important}:target [stroke="rgb(0, 0, 0)"]{stroke:var(--light-color)}:target [stroke="rgb(255, 255, 255)"]{stroke:var(--dark-color)}:target [fill="rgb(0, 0, 0)"]{fill:var(--light-color)}:target [fill="rgb(255, 255, 255)"]{fill:var(--dark-color)}:target div[data-drawio-colors*="color: rgb(0, 0, 0)"] div{color:var(--light-color)!important}:target div[data-drawio-colors*="border-color: rgb(0, 0, 0)"],:target div[data-drawio-colors*="border-color: rgb(0, 0, 0)"] div{border-color:var(--light-color)!important}:target div[data-drawio-colors*="background-color: rgb(255, 255, 255)"],:target div[data-drawio-colors*="background-color: rgb(255, 255, 255)"] div{background-color:var(--dark-color)!important}'
-    }
-  ]
-
-
-
-{
-  child: {
-    type: 'element',
-    name: 'defs',
-    attributes: {},
-    children: [ [Object] ]
-  }
-}
-
-
-{
-  fill: [ '#f5f5f5' ],
-  stroke: [ '#000000' ],
-  color: [ '#000000' ],
-  borderColor: [],
-  backgroundColor: []
-}
-
-
-{
-  child: {
-    type: 'element',
-    name: 'path',
-    attributes: {
-      stroke: '#000',
-      'stroke-miterlimit': '10',
-      d: 'm325.88 170-7 3.5 1.75-3.5-1.75-3.5Z',
-      'pointer-events': 'all'
+      },
     },
-    children: [],
-    pathJS: [ [Object], [Object], [Object], [Object], [Object] ]
-  }
+  };
 }
-
-
-{
-  node: {
-    type: 'element',
-    name: 'div',
-    attributes: {
-      'data-drawio-colors': 'color: rgb(0, 0, 0);',
-      style: 'box-sizing:border-box;font-size:0;text-align:center'
-    },
-    children: [ [Object] ]
-  }
-}
-
-/////////////////////
-
-{ ast: { type: 'root', children: [ [Object] ] } }
-{ params: { optionName: 'optionValue' } }
-{
-  info: {
-    path: '/home/gchudnov/Projects/mindthegap/res/domain.svg',
-    multipassCount: 0
-  }
-}
-*/
