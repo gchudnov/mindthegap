@@ -22,6 +22,8 @@ npm -g install svgo
 
 
 
+
+
 ### 0. Create an SVG
 
 Create an SVG using [drawio](https://github.com/jgraph/drawio). When selecting colors, select only the ones available in the palette (and black / white).

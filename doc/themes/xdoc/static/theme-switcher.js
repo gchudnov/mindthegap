@@ -3,6 +3,8 @@
   const LIGHT = "light";
   const DARK = "dark";
 
+  const TARGET_DARK = "#dark";
+
   const THEME_ATTR = "data-theme";
 
   function setHtmlTheme(value) {
@@ -21,12 +23,12 @@
     document.querySelectorAll("img").forEach((img) => {
       if (img.src.includes(".svg")) {
         if (theme === DARK) {
-          if (!img.src.endsWith("#dark")) {
-            img.src += "#dark";
+          if (!img.src.endsWith(TARGET_DARK)) {
+            img.src += TARGET_DARK;
           }
         } else {
-          if (img.src.endsWith("#dark")) {
-            img.src = img.src.substring(0, img.src.indexOf("#dark"));
+          if (img.src.endsWith(TARGET_DARK)) {
+            img.src = img.src.substring(0, img.src.indexOf(TARGET_DARK));
           }
         }
       }
