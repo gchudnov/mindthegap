@@ -16,7 +16,7 @@
     "xdoc": "npm run theme && npm run katex && npm run roboto && npm run search && npm run bundle"
   },
   "dependencies": {
-    "svgo": "^3.0.0",
+    "svgo": "^3.0.2",
     "terser": "^5.15.1"
   }
 }

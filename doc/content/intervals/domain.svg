@@ -1,27 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="dark" viewBox="-.5 -.5 358 339">
+<svg xmlns="http://www.w3.org/2000/svg" id="dark" viewBox="-.5 -.5 358 339">
   <defs id="styles">
-    <style type="text/css">
-      :root {
-        --dark-grey-color: #666666;
-        --light-primary-color: #c9d1d9;
-        --dark-primary-color: #0d1117;
-        }
-        svg:target[style^="background-color:"] { background-color: var(--dark-primary-color) !important; }
-        :target g[filter="url(#dropShadow)"] { filter: none !important; }
-
-        :target [fill="#f5f5f5"] { fill: var(--dark-grey-color); }
-        :target g[fill="#f5f5f5"] text { fill: var(--dark-grey-color); }
-        :target [stroke="#000000"] { stroke: var(--light-primary-color); }
-
-        :target div[data-drawio-colors*="color: #000000"] div { color: var(--light-primary-color) !important; }
-
-    </style>
+    <style>:root{--dark-grey-color:#666666;--light-primary-color:#c9d1d9;--dark-primary-color:#0d1117}svg:target[style^=&quot;background-color:&quot;]{background-color:var(--dark-primary-color)!important}:target [fill=&quot;#f5f5f5&quot;]{fill:var(--dark-grey-color)}:target [fill=&quot;#000000&quot;]{fill:var(--light-primary-color)}:target [stroke=&quot;#000000&quot;]{stroke:var(--light-primary-color)}:target div[data-drawio-colors*=&quot;color: #000000&quot;] div{color:var(--light-primary-color)!important}</style>
   </defs>
   <path fill="#f5f5f5" d="M37 300 287 50v250Z" pointer-events="all" />
-  <path stroke="#000000" stroke-miterlimit="10" d="M167 330V16.37" pointer-events="stroke" />
-  <path stroke="#000000" fill="#00ff00" stroke-miterlimit="10" d="m167 11.12 3.5 7-3.5-1.75-3.5 1.75Z" pointer-events="all" />
+  <path fill="none" stroke="#000000" stroke-miterlimit="10" d="M167 330V16.37" pointer-events="stroke" />
+  <path fill="#000000" stroke="#000000" stroke-miterlimit="10" d="m167 11.12 3.5 7-3.5-1.75-3.5 1.75Z" pointer-events="all" />
   <path fill="none" stroke="#000000" stroke-miterlimit="10" d="M7 170h313.63" pointer-events="stroke" />
-  <path stroke="#000000" fill="#ff0000" stroke-miterlimit="10" d="m325.88 170-7 3.5 1.75-3.5-1.75-3.5Z" pointer-events="all" />
+  <path fill="#000000" stroke="#000000" stroke-miterlimit="10" d="m325.88 170-7 3.5 1.75-3.5-1.75-3.5Z" pointer-events="all" />
   <path fill="none" d="M147 0h70v30h-70z" pointer-events="all" />
   <switch transform="translate(-.5 -.5)">
     <foreignObject width="100%" height="100%" pointer-events="none" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow:visible;text-align:left">
@@ -31,18 +16,18 @@
         </div>
       </div>
     </foreignObject>
-    <text x="182" y="19" font-family="Helvetica" font-size="12" text-anchor="middle">a+</text>
+    <text x="182" y="19" fill="#000000" font-family="Helvetica" font-size="12" text-anchor="middle">a+</text>
   </switch>
   <path fill="none" d="M287 170h70v30h-70z" pointer-events="all" />
   <switch transform="translate(-.5 -.5)">
     <foreignObject width="100%" height="100%" pointer-events="none" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow:visible;text-align:left">
       <div xmlns="http://www.w3.org/1999/xhtml" style="display:flex;align-items:unsafe center;justify-content:unsafe center;width:68px;height:1px;padding-top:185px;margin-left:288px">
         <div data-drawio-colors="color: #000000;" style="box-sizing:border-box;font-size:0;text-align:center">
-          <div style="display:inline-block;font-size:12px;font-family:Helvetica;color:#gg0000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">a-</div>
+          <div style="display:inline-block;font-size:12px;font-family:Helvetica;color:#000000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">a-</div>
         </div>
       </div>
     </foreignObject>
-    <text x="322" y="189" font-family="Helvetica" font-size="12" text-anchor="middle">a-</text>
+    <text x="322" y="189" fill="#000000" font-family="Helvetica" font-size="12" text-anchor="middle">a-</text>
   </switch>
   <path fill="none" stroke="#000000" stroke-dasharray="3 3" stroke-miterlimit="10" d="M27 310 307 30" pointer-events="stroke" />
   <path fill="none" d="M277 0h70v30h-70z" pointer-events="all" />
@@ -54,7 +39,7 @@
         </div>
       </div>
     </foreignObject>
-    <text x="312" y="19" font-family="Helvetica" font-size="12" text-anchor="middle">a+=a-</text>
+    <text x="312" y="19" fill="#000000" font-family="Helvetica" font-size="12" text-anchor="middle">a+=a-</text>
   </switch>
   <path fill="none" d="M207 230h60v50h-60z" pointer-events="all" />
   <switch transform="translate(-.5 -.5)">
@@ -69,7 +54,7 @@
         </div>
       </div>
     </foreignObject>
-    <text x="237" y="259" font-family="Helvetica" font-size="12" text-anchor="middle">empty inte...</text>
+    <text x="237" y="259" fill="#000000" font-family="Helvetica" font-size="12" text-anchor="middle">empty inte...</text>
   </switch>
   <path fill="none" d="M57 70h60v40H57z" pointer-events="all" />
   <switch transform="translate(-.5 -.5)">
@@ -84,11 +69,6 @@
         </div>
       </div>
     </foreignObject>
-    <text x="87" y="94" font-family="Helvetica" font-size="12" text-anchor="middle">non-empty...</text>
-  </switch>
-  <switch>
-    <a xlink:href="https://www.diagrams.net/doc/faq/svg-export-text-problems" target="_blank" transform="translate(0 -5)">
-      <text x="50%" y="100%" font-size="10" text-anchor="middle">Viewer does not support full SVG 1.1</text>
-    </a>
+    <text x="87" y="94" fill="#000000" font-family="Helvetica" font-size="12" text-anchor="middle">non-empty...</text>
   </switch>
 </svg>

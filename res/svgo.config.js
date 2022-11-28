@@ -63,8 +63,8 @@ function normalizeColors(ast, params, info) {
     "rgb\\(\\s*" + rNumber + rComma + rNumber + rComma + rNumber + "\\s*\\)"
   );
 
-  const rComponent = "[a-fA-F0-9]";
-  const xRGB = new RegExp(`#(${rComponent})(${rComponent})(${rComponent})\b`);
+  const rChan = "a-fA-F0-9";
+  const xRGB = new RegExp(`#([${rChan}])([${rChan}])([${rChan}])\\b`);
 
   /**
    * Convert [r, g, b] to #rrggbb.
@@ -341,7 +341,7 @@ function themeColors(ast, params, info) {
           );
           styles.push(...backgroundColorStyles);
 
-          console.log({styles: styles});
+          // console.log({ styles: styles });
 
           const defs = {
             type: "element",
@@ -351,7 +351,7 @@ function themeColors(ast, params, info) {
               {
                 type: "element",
                 name: "style",
-                attributes: { type: "text/css}" },
+                attributes: { type: "text/css" },
                 children: [
                   {
                     type: "text",

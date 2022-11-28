@@ -7,6 +7,7 @@
 ### 0. Ensure SVGO
 
 Ensure that [svgo](https://github.com/svg/svgo) is available in the system *globally*.
+This step is required to do only once.
 
 ```bash
 npm -g install svgo
@@ -15,7 +16,7 @@ npm -g install svgo
 ### 1. Build Theme-Aware Styles
 
 ```bash
-SVG_INIT_PATH=/home/gchudnov/Projects/mindthegap/res/domain.svg ./svginit.sh
+./svgtheme.sh /path/to/svg.svg
 ```
 
 
