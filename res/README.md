@@ -15,10 +15,12 @@ This step is required to do only once.
 npm -g install svgo
 ```
 
-### 1. Build Theme-Aware Styles
+### 1. Build theme-aware SVG
 
 ```bash
-./svg-theme.sh /path/to/svg.svg
+cd res/
+
+./svg-theme.sh /path/to/svg/file.svg
 ```
 
 After running,
@@ -27,3 +29,8 @@ After running,
 - SVG-file will be overwritten.
 
 To change the theme of an SVG, change `img.src` property by adding and removing `#dark` hash in the url.
+
+## Building Documentation
+
+Follow the instructions located in [doc/README.md](../doc/README.md).
+

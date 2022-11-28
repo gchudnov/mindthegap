@@ -45,11 +45,11 @@ where:
 ### 3. Bundle Icons
 
 ```bash
-export XDOC_SVG_PATH=/path/to/original/icon.svg
+export XDOC_ICON_SVG_PATH=/path/to/original/icon.svg
 npm run icons
 ```
 
-The command, given an input SVG in `XDOC_SVG_PATH`-variable, and create:
+The command, given an input SVG in `XDOC_ICON_SVG_PATH`-variable, will create:
 
 ```text
 /static/icon-512.png
@@ -79,7 +79,7 @@ Bundle theme storage management.
 npm run theme
 ```
 
-The command will take `theme-init.js` and build:
+The command will take `theme-init.js` and produce:
 
 ```text
 /static/theme-init.min.js
@@ -155,7 +155,7 @@ The command takes `search-facade.js` (created with `npm run search`), `theme-swi
 /static/xdoc-bundle.min.js
 ```
 
-That is loaded to the every page.
+This bundle is loaded in the every page.
 
 ## Links
 
