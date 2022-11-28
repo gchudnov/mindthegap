@@ -10,14 +10,18 @@
         :target g[filter="url(#dropShadow)"] { filter: none !important; }
 
         :target [fill="#f5f5f5"] { fill: var(--dark-grey-color); }
+        :target g[fill="#f5f5f5"] text { fill: var(--dark-grey-color); }
+        :target [stroke="#000000"] { stroke: var(--light-primary-color); }
+
+        :target div[data-drawio-colors*="color: #000000"] div { color: var(--light-primary-color) !important; }
 
     </style>
   </defs>
   <path fill="#f5f5f5" d="M37 300 287 50v250Z" pointer-events="all" />
   <path stroke="#000000" stroke-miterlimit="10" d="M167 330V16.37" pointer-events="stroke" />
-  <path stroke="#000000" stroke-miterlimit="10" d="m167 11.12 3.5 7-3.5-1.75-3.5 1.75Z" pointer-events="all" />
+  <path stroke="#000000" fill="#00ff00" stroke-miterlimit="10" d="m167 11.12 3.5 7-3.5-1.75-3.5 1.75Z" pointer-events="all" />
   <path fill="none" stroke="#000000" stroke-miterlimit="10" d="M7 170h313.63" pointer-events="stroke" />
-  <path stroke="#000000" stroke-miterlimit="10" d="m325.88 170-7 3.5 1.75-3.5-1.75-3.5Z" pointer-events="all" />
+  <path stroke="#000000" fill="#ff0000" stroke-miterlimit="10" d="m325.88 170-7 3.5 1.75-3.5-1.75-3.5Z" pointer-events="all" />
   <path fill="none" d="M147 0h70v30h-70z" pointer-events="all" />
   <switch transform="translate(-.5 -.5)">
     <foreignObject width="100%" height="100%" pointer-events="none" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow:visible;text-align:left">
@@ -34,7 +38,7 @@
     <foreignObject width="100%" height="100%" pointer-events="none" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow:visible;text-align:left">
       <div xmlns="http://www.w3.org/1999/xhtml" style="display:flex;align-items:unsafe center;justify-content:unsafe center;width:68px;height:1px;padding-top:185px;margin-left:288px">
         <div data-drawio-colors="color: #000000;" style="box-sizing:border-box;font-size:0;text-align:center">
-          <div style="display:inline-block;font-size:12px;font-family:Helvetica;color:#000000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">a-</div>
+          <div style="display:inline-block;font-size:12px;font-family:Helvetica;color:#gg0000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">a-</div>
         </div>
       </div>
     </foreignObject>

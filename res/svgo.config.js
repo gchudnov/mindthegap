@@ -295,8 +295,8 @@ function themeColors(ast, params, info) {
           const fillStyles = info.colors.fill.flatMap((code) => {
             const inversion = toInverse(code);
             return [
-              `:target [fill=${code}] { fill: var(--${inversion}-color); }`,
-              `:target g[fill=${code}] text { fill: var(--${inversion}-color); }`,
+              `:target [fill="${code}"] { fill: var(--${inversion}-color); }`,
+              `:target g[fill="${code}"] text { fill: var(--${inversion}-color); }`,
             ];
           });
           styles.push(...fillStyles);
@@ -305,7 +305,7 @@ function themeColors(ast, params, info) {
           const strokeStyles = info.colors.stroke.flatMap((code) => {
             const inversion = toInverse(code);
             return [
-              `:target [stroke=${code}] { stroke: var(--${inversion}-color); }`,
+              `:target [stroke="${code}"] { stroke: var(--${inversion}-color); }`,
             ];
           });
           styles.push(...strokeStyles);
