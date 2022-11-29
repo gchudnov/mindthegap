@@ -9,23 +9,23 @@ draft = false
 
 ## Intervals
 
-An **interval** is defined by a pair `{a-, a+}`, whose elements represent a starting `a-` and ending `a+` values on a discrete linear infinite domain `D`.
-Interval is a convex set that contains all elements between `a-` and `a+`.
+An **interval** defined by a pair `{a-, a+}`, that represent a starting `a-` and ending `a+` values on a discrete linear infinite domain `D`.
+Interval is a *convex* set that contains all elements between `a-` and `a+`.
 
 ![domain.svg](./domain.svg)
 
-For each element of the domain, there is only one _successor_ and _predecessor_ and no other elements in-between.
+For each element of the domain `D`, there is only one _successor_ and _predecessor_ and no other elements in-between.
 
 A pair `{a-, a+} ∈ D × D` corresponds to a point on a two-dimensional plane.
 
-Given _successor_, `succ()` and _predecessor_, `pred` concept, we can define intervals as:
+Given _successor_, `succ()` and _predecessor_, `pred()` functions that allow to get the next and the previous element, we can define different types of intervals as closed intervals:
 
 - closed interval `[a-, a+]` is represented as-is `[a-, a+]`
 - right-open interval`[a-, a+)` is represented as `[a-, pred(a+)]`
 - left-open interval `(a-, a+]` is represented as `[succ(a-), a+]`
 - open interval `(a-, a+)` is represented as `[succ(a-), pred(a+)]`
 
-In this way we consider a closed interval as a _canonical_ form.
+We consider an interval to be in a _canonical_ form when it is represented as a closed interval.
 
 ## Non-Empty and Empty
 
