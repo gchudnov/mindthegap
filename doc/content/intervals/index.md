@@ -163,10 +163,16 @@ val theme: Theme    = Theme.default
 
 val diagram = Diagram.make(List(a, b, c, d, e, f), view, canvas)
 
-Diagram.render(diagram, theme.copy(label = Theme.Label.NoOverlap)) // List[String]
+Diagram.render(diagram, theme.copy(label = Theme.Label.NoOverlap))
+// List[String]
 ```
 
-When printed, will produce the output:
+Here,
+- `canvas` specifies the width of the text buffer to draw a diagram on.
+- `view` specify the range to display. If not provided or empty, the range is bounded by the provided intervals.
+- `theme` provides rendering options.
+
+When printed, produces the following output:
 
 ```text
   [***************]
@@ -181,7 +187,9 @@ When printed, will produce the output:
 
 ### Theme
 
-`Theme` has a number of attributes that can specify the way the diagram is displayed:
+`Theme.make()`
+
+`Theme` specifies the way a diagram is displayed:
 
 - `label: Theme.Label` used to set the way labels are displayed:
   - `Theme.Label.None` - draw labels as-is on one line, labels can overlap;
@@ -243,7 +251,7 @@ Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked)) // List[String]
 
 ### View
 
-`View` is used to specify a window to display on a canvas:
+`View` is used to specify a range to display on a canvas:
 
 ```scala
 val a       = Interval.closed[Int](5, 10) // [5, 10]

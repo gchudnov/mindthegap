@@ -33,6 +33,8 @@ object Diagram extends NumericDefaults:
 
   /**
    * Theme
+   * 
+   * Provides rendering options.
    */
   final case class Theme(
     space: Char,
@@ -80,6 +82,8 @@ object Diagram extends NumericDefaults:
 
   /**
    * View
+   * 
+   * Specifies the range to display.
    *
    * TODO: instead of Numeric, we need to use Domain here and replace minus with d(...)
    */
@@ -116,7 +120,10 @@ object Diagram extends NumericDefaults:
         right = None
       )
 
-    def make[T: Numeric: Domain](intervals: List[Interval[T]])(using ordT: Ordering[Value[T]]): View[T] =
+    def make[T: Numeric: Domain](left: Option[T], right: Option[T]): View[T] =
+      View(left = left, right = right)
+
+    private[mtg] def make[T: Numeric: Domain](intervals: List[Interval[T]])(using ordT: Ordering[Value[T]]): View[T] =
       val xs: List[Interval[T]] = intervals.filter(_.nonEmpty) // TODO: If Empty intervals are displayed, we will need to change this condition
 
       val ps = xs.flatMap(toLeftRightValues).filter(_.isFinite)
@@ -153,6 +160,8 @@ object Diagram extends NumericDefaults:
 
   /**
    * Canvas
+   * 
+   * Specifies the width of the text buffer to draw a diagram on.
    */
   final case class Canvas(
     width: Int,
