@@ -89,41 +89,49 @@ Interval.open(1, 5).isProper // true
 Interval.open(1, 5).isPoint  // false
 ```
 
-`a.canonical` - converts an an interval to the canonical form where left and right boundaries on an interval are closed.
+`a.canonical` produces the canonical form of an interval where left and right boundaries are closed.
 
 ```scala
-Interval.open(1, 5).canonical      // (1, 5) -> [2, 4]
-Interval.closed(1, 5).canonical    // [1, 5] -> [1, 5]
+Interval.open(1, 5).canonical   // (1, 5) -> [2, 4]
+Interval.closed(1, 5).canonical // [1, 5] -> [1, 5]
 ```
 
-`a.normalize` can be used to optimize an interval, reducing the amoung of _successors_ (`succ`) and _predecessors_ `pred`, that might be produced by some of the algorithms. The method is rarely needed to be called explicitly.
+`a.normalize` optimizes the internal representation of an interval, reducing the amount of _succ()_ and _pred()_ markers.
 
 ```scala
-Interval.make(Mark.pred(Mark.pred(1)), Mark.at(5)).normalize // [pred(pred(1)), 5] -> [-1, 5]
-Interval.make(Mark.succ(Mark.succ(1)), Mark.at(5)).normalize // [succ(succ(1)), 5] -> (2, 5]
+Interval.make(Mark.pred(Mark.pred(1)), Mark.at(5)).normalize
+// [pred(pred(1)), 5] -> [-1, 5]
+
+Interval.make(Mark.succ(Mark.succ(1)), Mark.at(5)).normalize
+// [succ(succ(1)), 5] -> (2, 5]
 ```
 
-`a.swap` is used to swap left and right boudary, e.g. to convert an empty to non-empty interval or vice versa.
+`a.swap` swaps left and right boundary, e.g. to convert an _empty_ to _non-empty_ interval or vice versa.
 
 ```scala
 Interval.closed(1, 5).swap // [1, 5] -> [5, 1]
 ```
 
-`a.inflate` can be used to inflate an interval, extending its size. In addition there are methods `.inflateLeft` and `.inflateRight` that can be applied to the left and right ends of an interval.
+`a.inflate` inflates an interval, extending its size.
 
 ```scala
 Interval.closed(1, 2).inflate // [1, 2] -> [0, 3]
 ```
 
-`a.deflate` can be used to deflate an interval, reducing its size. In addition there are methods `.deflateLeft` and `.deflateRight` that can be applied to the left and right ends of an interval.
+In addition, `a.inflateLeft` and `a.inflateRight` methods extend left and right boundaries of an interval.
+
+
+`a.deflate` deflates an interval, reducing its size. 
 
 ```scala
 Interval.closed(1, 2).deflate // [1, 2] -> [2, 1]
 ```
 
+In addition, `a.deflateLeft` and `a.deflateRight` methods shrink left and right boundaries of an interval.
+
 ## Show
 
-To pretty-print an interval, `Show` can be used:
+Use `Show` given import to pretty-print an interval:
 
 ```scala
 import com.github.gchudnov.mtg.Show.given
