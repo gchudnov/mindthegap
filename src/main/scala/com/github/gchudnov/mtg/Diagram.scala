@@ -33,7 +33,7 @@ object Diagram extends NumericDefaults:
 
   /**
    * Theme
-   * 
+   *
    * Provides rendering options.
    */
   final case class Theme(
@@ -82,7 +82,7 @@ object Diagram extends NumericDefaults:
 
   /**
    * View
-   * 
+   *
    * Specifies the range to display.
    *
    * TODO: instead of Numeric, we need to use Domain here and replace minus with d(...)
@@ -114,7 +114,7 @@ object Diagram extends NumericDefaults:
 
   object View:
 
-    def empty[T: Numeric]: View[T] =
+    def default[T: Numeric]: View[T] =
       View(
         left = None,
         right = None
@@ -160,7 +160,7 @@ object Diagram extends NumericDefaults:
 
   /**
    * Canvas
-   * 
+   *
    * Specifies the width of the text buffer to draw a diagram on.
    */
   final case class Canvas(
@@ -583,15 +583,18 @@ object Diagram extends NumericDefaults:
   def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
     make(intervals, view = view, canvas = canvas, annotations = List.empty[String])
 
-  def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
-    make(intervals, view = View.empty[T], canvas = canvas, annotations = List.empty[String])
+  def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T])(using Ordering[Mark[T]]): Diagram =
+    make(intervals, view = view, canvas = Canvas.default, annotations = List.empty[String])
 
-  def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas, annotations: List[String])(using Ordering[Mark[T]]): Diagram =
-    make(intervals, view = View.empty[T], canvas = canvas, annotations = annotations)
+  def make[T: Domain: Numeric](intervals: List[Interval[T]])(using Ordering[Mark[T]]): Diagram =
+    make(intervals, view = View.default[T], canvas = Canvas.default, annotations = List.empty[String])
+
+  def make[T: Domain: Numeric](intervals: List[Interval[T]], annotations: List[String])(using Ordering[Mark[T]]): Diagram =
+    make(intervals, view = View.default[T], canvas = Canvas.default, annotations = annotations)
 
   /**
    * Render the provided Diagram
    */
-  def render(d: Diagram, theme: Theme): List[String] =
+  def render(d: Diagram, theme: Theme = Theme.default): List[String] =
     val r = Renderer.make(theme)
     r.render(d)

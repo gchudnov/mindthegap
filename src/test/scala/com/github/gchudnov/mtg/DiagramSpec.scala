@@ -14,7 +14,7 @@ import java.time.Instant
 final class DiagramSpec extends TestSpec:
 
   private val canvas: Canvas  = Canvas.make(40, 2)
-  private val view: View[Int] = View.empty[Int]
+  private val view: View[Int] = View.default[Int]
   private val theme: Theme    = Theme.default
 
   private val themeNoLegend: Theme = theme.copy(legend = false)
@@ -244,7 +244,7 @@ final class DiagramSpec extends TestSpec:
 
         val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
 
-        val odtView: View[OffsetDateTime] = View.empty[OffsetDateTime]
+        val odtView: View[OffsetDateTime] = View.default[OffsetDateTime]
 
         val actual = Diagram.make[OffsetDateTime](List(a), odtView, canvas)
         val expected = Diagram(
@@ -827,6 +827,31 @@ final class DiagramSpec extends TestSpec:
         actual mustBe expected
       }
 
+      "display with default settings" in {
+        val a = Interval.closed(100, 500)
+        val b = Interval.closed(150, 600)
+        val c = Interval.closed(200, 700)
+        val d = Interval.closed(250, 800)
+        val e = Interval.closed(300, 900)
+        val f = Interval.closed(600, 1000)
+
+        val diagram = Diagram.make(List(a, b, c, d, e, f))
+
+        val actual = Diagram.render(diagram)
+        val expected = List(
+          "  [***************]                      | [100,500]",
+          "    [****************]                   | [150,600]",
+          "      [******************]               | [200,700]",
+          "        [********************]           | [250,800]",
+          "          [**********************]       | [300,900]",
+          "                     [***************]   | [600,1000]",
+          "--+-+-+-+-+-------+--+---+---+---+---+-- |",
+          " 100 200 300     500    700 800 900      |"
+        )
+
+        actual mustBe expected
+      }
+
       "display overlapping intervals with overlapping labels (Theme.Label.None)" in {
         val a = Interval.closed(100, 500)
         val b = Interval.closed(150, 600)
@@ -976,7 +1001,7 @@ final class DiagramSpec extends TestSpec:
 
         val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
 
-        val diagram = Diagram.make[OffsetDateTime](List(a), canvas)
+        val diagram = Diagram.make[OffsetDateTime](List(a))
 
         val actual = Diagram.render(diagram, themeNoLegend.copy(label = Theme.Label.Stacked))
         val expected = List(
@@ -993,7 +1018,7 @@ final class DiagramSpec extends TestSpec:
 
         val a = Interval.closed(Instant.parse("2020-07-02T12:34:00Z"), Instant.parse("2021-07-02T12:34:00Z"))
 
-        val diagram = Diagram.make[Instant](List(a), canvas)
+        val diagram = Diagram.make[Instant](List(a))
 
         val actual = Diagram.render(diagram, themeNoLegend.copy(label = Theme.Label.Stacked))
         val expected = List(
@@ -1014,8 +1039,7 @@ final class DiagramSpec extends TestSpec:
 
         val c = a.intersection(b)
 
-        val canvas: Canvas = Canvas.make(40)
-        val diagram        = Diagram.make(List(a, b, c), canvas)
+        val diagram = Diagram.make(List(a, b, c))
 
         val actual = Diagram.render(diagram, theme)
 
@@ -1036,8 +1060,7 @@ final class DiagramSpec extends TestSpec:
 
         val c = a.span(b)
 
-        val canvas: Canvas = Canvas.make(40)
-        val diagram        = Diagram.make(List(a, b, c), canvas)
+        val diagram = Diagram.make(List(a, b, c))
 
         val actual = Diagram.render(diagram, theme)
 
@@ -1058,8 +1081,7 @@ final class DiagramSpec extends TestSpec:
 
         val c = a.span(b)
 
-        val canvas: Canvas = Canvas.make(40)
-        val diagram        = Diagram.make(List(a, b, c), canvas)
+        val diagram = Diagram.make(List(a, b, c))
 
         val actual = Diagram.render(diagram, theme)
 
@@ -1080,8 +1102,7 @@ final class DiagramSpec extends TestSpec:
 
         val c = a.union(b)
 
-        val canvas: Canvas = Canvas.make(40)
-        val diagram        = Diagram.make(List(a, b, c), canvas)
+        val diagram = Diagram.make(List(a, b, c))
 
         val actual = Diagram.render(diagram, theme)
 
@@ -1102,8 +1123,7 @@ final class DiagramSpec extends TestSpec:
 
         val c = a.union(b)
 
-        val canvas: Canvas = Canvas.make(40)
-        val diagram        = Diagram.make(List(a, b, c), canvas)
+        val diagram = Diagram.make(List(a, b, c))
 
         val actual = Diagram.render(diagram, theme)
 
@@ -1124,8 +1144,7 @@ final class DiagramSpec extends TestSpec:
 
         val c = a.gap(b)
 
-        val canvas: Canvas = Canvas.make(40)
-        val diagram        = Diagram.make(List(a, b, c), canvas)
+        val diagram = Diagram.make(List(a, b, c))
 
         val actual = Diagram.render(diagram, theme)
 
@@ -1146,8 +1165,7 @@ final class DiagramSpec extends TestSpec:
 
         val c = a.gap(b).canonical
 
-        val canvas: Canvas = Canvas.make(40)
-        val diagram        = Diagram.make(List(a, b, c), canvas)
+        val diagram = Diagram.make(List(a, b, c))
 
         val actual = Diagram.render(diagram, theme)
 
@@ -1168,8 +1186,7 @@ final class DiagramSpec extends TestSpec:
 
         val c = a.minus(b).canonical
 
-        val canvas: Canvas = Canvas.make(40)
-        val diagram        = Diagram.make(List(a, b, c), canvas)
+        val diagram = Diagram.make(List(a, b, c))
 
         val actual = Diagram.render(diagram, theme)
 
@@ -1190,8 +1207,7 @@ final class DiagramSpec extends TestSpec:
 
         val c = a.minus(b).canonical
 
-        val canvas: Canvas = Canvas.make(40)
-        val diagram        = Diagram.make(List(a, b, c), canvas)
+        val diagram = Diagram.make(List(a, b, c))
 
         val actual = Diagram.render(diagram, theme)
 
@@ -1212,8 +1228,7 @@ final class DiagramSpec extends TestSpec:
 
         val cs = Interval.minus(a, b).map(_.canonical)
 
-        val canvas: Canvas = Canvas.make(40)
-        val diagram        = Diagram.make(List(a, b) ++ cs, canvas, List("a", "b", "c1", "c2"))
+        val diagram = Diagram.make(List(a, b) ++ cs, view, canvas, List("a", "b", "c1", "c2"))
 
         val actual = Diagram.render(diagram, theme)
 

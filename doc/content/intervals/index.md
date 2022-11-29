@@ -120,8 +120,7 @@ Interval.closed(1, 2).inflate // [1, 2] -> [0, 3]
 
 In addition, `a.inflateLeft` and `a.inflateRight` methods extend left and right boundaries of an interval.
 
-
-`a.deflate` deflates an interval, reducing its size. 
+`a.deflate` deflates an interval, reducing its size.
 
 ```scala
 Interval.closed(1, 2).deflate // [1, 2] -> [2, 1]
@@ -157,35 +156,34 @@ val d = Interval.closed(250, 800)
 val e = Interval.closed(300, 900)
 val f = Interval.closed(600, 1000)
 
-val canvas: Canvas  = Canvas.make(40)
-val view: View[Int] = View.empty[Int]
-val theme: Theme    = Theme.default
+val diagram = Diagram.make(List(a, b, c, d, e, f))
 
-val diagram = Diagram.make(List(a, b, c, d, e, f), view, canvas)
-
-Diagram.render(diagram, theme.copy(label = Theme.Label.NoOverlap))
+Diagram.render(diagram)
 // List[String]
 ```
-
-Here,
-- `canvas` specifies the width of the text buffer to draw a diagram on.
-- `view` specify the range to display. If not provided or empty, the range is bounded by the provided intervals.
-- `theme` provides rendering options.
 
 When printed, produces the following output:
 
 ```text
-  [***************]
-    [****************]
-      [******************]
-        [********************]
-          [**********************]
-                     [***************]
---+-+-+-+-+-------+--+---+---+---+---+--
- 100 200 300     500    700 800 900
+  [***************]                      | [100,500]
+    [****************]                   | [150,600]
+      [******************]               | [200,700]
+        [********************]           | [250,800]
+          [**********************]       | [300,900]
+                     [***************]   | [600,1000]
+--+-+-+-+-+-------+--+---+---+---+---+-- |
+ 100 200 300     500    700 800 900      |
+```
+
+When creating a diagram, it is possible to adjust it by specifying `Theme`, `View` and `Canvas`:
+
+```scala
+Diagram.make(intervals: List[Interval[T]], view: View[T], canvas: Canvas, annotations: List[String])
 ```
 
 ### Theme
+
+
 
 `Theme.make()`
 
@@ -248,6 +246,14 @@ Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked)) // List[String]
 --+----------------------------------+--
 2020-07-02T12:34Z      2021-07-02T12:34Z
 ```
+
+TODO: rephrase it:
+////////////
+Here,
+- `canvas` specifies the width of the text buffer to draw a diagram on.
+- `view` specify the range to display. If not provided, the range is bounded by the provided intervals.
+- `theme` provides rendering options.
+////////////
 
 ### View
 
