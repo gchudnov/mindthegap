@@ -373,7 +373,7 @@ final class DiagramSpec extends TestSpec:
           actual mustBe expected
         }
 
-        "draw non-overlapping and non-meetinglabels on one line" in {
+        "draw non-overlapping and non-meeting labels on one line" in {
           val ls = List(Label(2, "5"), Label(36, "10"))
 
           val r = new Diagram.BasicRenderer(stackedLabelTheme)
@@ -681,13 +681,13 @@ final class DiagramSpec extends TestSpec:
         val diagram = Diagram.make(List(a), view, canvas)
 
         val actual = Diagram.render(diagram, themeNoLegend)
-        val exptected = List(
+        val expected = List(
           "                    [******************)",
           "--------------------+------------------+",
           "                    5                 +∞"
         )
 
-        actual mustBe exptected
+        actual mustBe expected
       }
 
       "display a rightOpen interval" in {

@@ -89,7 +89,7 @@ final class DuringSpec extends TestSpec:
         }
       }
 
-      "valid in specal cases" in {
+      "valid in special cases" in {
         // Empty
         Interval.empty[Int].during(Interval.open(5, 10)) mustBe (false)
         Interval.empty[Int].during(Interval.point(0)) mustBe (false)

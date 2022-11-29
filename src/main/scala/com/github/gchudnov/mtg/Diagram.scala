@@ -162,7 +162,7 @@ object Diagram extends NumericDefaults:
     val right: Int = width - 1 // end of the canvas, inclusive
 
     val first: Int = left + padding  // first offset for non-inf value
-    val last: Int  = right - padding // laft offset for non-inf value
+    val last: Int  = right - padding // last offset for non-inf value
 
     val size: Int = last - first
 
@@ -173,7 +173,7 @@ object Diagram extends NumericDefaults:
       val p = Canvas.align(x.toDouble - (text.size.toDouble / 2.0))
       val q = p + text.size
 
-      // if label just slighly out of the bounds, make it visible
+      // if label just slightly out of the bounds, make it visible
       val x1 =
         if (p < 0 && isIn(x)) then 0
         else if (q >= width && isIn(x)) then width - text.size
@@ -224,7 +224,7 @@ object Diagram extends NumericDefaults:
      * @param width
      *   width of the canvas
      * @param padding
-     *   left and right padding betweein -inf and +inf and value on a canvas
+     *   left and right padding between -inf and +inf and value on a canvas
      * @return
      *   canvas
      */
@@ -245,9 +245,9 @@ object Diagram extends NumericDefaults:
 
   object Translator:
     def make[T: Numeric: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Translator[T] =
-      new BasicTranslater[T](view, canvas)
+      new BasicTranslator[T](view, canvas)
 
-  final class BasicTranslater[T: Numeric: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]) extends Translator[T]:
+  final class BasicTranslator[T: Numeric: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]) extends Translator[T]:
 
     private val ok: Option[Double] =
       view.size.map(vsz => canvas.size.toDouble / summon[Numeric[T]].toDouble(vsz))
@@ -259,7 +259,7 @@ object Diagram extends NumericDefaults:
         case Value.InfPos =>
           canvas.right
         case Value.Finite(x) =>
-          val k    = ok.get        // NOTE: it is not possible to have k indefined if we have at least one Finite point
+          val k    = ok.get        // NOTE: it is not possible to have k undefined if we have at least one Finite point
           val numT = summon[Numeric[T]]
           val left = view.left.get // NOTE: .get is safe, otherwise `k` would be None
           val dx   = numT.minus(x, left)
@@ -415,21 +415,21 @@ object Diagram extends NumericDefaults:
       val addLegends     = theme.legend && legends.exists(_.nonEmpty)
       val addAnnotations = theme.annotations && annotations.exists(_.nonEmpty)
 
-      // bordedered chart
-      val bordered =
+      // with borders
+      val withBorder =
         if (addLegends || addAnnotations) then chart.map(line => if line.nonEmpty then s"${line}${theme.space}${theme.border}" else line)
         else chart
 
       // with legend
-      val legended =
-        if addLegends then bordered.zip(legends).map { case (line, legend) => if (line.nonEmpty && legend.nonEmpty) then s"${line}${theme.space}${legend}" else line }
-        else bordered
+      val withLegend =
+        if addLegends then withBorder.zip(legends).map { case (line, legend) => if (line.nonEmpty && legend.nonEmpty) then s"${line}${theme.space}${legend}" else line }
+        else withBorder
 
       // with annotations
       val annotated =
         if addAnnotations then
-          val maxLineSize = legended.map(_.size).maxOption.getOrElse(0)
-          legended.zip(annotations).map { case (line, annotation) =>
+          val maxLineSize = withLegend.map(_.size).maxOption.getOrElse(0)
+          withLegend.zip(annotations).map { case (line, annotation) =>
             if (line.nonEmpty && annotation.nonEmpty) then
               val padSize    = maxLineSize - line.size
               val paddedLine = padRight(padSize, theme.space)(line)
@@ -437,7 +437,7 @@ object Diagram extends NumericDefaults:
               s"${paddedLine}${separator}${theme.space}${annotation}"
             else line
           }
-        else legended
+        else withLegend
 
       annotated.filter(_.nonEmpty)
 
@@ -487,8 +487,8 @@ object Diagram extends NumericDefaults:
           val views = acc._1
           val last  = acc._2
 
-          val indides = last.indices
-          val i       = indides.find(i => (p > last(i) && q <= width))
+          val indices = last.indices
+          val i       = indices.find(i => (p > last(i) && q <= width))
 
           i match
             case None =>
@@ -539,7 +539,7 @@ object Diagram extends NumericDefaults:
     val effectiveView = if view.isEmpty then View.make(intervals) else view
     val translator    = Translator.make(effectiveView, canvas)
 
-    // if view is specified, provide labels and ticks to mark the boundries of the view
+    // if view is specified, provide labels and ticks to mark the boundaries of the view
     val (viewTicks, viewLabels) = if view.nonEmpty then
       val vi = view.toInterval
       val vs = translator.translate(vi)

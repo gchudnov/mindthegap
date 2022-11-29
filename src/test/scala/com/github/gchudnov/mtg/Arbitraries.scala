@@ -25,7 +25,7 @@ object Arbitraries:
   val intProb127: IntProb = IntProb(empty = 1, point = 2, proper = 7)
 
   /**
-   * Arguments to contruct an integer interval
+   * Arguments to construct an integer interval
    */
   case class IntArgs(left: Mark[Int], right: Mark[Int])
 
@@ -37,7 +37,7 @@ object Arbitraries:
     yield (x, x)
 
   /**
-   * Generate a tuple (a, b), whre a < b. | Proper
+   * Generate a tuple (a, b), where a < b. | Proper
    */
   private def genIntTupleLt(using ir: IntRange): Gen[(Int, Int)] =
     for
@@ -46,7 +46,7 @@ object Arbitraries:
     yield (x, y)
 
   /**
-   * Generate a tuple (a, b), whre a <= b. | Point, Proper
+   * Generate a tuple (a, b), where a <= b. | Point, Proper
    */
   private def genIntTupleLtEq(using ir: IntRange): Gen[(Int, Int)] =
     for
@@ -64,7 +64,7 @@ object Arbitraries:
     yield (x, y)
 
   /**
-   * Generate a tuple (a, b) where a and b are random. | Empty, Degenrate or Proper
+   * Generate a tuple (a, b) where a and b are random. | Empty, Degenerate or Proper
    */
   private def genIntTupleAny(using ir: IntRange): Gen[(Int, Int)] =
     for

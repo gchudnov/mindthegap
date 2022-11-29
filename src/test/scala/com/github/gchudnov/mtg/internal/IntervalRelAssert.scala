@@ -47,7 +47,7 @@ trait IntervalRelAssert:
   )
 
   /**
-   * Finds relations two itervals are satisfying
+   * Finds relations two iNtervals are satisfying
    */
   def findRelations[T](xx: Interval[T], yy: Interval[T])(using Ordering[Mark[T]]): Set[Rel] =
     relFnMap[T].foldLeft(Set.empty[Rel]) { case (acc, (k, fn)) =>

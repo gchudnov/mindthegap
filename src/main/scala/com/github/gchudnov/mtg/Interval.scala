@@ -31,7 +31,7 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
     ordM.equiv(left, right)
 
   /**
-   * Returns true if the itnerval is proper and false otherwise.
+   * Returns true if the interval is proper and false otherwise.
    */
   def isProper(using ordM: Ordering[Mark[T]]): Boolean =
     ordM.lt(left, right)

@@ -55,10 +55,10 @@ final class MinusSpec extends TestSpec:
           yy.isEmpty mustBe (true)
 
           val actual   = xx.minus(yy).canonical
-          val expedted = xx.canonical
+          val expected = xx.canonical
 
           actual.isEmpty mustBe false
-          actual mustBe (expedted)
+          actual mustBe (expected)
         }
       }
 

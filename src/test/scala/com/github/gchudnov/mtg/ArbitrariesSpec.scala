@@ -8,7 +8,7 @@ final class ArbitrariesSpec extends TestSpec:
   given intRange: IntRange = intRange5
   given intProb: IntProb   = intProb127
 
-  "Arbitraties" when {
+  "Arbitraries" when {
 
     "genEmptyIntArgs" should {
       "a.isEmpty == true" in {
