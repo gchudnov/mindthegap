@@ -36,8 +36,8 @@ A non-empty interval is _proper_ if left boundary is less than the right boundar
 On the diagram above, _proper_ intervals represented as points _above_ the line `a+ = a-`, _point_ intervals
 are located on the line `a+ = a-` and all empty intervals are _below_ the line `a+ = a-`.
 
-- empty : `a- > a+`, `[a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅`
-- point : `a- = a+`, `{x} = {x | a- = x = a+}`
+- empty : `a- > a+`
+- point : `{x} = {x | a- = x = a+}`
 - proper : `a- < a+`
   - bounded
     - open : `(a-, a+) = {x | a- < x < a+}`
@@ -50,11 +50,11 @@ are located on the line `a+ = a-` and all empty intervals are _below_ the line `
   - left-unbounded, right-bounded
     - right-open : `(-∞, a+) = {x | x < a+}`
     - right-closed : `(-∞, a+] = {x | x < a+}`
-  - unbounded : `(-∞, +∞) = R`
+  - unbounded : `(-∞, +∞)`
 
 ## Creation
 
-To create an interval one of the factory functions can be used:
+To create an interval one of the factory methods can be used:
 
 ```scala
 import com.github.gchudnov.mtg.*
@@ -81,11 +81,12 @@ Interval.make(Mark.succ(3), Mark.pred(5)) // (3, 5)
 
 ## Operations
 
-`a.isEmpty`, `a.isPoint`, `a.isProper` (`a.nonEmpty`, `a.nonPoint`, `a.nonProper`) are used to check the type of an interval.
+`a.isEmpty`, `a.isPoint`, `a.isProper` (`a.nonEmpty`, `a.nonPoint`, `a.nonProper`) can be used to check the type of an interval.
 
 ```scala
 Interval.open(1, 5).isEmpty  // false
 Interval.open(1, 5).isProper // true
+Interval.open(1, 5).isPoint  // false
 ```
 
 `a.canonical` - converts an an interval to the canonical form where left and right boundaries on an interval are closed.
