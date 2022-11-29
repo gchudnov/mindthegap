@@ -10,7 +10,7 @@ draft = false
 ## Intervals
 
 An **interval** defined by a pair `{a-, a+}`, that represent a starting `a-` and ending `a+` values on a discrete linear infinite domain `D`.
-Interval is a *convex* set that contains all elements between `a-` and `a+`.
+Interval is a _convex_ set that contains all elements between `a-` and `a+`.
 
 ![domain.svg](./domain.svg)
 
@@ -27,27 +27,18 @@ Given _successor_, `succ()` and _predecessor_, `pred()` functions that allow to 
 
 We consider an interval to be in a _canonical_ form when it is represented as a closed interval.
 
-## Non-Empty and Empty
-
-A pair `{a-, a+} ∈ D × D` represents a non-empty interval if `a- ≤ a+`; otherwise, the interval is empty.
-If left boundary `a-` is equal to the right boundary, `a+`, we call it as a _degenerate_ interval or a _point_.
-
-One can distinguish an _empty_, _point_ and _proper_ intervals:
-
-- A _proper_ interval is an ordered pair of elements where the first element is less than the second: `a- < a+`.
-- A _point_ is a degenerate interval where first element is equal to the second: `a- = a+`.
-- An _empty_ interval is the one where first element is greater than the second: `a- > a+`.
-
-Looking at the two-dimensional plane on the diagram above, _proper_ intervals correspond the are above the line `a+ = a-`, _point_ intervals
-are located on the line `a+ = a-` and all empty intervals are below the line `a+ = a-`.
-
 ## Classification
 
-Intervals could be further classified in the following way:
+A pair `{a-, a+}` represents a _non-empty_ interval if `a- ≤ a+`; otherwise, the interval is _empty_.
+If left boundary `a-` is equal to the right boundary, `a+`, we call it as a _degenerate_ interval or a _point_.
+A non-empty interval is _proper_ if left boundary is less than the right boundary `a- < a+`.
 
-- empty : `[a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅`
-- point : `{x} = {x | a- = x = a+}`
-- proper
+On the diagram above, _proper_ intervals represented as points _above_ the line `a+ = a-`, _point_ intervals
+are located on the line `a+ = a-` and all empty intervals are _below_ the line `a+ = a-`.
+
+- empty : `a- > a+`, `[a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅`
+- point : `a- = a+`, `{x} = {x | a- = x = a+}`
+- proper : `a- < a+`
   - bounded
     - open : `(a-, a+) = {x | a- < x < a+}`
     - closed : `[a-, a+] = {x | a- <= x <= a+}`
