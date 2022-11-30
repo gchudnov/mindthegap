@@ -81,6 +81,8 @@ Interval.make(Mark.succ(3), Mark.pred(5)) // (3, 5)
 
 ## Operations
 
+Given an interval `a`,
+
 `a.isEmpty`, `a.isPoint`, `a.isProper` (`a.nonEmpty`, `a.nonPoint`, `a.nonProper`) can be used to check the type of an interval.
 
 ```scala
@@ -96,14 +98,14 @@ Interval.open(1, 5).canonical   // (1, 5) -> [2, 4]
 Interval.closed(1, 5).canonical // [1, 5] -> [1, 5]
 ```
 
-`a.normalize` optimizes the internal representation of an interval, reducing the amount of _succ()_ and _pred()_ markers.
+`a.normalize` optimizes the internal representation of an interval, reducing the amount of consecutive _succ()_ and _pred()_ markers.
 
 ```scala
 Interval.make(Mark.pred(Mark.pred(1)), Mark.at(5)).normalize
 // [pred(pred(1)), 5] -> [-1, 5]
 
 Interval.make(Mark.succ(Mark.succ(1)), Mark.at(5)).normalize
-// [succ(succ(1)), 5] -> (2, 5]
+// [succ(succ(1)), 5] -> [succ(2), 5] = (2, 5]
 ```
 
 `a.swap` swaps left and right boundary, e.g. to convert an _empty_ to _non-empty_ interval or vice versa.
@@ -130,7 +132,7 @@ In addition, `a.deflateLeft` and `a.deflateRight` methods shrink left and right 
 
 ## Show
 
-Use `Show` given import to pretty-print an interval:
+Import `Show.given` to pretty-print an interval:
 
 ```scala
 import com.github.gchudnov.mtg.Show.given
@@ -149,79 +151,126 @@ c.show // [-∞,2)
 A collection of intervals can be displayed:
 
 ```scala
-val a = Interval.closed(100, 500)
-val b = Interval.closed(150, 600)
-val c = Interval.closed(200, 700)
-val d = Interval.closed(250, 800)
-val e = Interval.closed(300, 900)
-val f = Interval.closed(600, 1000)
+val a = Interval.closed(3, 7)
+val b = Interval.closed(10, 15)
+val c = Interval.closed(12, 20)
 
-val diagram = Diagram.make(List(a, b, c, d, e, f))
+val diagram = Diagram.make(List(a, b, c))
 
 Diagram.render(diagram)
 // List[String]
 ```
 
-When printed, produces the following output:
+When printed, it produces the following output:
 
 ```text
-  [***************]                      | [100,500]
-    [****************]                   | [150,600]
-      [******************]               | [200,700]
-        [********************]           | [250,800]
-          [**********************]       | [300,900]
-                     [***************]   | [600,1000]
---+-+-+-+-+-------+--+---+---+---+---+-- |
- 100 200 300     500    700 800 900      |
+  [*******]                              | [3,7]
+                [**********]             | [10,15]
+                     [***************]   | [12,20]
+--+-------+-----+----+-----+---------+-- |
+  3       7    10   12    15        20   |
 ```
 
-When creating a diagram, it is possible to adjust it by specifying `Theme`, `View` and `Canvas`:
+Adjust the output by specifying custom `View`, `Canvas` and `annotations` during diagram creation and `Theme` when rendering:
 
 ```scala
-Diagram.make(intervals: List[Interval[T]], view: View[T], canvas: Canvas, annotations: List[String])
+Diagram.make(
+  intervals: List[Interval[T]],
+  view: View[T],            // View.default[T]
+  canvas: Canvas,           // Canvas.default
+  annotations: List[String] // List.empty[String]
+): Diagram
+
+Diagram.render(
+  d: Diagram,
+  theme: Theme // Theme.default
+): List[String]
+```
+
+### View
+
+`View` is used to specify a range `[from, to]` to display. When not explicitly provided, a view that includes all of the intervals is used.
+
+For the example above, when view `[8, 17]` is specified:
+
+```scala
+val view    = View(Some(8), Some(17))
+val diagram = Diagram.make(List(a, b, c), view)
+```
+
+it will produce the following diagram when rendering:
+
+```text
+                                         | [3,7]
+          [******************]           | [10,15]
+                  [********************* | [12,20]
+--+-------+-------+----------+-------+-- |
+  8      10      12         15      17   |
+```
+
+Here we can see that the interval `[3,7]` is not in the view and only part of the interval `[12,20]` is displayed.
+
+### Canvas
+
+`Canvas` specifies the *width* of the text buffer to draw a diagram on. When not provided, a default canvas of width 40 is used.
+
+For example, when a custom canvas of width 20 is used:
+
+```scala
+val canvas = Canvas.make(20)
+val diagram = Diagram.make(List(a, b, c), canvas)
+```
+
+will produce:
+
+```text
+  [***]              | [3,7]
+        [****]       | [10,15]
+          [******]   | [12,20]
+--+---+-+-+--+---+-- |
+  3   7  12 15  20   |
 ```
 
 ### Theme
 
+A custom theme could be specified when rendering a diagram and used to set the interval styles, specify whether to show legend, annotations and how to display labels.
 
-
-`Theme.make()`
-
-`Theme` specifies the way a diagram is displayed:
-
-- `label: Theme.Label` used to set the way labels are displayed:
-  - `Theme.Label.None` - draw labels as-is on one line, labels can overlap;
-  - `Theme.Label.NoOverlap` - draw sorted labels that are non-overlapping, some of the labels might be skipped (default);
-  - `Theme.Label.Stacked` - draw all labels, but stack them onto multiple lines;
-- `legend: Boolean` used to specify whether to display a legend or not (default: true)
-
-When legend is specified:
+For example, on the diagram above, not all labels are visible, since it is not enough place on one line to display them non-overlapping.
+To display all labels, a custom theme can be applied:
 
 ```scala
-val a = Interval.closed(1, 5)
-val b = Interval.closed(5, 10)
-val c = Interval.rightClosed(15)
-val d = Interval.leftOpen(2)
-
-val canvas: Canvas  = Canvas.make(40)
-val view: View[Int] = View.empty[Int]
-val theme: Theme    = Theme.default
-
-val diagram = Diagram.make(List(a, b, c, d), view, canvas)
-
-Diagram.render(diagram, theme.copy(legend = true)) // List[String]
+val theme = Theme.default.copy(label = Theme.Label.Stacked)
+Diagram.render(diagram, theme)
 ```
 
-It will produce the following output:
+that produces the following output:
 
 ```text
-  [*********]                            | [1,5]
-            [************]               | [5,10]
-(************************************]   | (-∞,15]
-     (*********************************) | (2,+∞)
-+-+--+------+------------+-----------+-+ |
--∞1  2      5           10          15+∞ |
+  [***]              | [3,7]
+        [****]       | [10,15]
+          [******]   | [12,20]
+--+---+-+-+--+---+-- |
+  3   7  12 15  20   |
+       10            |
 ```
+
+Here we can see that labels are displayed on several lines, including the missing label, `10`.
+
+## Domain
+
+To work with intervals, a `given` instance of `Domain[T]` is needed.
+
+`Domain[T]` is defined as:
+
+```scala
+trait Domain[T]:
+  def succ(x: T): T
+  def pred(x: T): T
+```
+
+where `succ(x)` and `pred(x)` are used to get the next and the previous value for `x`.
+
+By default `Domain[T]` is implemented for `Integral[T]` types (e.g. `Int`, `Long`), `OffsetDateTime`, and `Instant`.
 
 When intervals are using `OffsetDateTime` or `Instant`, import `Diagram.given` to make a diagram:
 
@@ -246,65 +295,6 @@ Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked)) // List[String]
 --+----------------------------------+--
 2020-07-02T12:34Z      2021-07-02T12:34Z
 ```
-
-TODO: rephrase it:
-////////////
-Here,
-- `canvas` specifies the width of the text buffer to draw a diagram on.
-- `view` specify the range to display. If not provided, the range is bounded by the provided intervals.
-- `theme` provides rendering options.
-////////////
-
-### View
-
-`View` is used to specify a range to display on a canvas:
-
-```scala
-val a       = Interval.closed[Int](5, 10) // [5, 10]
-
-val canvas: Canvas  = Canvas.make(40)                       // width 40 chars
-val view: View[Int] = View(left = Some(0), right = Some(7)) // [0, 7]
-val theme: Theme    = Theme.default
-
-val diagram = Diagram.make(List(a), view, canvas)
-
-Diagram.render(diagram, theme) // List[String]
-```
-
-It will display a view `[0, 7]` into an interval `[5, 10]` on a canvas of width `40`:
-
-```text
-                           [************
---+------------------------+---------+--
-  0                        5         7
-```
-
-Here we can see that only a portion of a closed interval `[5, 10]` is displayed, since the right boundary of the view is `7`.
-
-### Canvas
-
-`Canvas` is used to specify the width of the text buffer to draw a diagram on.
-
-```scala
-val canvas1 = Canvas.default   // creates a default canvas (width: 40)
-val canvas2 = Canvas.make(100) // creates a canvas of width 100
-```
-
-## Domain
-
-To work with intervals, a `given` instance of `Domain[T]` is needed.
-
-`Domain[T]` is defined as:
-
-```scala
-trait Domain[T]:
-  def succ(x: T): T
-  def pred(x: T): T
-```
-
-where `succ(x)` and `pred(x)` are used to get the next and the previous value for `x`.
-
-By default `Domain[T]` is implemented for `Integral[T]` types (e.g. `Int`, `Long`), `OffsetDateTime`, and `Instant`.
 
 ## Ordering
 

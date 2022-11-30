@@ -243,7 +243,7 @@ object Diagram extends NumericDefaults:
     /**
      * Align value to the grid
      */
-    def align(value: Double): Int =
+    private[mtg] def align(value: Double): Int =
       value.round.toInt
 
   /**
@@ -588,6 +588,9 @@ object Diagram extends NumericDefaults:
 
   def make[T: Domain: Numeric](intervals: List[Interval[T]])(using Ordering[Mark[T]]): Diagram =
     make(intervals, view = View.default[T], canvas = Canvas.default, annotations = List.empty[String])
+
+  def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
+    make(intervals, view = View.default[T], canvas = canvas, annotations = List.empty[String])
 
   def make[T: Domain: Numeric](intervals: List[Interval[T]], annotations: List[String])(using Ordering[Mark[T]]): Diagram =
     make(intervals, view = View.default[T], canvas = Canvas.default, annotations = annotations)

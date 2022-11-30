@@ -1,5 +1,7 @@
 # TODO
 
+update css for subheaders, it is very subtle now
+
 ## PROJECT
 
 - add tests for negative intervals

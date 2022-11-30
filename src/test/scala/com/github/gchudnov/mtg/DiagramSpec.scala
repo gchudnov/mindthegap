@@ -827,26 +827,83 @@ final class DiagramSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "display with default settings" in {
-        val a = Interval.closed(100, 500)
-        val b = Interval.closed(150, 600)
-        val c = Interval.closed(200, 700)
-        val d = Interval.closed(250, 800)
-        val e = Interval.closed(300, 900)
-        val f = Interval.closed(600, 1000)
+      "display with default settings [doc]" in {
+        val a = Interval.closed(3, 7)
+        val b = Interval.closed(10, 15)
+        val c = Interval.closed(12, 20)
 
-        val diagram = Diagram.make(List(a, b, c, d, e, f))
+        val diagram = Diagram.make(List(a, b, c))
 
         val actual = Diagram.render(diagram)
         val expected = List(
-          "  [***************]                      | [100,500]",
-          "    [****************]                   | [150,600]",
-          "      [******************]               | [200,700]",
-          "        [********************]           | [250,800]",
-          "          [**********************]       | [300,900]",
-          "                     [***************]   | [600,1000]",
-          "--+-+-+-+-+-------+--+---+---+---+---+-- |",
-          " 100 200 300     500    700 800 900      |"
+          "  [*******]                              | [3,7]",
+          "                [**********]             | [10,15]",
+          "                     [***************]   | [12,20]",
+          "--+-------+-----+----+-----+---------+-- |",
+          "  3       7    10   12    15        20   |"
+        )
+
+        actual mustBe expected
+      }
+
+      "display with custom view [doc]" in {
+        val a = Interval.closed(3, 7)
+        val b = Interval.closed(10, 15)
+        val c = Interval.closed(12, 20)
+
+        val view    = View(Some(8), Some(17))
+        val diagram = Diagram.make(List(a, b, c), view)
+
+        val actual = Diagram.render(diagram)
+        val expected = List(
+          "                                         | [3,7]",
+          "          [******************]           | [10,15]",
+          "                  [********************* | [12,20]",
+          "--+-------+-------+----------+-------+-- |",
+          "  8      10      12         15      17   |"
+        )
+
+        actual mustBe expected
+      }
+
+      "display with custom canvas [doc]" in {
+        val a = Interval.closed(3, 7)
+        val b = Interval.closed(10, 15)
+        val c = Interval.closed(12, 20)
+
+        val canvas  = Canvas.make(20)
+        val diagram = Diagram.make(List(a, b, c), canvas)
+
+        val actual = Diagram.render(diagram)
+        val expected = List(
+          "  [***]              | [3,7]",
+          "        [****]       | [10,15]",
+          "          [******]   | [12,20]",
+          "--+---+-+-+--+---+-- |",
+          "  3   7  12 15  20   |"
+        )
+
+        actual mustBe expected
+      }
+
+      "display with custom theme [doc]" in {
+        val a = Interval.closed(3, 7)
+        val b = Interval.closed(10, 15)
+        val c = Interval.closed(12, 20)
+
+        val canvas  = Canvas.make(20)
+        val diagram = Diagram.make(List(a, b, c), canvas)
+
+        val theme = Theme.default.copy(label = Theme.Label.Stacked)
+
+        val actual = Diagram.render(diagram, theme)
+        val expected = List(
+          "  [***]              | [3,7]",
+          "        [****]       | [10,15]",
+          "          [******]   | [12,20]",
+          "--+---+-+-+--+---+-- |",
+          "  3   7  12 15  20   |",
+          "       10            |"
         )
 
         actual mustBe expected
