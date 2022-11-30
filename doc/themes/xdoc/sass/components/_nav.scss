@@ -112,7 +112,7 @@ aside {
 
   li {
     padding: calc(var(--nav-element-spacing-vertical) * 0.5)
-      var(--nav-element-spacing-horizontal);
+    calc(var(--nav-element-spacing-horizontal) * 1.25);
 
     a {
       display: block;
