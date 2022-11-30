@@ -268,9 +268,9 @@ trait Domain[T]:
   def pred(x: T): T
 ```
 
-where `succ(x)` and `pred(x)` are used to get the next and the previous value for `x`.
+where `succ(x)` and `pred(x)` are used to get the next and the previous value of `x`.
 
-By default `Domain[T]` is implemented for `Integral[T]` types (e.g. `Int`, `Long`), `OffsetDateTime`, and `Instant`.
+By default `Domain[T]` is implemented for *integral* types (e.g. `Int`, `Long`) and several date-time typed like `OffsetDateTime`, and `Instant`.
 
 When intervals are using `OffsetDateTime` or `Instant`, import `Diagram.given` to make a diagram:
 
@@ -287,7 +287,8 @@ val theme: Theme    = Theme.default
 
 val diagram = Diagram.make[OffsetDateTime](List(a), canvas)
 
-Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked)) // List[String]
+Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked))
+// List[String]
 ```
 
 ```text
