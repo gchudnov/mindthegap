@@ -10,7 +10,7 @@ private[mtg] transparent trait BasicRel[T]:
   a: Interval[T] =>
 
   /**
-   * Before, Preceeds (b)
+   * Before, Precedes (b)
    *
    * {{{
    *   PP (Point-Point):
@@ -38,7 +38,7 @@ private[mtg] transparent trait BasicRel[T]:
     a.nonEmpty && b.nonEmpty && ordM.lt(a.right, b.left)
 
   /**
-   * After, IsPreceededBy (B)
+   * After, IsPrecededBy (B)
    */
   final def after(b: Interval[T])(using Ordering[Mark[T]]): Boolean =
     b.before(a)
@@ -205,7 +205,7 @@ private[mtg] transparent trait BasicRel[T]:
    *   a- = b- < a+ = b+
    *
    *   Relation                  AAAAA
-   *   equals(a, b)     e        BBBBB            |  a- = b- ; a+ = b+
+   *   equalsTo(a, b)   e        BBBBB            |  a- = b- ; a+ = b+
    * }}}
    */
   final def equalsTo(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =

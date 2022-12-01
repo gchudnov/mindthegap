@@ -6,14 +6,6 @@ import com.github.gchudnov.mtg.Domain
 
 /**
  * Extended Interval Relations
- *
- *   - IsSubset
- *   - IsSuperset
- *   - IsDisjoint
- *   - IsAdjacent
- *   - Merges
- *   - IsLess
- *   - IsGreater
  */
 private[mtg] transparent trait ExtendedRel[T]:
   a: Interval[T] =>

@@ -26,7 +26,7 @@ In Allen's interval algebra there are thirteen basic relations between time inte
 or can be represented in the following compact text form:
 
 ```text
-  Relation                         AAAAA
+  Relation         Symbol          AAAAA
                                    :   :
   a.before(b)         b            :   : BBBBBBBBB  | a+ < b-
   a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
@@ -47,8 +47,8 @@ These basic 13 relations can be split in 6 pairs of *converse* relations and one
 For example `a` *before* `b` and `b` *after* `a` is a pair of converse relations.
 Whenever the first relation is *true*, the converse relation is *true* as well.
 
-For convenience, each relation has an associated letter with it, e.g. `b` for the relation *before*.
-The converse relation is represented by the same letter, but in the upper case, e.g. `B` for the relation *after* that is a converse for *before*, `b`.
+For convenience, each relation has an associated symbol with it, e.g. `b` for the relation *before*.
+The converse relation is represented by the same symbol, but in the upper case, e.g. `B` for the relation *after*, that is a converse of *before*, `b`.
 
 Note, that the relations are defined on *non-empty* intervals.
 
