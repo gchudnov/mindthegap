@@ -7,14 +7,6 @@ import com.github.gchudnov.mtg.internal.StaticOps
 
 /**
  * Interval
- *
- * An interval is bounded, if it is both left- and right-bounded; and unbounded otherwise. Bounded intervals are also commonly known as finite intervals.
- *
- * An empty interval has starting value greater than the ending value.
- *
- * Point is a generate interval that consists of a single value.
- *
- * An interval that is neither Empty nor Point is said to be Proper.
  */
 final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
 

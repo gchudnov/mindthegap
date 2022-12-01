@@ -30,8 +30,10 @@ We consider an interval to be in a _canonical_ form when it is represented as a 
 ## Classification
 
 A pair `{a-, a+}` represents a _non-empty_ interval if `a- ≤ a+`; otherwise, the interval is _empty_.
-If left boundary `a-` is equal to the right boundary, `a+`, we call it as a _degenerate_ interval or a _point_.
+If left boundary `a-` is equal to the right boundary, `a+` (consists of a single value only), we call it as a _degenerate_ interval or a _point_.
 A non-empty interval is _proper_ if left boundary is less than the right boundary `a- < a+`.
+
+A _proper_ interval is _bounded_, if it is both left- and right-bounded; and _unbounded_ otherwise.
 
 On the diagram above, _proper_ intervals represented as points _above_ the line `a+ = a-`, _point_ intervals
 are located on the line `a+ = a-` and all empty intervals are _below_ the line `a+ = a-`.
@@ -212,7 +214,7 @@ Here we can see that the interval `[3,7]` is not in the view and only part of th
 
 ### Canvas
 
-`Canvas` specifies the *width* of the text buffer to draw a diagram on. When not provided, a default canvas of width `40` is used.
+`Canvas` specifies the _width_ of the text buffer to draw a diagram on. When not provided, a default canvas of width `40` is used.
 
 For example, when a custom canvas of width `20` is used:
 
@@ -272,7 +274,7 @@ trait Domain[T] extends Ordering[T]:
 
 where `succ(x)` and `pred(x)` are used to get the next and previous value of `x`; `count` - to return the length (duration) of an interval.
 
-By default `Domain[T]` is implemented for *integral* types (e.g. `Int`, `Long`) and date-time types `OffsetDateTime`, and `Instant`.
+By default `Domain[T]` is implemented for _integral_ types (e.g. `Int`, `Long`) and date-time types `OffsetDateTime`, and `Instant`.
 
 When intervals are using `OffsetDateTime` or `Instant`, import `Diagram.given` to make a diagram:
 
