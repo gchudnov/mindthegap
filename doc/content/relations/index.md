@@ -9,19 +9,21 @@ draft = false
 
 ## Basic Relations
 
-The library support the following relations:
+The library supports relations between points, points and intervals & relations between intervals (famous [Allen's interval algebra](https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html)).
 
 - **Point-Point (PP)** relations between a pair of points.
 - **Point-Interval (PI)** relations that between a point and an interval.
 - **Interval-Interval (II)** relations that between a pair of intervals.
 
-![relations.svg](./relations.svg)
-
-The 13 relations are:
+In Allen's interval algebra there are thirteen basic relations between time intervals; these relations are distinct, exhaustive, and qualitative:
 
 - **Distinct** because no pair of definite intervals can be related by more than one of the relationships.
 - **Exhaustive** because any pair of definite intervals are described by one of the relations.
 - **Qualitative** because no specific time spans are considered.
+
+![relations.svg](./relations.svg)
+
+or can be represented in the following compact text form:
 
 ```text
   Relation                         AAAAA
@@ -38,70 +40,114 @@ The 13 relations are:
   a.isStartedBy(b)    S            BBB :            | a- = b- ; b+ < a+
   a.contains(b)       D            : B :            | a- < b- ; b+ < a+
   a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
-  a.equals(b)         e            BBBBB            | a- = b- ; a+ = b+
+  a.equalsTo(b)       e            BBBBB            | a- = b- ; a+ = b+
 ```
+
+These basic 13 relations can be split in 6 pairs of *converse* relations and one relation that converse to itself.
+For example `a` *before* `b` and `b` *after* `a` is a pair of converse relations.
+Whenever the first relation is *true*, the converse relation is *true* as well.
+
+For convenience, each relation has an associated letter with it, e.g. `b` for the relation *before*.
+The converse relation is represented by the same letter, but in the upper case, e.g. `B` for the relation *after* that is a converse for *before*, `b`.
+
+### Before / After
+
+`a` *before* `b` means that interval `a` ends *before* interval `b` begins, with a gap separating them.
+The converse relation is `b` *after* `a`. 
+
+TBD
 
 ```scala
 // before (b), after (B)
 Interval.open(1, 4).before(Interval.open(3, 6)) // true
 Interval.open(3, 6).after(Interval.open(1, 4))  // true
+```
 
+### Meets / IsMetBy
+
+`a` *meets* `b` means that `b` begins at the same point where `A` ends.
+The converse of relation is `b` *isMetBy* `a`.
+
+TBD
+
+```scala
 // meets (m), isMetBy (M)
 Interval.closed(1, 5).meets(Interval.closed(5, 10))   // true
 Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) // true
+```
 
+
+### Overlaps / IsOverlappedBy
+
+`a` *overlaps* `b` when right boundary of the interval `a` is inside of the interval `b`.
+The converse of relation is `b` *isOverlappedBy* `a`.
+
+TBD
+
+```scala
 // overlaps (o), isOverlappedBy (O)
 Interval.open(1, 10).overlaps(Interval.open(5, 20))      // true
 Interval.open(5, 30).isOverlappedBy(Interval.open(1, 10)) // true
+```
 
+
+### Starts / IsStartedBy
+
+`a` *starts* `b` when both intervals `a` and `b` have the same left boundary, and interval `a` is inside an the interval `b`, however not equal to it.
+The converse of relation is `b` *isStartedBy* `a`.
+
+TBD
+
+```scala
 // starts (s), isStartedBy (S)
 Interval.closed(1, 2).starts(Interval.closed(1, 10))      // true
 Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) // true
+```
 
+### During / Contains
+
+`a` *during* `b` when the interval `a` lies inside of the interval `b`.
+The converse of relation is `b` *contains* `a`.
+
+TBD
+
+```scala
+// during (d), contains (D)
+Interval.closed(1, 2).during(Interval.closed(1, 1000000))      // true
+Interval.closed(1, 10).contains(Interval.closed(1, 20000)) // true
+```
+
+### Finishes / IsFinishedBy
+
+`a` *finishes* `b` when both intervals `a` and `b` have the same right boundary, and interval `a` is inside an the interval `b`, however not equal to it.
+The converse of relation is `b` *isFinishedBy* `a`.
+
+TBD
+
+```scala
 // finishes (f), isFinishedBy (F)
 Interval.leftClosedRightOpen(0, 5).finishes(Interval.leftClosedRightOpen(-1, 5))     // true
 Interval.leftClosedRightOpen(-1, 5).isFinishedBy(Interval.leftClosedRightOpen(0, 5)) // true
+```
 
+### EqualsTo
+
+`a` *equalsTo* `b` when the left and right boundaries of the intervals `a` and `b` are matching. It is its own converse.
+
+TBD
+
+```scala
 // equalsTo (e)
 Interval.open(4, 7).equalsTo(Interval.open(4, 7)) // true
 ```
 
-### Before / After
-
-TBD
-
-### Meets / IsMetBy
-
-TBD
-
-### Overlaps / IsOverlappedBy
-
-TBD
-
-### Starts / IsStartedBy
-
-TBD
-
-### During / Contains
-
-TBD
-
-### Finishes / IsFinishedBy
-
-TBD
-
-### Equals
-
-TBD
-
-
 ## Extended Relations
 
-Extended relations are the ones that compose of several basic relations.
+For convenience the library defines more relations that are composed of several basic relations.
 
 ### IsSubset
 
-Determines whether `a` is a subset of `b`.
+`a` is a subset of `b` when .
 
 ```text
   a.isSubset(b)                    AAAAA            | a- >= b- AND a+ <= b+
