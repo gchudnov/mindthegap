@@ -21,7 +21,7 @@ In Allen's interval algebra there are 13 basic relations between time intervals;
 - **Exhaustive** because any pair of definite intervals are described by one of the relations.
 - **Qualitative** because no specific time spans are considered.
 
-These basic 13 relations can be split in 6 pairs of *converse* relations and one relation that converse to itself.
+13 basic relations can be split in 6 pairs of *converse* relations and one relation that converse to itself.
 For example `a` *before* `b` and `b` *after* `a` is a pair of converse relations.
 Whenever the first relation is *true*, the converse relation is *true* as well.
 
@@ -67,7 +67,7 @@ Interval.open(3, 6).after(Interval.open(1, 4))  // true
 
 ### Meets / IsMetBy
 
-`a` *meets* `b` means that `b` begins at the same point where `A` ends.
+`a` *meets* `b` means that `b` begins at the same point where `a` ends.
 The converse of relation is `b` *is met by* `a`.
 
 TBD
