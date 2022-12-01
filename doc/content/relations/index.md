@@ -15,11 +15,20 @@ The library supports relations between points, points and intervals & relations 
 - **Point-Interval (PI)** relations that between a point and an interval.
 - **Interval-Interval (II)** relations that between a pair of intervals.
 
-In Allen's interval algebra there are thirteen basic relations between time intervals; these relations are distinct, exhaustive, and qualitative:
+In Allen's interval algebra there are 13 basic relations between time intervals; these relations are distinct, exhaustive, and qualitative:
 
 - **Distinct** because no pair of definite intervals can be related by more than one of the relationships.
 - **Exhaustive** because any pair of definite intervals are described by one of the relations.
 - **Qualitative** because no specific time spans are considered.
+
+These basic 13 relations can be split in 6 pairs of *converse* relations and one relation that converse to itself.
+For example `a` *before* `b` and `b` *after* `a` is a pair of converse relations.
+Whenever the first relation is *true*, the converse relation is *true* as well.
+
+For convenience, each relation has an associated symbol with it, e.g. `b` for the relation *before*.
+The converse relation is represented by the same symbol, but in the upper case, e.g. `B` for the relation *after*, that is a converse of *before*, `b`.
+
+Note, that the relations are defined on *non-empty* intervals.
 
 ![relations.svg](./relations.svg)
 
@@ -42,15 +51,6 @@ or can be represented in the following compact text form:
   a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
   a.equalsTo(b)       e            BBBBB            | a- = b- ; a+ = b+
 ```
-
-These basic 13 relations can be split in 6 pairs of *converse* relations and one relation that converse to itself.
-For example `a` *before* `b` and `b` *after* `a` is a pair of converse relations.
-Whenever the first relation is *true*, the converse relation is *true* as well.
-
-For convenience, each relation has an associated symbol with it, e.g. `b` for the relation *before*.
-The converse relation is represented by the same symbol, but in the upper case, e.g. `B` for the relation *after*, that is a converse of *before*, `b`.
-
-Note, that the relations are defined on *non-empty* intervals.
 
 ### Before / After
 
