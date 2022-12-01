@@ -45,6 +45,9 @@ private[mtg] object DomainDefaults:
     override def pred(x: Nothing): Nothing =
       x
 
+    override def count(start: Nothing, end: Nothing): Long =
+      0
+
   /**
    * Integral Domain: Int, Long, ...
    */
@@ -58,8 +61,12 @@ private[mtg] object DomainDefaults:
       val intT = summon[Integral[T]]
       intT.minus(x, intT.one)
 
+    override def count(start: T, end: T): Long =
+      val intT = summon[Integral[T]]
+      intT.toLong(intT.minus(end, start))
+
   /**
-   * Fractional Domain: Double, Float
+   * Fractional Domain: Double, Float with step size
    */
   final class FractionalDomain[T: Fractional](unit: T) extends Domain[T]:
 
@@ -70,6 +77,10 @@ private[mtg] object DomainDefaults:
     override def pred(x: T): T =
       val fracT = summon[Fractional[T]]
       fracT.minus(x, unit)
+
+    override def count(start: T, end: T): Long =
+      val fracT = summon[Fractional[T]]
+      fracT.toLong(fracT.div(fracT.minus(end, start), unit))
 
   /**
    * OffsetDateTime Domain
@@ -82,6 +93,9 @@ private[mtg] object DomainDefaults:
     override def pred(x: OffsetDateTime): OffsetDateTime =
       x.minus(1, unit)
 
+    override def count(start: OffsetDateTime, end: OffsetDateTime): Long =
+      start.until(end, unit)
+
   /**
    * Instant Domain
    */
@@ -92,3 +106,6 @@ private[mtg] object DomainDefaults:
 
     override def pred(x: Instant): Instant =
       x.minus(1, unit)
+
+    override def count(start: Instant, end: Instant): Long =
+      start.until(end, unit)

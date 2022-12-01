@@ -212,9 +212,9 @@ Here we can see that the interval `[3,7]` is not in the view and only part of th
 
 ### Canvas
 
-`Canvas` specifies the *width* of the text buffer to draw a diagram on. When not provided, a default canvas of width 40 is used.
+`Canvas` specifies the *width* of the text buffer to draw a diagram on. When not provided, a default canvas of width `40` is used.
 
-For example, when a custom canvas of width 20 is used:
+For example, when a custom canvas of width `20` is used:
 
 ```scala
 val canvas = Canvas.make(20)
