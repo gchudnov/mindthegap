@@ -276,31 +276,6 @@ where `succ(x)` and `pred(x)` are used to get the next and previous value of `x`
 
 By default `Domain[T]` is implemented for _integral_ types (e.g. `Int`, `Long`) and date-time types `OffsetDateTime`, and `Instant`.
 
-When intervals are using `OffsetDateTime` or `Instant`, import `Diagram.given` to make a diagram:
-
-```scala
-import Diagram.given
-
-val a = Interval.closed(
-  OffsetDateTime.parse("2020-07-02T12:34Z"),
-  OffsetDateTime.parse("2021-07-02T12:34Z")
-)
-
-val canvas: Canvas  = Canvas.make(40)
-val theme: Theme    = Theme.default
-
-val diagram = Diagram.make[OffsetDateTime](List(a), canvas)
-
-Diagram.render(diagram, theme.copy(label = Theme.Label.Stacked))
-// List[String]
-```
-
-```text
-  [**********************************]
---+----------------------------------+--
-2020-07-02T12:34Z      2021-07-02T12:34Z
-```
-
 ## Ordering
 
 Intervals can be ordered.
