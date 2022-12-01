@@ -50,6 +50,8 @@ Whenever the first relation is *true*, the converse relation is *true* as well.
 For convenience, each relation has an associated letter with it, e.g. `b` for the relation *before*.
 The converse relation is represented by the same letter, but in the upper case, e.g. `B` for the relation *after* that is a converse for *before*, `b`.
 
+Note, that the relations are defined on *non-empty* intervals.
+
 ### Before / After
 
 `a` *before* `b` means that interval `a` ends *before* interval `b` begins, with a gap separating them.
@@ -66,7 +68,7 @@ Interval.open(3, 6).after(Interval.open(1, 4))  // true
 ### Meets / IsMetBy
 
 `a` *meets* `b` means that `b` begins at the same point where `A` ends.
-The converse of relation is `b` *isMetBy* `a`.
+The converse of relation is `b` *is met by* `a`.
 
 TBD
 
@@ -80,7 +82,7 @@ Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) // true
 ### Overlaps / IsOverlappedBy
 
 `a` *overlaps* `b` when right boundary of the interval `a` is inside of the interval `b`.
-The converse of relation is `b` *isOverlappedBy* `a`.
+The converse of relation is `b` *is overlapped by* `a`.
 
 TBD
 
@@ -94,7 +96,7 @@ Interval.open(5, 30).isOverlappedBy(Interval.open(1, 10)) // true
 ### Starts / IsStartedBy
 
 `a` *starts* `b` when both intervals `a` and `b` have the same left boundary, and interval `a` is inside an the interval `b`, however not equal to it.
-The converse of relation is `b` *isStartedBy* `a`.
+The converse of relation is `b` *is started by* `a`.
 
 TBD
 
@@ -120,7 +122,7 @@ Interval.closed(1, 10).contains(Interval.closed(1, 20000)) // true
 ### Finishes / IsFinishedBy
 
 `a` *finishes* `b` when both intervals `a` and `b` have the same right boundary, and interval `a` is inside an the interval `b`, however not equal to it.
-The converse of relation is `b` *isFinishedBy* `a`.
+The converse of relation is `b` *is finished by* `a`.
 
 TBD
 
@@ -132,7 +134,7 @@ Interval.leftClosedRightOpen(-1, 5).isFinishedBy(Interval.leftClosedRightOpen(0,
 
 ### EqualsTo
 
-`a` *equalsTo* `b` when the left and right boundaries of the intervals `a` and `b` are matching. It is its own converse.
+`a` *equals to* `b` when the left and right boundaries of the intervals `a` and `b` are matching. It is its own converse.
 
 TBD
 
@@ -143,11 +145,11 @@ Interval.open(4, 7).equalsTo(Interval.open(4, 7)) // true
 
 ## Extended Relations
 
-For convenience the library defines more relations that are composed of several basic relations.
+cThe library defines more relations for convenience that are composed of several basic relations.
 
 ### IsSubset
 
-`a` is a subset of `b` when .
+`a` is a *subset of* `b` when the interval `a` *starts*, *during*, *finishes* or *equals to* the interval `b`.
 
 ```text
   a.isSubset(b)                    AAAAA            | a- >= b- AND a+ <= b+
@@ -155,7 +157,7 @@ For convenience the library defines more relations that are composed of several 
   a.starts(b)         s            BBBBBBBBB        | a- = b- ; a+ < b+
   a.during(b)         d          BBBBBBBBB          | a- > b- ; a+ < b+
   a.finishes(b)       f        BBBBBBBBB            | a+ = b+ ; a- > b-
-  a.equals(b)         e            BBBBB            | a- = b- ; a+ = b+
+  a.equalsTo(b)       e            BBBBB            | a- = b- ; a+ = b+
 ```
 
 ```scala
@@ -167,7 +169,7 @@ Interval.open(4, 7).isSubset(Interval.open(4, 7))  // true
 
 ### IsSuperset
 
-Determines whether `a` is a superset of `b`.
+`a` is a *superset of* `b` when the interval `a` *is started by*, *contains*, *if finished by* or *equals to* `b`.
 
 ```text
   a.isSuperset(b)                  AAAAA            | b- >= a- AND b+ <= a+
@@ -175,7 +177,7 @@ Determines whether `a` is a superset of `b`.
   a.isStartedBy(b)    S            BBB :            | a- = b- ; b+ < a+
   a.contains(b)       D            : B :            | a- < b- ; b+ < a+
   a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
-  a.equals(b)         e            BBBBB            | a- = b- ; a+ = b+
+  a.equalsTo(b)       e            BBBBB            | a- = b- ; a+ = b+
 ```
 
 ```scala
@@ -187,7 +189,7 @@ Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
 
 ### IsDisjoint
 
-Determines if there `a` and `b` are disjoint. `a` and `b` are disjoint if `a` does not intersect `b`.
+`a` and `b` are *disjoint* if `a` does not intersect `b`. It means `a` *before* `b` or `a` *after* `b`.
 
 ```text
   a.isDisjoint(b)                  AAAAA            | a+ < b- OR a- > b+
@@ -203,7 +205,10 @@ Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) // true
 
 ### IsAdjacent
 
-Two intervals `a` and `b` are adjacent if they are disjoint and `succ(a+) = b- OR succ(b+) = a-`
+Two intervals `a` and `b` are *adjacent* if they are *disjoint* and the successor of the right boundary of `a` is the left boundary of `b` or
+the successor of the right boundary of `b` is the left boundary of `a`.
+
+It can be written as: `succ(a+) = b- OR succ(b+) = a-`.
 
 ```text
   a.isAdjacent(b)                  AAAAA            |  succ(a+) = b- OR succ(b+) = a-
@@ -221,7 +226,9 @@ Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) // true
 
 ### Intersects
 
-Two intervals `a` and `b` are intersecting if: `a- <= b+ AND b- <= a+`
+Two intervals `a` and `b` are *intersecting* if `a` *is not before* `b` and `a` *is not after* `b`. It means that if any of the remaining 11 basic relations holds, the intervals are intersecting.
+
+It can be written as: `a- <= b+ AND b- <= a+`
 
 ```text
   a.intersects(b)                  AAAAA            | a- <= b+ AND b- <= a+
@@ -247,7 +254,7 @@ Interval.closed(0, 5).intersects(Interval.closed(1, 6)) // true
 
 ### Merges
 
-Two intervals `a` and `b` can be merged, if they are adjacent or intersect.
+Two intervals `a` and `b` can be *merged*, if they are *adjacent* or *intersect*.
 
 ```text
   a.merges(b)                      AAAAA            | intersects(a,b) OR isAdjacent(a,b)
@@ -274,7 +281,8 @@ Interval.open(4, 10).merges(Interval.open(5, 12)) // true
 
 ### IsLess
 
-Determines whether `a` is less-than `b`.
+`a`* is less-than* `b` when the left boundary of the interval `a` is less than the left boundary of the interval `b`.
+It means that `a` must be *before*, *meet* of *overlap* `b`.
 
 ```text
   a.isLess(b)                      AAAAA            | a- < b- AND a+ < b+
@@ -284,8 +292,6 @@ Determines whether `a` is less-than `b`.
   a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
 ```
 
-TODO: ADD CONTAINS, isFinishedBy
-
 ```scala
 Interval.open(4, 7).isLess(Interval.open(10, 15)) // true
 Interval.open(4, 7).isLess(Interval.open(6, 15))  // true
@@ -294,7 +300,7 @@ Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 
 ### IsGreater
 
-Determines whether `a` is greater-than `b`.
+`a` is greater-than `b` when `a` *is after* `b`, `a` *is met by* `b` or `a` *is overlapped by* `b`.
 
 ```text
   a.isGreater                      AAAAA            | a- > b- AND a+ > b+
@@ -304,12 +310,8 @@ Determines whether `a` is greater-than `b`.
   a.isOverlappedBy(b) O      BBBBBBBBB :            | b- < a- < b+ < a+
 ```
 
-TODO: ADD during, finithses
-
 ```scala
 Interval.open(10, 15).isGreater(Interval.open(4, 7)) // true
 Interval.open(6, 15).isGreater(Interval.open(4, 7))  // true
 Interval.open(5, 15).isGreater(Interval.open(4, 7))  // true
 ```
-
-NOTE: empty intervals cannot be compared -- operations `isLess`, `isGreater`, `equalsTo` return `false`.
