@@ -8,7 +8,7 @@ import com.github.gchudnov.mtg.internal.StaticOps
 /**
  * Interval
  *
- * An interval is Bounded, if it is both Left- and Right-bounded; and is said to be Unbounded otherwise. Bounded intervals are also commonly known as finite intervals.
+ * An interval is bounded, if it is both left- and right-bounded; and unbounded otherwise. Bounded intervals are also commonly known as finite intervals.
  *
  * An empty interval has starting value greater than the ending value.
  *

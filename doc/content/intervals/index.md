@@ -263,14 +263,16 @@ To work with intervals, a `given` instance of `Domain[T]` is needed.
 `Domain[T]` is defined as:
 
 ```scala
-trait Domain[T]:
+trait Domain[T] extends Ordering[T]:
   def succ(x: T): T
   def pred(x: T): T
+  def count(start: T, end: T): Long
+
 ```
 
-where `succ(x)` and `pred(x)` are used to get the next and the previous value of `x`.
+where `succ(x)` and `pred(x)` are used to get the next and previous value of `x`; `count` - to return the length (duration) of an interval.
 
-By default `Domain[T]` is implemented for *integral* types (e.g. `Int`, `Long`) and several date-time typed like `OffsetDateTime`, and `Instant`.
+By default `Domain[T]` is implemented for *integral* types (e.g. `Int`, `Long`) and date-time types `OffsetDateTime`, and `Instant`.
 
 When intervals are using `OffsetDateTime` or `Instant`, import `Diagram.given` to make a diagram:
 
