@@ -57,7 +57,9 @@ or can be represented in the following compact text form:
 `a` *before* `b` means that interval `a` ends *before* interval `b` begins, with a gap separating them.
 The converse relation is `b` *after* `a`. 
 
-TBD
+Condition: `a+ < b-`
+
+![before.svg](./before.svg)
 
 ```scala
 // before (b), after (B)
