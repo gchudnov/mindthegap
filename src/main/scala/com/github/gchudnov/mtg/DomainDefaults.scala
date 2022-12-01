@@ -48,39 +48,44 @@ private[mtg] object DomainDefaults:
     override def count(start: Nothing, end: Nothing): Long =
       0
 
+    override def compare(x: Nothing, y: Nothing): Int =
+      0
+
   /**
    * Integral Domain: Int, Long, ...
    */
   final class IntegralDomain[T: Integral] extends Domain[T]:
+    val intT = summon[Integral[T]]
 
     override def succ(x: T): T =
-      val intT = summon[Integral[T]]
       intT.plus(x, intT.one)
 
     override def pred(x: T): T =
-      val intT = summon[Integral[T]]
       intT.minus(x, intT.one)
 
     override def count(start: T, end: T): Long =
-      val intT = summon[Integral[T]]
       intT.toLong(intT.minus(end, start))
+
+    override def compare(x: T, y: T): Int =
+      intT.compare(x, y)
 
   /**
    * Fractional Domain: Double, Float with step size
    */
   final class FractionalDomain[T: Fractional](unit: T) extends Domain[T]:
+    val fracT = summon[Fractional[T]]
 
     override def succ(x: T): T =
-      val fracT = summon[Fractional[T]]
       fracT.plus(x, unit)
 
     override def pred(x: T): T =
-      val fracT = summon[Fractional[T]]
       fracT.minus(x, unit)
 
     override def count(start: T, end: T): Long =
-      val fracT = summon[Fractional[T]]
       fracT.toLong(fracT.div(fracT.minus(end, start), unit))
+
+    override def compare(x: T, y: T): Int =
+      fracT.compare(x, y)
 
   /**
    * OffsetDateTime Domain
@@ -96,6 +101,9 @@ private[mtg] object DomainDefaults:
     override def count(start: OffsetDateTime, end: OffsetDateTime): Long =
       start.until(end, unit)
 
+    override def compare(x: OffsetDateTime, y: OffsetDateTime): Int =
+      x.compareTo(y)
+
   /**
    * Instant Domain
    */
@@ -109,3 +117,6 @@ private[mtg] object DomainDefaults:
 
     override def count(start: Instant, end: Instant): Long =
       start.until(end, unit)
+
+    override def compare(x: Instant, y: Instant): Int =
+      x.compareTo(y)

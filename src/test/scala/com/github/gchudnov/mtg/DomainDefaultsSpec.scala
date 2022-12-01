@@ -32,13 +32,24 @@ final class DomainDefaultsSpec extends TestSpec:
       "count" in {
         val valT: Domain[Int] = summon[Domain[Int]]
 
-        val start: Int = 10
-        val end: Int   = 20
+        val x: Int = 10
+        val y: Int = 20
 
-        val actual   = valT.count(start, end)
+        val actual   = valT.count(start = x, end = y)
         val expected = 10
 
         actual mustEqual expected
+      }
+
+      "compare" in {
+        val valT: Domain[Int] = summon[Domain[Int]]
+
+        val x = 10
+        val y = 20
+
+        val actual   = valT.compare(x, y)
+
+        (actual < 0) mustBe true
       }
     }
 
@@ -63,13 +74,24 @@ final class DomainDefaultsSpec extends TestSpec:
       "count" in {
         val valT: Domain[Long] = summon[Domain[Long]]
 
-        val start: Long = -10L
-        val end: Long   = 10L
+        val x: Long = -10L
+        val y: Long = 10L
 
-        val actual   = valT.count(start, end)
+        val actual   = valT.count(start = x, end = y)
         val expected = 20
 
         actual mustEqual expected
+      }
+
+      "compare" in {
+        val valT: Domain[Long] = summon[Domain[Long]]
+
+        val x = 2L
+        val y = 1L
+
+        val actual   = valT.compare(x, y)
+
+        (actual > 0) mustBe true
       }
     }
 
@@ -95,13 +117,24 @@ final class DomainDefaultsSpec extends TestSpec:
       "count" in {
         val valT: Domain[Double] = Domain.makeFractional(1.0)
 
-        val start: Double = -10.0
-        val end: Double   = 10.0
+        val x: Double = -10.0
+        val y: Double = 10.0
 
-        val actual   = valT.count(start, end)
+        val actual   = valT.count(start = x, end = y)
         val expected = 20
 
         actual mustEqual expected
+      }
+
+      "compare" in {
+        given valT: Domain[Double] = Domain.makeFractional(0.1)
+
+        val x = 1.0
+        val y = 1.0
+
+        val actual   = valT.compare(x, y)
+
+        (actual == 0) mustBe true
       }
     }
 
@@ -126,13 +159,23 @@ final class DomainDefaultsSpec extends TestSpec:
       "count" in {
         val valT: Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.DAYS)
 
-        val start: OffsetDateTime = OffsetDateTime.parse("2022-07-02T00:00Z").truncatedTo(ChronoUnit.DAYS)
-        val end: OffsetDateTime   = OffsetDateTime.parse("2022-07-10T00:00Z").truncatedTo(ChronoUnit.DAYS)
+        val x: OffsetDateTime = OffsetDateTime.parse("2022-07-02T00:00Z").truncatedTo(ChronoUnit.DAYS)
+        val y: OffsetDateTime = OffsetDateTime.parse("2022-07-10T00:00Z").truncatedTo(ChronoUnit.DAYS)
 
-        val actual   = valT.count(start, end)
+        val actual   = valT.count(start = x, end = y)
         val expected = 8
 
         actual mustEqual expected
+      }
+
+      "compare" in {
+        val valT: Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.DAYS)
+
+        val x: OffsetDateTime = OffsetDateTime.parse("2022-07-02T00:00Z").truncatedTo(ChronoUnit.DAYS)
+        val y: OffsetDateTime = OffsetDateTime.parse("2022-07-10T00:00Z").truncatedTo(ChronoUnit.DAYS)
+
+        val actual   = valT.compare(x, y)
+        (actual < 0) mustBe true
       }
     }
 
@@ -157,13 +200,24 @@ final class DomainDefaultsSpec extends TestSpec:
       "count" in {
         val valT: Domain[Instant] = Domain.makeInstant(ChronoUnit.DAYS)
 
-        val start: Instant = Instant.parse("2022-07-02T00:00:00Z").truncatedTo(ChronoUnit.DAYS)
-        val end: Instant   = Instant.parse("2022-07-10T00:00:00Z").truncatedTo(ChronoUnit.DAYS)
+        val x: Instant = Instant.parse("2022-07-02T00:00:00Z").truncatedTo(ChronoUnit.DAYS)
+        val y: Instant = Instant.parse("2022-07-10T00:00:00Z").truncatedTo(ChronoUnit.DAYS)
 
-        val actual   = valT.count(start, end)
+        val actual   = valT.count(start = x, end = y)
         val expected = 8
 
         actual
+      }
+
+      "compare" in {
+        val valT: Domain[Instant] = Domain.makeInstant(ChronoUnit.DAYS)
+
+        val x: Instant = Instant.parse("2022-06-10T00:00:00Z").truncatedTo(ChronoUnit.DAYS)
+        val y: Instant = Instant.parse("2022-07-10T00:00:00Z").truncatedTo(ChronoUnit.DAYS)
+
+        val actual   = valT.compare(x, y)
+
+        (actual < 0) mustBe true
       }
     }
   }

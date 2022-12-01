@@ -11,7 +11,7 @@ package com.github.gchudnov.mtg
  *   (x, y) = [succ(x), pred(y)].
  * }}}
  */
-trait Domain[T]:
+trait Domain[T] extends Ordering[T]:
   /**
    * Successor value
    *
@@ -32,7 +32,6 @@ trait Domain[T]:
    */
   def pred(x: T): T
 
-
   /**
    * Count
    * 
@@ -42,6 +41,6 @@ trait Domain[T]:
     * @param end
     * @return
     */
-  def count(start: T, end: T): Long
+  def count(start: T, end: T): Long  
 
 object Domain extends DomainDefaults
