@@ -116,7 +116,7 @@ Interval.make(Mark.succ(Mark.succ(1)), Mark.at(5)).normalize
 Interval.closed(1, 5).swap // [1, 5] -> [5, 1]
 ```
 
-`a.inflate` inflates an interval, extending its size.
+`a.inflate` inflates an interval, extending its size: `[a-, a+] -> [pred(a-), succ(a+)]`.
 
 ```scala
 Interval.closed(1, 2).inflate // [1, 2] -> [0, 3]
@@ -124,7 +124,9 @@ Interval.closed(1, 2).inflate // [1, 2] -> [0, 3]
 
 In addition, `a.inflateLeft` and `a.inflateRight` methods extend left and right boundaries of an interval.
 
-`a.deflate` deflates an interval, reducing its size.
+`a.deflate` deflates an interval, reducing its size: `[a-, a+] -> [succ(a-), pred(a+)]`.
+
+NOTE: it is possible that after deflation an interval becomes _empty_.
 
 ```scala
 Interval.closed(1, 2).deflate // [1, 2] -> [2, 1]
