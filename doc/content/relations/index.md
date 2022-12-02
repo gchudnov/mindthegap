@@ -88,12 +88,14 @@ Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) // true
 `a` *overlaps* `b` when right boundary of the interval `a` is inside of the interval `b`.
 The converse of relation is `b` *is overlapped by* `a`.
 
-TBD
+Condition: `a- < b- < a+ < b+`
+
+![overlaps.svg](./overlaps.svg)
 
 ```scala
 // overlaps (o), isOverlappedBy (O)
-Interval.open(1, 10).overlaps(Interval.open(5, 20))      // true
-Interval.open(5, 30).isOverlappedBy(Interval.open(1, 10)) // true
+Interval.closed(1, 10).overlaps(Interval.closed(5, 15))       // true
+Interval.closed(5, 15).isOverlappedBy(Interval.closed(1, 10)) // true
 ```
 
 
