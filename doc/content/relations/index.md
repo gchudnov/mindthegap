@@ -72,7 +72,9 @@ Interval.closed(5, 8).after(Interval.closed(1, 4))  // true
 `a` *meets* `b` means that `b` begins at the same point where `a` ends.
 The converse of relation is `b` *is met by* `a`.
 
-TBD
+Condition: `a+ = b-`
+
+![meets.svg](./meets.svg)
 
 ```scala
 // meets (m), isMetBy (M)
