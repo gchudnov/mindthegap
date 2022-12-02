@@ -211,27 +211,16 @@ Condition: `succ(a+) = b- OR succ(b+) = a-`.
 
 ![isAdjacent.svg](./isAdjacent.svg)
 
-// TODO: impl it
-
-```text
-  a.isAdjacent(b)                  AAAAA            |  succ(a+) = b- OR succ(b+) = a-
-                                   :   :
-  a.before(b)         b            :   : BBBBBBBBB  | a+ < b- ; succ(a+) = b-
-  a.after(b)          B  BBBBBBBBB :   :            | a- > b+ ; succ(b+) = a-
-```
-
 ```scala
-Interval.open(1, 4).isAdjacent(Interval.open(3, 6))     // true
-Interval.open(3, 6).isAdjacent(Interval.open(1, 4))     // true
-Interval.closed(1, 4).isAdjacent(Interval.closed(5, 6)) // true
-Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) // true
+Interval.closed(5, 7).isAdjacent(Interval.closed(8, 10)) // true
+Interval.closed(1, 4).isAdjacent(Interval.closed(5, 7))  // true
 ```
 
 ### Intersects
 
 Two intervals `a` and `b` are _intersecting_ if `a` _is not before_ `b` and `a` _is not after_ `b`. It means that if any of the remaining 11 basic relations holds, the intervals are intersecting.
 
-It can be written as: `a- <= b+ AND b- <= a+`
+Condition: `a- <= b+ ; b- <= a+`
 
 ```text
   a.intersects(b)                  AAAAA            | a- <= b+ AND b- <= a+

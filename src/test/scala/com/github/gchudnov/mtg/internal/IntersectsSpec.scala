@@ -83,6 +83,8 @@ final class IntersectsSpec extends TestSpec:
         // Infinity
         // [5, +inf)  (-inf, 10)
         Interval.leftClosed(5).intersects(Interval.rightOpen(10)) mustBe (true)
+
+        // [doc]
       }
     }
   }
