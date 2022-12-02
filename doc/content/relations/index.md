@@ -222,21 +222,7 @@ Two intervals `a` and `b` are _intersecting_ if `a` _is not before_ `b` and `a` 
 
 Condition: `a- <= b+ ; b- <= a+`
 
-```text
-  a.intersects(b)                  AAAAA            | a- <= b+ AND b- <= a+
-                                   :   :
-  a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
-  a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
-  a.starts(b)         s            BBBBBBBBB        | a- = b- ; a+ < b+
-  a.during(b)         d          BBBBBBBBB          | a- > b- ; a+ < b+
-  a.finishes(b)       f        BBBBBBBBB            | a+ = b+ ; a- > b-
-  a.isMetBy(b)        M    BBBBBBBBB   :            | a- = b+
-  a.isOverlappedBy(b) O      BBBBBBBBB :            | b- < a- < b+ < a+
-  a.isStartedBy(b)    S            BBB :            | a- = b- ; b+ < a+
-  a.contains(b)       D            : B :            | a- < b- ; b+ < a+
-  a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
-  a.equals(b)         e            BBBBB            | a- = b- ; a+ = b+
-```
+![intersects.svg](./intersects.svg)
 
 ```scala
 Interval.empty[Int].intersects(Interval.empty[Int])     // false

@@ -85,6 +85,9 @@ final class IntersectsSpec extends TestSpec:
         Interval.leftClosed(5).intersects(Interval.rightOpen(10)) mustBe (true)
 
         // [doc]
+        Interval.empty[Int].intersects(Interval.empty[Int]) mustBe (false)
+        Interval.point(5).intersects(Interval.point(5)) mustBe (true)
+        Interval.closed(0, 5).intersects(Interval.closed(1, 6)) mustBe (true)
       }
     }
   }
