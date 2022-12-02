@@ -119,7 +119,11 @@ final class FinishesSpec extends TestSpec:
         Interval.unbounded[Int].finishes(Interval.unbounded[Int]) mustBe (false)
 
         // (-inf, 2]  (-inf, 3)
-        Interval.rightClosed(2).finishes(Interval.rightOpen(3))
+        Interval.rightClosed(2).finishes(Interval.rightOpen(3)) mustBe (false)
+
+        // [doc]
+        Interval.closed(3, 6).finishes(Interval.closed(1, 6)) mustBe (true)
+        Interval.closed(1, 6).isFinishedBy(Interval.closed(3, 6)) mustBe (true)
       }
     }
   }

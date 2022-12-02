@@ -122,6 +122,10 @@ final class StartsSpec extends TestSpec:
 
         // (0,2]  (0,+∞]
         Interval.leftOpenRightClosed(0, 2).starts(Interval.leftOpen(0)) mustBe (true)
+
+        // [doc]
+        Interval.closed(1, 4).starts(Interval.closed(1, 6)) mustBe (true)
+        Interval.closed(1, 6).isStartedBy(Interval.closed(1, 4)) mustBe (true)
       }
     }
   }

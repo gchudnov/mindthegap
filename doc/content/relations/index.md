@@ -21,14 +21,14 @@ In Allen's interval algebra there are 13 basic relations between time intervals;
 - **Exhaustive** because any pair of definite intervals are described by one of the relations.
 - **Qualitative** because no specific time spans are considered.
 
-13 basic relations can be split in 6 pairs of *converse* relations and one relation that converse to itself.
-For example `a` *before* `b` and `b` *after* `a` is a pair of converse relations.
-Whenever the first relation is *true*, the converse relation is *true* as well.
+13 basic relations can be split in 6 pairs of _converse_ relations and one relation that converse to itself.
+For example `a` _before_ `b` and `b` _after_ `a` is a pair of converse relations.
+Whenever the first relation is _true_, the converse relation is _true_ as well.
 
-For convenience, each relation has an associated symbol with it, e.g. `b` for the relation *before*.
-The converse relation is represented by the same symbol, but in the upper case, e.g. `B` for the relation *after*, that is a converse of *before*, `b`.
+For convenience, each relation has an associated symbol with it, e.g. `b` for the relation _before_.
+The converse relation is represented by the same symbol, but in the upper case, e.g. `B` for the relation _after_, that is a converse of _before_, `b`.
 
-Note, that the relations are defined on *non-empty* intervals.
+Note, that the relations are defined on _non-empty_ intervals.
 
 ![relations.svg](./relations.svg)
 
@@ -54,8 +54,8 @@ or can be represented in the following compact text form:
 
 ### Before / After
 
-`a` *before* `b` means that interval `a` ends *before* interval `b` begins, with a gap separating them.
-The converse relation is `b` *after* `a`. 
+`a` _before_ `b` means that interval `a` ends _before_ interval `b` begins, with a gap separating them.
+The converse relation is `b` _after_ `a`.
 
 Condition: `a+ < b-`
 
@@ -69,8 +69,8 @@ Interval.closed(5, 8).after(Interval.closed(1, 4))  // true
 
 ### Meets / IsMetBy
 
-`a` *meets* `b` means that `b` begins at the same point where `a` ends.
-The converse of relation is `b` *is met by* `a`.
+`a` _meets_ `b` means that `b` begins at the same point where `a` ends.
+The converse of relation is `b` _is met by_ `a`.
 
 Condition: `a+ = b-`
 
@@ -82,11 +82,10 @@ Interval.closed(1, 5).meets(Interval.closed(5, 10))   // true
 Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) // true
 ```
 
-
 ### Overlaps / IsOverlappedBy
 
-`a` *overlaps* `b` when right boundary of the interval `a` is inside of the interval `b`.
-The converse of relation is `b` *is overlapped by* `a`.
+`a` _overlaps_ `b` when right boundary of the interval `a` is inside of the interval `b`.
+The converse of relation is `b` _is overlapped by_ `a`.
 
 Condition: `a- < b- < a+ < b+`
 
@@ -98,11 +97,10 @@ Interval.closed(1, 10).overlaps(Interval.closed(5, 15))       // true
 Interval.closed(5, 15).isOverlappedBy(Interval.closed(1, 10)) // true
 ```
 
-
 ### Starts / IsStartedBy
 
-`a` *starts* `b` when both intervals `a` and `b` have the same left boundary, and interval `a` is inside an the interval `b`, however not equal to it.
-The converse of relation is `b` *is started by* `a`.
+`a` _starts_ `b` when both intervals `a` and `b` have the same left boundary, and interval `a` is inside an the interval `b`, however not equal to it.
+The converse of relation is `b` _is started by_ `a`.
 
 Condition: `a- = b- ; a+ < b+`
 
@@ -116,8 +114,8 @@ Interval.closed(1, 6).isStartedBy(Interval.closed(1, 4)) // true
 
 ### During / Contains
 
-`a` *during* `b` when the interval `a` lies inside of the interval `b`.
-The converse of relation is `b` *contains* `a`.
+`a` _during_ `b` when the interval `a` lies inside of the interval `b`.
+The converse of relation is `b` _contains_ `a`.
 
 Condition: `a- > b- ; a+ < b+`
 
@@ -131,8 +129,8 @@ Interval.closed(1, 10).contains(Interval.closed(3, 7)) // true
 
 ### Finishes / IsFinishedBy
 
-`a` *finishes* `b` when both intervals `a` and `b` have the same right boundary, and interval `a` is inside an the interval `b`, however not equal to it.
-The converse of relation is `b` *is finished by* `a`.
+`a` _finishes_ `b` when both intervals `a` and `b` have the same right boundary, and interval `a` is inside an the interval `b`, however not equal to it.
+The converse of relation is `b` _is finished by_ `a`.
 
 Condition: `a+ = b+ ; a- > b-`
 
@@ -146,7 +144,7 @@ Interval.closed(1, 6).isFinishedBy(Interval.closed(3, 6)) // true
 
 ### EqualsTo
 
-`a` *equals to* `b` when the left and right boundaries of the intervals `a` and `b` are matching. It is its own converse.
+`a` _equals to_ `b` when the left and right boundaries of the intervals `a` and `b` are matching. It is its own converse.
 
 Condition: `a- = b- ; a+ = b+`
 
@@ -163,7 +161,7 @@ cThe library defines more relations for convenience that are composed of several
 
 ### IsSubset
 
-`a` is a *subset of* `b` when the interval `a` *starts*, *during*, *finishes* or *equals to* the interval `b`.
+`a` is a _subset of_ `b` when the interval `a` _starts_, _during_, _finishes_ or _equals to_ the interval `b`.
 
 ```text
   a.isSubset(b)                    AAAAA            | a- >= b- AND a+ <= b+
@@ -183,7 +181,7 @@ Interval.open(4, 7).isSubset(Interval.open(4, 7))  // true
 
 ### IsSuperset
 
-`a` is a *superset of* `b` when the interval `a` *is started by*, *contains*, *if finished by* or *equals to* `b`.
+`a` is a _superset of_ `b` when the interval `a` _is started by_, _contains_, _if finished by_ or _equals to_ `b`.
 
 ```text
   a.isSuperset(b)                  AAAAA            | b- >= a- AND b+ <= a+
@@ -203,7 +201,7 @@ Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
 
 ### IsDisjoint
 
-`a` and `b` are *disjoint* if `a` does not intersect `b`. It means `a` *before* `b` or `a` *after* `b`.
+`a` and `b` are _disjoint_ if `a` does not intersect `b`. It means `a` _before_ `b` or `a` _after_ `b`.
 
 ```text
   a.isDisjoint(b)                  AAAAA            | a+ < b- OR a- > b+
@@ -219,7 +217,7 @@ Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) // true
 
 ### IsAdjacent
 
-Two intervals `a` and `b` are *adjacent* if they are *disjoint* and the successor of the right boundary of `a` is the left boundary of `b` or
+Two intervals `a` and `b` are _adjacent_ if they are _disjoint_ and the successor of the right boundary of `a` is the left boundary of `b` or
 the successor of the right boundary of `b` is the left boundary of `a`.
 
 It can be written as: `succ(a+) = b- OR succ(b+) = a-`.
@@ -240,7 +238,7 @@ Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) // true
 
 ### Intersects
 
-Two intervals `a` and `b` are *intersecting* if `a` *is not before* `b` and `a` *is not after* `b`. It means that if any of the remaining 11 basic relations holds, the intervals are intersecting.
+Two intervals `a` and `b` are _intersecting_ if `a` _is not before_ `b` and `a` _is not after_ `b`. It means that if any of the remaining 11 basic relations holds, the intervals are intersecting.
 
 It can be written as: `a- <= b+ AND b- <= a+`
 
@@ -268,7 +266,7 @@ Interval.closed(0, 5).intersects(Interval.closed(1, 6)) // true
 
 ### Merges
 
-Two intervals `a` and `b` can be *merged*, if they are *adjacent* or *intersect*.
+Two intervals `a` and `b` can be _merged_, if they are _adjacent_ or _intersect_.
 
 ```text
   a.merges(b)                      AAAAA            | intersects(a,b) OR isAdjacent(a,b)
@@ -295,8 +293,8 @@ Interval.open(4, 10).merges(Interval.open(5, 12)) // true
 
 ### IsLess
 
-`a`* is less-than* `b` when the left boundary of the interval `a` is less than the left boundary of the interval `b`.
-It means that `a` must be *before*, *meet* of *overlap* `b`.
+`a`_ is less-than_ `b` when the left boundary of the interval `a` is less than the left boundary of the interval `b`.
+It means that `a` must be _before_, _meet_ of _overlap_ `b`.
 
 ```text
   a.isLess(b)                      AAAAA            | a- < b- AND a+ < b+
@@ -314,7 +312,7 @@ Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
 
 ### IsGreater
 
-`a` is greater-than `b` when `a` *is after* `b`, `a` *is met by* `b` or `a` *is overlapped by* `b`.
+`a` is greater-than `b` when `a` _is after_ `b`, `a` _is met by_ `b` or `a` _is overlapped by_ `b`.
 
 ```text
   a.isGreater                      AAAAA            | a- > b- AND a+ > b+

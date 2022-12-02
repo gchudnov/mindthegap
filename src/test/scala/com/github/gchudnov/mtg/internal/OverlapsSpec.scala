@@ -171,6 +171,10 @@ final class OverlapsSpec extends TestSpec:
         // (-inf, 2)  (-2, +inf)
         Interval.rightOpen(2).overlaps(Interval.leftOpen(-2)) mustBe (true)
         Interval.leftOpen(-2).isOverlappedBy(Interval.rightOpen(2)) mustBe (true)
+
+        // [doc]
+        Interval.closed(1, 10).overlaps(Interval.closed(5, 15)) mustBe (true)
+        Interval.closed(5, 15).isOverlappedBy(Interval.closed(1, 10)) mustBe (true)
       }
     }
   }

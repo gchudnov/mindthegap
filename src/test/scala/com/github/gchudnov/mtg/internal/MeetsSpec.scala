@@ -124,6 +124,10 @@ final class MeetsSpec extends TestSpec:
 
         // (-inf, 6)  [5, +inf)
         Interval.rightOpen(6).meets(Interval.leftClosed(5)) mustBe (true)
+
+        // [doc]
+        Interval.closed(1, 5).meets(Interval.closed(5, 10)) mustBe (true)
+        Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) mustBe (true)
       }
     }
   }

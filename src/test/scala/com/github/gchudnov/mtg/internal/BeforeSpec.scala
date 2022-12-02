@@ -133,6 +133,10 @@ final class BeforeSpec extends TestSpec:
 
         // (-inf, 2)  [3, +inf)
         Interval.rightOpen(2).before(Interval.leftClosed(3)) mustBe (true)
+
+        // [doc]
+        Interval.closed(1, 4).before(Interval.closed(5, 8)) mustBe (true)
+        Interval.closed(5, 8).after(Interval.closed(1, 4)) mustBe (true)      
       }
     }
   }
