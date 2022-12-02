@@ -40,10 +40,10 @@ final class IsSupersetSpec extends TestSpec:
         Interval.unbounded[Int].isSuperset(Interval.closed(1, 10)) mustBe (true)
 
         // [doc]
-        Interval.open(4, 10).isSuperset(Interval.open(4, 7)) mustBe (true)
-        Interval.open(2, 10).isSuperset(Interval.open(4, 7)) mustBe (true)
-        Interval.open(2, 7).isSuperset(Interval.open(4, 7)) mustBe (true)
-        Interval.open(4, 7).isSuperset(Interval.open(4, 7)) mustBe (true)
+        Interval.closed(4, 10).isSuperset(Interval.closed(4, 7)) mustBe (true)
+        Interval.closed(2, 10).isSuperset(Interval.closed(4, 7)) mustBe (true)
+        Interval.closed(2, 7).isSuperset(Interval.closed(4, 7)) mustBe (true)
+        Interval.closed(4, 7).isSuperset(Interval.closed(4, 7)) mustBe (true)
       }
     }
   }

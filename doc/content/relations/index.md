@@ -168,10 +168,10 @@ Condition: `a- >= b- ; a+ <= b+`
 ![isSubset.svg](./isSubset.svg)
 
 ```scala
-Interval.open(4, 7).isSubset(Interval.open(4, 10)) // true
-Interval.open(4, 7).isSubset(Interval.open(2, 10)) // true
-Interval.open(4, 7).isSubset(Interval.open(2, 7))  // true
-Interval.open(4, 7).isSubset(Interval.open(4, 7))  // true
+Interval.closed(4, 7).isSubset(Interval.closed(4, 10)) // true
+Interval.closed(4, 7).isSubset(Interval.closed(2, 10)) // true
+Interval.closed(4, 7).isSubset(Interval.closed(2, 7))  // true
+Interval.closed(4, 7).isSubset(Interval.closed(4, 7))  // true
 ```
 
 ### IsSuperset
@@ -183,34 +183,33 @@ Condition: `b- >= a- ; b+ <= a+`
 ![isSuperset.svg](./isSuperset.svg)
 
 ```scala
-Interval.open(4, 10).isSuperset(Interval.open(4, 7)) // true
-Interval.open(2, 10).isSuperset(Interval.open(4, 7)) // true
-Interval.open(2, 7).isSuperset(Interval.open(4, 7))  // true
-Interval.open(4, 7).isSuperset(Interval.open(4, 7))  // true
+Interval.closed(4, 10).isSuperset(Interval.closed(4, 7)) // true
+Interval.closed(2, 10).isSuperset(Interval.closed(4, 7)) // true
+Interval.closed(2, 7).isSuperset(Interval.closed(4, 7))  // true
+Interval.closed(4, 7).isSuperset(Interval.closed(4, 7))  // true
 ```
 
 ### IsDisjoint
 
 `a` and `b` are _disjoint_ if `a` does not intersect `b`. It means `a` _before_ `b` or `a` _after_ `b`.
 
-```text
-  a.isDisjoint(b)                  AAAAA            | a+ < b- OR a- > b+
-                                   :   :
-  a.before(b)         b            :   : BBBBBBBBB  | a+ < b-
-  a.after(b)          B  BBBBBBBBB :   :            | a- > b+
-```
+Condition: `a+ < b- OR a- > b+`
+
+![isDisjoint.svg](./isDisjoint.svg)
 
 ```scala
-Interval.open(1, 4).isDisjoint(Interval.open(3, 6)) // true
-Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) // true
+Interval.closed(5, 7).isDisjoint(Interval.closed(1, 3))  // true
+Interval.closed(5, 7).isDisjoint(Interval.closed(8, 10)) // true
 ```
 
 ### IsAdjacent
 
-Two intervals `a` and `b` are _adjacent_ if they are _disjoint_ and the successor of the right boundary of `a` is the left boundary of `b` or
-the successor of the right boundary of `b` is the left boundary of `a`.
+Two intervals `a` and `b` are _adjacent_ if they are _disjoint_ and the successor of the right boundary of `a` equals to the left boundary of `b` or
+the successor of the right boundary of `b` equals to the left boundary of `a`.
 
-It can be written as: `succ(a+) = b- OR succ(b+) = a-`.
+Condition: `succ(a+) = b- OR succ(b+) = a-`.
+
+![isAdjacent.svg](./isAdjacent.svg)
 
 ```text
   a.isAdjacent(b)                  AAAAA            |  succ(a+) = b- OR succ(b+) = a-
