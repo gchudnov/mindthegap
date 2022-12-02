@@ -63,8 +63,8 @@ Condition: `a+ < b-`
 
 ```scala
 // before (b), after (B)
-Interval.open(1, 4).before(Interval.open(3, 6)) // true
-Interval.open(3, 6).after(Interval.open(1, 4))  // true
+Interval.closed(1, 4).before(Interval.closed(5, 8)) // true
+Interval.closed(5, 8).after(Interval.closed(1, 4))  // true
 ```
 
 ### Meets / IsMetBy
