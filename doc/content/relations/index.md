@@ -211,6 +211,8 @@ Condition: `succ(a+) = b- OR succ(b+) = a-`.
 
 ![isAdjacent.svg](./isAdjacent.svg)
 
+// TODO: impl it
+
 ```text
   a.isAdjacent(b)                  AAAAA            |  succ(a+) = b- OR succ(b+) = a-
                                    :   :
