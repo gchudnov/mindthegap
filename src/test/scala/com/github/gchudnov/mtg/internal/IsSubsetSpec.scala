@@ -48,12 +48,13 @@ final class IsSubsetSpec extends TestSpec:
       }
 
       "valid in special cases" in {
+        Interval.closed(1, 10).isSubset(Interval.unbounded[Int]) mustBe (true)
+
+        // [doc]
         Interval.open(4, 7).isSubset(Interval.open(4, 10)) mustBe (true)
         Interval.open(4, 7).isSubset(Interval.open(2, 10)) mustBe (true)
         Interval.open(4, 7).isSubset(Interval.open(2, 7)) mustBe (true)
         Interval.open(4, 7).isSubset(Interval.open(4, 7)) mustBe (true)
-
-        Interval.closed(1, 10).isSubset(Interval.unbounded[Int]) mustBe (true)
       }
     }
   }

@@ -157,20 +157,15 @@ Interval.closed(1, 5).equalsTo(Interval.closed(1, 5)) // true
 
 ## Extended Relations
 
-cThe library defines more relations for convenience that are composed of several basic relations.
+For convenience the library defines extended relations that are composed of several basic relations.
 
 ### IsSubset
 
 `a` is a _subset of_ `b` when the interval `a` _starts_, _during_, _finishes_ or _equals to_ the interval `b`.
 
-```text
-  a.isSubset(b)                    AAAAA            | a- >= b- AND a+ <= b+
-                                   :   :
-  a.starts(b)         s            BBBBBBBBB        | a- = b- ; a+ < b+
-  a.during(b)         d          BBBBBBBBB          | a- > b- ; a+ < b+
-  a.finishes(b)       f        BBBBBBBBB            | a+ = b+ ; a- > b-
-  a.equalsTo(b)       e            BBBBB            | a- = b- ; a+ = b+
-```
+Condition: `a- >= b- ; a+ <= b+`
+
+![isSubset.svg](./isSubset.svg)
 
 ```scala
 Interval.open(4, 7).isSubset(Interval.open(4, 10)) // true

@@ -14,7 +14,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
  *   BBBB
  * }}}
  */
-final class EqualsSpec extends TestSpec:
+final class EqualsToSpec extends TestSpec:
 
   given intRange: IntRange = intRange5
   given intProb: IntProb   = intProb127
@@ -23,12 +23,12 @@ final class EqualsSpec extends TestSpec:
 
   val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
 
-  "Equals" when {
+  "EqualsTo" when {
     import IntervalRelAssert.*
 
-    "a.equals(b)" should {
+    "a.equalsTo(b)" should {
 
-      "b.equals(a)" in {
+      "b.equalsTo(a)" in {
         forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
@@ -92,6 +92,9 @@ final class EqualsSpec extends TestSpec:
 
         // (-inf, 5)  (-inf, 5)
         Interval.rightOpen(5).equalsTo(Interval.rightOpen(5)) mustBe (true)
+
+        // [doc]
+        Interval.closed(1, 5).equalsTo(Interval.closed(1, 5)) mustBe (true)
       }
     }
   }
