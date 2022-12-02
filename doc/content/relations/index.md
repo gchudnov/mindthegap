@@ -104,12 +104,14 @@ Interval.closed(5, 15).isOverlappedBy(Interval.closed(1, 10)) // true
 `a` *starts* `b` when both intervals `a` and `b` have the same left boundary, and interval `a` is inside an the interval `b`, however not equal to it.
 The converse of relation is `b` *is started by* `a`.
 
-TBD
+Condition: `a- = b- ; a+ < b+`
+
+![starts.svg](./starts.svg)
 
 ```scala
 // starts (s), isStartedBy (S)
-Interval.closed(1, 2).starts(Interval.closed(1, 10))      // true
-Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) // true
+Interval.closed(1, 4).starts(Interval.closed(1, 6))      // true
+Interval.closed(1, 6).isStartedBy(Interval.closed(1, 4)) // true
 ```
 
 ### During / Contains
@@ -117,12 +119,14 @@ Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) // true
 `a` *during* `b` when the interval `a` lies inside of the interval `b`.
 The converse of relation is `b` *contains* `a`.
 
-TBD
+Condition: `a- > b- ; a+ < b+`
+
+![during.svg](./during.svg)
 
 ```scala
 // during (d), contains (D)
-Interval.closed(1, 2).during(Interval.closed(1, 1000000))      // true
-Interval.closed(1, 10).contains(Interval.closed(1, 20000)) // true
+Interval.closed(3, 7).during(Interval.closed(1, 10))   // true
+Interval.closed(1, 10).contains(Interval.closed(3, 7)) // true
 ```
 
 ### Finishes / IsFinishedBy
@@ -130,23 +134,27 @@ Interval.closed(1, 10).contains(Interval.closed(1, 20000)) // true
 `a` *finishes* `b` when both intervals `a` and `b` have the same right boundary, and interval `a` is inside an the interval `b`, however not equal to it.
 The converse of relation is `b` *is finished by* `a`.
 
-TBD
+Condition: `a+ = b+ ; a- > b-`
+
+![finishes.svg](./finishes.svg)
 
 ```scala
 // finishes (f), isFinishedBy (F)
-Interval.leftClosedRightOpen(0, 5).finishes(Interval.leftClosedRightOpen(-1, 5))     // true
-Interval.leftClosedRightOpen(-1, 5).isFinishedBy(Interval.leftClosedRightOpen(0, 5)) // true
+Interval.closed(3, 6).finishes(Interval.closed(1, 6))     // true
+Interval.closed(1, 6).isFinishedBy(Interval.closed(3, 6)) // true
 ```
 
 ### EqualsTo
 
 `a` *equals to* `b` when the left and right boundaries of the intervals `a` and `b` are matching. It is its own converse.
 
-TBD
+Condition: `a- = b- ; a+ = b+`
+
+![equalsTo.svg](./equalsTo.svg)
 
 ```scala
 // equalsTo (e)
-Interval.open(4, 7).equalsTo(Interval.open(4, 7)) // true
+Interval.closed(1, 5).equalsTo(Interval.closed(1, 5)) // true
 ```
 
 ## Extended Relations
