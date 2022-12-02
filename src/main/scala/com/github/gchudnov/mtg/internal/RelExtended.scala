@@ -142,11 +142,6 @@ private[mtg] transparent trait ExtendedRel[T]:
    *
    * {{{
    *   a- < b-
-   *   a+ < b+
-   *
-   *   before         | b
-   *   meets          | m
-   *   overlaps       | o
    * }}}
    */
   final def isLess(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
@@ -160,12 +155,7 @@ private[mtg] transparent trait ExtendedRel[T]:
    * A > B
    *
    * {{{
-   *   a- > b-
-   *   a+ > b+
-   *
-   *   after          | B
-   *   isMetBy        | M
-   *   isOverlappedBy | O
+   *   b- < a-
    * }}}
    */
   final def isGreater(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =

@@ -104,6 +104,10 @@ final class MergesSpec extends TestSpec:
         Interval.open(4, 10).merges(Interval.open(5, 12)) mustBe (true)
         Interval.open(5, 12).isMergedBy(Interval.open(4, 10)) mustBe (true)
         Interval.open(4, 7).merges(Interval.open(5, 8)) mustBe (true)
+
+        // [doc]
+        Interval.point(5).merges(Interval.point(6)) mustBe (true)
+        Interval.closed(4, 10).merges(Interval.closed(5, 12)) mustBe (true)      
       }
     }
   }

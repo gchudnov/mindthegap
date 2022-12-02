@@ -234,62 +234,35 @@ Interval.closed(0, 5).intersects(Interval.closed(1, 6)) // true
 
 Two intervals `a` and `b` can be _merged_, if they are _adjacent_ or _intersect_.
 
-```text
-  a.merges(b)                      AAAAA            | intersects(a,b) OR isAdjacent(a,b)
-                                   :   :
-  a.before(b)         b            :   : BBBBBBBBB  | a+ < b- ; succ(a+) = b-
-  a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
-  a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
-  a.starts(b)         s            BBBBBBBBB        | a- = b- ; a+ < b+
-  a.during(b)         d          BBBBBBBBB          | a- > b- ; a+ < b+
-  a.finishes(b)       f        BBBBBBBBB            | a+ = b+ ; a- > b-
-  a.after(b)          B  BBBBBBBBB :   :            | a- > b+ ; succ(b+) = a-
-  a.isMetBy(b)        M    BBBBBBBBB   :            | a- = b+
-  a.isOverlappedBy(b) O      BBBBBBBBB :            | b- < a- < b+ < a+
-  a.isStartedBy(b)    S            BBB :            | a- = b- ; b+ < a+
-  a.contains(b)       D            : B :            | a- < b- ; b+ < a+
-  a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
-  a.equals(b)         e            BBBBB            | a- = b- ; a+ = b+
-```
+Condition: `intersects(a,b) OR isAdjacent(a,b)`
+
+![merges.svg](./merges.svg)
 
 ```scala
-Interval.point(5).merges(Interval.point(6))       // true
-Interval.open(4, 10).merges(Interval.open(5, 12)) // true
+Interval.point(5).merges(Interval.point(6))           // true
+Interval.closed(4, 10).merges(Interval.closed(5, 12)) // true
 ```
 
 ### IsLess
 
-`a`_ is less-than_ `b` when the left boundary of the interval `a` is less than the left boundary of the interval `b`.
-It means that `a` must be _before_, _meet_ of _overlap_ `b`.
+`a` is _less than_ `b` when the left boundary of the interval `a` is less than the left boundary of the interval `b`.
 
-```text
-  a.isLess(b)                      AAAAA            | a- < b- AND a+ < b+
-                                   :   :
-  a.before(b)         b            :   : BBBBBBBBB  | a+ < b-
-  a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
-  a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
-```
+Condition: `a- < b-`
+
+![isLess.svg](./isLess.svg)
 
 ```scala
-Interval.open(4, 7).isLess(Interval.open(10, 15)) // true
-Interval.open(4, 7).isLess(Interval.open(6, 15))  // true
-Interval.open(4, 7).isLess(Interval.open(5, 15))  // true
+Interval.closed(1, 5).isLess(Interval.closed(5, 10)) // true
 ```
 
 ### IsGreater
 
-`a` is greater-than `b` when `a` _is after_ `b`, `a` _is met by_ `b` or `a` _is overlapped by_ `b`.
+`a` is greater-than `b` when left boundary of the interval `b` is less than the left boundary of the interval `a`.
 
-```text
-  a.isGreater                      AAAAA            | a- > b- AND a+ > b+
-                                   :   :
-  a.after(b)          B  BBBBBBBBB :   :            | a- > b+
-  a.isMetBy(b)        M    BBBBBBBBB   :            | a- = b+
-  a.isOverlappedBy(b) O      BBBBBBBBB :            | b- < a- < b+ < a+
-```
+Condition: `b- < a-`
+
+![isGreater.svg](./isGreater.svg)
 
 ```scala
-Interval.open(10, 15).isGreater(Interval.open(4, 7)) // true
-Interval.open(6, 15).isGreater(Interval.open(4, 7))  // true
-Interval.open(5, 15).isGreater(Interval.open(4, 7))  // true
+Interval.closed(5, 10).isGreater(Interval.closed(1, 5)) // true
 ```
