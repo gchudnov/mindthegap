@@ -176,16 +176,11 @@ Interval.open(4, 7).isSubset(Interval.open(4, 7))  // true
 
 ### IsSuperset
 
-`a` is a _superset of_ `b` when the interval `a` _is started by_, _contains_, _if finished by_ or _equals to_ `b`.
+`a` is a _superset of_ `b` when the interval `a` _is started by_, _contains_, _is finished by_ or _equals to_ `b`.
 
-```text
-  a.isSuperset(b)                  AAAAA            | b- >= a- AND b+ <= a+
-                                   :   :
-  a.isStartedBy(b)    S            BBB :            | a- = b- ; b+ < a+
-  a.contains(b)       D            : B :            | a- < b- ; b+ < a+
-  a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
-  a.equalsTo(b)       e            BBBBB            | a- = b- ; a+ = b+
-```
+Condition: `b- >= a- ; b+ <= a+`
+
+![isSuperset.svg](./isSuperset.svg)
 
 ```scala
 Interval.open(4, 10).isSuperset(Interval.open(4, 7)) // true
