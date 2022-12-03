@@ -93,14 +93,20 @@ Interval.open(1, 5).isProper // true
 Interval.open(1, 5).isPoint  // false
 ```
 
-`a.canonical` produces the canonical form of an interval where left and right boundaries are closed.
+### Canonical
+
+`a.canonical` produces the canonical form of an interval where left and right boundaries are _closed_.
+
+A *canonical* form of a closed interval is the interval itself.
 
 ```scala
 Interval.open(1, 5).canonical   // (1, 5) -> [2, 4]
 Interval.closed(1, 5).canonical // [1, 5] -> [1, 5]
 ```
 
-`a.normalize` optimizes the internal representation of an interval, reducing the amount of consecutive _succ()_ and _pred()_ markers.
+### Normalize
+
+`a.normalize` optimizes the internal representation of an interval, reducing the amount of consecutive _succ()_ and _pred()_ operations.
 
 ```scala
 Interval.make(Mark.pred(Mark.pred(1)), Mark.at(5)).normalize
@@ -110,6 +116,8 @@ Interval.make(Mark.succ(Mark.succ(1)), Mark.at(5)).normalize
 // [succ(succ(1)), 5] -> [succ(2), 5] = (2, 5]
 ```
 
+### Swap
+
 `a.swap` swaps left and right boundary, to convert a _non-empty_ interval to an _empty_ interval or vice versa.
 
 ```scala
@@ -118,13 +126,19 @@ Interval.closed(1, 5).swap // [1, 5] -> [5, 1]
 
 ![swap.svg](./swap.svg)
 
+### Inflate
+
 `a.inflate` inflates an interval, extending its size: `[a-, a+] -> [pred(a-), succ(a+)]`.
 
 ```scala
 Interval.closed(1, 2).inflate // [1, 2] -> [0, 3]
 ```
 
+![inflate.svg](./inflate.svg)
+
 In addition, `a.inflateLeft` and `a.inflateRight` methods extend left and right boundaries of an interval.
+
+### Deflate
 
 `a.deflate` deflates an interval, reducing its size: `[a-, a+] -> [succ(a-), pred(a+)]`.
 
@@ -133,6 +147,8 @@ NOTE: it is possible that after deflation an interval becomes _empty_.
 ```scala
 Interval.closed(1, 2).deflate // [1, 2] -> [2, 1]
 ```
+
+![deflate.svg](./deflate.svg)
 
 In addition, `a.deflateLeft` and `a.deflateRight` methods shrink left and right boundaries of an interval.
 
