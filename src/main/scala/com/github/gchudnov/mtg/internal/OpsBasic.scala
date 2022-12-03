@@ -26,11 +26,11 @@ private[mtg] transparent trait BasicOps[T]:
    *                   [******]               | [5,7]
    * --+---------------+------+-----------+-- |
    *   1               5      7          10   |
+   * }}}
    *
    * Laws:
-   *   - commutative: A & B = B & A
-   *   - associative: (A & B) & C = A & (B & C)
-   * }}}
+   *   - Commutative: A & B = B & A
+   *   - Associative: (A & B) & C = A & (B & C)
    */
   final def intersection(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     Interval.make(ordM.max(a.left, b.left), ordM.min(a.right, b.right))
@@ -60,11 +60,11 @@ private[mtg] transparent trait BasicOps[T]:
    *   [**********************************]   | [1,10]
    * --+---------------+------+-----------+-- |
    *   1               5      7          10   |
+   * }}}
    *
    * Laws:
-   *   - commutative: A # B = B # A
-   *   - associative: (A # B) # C = A # (B # C)
-   * }}}
+   *   - Commutative: A # B = B # A
+   *   - Associative: (A # B) # C = A # (B # C)
    */
   final def span(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
@@ -97,9 +97,9 @@ private[mtg] transparent trait BasicOps[T]:
    * --+-----------+------+---------------+-- |
    *   1           4      6              10   |
    * }}}
-   * 
+   *
    * Laws:
-   *   - commutative: A ∪ B = B ∪ A
+   *   - Commutative: A ∪ B = B ∪ A
    */
   def union(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     if a.merges(b) then
@@ -114,10 +114,10 @@ private[mtg] transparent trait BasicOps[T]:
    *
    *   - A ∥ B
    *
-   * A gap between two intervals `a` and `b`: `a ∥ b := [min(a-, b-), max(a+, b+)]`.
+   * A gap between two intervals `a` and `b`: `a ∥ b := [succ(min(a+, b+)), pred(max(a-, b-))]`.
    *
    * {{{
-   *   A ∥ B := [min(a+, b+), max(a-, b-)]
+   *   A ∥ B := [succ(min(a+, b+)), pred(max(a-, b-))]
    *
    *   [***********]                          | [5,10]
    *                          [***********]   | [15,20]

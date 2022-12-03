@@ -40,7 +40,7 @@ val c = a.span(b)              // [1, 10]
 The resulting interval `c` covers the duration of both intervals `a` and `b` even if they are disjoint:
 
 ```scala
-val a = Interval.closed(1, 5)   // [1. 5]
+val a = Interval.closed(1, 5)   // [1, 5]
 val b = Interval.closed(7, 10)  // [7, 10]
 
 val c = a.span(b)               // [1, 10]
@@ -81,24 +81,18 @@ val c = a.union(b)             // ∅
 
 ## Gap
 
-A gap `∥` between two intervals `a` and `b`: `a ∥ b := [min(a-, b-), max(a+, b+)]`.
+A *gap* `∥` between two intervals `a` and `b` is the interval `c`, such that: `c = a ∥ b := [succ(min(a+, b+)), pred(max(a-, b-))]`.
 
 ```scala
-val a = Interval.closed(5, 10)   // [5, 10]
-val b = Interval.closed(15, 20)  // [15, 20]
+val a = Interval.closed(1, 4)   // [1, 4]
+val b = Interval.closed(7, 10)  // [7, 10]
 
-val c = a.gap(b)                 // [11, 14]
+val c = a.gap(b)                // [5, 6]
 ```
 
-```text
-  [***********]                          | [5,10]
-                         [***********]   | [15,20]
-                [******]                 | [11,14]
---+-----------+-+------+-+-----------+-- |
-  5          10 11    14 15         20   |
-```
+![gap.svg](./gap.svg)
 
-If intervals are not disjoint, the gap is empty.
+If the intervals are not disjoint, the gap is empty.
 
 ## Minus
 

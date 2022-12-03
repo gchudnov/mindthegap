@@ -331,6 +331,16 @@ final class GapSpec extends TestSpec:
         actual.isEmpty mustBe (true)
         actual mustBe expected
       }
+
+      "valid in [doc]" in {
+        val a = Interval.closed(1, 4)
+        val b = Interval.closed(7, 10)
+
+        val actual   = a.gap(b).canonical
+        val expected = Interval.closed(5, 6)
+
+        actual mustBe expected
+      }
     }
 
     "A, B" should {
