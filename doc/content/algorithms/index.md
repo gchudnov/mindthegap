@@ -21,8 +21,8 @@ val c = a.intersection(b)      // [5, 7]
 
 ![intersection.svg](./intersection.svg)
 
-* **Commutative property**: `a & b = b & a` holds for *any* intervals `a` and `b`. It means that changing the _order of the operands_ does not change the result.
-* **Associative property**: `(a & b) & c = a & (b & c)` holds *for* any intervals `a`, `b` and `c`. It means that _order of operations_ does not affect the result.
+- **Commutative property**: `a & b = b & a` holds for _any_ intervals `a` and `b`. It means that changing the _order of the operands_ does not change the result.
+- **Associative property**: `(a & b) & c = a & (b & c)` holds _for_ any intervals `a`, `b` and `c`. It means that _order of operations_ does not affect the result.
 
 ## Span
 
@@ -48,12 +48,14 @@ val c = a.span(b)               // [1, 10]
 
 ![span-disjoint.svg](./span-disjoint.svg)
 
-* **Commutative property**: `a # b = b # a` holds for *any* intervals `a` and `b`. It means that changing the _order of the operands_ does not change the result.
-* **Associative property**: `(a # b) # c = a # (b # c)` holds *for* any intervals `a`, `b` and `c`. It means that _order of operations_ does not affect the result.
+- **Commutative property**: `a # b = b # a` holds for _any_ intervals `a` and `b`. It means that changing the _order of the operands_ does not change the result.
+- **Associative property**: `(a # b) # c = a # (b # c)` holds _for_ any intervals `a`, `b` and `c`. It means that _order of operations_ does not affect the result.
 
 ## Union
 
-A union of two intervals `a` and `b`: `[min(a-,b-), max(a+,b+)]` if `merges(a, b)` and `∅` otherwise.
+A _union_ `∪` of two intervals `a` and `b` is the interval `c`, such that: `c = a ∪ b = [min(a-,b-), max(a+,b+)] if merges(a, b)` and `∅` otherwise.
+
+The operation is similar to _span_, but in order to be merged, the intervals should be _adjacent_ or _intersecting_.
 
 ```scala
 val a = Interval.closed(1, 5)  // [1, 5]
@@ -62,15 +64,9 @@ val b = Interval.closed(6, 10) // [6, 10]
 val c = a.union(b)             // [1, 10]
 ```
 
-```text
-  [***************]                      | [1,5]
-                     [***************]   | [6,10]
-  [**********************************]   | [1,10]
---+---------------+--+---------------+-- |
-  1               5  6              10   |
-```
+![union-adjacent.svg](./union-adjacent.svg)
 
-If intervals are disjoint and not adjacent, the union is empty:
+If the intervals are _disjoint_ but _not adjacent_, the union is empty:
 
 ```scala
 val a = Interval.closed(1, 4)  // [1, 4]
@@ -79,17 +75,13 @@ val b = Interval.closed(6, 10) // [6, 10]
 val c = a.union(b)             // ∅
 ```
 
-```text
-  [***********]                          | [1,4]
-                     [***************]   | [6,10]
-                                         | ∅
---+-----------+------+---------------+-- |
-  1           4      6              10   |
-```
+![union-adjacent.svg](./union-disjoint.svg)
+
+- **Commutative property**: `a ∪ b = b ∪ a` holds for _any_ intervals `a` and `b`. It means that changing the _order of the operands_ does not change the result.
 
 ## Gap
 
-A gap between two intervals `a` and `b`: `a ∥ b := [min(a-, b-), max(a+, b+)]`.
+A gap `∥` between two intervals `a` and `b`: `a ∥ b := [min(a-, b-), max(a+, b+)]`.
 
 ```scala
 val a = Interval.closed(5, 10)   // [5, 10]

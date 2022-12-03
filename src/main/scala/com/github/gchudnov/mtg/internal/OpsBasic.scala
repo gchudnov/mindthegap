@@ -17,7 +17,7 @@ private[mtg] transparent trait BasicOps[T]:
    *   - A & B
    *
    * An intersection of two intervals `a` and `b` is defined as the interval `c`, such that `c = a ∩ b := [max(a-, b-), min(a+, b+)]`.
-   * 
+   *
    * {{{
    *   A ∩ B := [max(a-, b-), min(a+, b+)]
    *
@@ -26,7 +26,7 @@ private[mtg] transparent trait BasicOps[T]:
    *                   [******]               | [5,7]
    * --+---------------+------+-----------+-- |
    *   1               5      7          10   |
-   * 
+   *
    * Laws:
    *   - commutative: A & B = B & A
    *   - associative: (A & B) & C = A & (B & C)
@@ -60,7 +60,7 @@ private[mtg] transparent trait BasicOps[T]:
    *   [**********************************]   | [1,10]
    * --+---------------+------+-----------+-- |
    *   1               5      7          10   |
-   * 
+   *
    * Laws:
    *   - commutative: A # B = B # A
    *   - associative: (A # B) # C = A # (B # C)
@@ -75,6 +75,8 @@ private[mtg] transparent trait BasicOps[T]:
    *   - A ∪ B
    *
    * A union of two intervals `a` and `b`: `[min(a-,b-), max(a+,b+)]` if `merges(a, b)` and undefined otherwise.
+   *
+   * NOTE: `merges` means that the intervals are `adjacent` or `intersecting`.
    *
    * {{{
    *   A union B := [min(a-,b-), max(a+,b+)] if merges(a, b) else ∅
@@ -95,6 +97,9 @@ private[mtg] transparent trait BasicOps[T]:
    * --+-----------+------+---------------+-- |
    *   1           4      6              10   |
    * }}}
+   * 
+   * Laws:
+   *   - commutative: A ∪ B = B ∪ A
    */
   def union(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     if a.merges(b) then
