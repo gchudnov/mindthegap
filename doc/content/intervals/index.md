@@ -110,11 +110,13 @@ Interval.make(Mark.succ(Mark.succ(1)), Mark.at(5)).normalize
 // [succ(succ(1)), 5] -> [succ(2), 5] = (2, 5]
 ```
 
-`a.swap` swaps left and right boundary, e.g. to convert an _empty_ to _non-empty_ interval or vice versa.
+`a.swap` swaps left and right boundary, to convert a _non-empty_ interval to an _empty_ interval or vice versa.
 
 ```scala
 Interval.closed(1, 5).swap // [1, 5] -> [5, 1]
 ```
+
+![swap.svg](./swap.svg)
 
 `a.inflate` inflates an interval, extending its size: `[a-, a+] -> [pred(a-), succ(a+)]`.
 
