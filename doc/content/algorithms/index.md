@@ -107,10 +107,10 @@ val c = a.gap(b)                // ∅
 
 ## Minus
 
-Subtraction `-` of two intervals, `a` minus `b` returns:
+Subtraction `-` of two intervals, `a` minus `b`:
 
-- `[a-, min(pred(b-), a+)]` if `(a- < b-)` and `(a+ <= b+)`.
-- `[max(succ(b+), a-), a+]` if `(a- >= b-)` and `(a+ > b+)`.
+- `c := a - b = [a-, min(pred(b-), a+)]` if `a- < b-` and `a+ <= b+`;
+- `c := a - b = [max(succ(b+), a-), a+]` if `a- >= b-` and `a+ > b+`.
 
 ```scala
 val a = Interval.closed(1, 10)  // [1, 10]
@@ -119,13 +119,17 @@ val b = Interval.closed(5, 15)  // [5, 15]
 val c = a.minus(b)              // [1, 4]
 ```
 
-```text
-  [**********************]               | [1,10]
-            [************************]   | [5,15]
-  [*******]                              | [1,4]
---+-------+-+------------+-----------+-- |
-  1       4 5           10          15   |
+![minus-left.svg](./minus-left.svg)
+
+```scala
+val a = Interval.closed(5, 15) // [5, 15]
+val b = Interval.closed(1, 10) // [1, 10]
+
+val c = a.minus(b) // [11, 15]
 ```
+
+![minus-right.svg](./minus-right.svg)
+
 
 NOTE: the operation `a.minus(b)` is not defined if `a.contains(b)` and throws a `UnsupportedOperationException`.
 Use `Intervals.minus(a, b)` instead that returns a collection of intervals:

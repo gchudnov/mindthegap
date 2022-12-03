@@ -150,7 +150,7 @@ private[mtg] transparent trait BasicOps[T]:
    *   - either `a` or `b` is properly included in the other;
    *
    * {{{
-   *   Example #1 ((a- < b-) AND (a+ <= b+)):
+   * Example #1 ((a- < b-) AND (a+ <= b+)):
    *
    *   [**********************]               | [1,10]
    *             [************************]   | [5,15]
@@ -158,7 +158,7 @@ private[mtg] transparent trait BasicOps[T]:
    * --+-------+-+------------+-----------+-- |
    *   1       4 5           10          15   |
    *
-   *   Example #2 ((a- >= b-) AND (a+ > b+)):
+   * Example #2 ((a- >= b-) AND (a+ > b+)):
    *
    *             [************************]   | [5,15]
    *   [**********************]               | [1,10]

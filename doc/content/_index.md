@@ -3,7 +3,7 @@ date = 2022-11-19
 draft = false
 +++
 
-A library to work with [intervals](/intervals), [relations](/relations) between them and [algorithms](/algorithms).
+A library of [intervals](/intervals), interval [relations](/relations) and [algorithms](/algorithms).
 
 ### Usage
 

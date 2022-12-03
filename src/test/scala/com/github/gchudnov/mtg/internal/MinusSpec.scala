@@ -246,6 +246,28 @@ final class MinusSpec extends TestSpec:
           }
         }
       }
+
+      "[,] if minus left [doc]" in {
+        val a = Interval.closed(1, 10) // [1, 10]
+        val b = Interval.closed(5, 15) // [5, 15]
+
+        val actual = a.minus(b).canonical // [1, 4]
+
+        val expected = Interval.closed(1, 4)
+
+        actual mustBe expected
+      }
+
+      "[,] if minus right [doc]" in {
+        val a = Interval.closed(5, 15) // [5, 15]
+        val b = Interval.closed(1, 10) // [1, 10]
+
+        val actual = a.minus(b).canonical // [11, 15]
+
+        val expected = Interval.closed(11, 15)
+
+        actual mustBe expected
+      }      
     }
 
     "Interval" should {
