@@ -60,6 +60,10 @@ private[mtg] transparent trait BasicOps[T]:
    *   [**********************************]   | [1,10]
    * --+---------------+------+-----------+-- |
    *   1               5      7          10   |
+   * 
+   * Laws:
+   *   - commutative: A # B = B # A
+   *   - associative: (A # B) # C = A # (B # C)
    * }}}
    */
   final def span(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =

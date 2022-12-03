@@ -9,7 +9,7 @@ draft = false
 
 ## Basic Relations
 
-The library supports relations between points, points and intervals & relations between intervals (famous [Allen's interval algebra](https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html)).
+The library supports relations between points, points and intervals & relations between intervals (famous Allen's interval algebra).
 
 - **Point-Point (PP)** relations between a pair of points.
 - **Point-Interval (PI)** relations that between a point and an interval.

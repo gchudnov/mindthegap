@@ -9,7 +9,7 @@ draft = false
 
 ## Intersection
 
-An _intersection_ `&` of two intervals `a` and `b` is defined as the interval `c`, such that `c = a & b := [max(a-, b-), min(a+, b+)]`.
+An _intersection_ `&` of two intervals `a` and `b` is the interval `c`, such that `c = a & b := [max(a-, b-), min(a+, b+)]`.
 When two intervals are not intersecting, the _intersection_ produces an empty-interval.
 
 ```scala
@@ -21,13 +21,12 @@ val c = a.intersection(b)      // [5, 7]
 
 ![intersection.svg](./intersection.svg)
 
-The intersection is _commutative_ as changing the _order of the operands_ does not change the result. It means that for any intervals `a` and `b`, `a & b = b & a`.
-
-The intersection is _associative_ as the _order of operations_ does not affect the final result. It means that for any intervals `a`, `b` and `c`, `(a & b) & c = a & (b & c)`.
+* **Commutative property**: `a & b = b & a` holds for *any* intervals `a` and `b`. It means that changing the _order of the operands_ does not change the result.
+* **Associative property**: `(a & b) & c = a & (b & c)` holds *for* any intervals `a`, `b` and `c`. It means that _order of operations_ does not affect the result.
 
 ## Span
 
-A span of two intervals `a` and `b`: `a # b := [min(a-, b-), max(a+, b+)]`.
+A _span_ `#` of two intervals `a` and `b` is the interval `c`, such shat `c = a # b := [min(a-, b-), max(a+, b+)]`.
 
 ```scala
 val a = Interval.closed(5, 10) // [5, 10]
@@ -36,15 +35,9 @@ val b = Interval.closed(1, 7)  // [1, 7]
 val c = a.span(b)              // [1, 10]
 ```
 
-```text
-                  [******************]   | [5,10]
-  [**********************]               | [1,7]
-  [**********************************]   | [1,10]
---+---------------+------+-----------+-- |
-  1               5      7          10   |
-```
+![span.svg](./span.svg)
 
-If intervals are disjoint, the span is non-empty:
+The resulting interval `c` covers the duration of both intervals `a` and `b` even if they are disjoint:
 
 ```scala
 val a = Interval.closed(1, 5)   // [1. 5]
@@ -53,13 +46,10 @@ val b = Interval.closed(7, 10)  // [7, 10]
 val c = a.span(b)               // [1, 10]
 ```
 
-```text
-  [***************]                      | [1,5]
-                         [***********]   | [7,10]
-  [**********************************]   | [1,10]
---+---------------+------+-----------+-- |
-  1               5      7          10   |
-```
+![span-disjoint.svg](./span-disjoint.svg)
+
+* **Commutative property**: `a # b = b # a` holds for *any* intervals `a` and `b`. It means that changing the _order of the operands_ does not change the result.
+* **Associative property**: `(a # b) # c = a # (b # c)` holds *for* any intervals `a`, `b` and `c`. It means that _order of operations_ does not affect the result.
 
 ## Union
 
