@@ -125,6 +125,9 @@ private[mtg] transparent trait BasicOps[T]:
    * --+-----------+-+------+-+-----------+-- |
    *   5          10 11    14 15         20   |
    * }}}
+   *
+   * Laws:
+   *   - Commutative: A ∥ B = B ∥ A
    */
   final def gap(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     Interval.make(ordM.min(a.right, b.right), ordM.max(a.left, b.left)).deflate

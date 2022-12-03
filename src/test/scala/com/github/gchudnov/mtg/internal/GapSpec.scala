@@ -332,7 +332,7 @@ final class GapSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "valid in [doc]" in {
+      "valid if disjoint [doc]" in {
         val a = Interval.closed(1, 4)
         val b = Interval.closed(7, 10)
 
@@ -340,6 +340,15 @@ final class GapSpec extends TestSpec:
         val expected = Interval.closed(5, 6)
 
         actual mustBe expected
+      }
+
+      "valid if non-disjoint [doc]" in {
+        val a = Interval.closed(5, 10)
+        val b = Interval.closed(1, 7)
+
+        val actual   = a.gap(b).canonical
+
+        actual.isEmpty mustBe true
       }
     }
 

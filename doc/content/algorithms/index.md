@@ -94,9 +94,20 @@ val c = a.gap(b)                // [5, 6]
 
 If the intervals are not disjoint, the gap is empty.
 
+```scala
+val a = Interval.closed(5, 10) // [5, 10]
+val b = Interval.closed(1, 7)  // [1, 7]
+
+val c = a.gap(b)                // ∅
+```
+
+![gap-if-intersect.svg](./gap-if-intersect.svg)
+
+- **Commutative property**: `a ∥ b = b ∥ a` holds for _any_ intervals `a` and `b`. It means that changing the _order of the operands_ does not change the result.
+
 ## Minus
 
-Subtraction of two intervals, `a` minus `b` returns:
+Subtraction `-` of two intervals, `a` minus `b` returns:
 
 - `[a-, min(pred(b-), a+)]` if `(a- < b-)` and `(a+ <= b+)`.
 - `[max(succ(b+), a-), a+]` if `(a- >= b-)` and `(a+ > b+)`.
