@@ -105,6 +105,8 @@ val c = a.gap(b)                // ∅
 
 - **Commutative property**: `a ∥ b = b ∥ a` holds for _any_ intervals `a` and `b`. It means that changing the _order of the operands_ does not change the result.
 
+**NOTE:** _intersection_ and _gap_ operations are related: for _any_ intervals `a` and `b`, `(a & b).swap == (a ∥ b).inflate`.
+
 ## Minus
 
 Subtraction `-` of two intervals, `a` _minus_ `b` is the interval `c`, such that:
