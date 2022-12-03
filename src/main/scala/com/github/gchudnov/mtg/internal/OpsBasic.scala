@@ -53,7 +53,7 @@ private[mtg] transparent trait BasicOps[T]:
    * --+---------------+------+-----------+-- |
    *   1               5      7          10   |
    *
-   * Example #2 (disjoint Intervals):
+   * Example #2: (disjoint Intervals):
    *
    *   [***************]                      | [1,5]
    *                          [***********]   | [7,10]
@@ -89,7 +89,7 @@ private[mtg] transparent trait BasicOps[T]:
    * --+---------------+--+---------------+-- |
    *   1               5  6              10   |
    *
-   * Example #1 (disjoint and non-adjacent Intervals):
+   * Example #2: (disjoint and non-adjacent Intervals):
    *
    *   [***********]                          | [1,4]
    *                      [***************]   | [6,10]
@@ -140,17 +140,17 @@ private[mtg] transparent trait BasicOps[T]:
    *   - `[a-, min(pred(b-), a+)]` if (a- < b-) and (a+ <= b+)
    *   - `[max(succ(b+), a-), a+]` if (a- >= b-) and (a+ > b+)
    *
-   * NOTE: a.minus(b) is defined only if and only if:
+   * NOTE: `a.minus(b)` is defined if and only if:
    *   - (a) `a` and `b` are disjoint;
    *   - (b) `a` contains either `b-` or `b+` but not both;
    *   - (c) either b.starts(a) or b.finishes(a) is true;
    *
-   * NOTE: a.minus(b) is undefined if:
-   *   - either a.starts(b) or a.finishes(b);
+   * NOTE: `a.minus(b)` is undefined if:
+   *   - either `a.starts(b)` or `a.finishes(b)`;
    *   - either `a` or `b` is properly included in the other;
    *
    * {{{
-   * Example #1 ((a- < b-) AND (a+ <= b+)):
+   * Example #1: ((a- < b-) AND (a+ <= b+))   | [a-, min(pred(b-), a+)]
    *
    *   [**********************]               | [1,10]
    *             [************************]   | [5,15]
@@ -158,7 +158,7 @@ private[mtg] transparent trait BasicOps[T]:
    * --+-------+-+------------+-----------+-- |
    *   1       4 5           10          15   |
    *
-   * Example #2 ((a- >= b-) AND (a+ > b+)):
+   * Example #2: ((a- >= b-) AND (a+ > b+))   | [max(succ(b+), a-), a+]
    *
    *             [************************]   | [5,15]
    *   [**********************]               | [1,10]

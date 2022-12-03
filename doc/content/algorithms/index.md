@@ -81,7 +81,7 @@ val c = a.union(b)             // ∅
 
 ## Gap
 
-A *gap* `∥` between two intervals `a` and `b` is the interval `c`, such that: `c = a ∥ b := [succ(min(a+, b+)), pred(max(a-, b-))]`.
+A _gap_ `∥` between two intervals `a` and `b` is the interval `c`, such that: `c = a ∥ b := [succ(min(a+, b+)), pred(max(a-, b-))]`.
 
 ```scala
 val a = Interval.closed(1, 4)   // [1, 4]
@@ -107,10 +107,22 @@ val c = a.gap(b)                // ∅
 
 ## Minus
 
-Subtraction `-` of two intervals, `a` minus `b`:
+Subtraction `-` of two intervals, `a` _minus_ `b` is the interval `c`, such that:
 
 - `c := a - b = [a-, min(pred(b-), a+)]` if `a- < b-` and `a+ <= b+`;
 - `c := a - b = [max(succ(b+), a-), a+]` if `a- >= b-` and `a+ > b+`.
+
+`a.minus(b)` is defined if and only if:
+
+- `a` and `b` are _disjoint_;
+- `a` _contains_ either `b-` or `b+` but not both;
+- either `b.starts(a)` or `b.finishes(a)` is true.
+
+`a.minus(b)` is undefined if:
+
+- either `a.starts(b)` or `a.finishes(b)`;
+- either `a` or `b` is _properly included_ in the other.
+  - NOTE: when `a.contains(b)`, use `Intervals.minus(a, b)` instead, it returns a collection of intervals.
 
 ```scala
 val a = Interval.closed(1, 10)  // [1, 10]
@@ -125,28 +137,20 @@ val c = a.minus(b)              // [1, 4]
 val a = Interval.closed(5, 15) // [5, 15]
 val b = Interval.closed(1, 10) // [1, 10]
 
-val c = a.minus(b) // [11, 15]
+val c = a.minus(b)             // [11, 15]
 ```
 
 ![minus-right.svg](./minus-right.svg)
 
-
-NOTE: the operation `a.minus(b)` is not defined if `a.contains(b)` and throws a `UnsupportedOperationException`.
-Use `Intervals.minus(a, b)` instead that returns a collection of intervals:
+**NOTE:** the operation `a.minus(b)` is not defined if `a.contains(b)` and throws `UnsupportedOperationException`.
+Use `Intervals.minus(a, b)` instead that returns a collection of intervals: `c1, c2 := a - b = list([a-, pred(b-)], [succ(b+), a+])`
 
 ```scala
 val a = Interval.closed(1, 15)  // [1, 15]
 val b = Interval.closed(5, 10)  // [5, 10]
 
 // val c = a.minus(b)           // throws UnsupportedOperationException
-val cs = Intervals.minus(a, b)  // [[1, 4], [11, 15]]
+val cs = Interval.minus(a, b)   // [[1, 4], [11, 15]]
 ```
 
-```text
-  [**********************************]   | [1,15]  : a
-            [************]               | [5,10]  : b
-  [*******]                              | [1,4]   : c1
-                           [*********]   | [11,15] : c2
---+-------+-+------------+-+---------+-- |
-  1       4 5           10          15   |
-```
+![minus-contains.svg](./minus-contains.svg)
