@@ -9,7 +9,8 @@ draft = false
 
 ## Intersection
 
-An intersection of two intervals `a` and `b`: `a ∩ b := [max(a-, b-), min(a+, b+)]`.
+An _intersection_ `&` of two intervals `a` and `b` is defined as the interval `c`, such that `c = a & b := [max(a-, b-), min(a+, b+)]`.
+When two intervals are not intersecting, the _intersection_ produces an empty-interval.
 
 ```scala
 val a = Interval.closed(5, 10) // [5, 10]
@@ -18,13 +19,11 @@ val b = Interval.closed(1, 7)  // [1, 7]
 val c = a.intersection(b)      // [5, 7]
 ```
 
-```text
-                  [******************]   | [5,10]
-  [**********************]               | [1,7]
-                  [******]               | [5,7]
---+---------------+------+-----------+-- |
-  1               5      7          10   |
-```
+![intersection.svg](./intersection.svg)
+
+The intersection is _commutative_ as changing the _order of the operands_ does not change the result. It means that for any intervals `a` and `b`, `a & b = b & a`.
+
+The intersection is _associative_ as the _order of operations_ does not affect the final result. It means that for any intervals `a`, `b` and `c`, `(a & b) & c = a & (b & c)`.
 
 ## Span
 

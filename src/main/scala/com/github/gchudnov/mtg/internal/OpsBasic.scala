@@ -16,7 +16,7 @@ private[mtg] transparent trait BasicOps[T]:
    *   - A ∩ B
    *   - A & B
    *
-   * An intersection of two intervals `a` and `b`: `[max(a-, b-), min(a+, b+)]` if a intersects b else undefined.
+   * An intersection of two intervals `a` and `b` is defined as the interval `c`, such that `c = a ∩ b := [max(a-, b-), min(a+, b+)]`.
    *
    * {{{
    *   A ∩ B := [max(a-, b-), min(a+, b+)]

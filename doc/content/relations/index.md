@@ -32,26 +32,6 @@ Note, that the relations are defined on _non-empty_ intervals.
 
 ![relations.svg](./relations.svg)
 
-or can be represented in the following compact text form:
-
-```text
-  Relation         Symbol          AAAAA
-                                   :   :
-  a.before(b)         b            :   : BBBBBBBBB  | a+ < b-
-  a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
-  a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
-  a.starts(b)         s            BBBBBBBBB        | a- = b- ; a+ < b+
-  a.during(b)         d          BBBBBBBBB          | a- > b- ; a+ < b+
-  a.finishes(b)       f        BBBBBBBBB            | a+ = b+ ; a- > b-
-  a.after(b)          B  BBBBBBBBB :   :            | a- > b+
-  a.isMetBy(b)        M    BBBBBBBBB   :            | a- = b+
-  a.isOverlappedBy(b) O      BBBBBBBBB :            | b- < a- < b+ < a+
-  a.isStartedBy(b)    S            BBB :            | a- = b- ; b+ < a+
-  a.contains(b)       D            : B :            | a- < b- ; b+ < a+
-  a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
-  a.equalsTo(b)       e            BBBBB            | a- = b- ; a+ = b+
-```
-
 ### Before / After
 
 `a` _before_ `b` means that interval `a` ends _before_ interval `b` begins, with a gap separating them.
