@@ -1,13 +1,11 @@
 name: CI
 on:
   push:
-    branches:
-      - main
+    branches: [$default-branch]
     tags:
       - '*'
   pull_request:
-    branches:
-      - main
+    branches: [$default-branch]
   workflow_dispatch:
 jobs:
   build:
