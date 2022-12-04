@@ -11,11 +11,35 @@
 Add the following dependency to your `build.sbt`:
 
 ```scala
-libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "x.y.z"
+libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "1.0.0"
 ```
 
-TODO: extract parts from documentation
+Import the package:
 
+```scala
+import com.github.gchudnov.mtg.*
+```
+
+An example application:
+
+```scala
+package com.example
+
+import com.github.gchudnov.mtg.*
+
+object Hello extends App {
+  val a = Interval.closed(0, 5)
+  val b = Interval.closed(1, 6)
+
+  val c = a.intersection(b)
+
+  println(c)
+  // Interval(At(Finite(1)),At(Finite(5)))
+
+  println(Show.asString(c))
+  // [1,5]
+}
+```
 
 ## Links
 
