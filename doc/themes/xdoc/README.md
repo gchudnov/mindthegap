@@ -39,7 +39,7 @@ where:
 - `XDOC_ROOT_DIR` - is the root directory of the theme`.
 - `XDOC_STATIC_DIR` - static directory of the theme.
 - `XDOC_CONFIG_DIR` - path to the configuration directory of the theme.
-- `XDOC_PROJECT_DIR` - root directory of the project.
+- `XDOC_PROJECT_DIR` - root directory of the project documentation.
 - `XDOC_BUILD_DIR` - build directory of the project (not the theme). Usually it is `${XDOC_PROJECT_DIR}/public` directory.
 
 ### 3. Bundle Icons
