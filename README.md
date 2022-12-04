@@ -6,6 +6,8 @@
 
 <br clear="right" /><!-- Turn off the wrapping for the logo image. -->
 
+[Documentation](https://gchudnov.github.io/mindthegap/)
+
 ## Usage
 
 Add the following dependency to your `build.sbt`:
