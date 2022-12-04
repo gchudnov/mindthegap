@@ -1,4 +1,4 @@
-name: Build
+name: CI
 on:
   push:
     branches:
@@ -8,27 +8,21 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 jobs:
-  # build_code:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-java@v3
-  #       with:
-  #         distribution: 'temurin'
-  #         java-version: '17'
-  #         cache: 'sbt'
-  #     - name: Run tests
-  #       run: sbt test
-  build_doc:
+  build:
+    if: ${{ false }}  # disable for now
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/master'
     steps:
-      - name: 'Checkout'
+      - name: Checkout
         uses: actions/checkout@v3
-      - name: 'Build Doc and Deploy'
-        run: bash ./build.sh
-        env:
-          PAGES_BRANCH: gh-pages
-          BUILD_DIR: doc
-          TOKEN: ${{ secrets.TOKEN }}
+        with:
+          submodules: recursive
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'sbt'
+      - name: Run Tests
+        run: sbt test

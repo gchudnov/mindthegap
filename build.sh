@@ -4,21 +4,9 @@ set -exu
 # current directory
 DIR_SELF="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# node.js
-curl -fsSL https://deb.nodesource.com/setup_19.x | sudo -E bash - && \
-sudo apt-get install -y nodejs
-
-# inkscape
-sudo add-apt-repository ppa:inkscape.dev/stable
-sudo apt update
-sudo apt install -y inkscape
-
-# zola
-snap install --edge zola
-
-# install xdoc dependencies
 cd "${DIR_SELF}/doc/themes/xdoc"
 
+# install xdoc node.js dependencies
 npm install
 
 # set env variables
