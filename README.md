@@ -2,7 +2,7 @@
 
 > Intervals, Relations and Algorithms
 
-[![Build](https://github.com/gchudnov/mindthegap/actions/workflows/ci.yml/badge.svg)](https://github.com/gchudnov/mindthegap/actions/workflows/ci.yml)
+[![Build](https://github.com/gchudnov/mindthegap/actions/workflows/scala.yml/badge.svg)](https://github.com/gchudnov/mindthegap/actions/workflows/scala.yml)
 
 <br clear="right" /><!-- Turn off the wrapping for the logo image. -->
 
