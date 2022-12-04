@@ -1,6 +1,11 @@
 import sbt.Keys._
 import sbt._
 
+import sbtrelease.ReleasePlugin.autoImport._
+import sbtrelease.ReleaseStateTransformations._
+import com.jsuereth.sbtpgp.PgpKeys
+import com.jsuereth.sbtpgp.SbtPgp.autoImport.usePgpKeyHex
+
 object Settings {
   private val scalaV = "3.2.0"
 
@@ -24,15 +29,60 @@ object Settings {
   )
 
   val globalScalaVersion: String = scalaV
+  val supportedScalaVersions: List[String] = List(scalaV)
 
   val sharedResolvers: Vector[MavenRepository] = (Seq(Resolver.mavenLocal) ++ Resolver.sonatypeOssRepos("releases")).toVector
 
   val shared: Seq[Setting[_]] = Seq(
-    scalacOptions ++= sharedScalacOptions,
-    scalaVersion      := scalaV,
-    ThisBuild / turbo := true,
-    resolvers         := Resolver.combineDefaultResolvers(sharedResolvers),
-    compileOrder      := CompileOrder.JavaThenScala,
-    organization      := "com.github.gchudnov"
+    scalacOptions      := sharedScalacOptions,
+    crossScalaVersions := supportedScalaVersions,
+    scalaVersion       := scalaV,
+    ThisBuild / turbo  := true,
+    resolvers          := Resolver.combineDefaultResolvers(sharedResolvers),
+    compileOrder       := CompileOrder.JavaThenScala,
+    organization       := "com.github.gchudnov",
+    homepage           := Some(url("https://github.com/gchudnov/mindthegap")),
+    description        := "Intervals, Relations and Algorithms",
+    licenses           := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
+    scmInfo := Some(
+      ScmInfo(
+        url("https://github.com/gchudnov/mindthegap"),
+        "scm:git@github.com:gchudnov/mindthegap.git"
+      )
+    ),
+    developers := List(
+      Developer(id = "gchudnov", name = "Grigorii Chudnov", email = "g.chudnov@gmail.com", url = url("https://github.com/gchudnov"))
+    )
   )
+
+  val sonatype: Seq[Setting[_]] = Seq(
+    publishMavenStyle      := true,
+    Test / publishArtifact := false,
+    publishTo                     := Some("Sonatype Releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2"),
+    releaseCrossBuild             := true,
+    releaseIgnoreUntrackedFiles   := true,
+    releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+    releaseProcess := Seq[ReleaseStep](
+      checkSnapshotDependencies,
+      inquireVersions,
+      runClean,
+      runTest,
+      setReleaseVersion,
+      commitReleaseVersion,
+      tagRelease,
+      releaseStepCommandAndRemaining("+publishSigned"),
+      releaseStepCommandAndRemaining("sonatypeBundleRelease"),
+      setNextVersion,
+      commitNextVersion,
+      pushChanges
+    )
+  )
+
+  val noPublish: Seq[Setting[_]] = Seq(
+    publishArtifact := false,
+    publish         := {},
+    publishLocal    := {},
+    publish / skip  := true
+  )
+
 }

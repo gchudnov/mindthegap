@@ -16,11 +16,12 @@ lazy val allSettings = Settings.shared ++ testSettings
 lazy val mtg = (project in file("."))
   .enablePlugins(BuildInfoPlugin)
   .settings(allSettings)
+  .settings(Settings.sonatype)
   .settings(
     name := "mtg",
     libraryDependencies ++= Dependencies.Mtg,
-    buildInfoKeys                 := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage              := "com.github.gchudnov.mtg",
+    buildInfoKeys       := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoPackage    := "com.github.gchudnov.mtg",
   )
 
 addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
