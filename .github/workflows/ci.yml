@@ -2,12 +2,12 @@ name: Build
 on:
   push:
     branches:
-      - $default-branch
+      - main
     tags:
       - '*'
   pull_request:
     branches:
-      - $default-branch
+      - main
 jobs:
   # build_code:
   #   runs-on: ubuntu-latest
@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
-      - name: 'Build and Deploy'
+      - name: 'Build Doc and Deploy'
         run: bash ./build.sh
         env:
           PAGES_BRANCH: gh-pages
