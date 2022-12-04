@@ -6,7 +6,9 @@
 
 <br clear="right" /><!-- Turn off the wrapping for the logo image. -->
 
-[Documentation](https://gchudnov.github.io/mindthegap/)
+## Documentation
+
+You can find the documentation [on the website](https://gchudnov.github.io/mindthegap/).  
 
 ## Usage
 
