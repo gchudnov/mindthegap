@@ -13,6 +13,9 @@ sudo add-apt-repository ppa:inkscape.dev/stable
 sudo apt update
 sudo apt install -y inkscape
 
+# zola
+snap install --edge zola
+
 # install xdoc dependencies
 cd "${DIR_SELF}/doc/themes/xdoc"
 
@@ -28,3 +31,27 @@ export XDOC_BUILD_DIR=$(realpath "${XDOC_PROJECT_DIR}/public")
 # bundle icons
 export XDOC_ICON_SVG_PATH="${DIR_SELF}/res/logo512.svg"
 npm run icons
+
+# build Manifest
+npm run manifest
+
+# bundle theme
+npm run theme
+
+# bundle KaTeX
+npm run katex
+
+# bundle Roboto-Font
+npm run roboto
+
+# build zola project (1)
+zola build
+
+# bundle search
+npm run search
+
+# bundle application
+npm run bundle
+
+# build zola project (2)
+zola build
