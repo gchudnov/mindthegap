@@ -32,6 +32,9 @@ npm run katex
 # bundle Roboto-Font
 npm run roboto
 
+# stub on first build to avoid `Error: Reason: `get_url`: Could not find or open file xdoc-bundle.min.js`
+touch "${XDOC_STATIC_DIR}/xdoc-bundle.min.js"
+
 # build zola project (1)
 zola build
 
