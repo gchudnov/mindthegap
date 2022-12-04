@@ -27,7 +27,7 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@master
       - name: 'Build and Deploy'
-        run: ./build.sh
+        run: bash ./build.sh
         env:
           PAGES_BRANCH: gh-pages
           BUILD_DIR: doc
