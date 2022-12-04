@@ -154,18 +154,16 @@ In addition, `a.deflateLeft` and `a.deflateRight` methods shrink left and right 
 
 ## Show
 
-Import `Show.given` to pretty-print an interval:
+Use `Show.asString` to pretty-print an interval:
 
 ```scala
-import com.github.gchudnov.mtg.Show.given
-
 val a = Interval.empty[Int]
 val b = Interval.point(5)
 val c = Interval.proper(None, true, Some(2), false)
 
-a.show // ∅
-b.show // {5}
-c.show // [-∞,2)
+Show.asString(a) // ∅
+Show.asString(b) // {5}
+Show.asString(c) // [-∞,2)
 ```
 
 ## Display
