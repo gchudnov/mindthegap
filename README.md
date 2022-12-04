@@ -2,13 +2,13 @@
 
 > Intervals, Relations and Algorithms
 
-[![Build](https://github.com/gchudnov/mindthegap/actions/workflows/scala.yml/badge.svg)](https://github.com/gchudnov/mindthegap/actions/workflows/scala.yml)
+[![Build](https://github.com/gchudnov/mindthegap/actions/workflows/scala.yml/badge.svg?branch=main)](https://github.com/gchudnov/mindthegap/actions/workflows/scala.yml)
 
 <br clear="right" /><!-- Turn off the wrapping for the logo image. -->
 
 ## Documentation
 
-You can find the documentation [on the website](https://gchudnov.github.io/mindthegap/).  
+You can find _mindthegap_ documentation [on the website](https://gchudnov.github.io/mindthegap/).  
 
 ## Usage
 
