@@ -11,7 +11,7 @@ package com.github.gchudnov.mtg
  *   (x, y) = [succ(x), pred(y)].
  * }}}
  */
-trait Domain[T]:
+trait Domain[T] extends Ordering[T]:
   /**
    * Successor value
    *
@@ -31,5 +31,18 @@ trait Domain[T]:
    *   x - epsilon
    */
   def pred(x: T): T
+
+  /**
+   * Count
+   *
+   * Returns the number of points in interval defined by [start, end]. 
+   * 
+   * In other words, it returns the cardinality (length / duration of an interval).
+   *
+   * @param start
+   * @param end
+   * @return
+   */
+  def count(start: T, end: T): Long
 
 object Domain extends DomainDefaults

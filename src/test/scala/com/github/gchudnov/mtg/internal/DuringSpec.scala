@@ -89,7 +89,7 @@ final class DuringSpec extends TestSpec:
         }
       }
 
-      "valid in specal cases" in {
+      "valid in special cases" in {
         // Empty
         Interval.empty[Int].during(Interval.open(5, 10)) mustBe (false)
         Interval.empty[Int].during(Interval.point(0)) mustBe (false)
@@ -134,6 +134,10 @@ final class DuringSpec extends TestSpec:
         // (3,10), (0,+∞)
         Interval.open(3, 10).during(Interval.leftOpen(0)) mustBe (true)
         Interval.leftOpen(0).contains(Interval.open(3, 10)) mustBe (true)
+
+        // [doc]
+        Interval.closed(3, 7).during(Interval.closed(1, 10)) mustBe (true)
+        Interval.closed(1, 10).contains(Interval.closed(3, 7)) mustBe (true)
       }
     }
   }

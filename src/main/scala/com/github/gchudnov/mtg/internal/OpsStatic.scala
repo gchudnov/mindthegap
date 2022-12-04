@@ -36,10 +36,11 @@ private[mtg] transparent trait StaticOps:
   /**
    * Minus
    *
-   * Unlike `a.minus(b)` that returns an interval and not defined when a.contains(b), this method returns a non-empty collection of intervals and can be used when a.contains(b).
+   * Unlike `a.minus(b)` that returns an interval and not defined when `a.contains(b)`, this method returns a non-empty collection of intervals and can be used when `a.contains(b)`
+   * is true.
    *
    * {{{
-   *   a - b = [c1, c2]
+   *   a - b = [c1, c2]                       | [a-, pred(b-)], [succ(b+), a+]
    *
    *   [**********************************]   | [1,15]  : a
    *             [************]               | [5,10]  : b

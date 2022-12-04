@@ -1,0 +1,14 @@
+/**
+ * Theme Switcher
+ */
+
+.theme-switcher {
+  @include button-icon-round;
+
+  &::after {
+    background-image: var(--icon-theme-switch);
+    background-position: center;
+    // background-size: 0.75em auto;
+    background-repeat: no-repeat;
+  }
+}

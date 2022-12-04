@@ -9,7 +9,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
  * IsLess
  *
  * {{{
- *   isLess                    AAAAA            |  a- < b- AND a+ < b+
+ *   isLess                    AAAAA            |  a- < b-
  *                             :   :
  *   before(a,b)      b        :   : BBBBBBBBB
  *   meets(a,b)       m        :   BBBBBBBBB
@@ -50,7 +50,7 @@ final class IsLessSpec extends TestSpec:
           whenever(xx.isGreater(yy)) {
             yy.isLess(xx) mustBe true
 
-            if (xx.nonEmpty && yy.nonEmpty) then assertOneOf(Set(Rel.After, Rel.IsMetBy, Rel.IsOverlapedBy, Rel.During, Rel.Finishes))(xx, yy)
+            if (xx.nonEmpty && yy.nonEmpty) then assertOneOf(Set(Rel.After, Rel.IsMetBy, Rel.IsOverlappedBy, Rel.During, Rel.Finishes))(xx, yy)
           }
         }
       }
@@ -109,6 +109,12 @@ final class IsLessSpec extends TestSpec:
 
         Interval.empty[Int].isGreater(Interval.unbounded[Int]) mustBe (true)
         Interval.unbounded[Int].isGreater(Interval.empty[Int]) mustBe (false)
+
+        // [doc]
+        Interval.closed(1, 5).isLess(Interval.closed(5, 10)) // true        
+
+        // [doc]
+        Interval.closed(5, 10).isGreater(Interval.closed(1, 5)) // true        
       }
     }
   }

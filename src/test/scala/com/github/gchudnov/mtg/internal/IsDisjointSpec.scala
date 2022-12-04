@@ -58,6 +58,10 @@ final class IsDisjointSpec extends TestSpec:
       "valid in special cases" in {
         Interval.open(1, 4).isDisjoint(Interval.open(3, 6)) mustBe (true)
         Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) mustBe (true)
+
+        // [doc]
+        Interval.closed(5, 7).isDisjoint(Interval.closed(1, 3)) mustBe (true)
+        Interval.closed(5, 7).isDisjoint(Interval.closed(8, 10)) mustBe (true)
       }
     }
   }

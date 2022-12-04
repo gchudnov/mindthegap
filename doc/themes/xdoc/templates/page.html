@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{%- block seo %}
+  {{- super() }}
+  {%- set subcaption = "" %}
+  {%- if page.title and config.title %}
+    {%- set caption = page.title %}
+    {%- set subcaption = config.title %}
+  {%- elif page.title %}
+    {%- set caption = page.title %}
+  {%- else %}
+    {%- set caption = config.title %}
+  {%- endif %}
+
+  {{- macros_head::seo(caption=caption, subcaption=subcaption, type="article") }}
+{%- endblock seo %}
+
+{%- block content %}
+  <section>
+    {%- block aside %}
+    {%- if page.toc %}
+    <aside>
+      <nav>
+        <ul>
+          {% for h1 in page.toc %}
+          <li>
+            <a href="{{ h1.permalink | safe }}" class="secondary">{{ h1.title }}</a>
+            {% if h1.children %}
+            <ul>
+              {% for h2 in h1.children %}
+              <li>
+                  <a href="{{ h2.permalink | safe }}" class="secondary">{{ h2.title }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </aside>
+    {%- endif %}
+    {%- endblock aside %}
+
+    <div role="document">
+      {{ page.content | safe }}
+    </div>
+  </section>
+{%- endblock content %}
+
+{%- block scroll_top %}
+{%- if page.reading_time and page.reading_time > 2 %}
+<a role="button" style="display: none;" class="muted scroll-top" href="{{ get_url(path=current_path, trailing_slash=true) ~ '#' }}"></a>
+{%- endif %}
+{%- endblock scroll_top %}

@@ -1,0 +1,14 @@
+{%- extends "base.html" %}
+
+{%- block seo %}
+  {{- super() }}
+  {%- set caption = config.title %}
+  {%- set subcaption = "" %}
+  {{- macros_head::seo(caption=caption, subcaption=subcaption) }}
+{%- endblock seo %}
+
+{%- block content %}
+  <div role="document">
+    {{ section.content | safe }}
+  </div>
+{%- endblock content %}

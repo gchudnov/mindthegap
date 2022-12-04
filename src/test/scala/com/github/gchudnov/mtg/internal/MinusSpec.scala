@@ -55,10 +55,10 @@ final class MinusSpec extends TestSpec:
           yy.isEmpty mustBe (true)
 
           val actual   = xx.minus(yy).canonical
-          val expedted = xx.canonical
+          val expected = xx.canonical
 
           actual.isEmpty mustBe false
-          actual mustBe (expedted)
+          actual mustBe (expected)
         }
       }
 
@@ -157,7 +157,7 @@ final class MinusSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          whenever(xx.isOverlapedBy(yy)) {
+          whenever(xx.isOverlappedBy(yy)) {
             val actual = xx.minus(yy).canonical
 
             actual.isEmpty mustBe false
@@ -246,6 +246,28 @@ final class MinusSpec extends TestSpec:
           }
         }
       }
+
+      "[,] if minus left [doc]" in {
+        val a = Interval.closed(1, 10) // [1, 10]
+        val b = Interval.closed(5, 15) // [5, 15]
+
+        val actual = a.minus(b).canonical // [1, 4]
+
+        val expected = Interval.closed(1, 4)
+
+        actual mustBe expected
+      }
+
+      "[,] if minus right [doc]" in {
+        val a = Interval.closed(5, 15) // [5, 15]
+        val b = Interval.closed(1, 10) // [1, 10]
+
+        val actual = a.minus(b).canonical // [11, 15]
+
+        val expected = Interval.closed(11, 15)
+
+        actual mustBe expected
+      }      
     }
 
     "Interval" should {
@@ -266,6 +288,17 @@ final class MinusSpec extends TestSpec:
             zz mustBe (xx.canonical)
           }
         }
+      }
+
+      "[,] if a.contains(b) [doc]" in {
+        val a = Interval.closed(1, 15)  // [1, 15]
+        val b = Interval.closed(5, 10)  // [5, 10]
+
+        // val c = a.minus(b)           // throws UnsupportedOperationException
+        val cs = Interval.minus(a, b)   // [[1, 4], [11, 15]]
+
+        val actual = cs.map(_.canonical)
+        val expected = List(Interval.closed(1, 4), Interval.closed(11, 15))
       }
     }
   }

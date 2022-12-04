@@ -4,6 +4,7 @@ import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.Mark
 
 /**
  * Merges, IsMergedBy
@@ -32,7 +33,7 @@ final class MergesSpec extends TestSpec:
                 Rel.Meets,
                 Rel.IsMetBy,
                 Rel.Overlaps,
-                Rel.IsOverlapedBy,
+                Rel.IsOverlappedBy,
                 Rel.During,
                 Rel.Contains,
                 Rel.Starts,
@@ -60,7 +61,8 @@ final class MergesSpec extends TestSpec:
             yy.merges(xx) mustBe true
 
             val rs = findRelations(xx, yy)
-            rs.isEmpty mustBe (true)
+            val es = if xx.canonical == yy.canonical then Set(Rel.EqualsTo) else Set.empty[Rel]
+            rs must contain theSameElementsAs (es)
 
             xx.intersects(yy) mustBe (false)
             xx.isAdjacent(yy) mustBe (false)
@@ -102,6 +104,10 @@ final class MergesSpec extends TestSpec:
         Interval.open(4, 10).merges(Interval.open(5, 12)) mustBe (true)
         Interval.open(5, 12).isMergedBy(Interval.open(4, 10)) mustBe (true)
         Interval.open(4, 7).merges(Interval.open(5, 8)) mustBe (true)
+
+        // [doc]
+        Interval.point(5).merges(Interval.point(6)) mustBe (true)
+        Interval.closed(4, 10).merges(Interval.closed(5, 12)) mustBe (true)      
       }
     }
   }

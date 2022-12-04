@@ -1,0 +1,18 @@
+@mixin darkSyntax {
+  --code-zola-color: #C8C8C8;
+  --code-zola-background-color: #212121;
+  --code-zola-text-color: hsl(0, 0%, 49%);
+  --code-zola-invalid-color: #ffffff;
+  --code-zola-error-color: #ff5370;
+  --code-zola-constant-color: #ce9178;
+  --code-zola-keyword-color: #569cd6;
+  --code-zola-operator-color: #89ddff;
+  --code-zola-tag-color: #f07178;
+  --code-zola-function-color: #DCDCAA;
+  --code-zola-parameter-color: #4EC9B0;
+  --code-zola-type-color: #4EC9B0;
+  --code-zola-style-type-color: #b2ccd6;
+  --code-zola-line-number-color: #c17e70;
+  --code-zola-raw-markdown-color: #65737e;
+  --code-zola-fenced-markdown-color: #000000;
+}

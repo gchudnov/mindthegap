@@ -31,7 +31,7 @@ final class IntersectsSpec extends TestSpec:
             yy.intersects(xx) mustBe true
 
             assertOneOf(
-              Set(Rel.Meets, Rel.IsMetBy, Rel.Overlaps, Rel.IsOverlapedBy, Rel.During, Rel.Contains, Rel.Starts, Rel.IsStartedBy, Rel.Finishes, Rel.IsFinishedBy, Rel.EqualsTo)
+              Set(Rel.Meets, Rel.IsMetBy, Rel.Overlaps, Rel.IsOverlappedBy, Rel.During, Rel.Contains, Rel.Starts, Rel.IsStartedBy, Rel.Finishes, Rel.IsFinishedBy, Rel.EqualsTo)
             )(xx, yy)
 
             // a- <= b+ && b- <= a+
@@ -83,6 +83,11 @@ final class IntersectsSpec extends TestSpec:
         // Infinity
         // [5, +inf)  (-inf, 10)
         Interval.leftClosed(5).intersects(Interval.rightOpen(10)) mustBe (true)
+
+        // [doc]
+        Interval.empty[Int].intersects(Interval.empty[Int]) mustBe (false)
+        Interval.point(5).intersects(Interval.point(5)) mustBe (true)
+        Interval.closed(0, 5).intersects(Interval.closed(1, 6)) mustBe (true)
       }
     }
   }

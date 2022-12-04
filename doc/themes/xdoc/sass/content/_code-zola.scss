@@ -1,0 +1,452 @@
+/**
+ * Zola Code
+ */
+
+.z-code {
+  color: var(--code-zola-color);
+  background-color: var(--code-zola-background-color);
+}
+.z-comment,
+.z-punctuation.z-definition.z-comment {
+  color: var(--code-zola-text-color);
+}
+.z-variable,
+.z-string .z-constant.z-other.z-placeholder {
+  color: var(--code-zola-color);
+}
+.z-constant.z-other.z-color {
+  color: var(--code-zola-invalid-color);
+}
+.z-invalid,
+.z-invalid.z-illegal,
+.z-invalid.z-broken {
+  color: var(--code-zola-invalid-color);
+  background-color: var(--code-zola-error-color);
+}
+.z-invalid.z-unimplemented {
+  color: var(--code-zola-invalid-color);
+  background-color: var(--code-zola-constant-color);
+}
+.z-invalid.z-deprecated {
+  color: var(--code-zola-invalid-color);
+  background-color: var(--code-zola-keyword-color);
+}
+.z-keyword,
+.z-storage.z-type,
+.z-storage.z-modifier {
+  color: var(--code-zola-keyword-color);
+}
+.z-storage.z-type,
+.z-keyword.z-control {
+  // no-op
+}
+.z-keyword.z-operator,
+.z-constant.z-other.z-color,
+.z-punctuation,
+.z-meta.z-tag,
+.z-punctuation.z-definition.z-tag,
+.z-punctuation.z-separator.z-inheritance.z-php,
+.z-punctuation.z-definition.z-tag.z-html,
+.z-punctuation.z-definition.z-tag.z-begin.z-html,
+.z-punctuation.z-definition.z-tag.z-end.z-html,
+.z-punctuation.z-section.z-embedded,
+.z-keyword.z-other.z-template,
+.z-keyword.z-other.z-substitution {
+  color: var(--code-zola-operator-color);
+}
+.z-entity.z-name.z-tag,
+.z-meta.z-tag.z-sgml,
+.z-markup.z-deleted.z-git_gutter {
+  color: var(--code-zola-tag-color);
+}
+.z-entity.z-name.z-function,
+.z-meta.z-function-call,
+.z-variable.z-function,
+.z-support.z-function,
+.z-keyword.z-other.z-special-method,
+.z-meta.z-block-level {
+  color: var(--code-zola-function-color);
+}
+.z-support.z-other.z-variable,
+.z-string.z-other.z-link {
+  color: var(--code-zola-tag-color);
+}
+.z-constant.z-numeric,
+.z-constant.z-language,
+.z-support.z-constant,
+.z-constant.z-character,
+.z-variable.z-parameter,
+.z-keyword.z-other.z-unit {
+  color: var(--code-zola-parameter-color);
+}
+.z-string,
+.z-constant.z-other.z-symbol,
+.z-constant.z-other.z-key,
+.z-entity.z-other.z-inherited-class,
+.z-markup.z-heading,
+.z-markup.z-inserted.z-git_gutter,
+.z-meta.z-group.z-braces.z-curly .z-constant.z-other.z-object.z-key.z-js .z-string.z-unquoted.z-label.z-js {
+  color: var(--code-zola-constant-color);
+}
+.z-entity.z-name.z-class,
+.z-entity.z-name.z-type.z-class,
+.z-support.z-type,
+.z-support.z-class,
+.z-support.z-orther.z-namespace.z-use.z-php,
+.z-meta.z-use.z-php,
+.z-support.z-other.z-namespace.z-php,
+.z-markup.z-changed.z-git_gutter,
+.z-support.z-type.z-sys-types {
+  color: var(--code-zola-type-color);
+}
+.z-source.z-css .z-support.z-type,
+.z-source.z-sass .z-support.z-type,
+.z-source.z-scss .z-support.z-type,
+.z-source.z-less .z-support.z-type,
+.z-source.z-stylus .z-support.z-type {
+  color: var(--code-zola-style-type-color);
+}
+.z-entity.z-name.z-module.z-js,
+.z-variable.z-import.z-parameter.z-js,
+.z-variable.z-other.z-class.z-js {
+  color: var(--code-zola-error-color);
+}
+.z-variable.z-language {
+  color: var(--code-zola-error-color);
+}
+.z-entity.z-name.z-method.z-js {
+  color: var(--code-zola-function-color);
+}
+.z-meta.z-class-method.z-js .z-entity.z-name.z-function.z-js,
+.z-variable.z-function.z-constructor {
+  color: var(--code-zola-function-color);
+}
+.z-entity.z-other.z-attribute-name {
+  color: var(--code-zola-keyword-color);
+}
+.z-text.z-html.z-basic .z-entity.z-other.z-attribute-name.z-html,
+.z-text.z-html.z-basic .z-entity.z-other.z-attribute-name {
+  color: var(--code-zola-type-color);
+}
+.z-entity.z-other.z-attribute-name.z-class {
+  color: var(--code-zola-type-color);
+}
+.z-source.z-sass .z-keyword.z-control {
+  color: var(--code-zola-function-color);
+}
+.z-markup.z-inserted {
+  color: var(--code-zola-constant-color);
+}
+.z-markup.z-deleted {
+  color: var(--code-zola-error-color);
+}
+.z-markup.z-changed {
+  color: var(--code-zola-keyword-color);
+}
+.z-string.z-regexp {
+  color: var(--code-zola-operator-color);
+}
+.z-constant.z-character.z-escape {
+  color: var(--code-zola-operator-color);
+}
+.z-*url*,
+.z-*link*,
+.z-*uri* {
+  font-style: underline;
+}
+.z-constant.z-numeric.z-line-number.z-find-in-files {
+  color: var(--code-zola-line-number-color);
+}
+.z-entity.z-name.z-filename.z-find-in-files {
+  color: var(--code-zola-constant-color);
+}
+.z-tag.z-decorator.z-js .z-entity.z-name.z-tag.z-js,
+.z-tag.z-decorator.z-js .z-punctuation.z-definition.z-tag.z-js {
+  color: var(--code-zola-function-color);
+}
+.z-source.z-js .z-constant.z-other.z-object.z-key.z-js .z-string.z-unquoted.z-label.z-js {
+  color: var(--code-zola-error-color);
+}
+.z-source.z-json
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta.z-structure.z-dictionary.z-json
+  .z-string.z-quoted.z-double.z-json,
+.z-source.z-json
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta.z-structure.z-dictionary.z-json
+  .z-punctuation.z-definition.z-string {
+  color: var(--code-zola-constant-color);
+}
+.z-source.z-json
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta.z-structure.z-dictionary.z-json
+  .z-string.z-quoted.z-double.z-json,
+.z-source.z-json
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta.z-structure.z-dictionary.z-json
+  .z-punctuation.z-definition.z-string {
+  color: var(--code-zola-keyword-color);
+}
+.z-source.z-json
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta.z-structure.z-dictionary.z-json
+  .z-string.z-quoted.z-double.z-json,
+.z-source.z-json
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta.z-structure.z-dictionary.z-json
+  .z-punctuation.z-definition.z-string {
+  color: var(--code-zola-tag-color);
+}
+.z-source.z-json
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta.z-structure.z-dictionary.z-json
+  .z-string.z-quoted.z-double.z-json,
+.z-source.z-json
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta
+  .z-meta.z-structure.z-dictionary.z-json
+  .z-punctuation.z-definition.z-string {
+  color: var(--code-zola-function-color);
+}
+.z-source.z-json .z-meta .z-meta .z-meta .z-meta .z-meta .z-meta .z-meta .z-meta.z-structure.z-dictionary.z-json .z-string.z-quoted.z-double.z-json,
+.z-source.z-json .z-meta .z-meta .z-meta .z-meta .z-meta .z-meta .z-meta .z-meta.z-structure.z-dictionary.z-json .z-punctuation.z-definition.z-string {
+  color: var(--code-zola-line-number-color);
+}
+.z-source.z-json .z-meta .z-meta .z-meta .z-meta .z-meta .z-meta.z-structure.z-dictionary.z-json .z-string.z-quoted.z-double.z-json,
+.z-source.z-json .z-meta .z-meta .z-meta .z-meta .z-meta .z-meta.z-structure.z-dictionary.z-json .z-punctuation.z-definition.z-string {
+  color: var(--code-zola-error-color);
+}
+.z-source.z-json .z-meta .z-meta .z-meta .z-meta.z-structure.z-dictionary.z-json .z-string.z-quoted.z-double.z-json,
+.z-source.z-json .z-meta .z-meta .z-meta .z-meta.z-structure.z-dictionary.z-json .z-punctuation.z-definition.z-string {
+  color: var(--code-zola-parameter-color);
+}
+.z-source.z-json .z-meta .z-meta.z-structure.z-dictionary.z-json .z-string.z-quoted.z-double.z-json,
+.z-source.z-json .z-meta .z-meta.z-structure.z-dictionary.z-json .z-punctuation.z-definition.z-string {
+  color: var(--code-zola-type-color);
+}
+.z-source.z-json .z-meta.z-structure.z-dictionary.z-json .z-string.z-quoted.z-double.z-json,
+.z-source.z-json .z-meta.z-structure.z-dictionary.z-json .z-punctuation.z-definition.z-string {
+  color: var(--code-zola-keyword-color);
+}
+.z-text.z-html.z-markdown,
+.z-punctuation.z-definition.z-list_item.z-markdown {
+  color: var(--code-zola-color);
+}
+.z-text.z-html.z-markdown .z-markup.z-raw.z-inline {
+  color: var(--code-zola-keyword-color);
+}
+.z-text.z-html.z-markdown .z-punctuation.z-definition.z-raw.z-markdown {
+  color: var(--code-zola-raw-markdown-color);
+}
+.z-markdown.z-heading,
+.z-markup.z-heading,
+.z-markup.z-heading .z-entity.z-name,
+.z-markup.z-heading.z-markdown .z-punctuation.z-definition.z-heading.z-markdown {
+  color: var(--code-zola-constant-color);
+}
+.z-markup.z-italic {
+  color: var(--code-zola-tag-color);
+  font-style: italic;
+}
+.z-markup.z-bold,
+.z-markup.z-bold .z-string {
+  color: var(--code-zola-tag-color);
+  font-weight: bold;
+}
+.z-markup.z-bold .z-markup.z-italic,
+.z-markup.z-italic .z-markup.z-bold,
+.z-markup.z-quote .z-markup.z-bold,
+.z-markup.z-bold .z-markup.z-italic .z-string,
+.z-markup.z-italic .z-markup.z-bold .z-string,
+.z-markup.z-quote .z-markup.z-bold .z-string {
+  font-weight: bold;
+  font-style: italic;
+}
+.z-markup.z-underline {
+  color: var(--code-zola-parameter-color);
+  font-style: underline;
+}
+.z-markup.z-quote .z-punctuation.z-definition.z-blockquote.z-markdown {
+  color: var(--code-zola-raw-markdown-color);
+  background-color: var(--code-zola-raw-markdown-color);
+}
+.z-string.z-other.z-link.z-title.z-markdown {
+  color: var(--code-zola-function-color);
+}
+.z-string.z-other.z-link.z-description.z-title.z-markdown {
+  color: var(--code-zola-keyword-color);
+}
+.z-constant.z-other.z-reference.z-link.z-markdown {
+  color: var(--code-zola-type-color);
+}
+.z-markup.z-raw.z-block {
+  color: var(--code-zola-keyword-color);
+}
+.z-markup.z-raw.z-block.z-fenced.z-markdown {
+  background-color: var(--code-zola-fenced-markdown-color);
+}
+.z-punctuation.z-definition.z-fenced.z-markdown {
+  background-color: var(--code-zola-fenced-markdown-color);
+}
+.z-markup.z-raw.z-block.z-fenced.z-markdown,
+.z-variable.z-language.z-fenced.z-markdown,
+.z-punctuation.z-section.z-class.z-end {
+  color: var(--code-zola-color);
+}
+.z-variable.z-language.z-fenced.z-markdown {
+  color: var(--code-zola-raw-markdown-color);
+}
+.z-text.z-html.z-markdown .z-punctuation.z-definition {
+  color: var(--code-zola-text-color);
+}
+.z-text.z-html.z-markdown .z-meta.z-disable-markdown .z-punctuation.z-definition {
+  color: var(--code-zola-operator-color);
+}
+.z-meta.z-separator {
+  color: var(--code-zola-raw-markdown-color);
+  background-color: var(--code-zola-fenced-markdown-color);
+  font-weight: bold;
+}
+.z-markup.z-ignored.z-git_gutter {
+  color: var(--code-zola-raw-markdown-color);
+}
+.z-markup.z-untracked.z-git_gutter {
+  color: var(--code-zola-raw-markdown-color);
+}
+.z-markup.z-inserted.z-git_gutter {
+  color: var(--code-zola-constant-color);
+}
+.z-markup.z-changed.z-git_gutter {
+  color: var(--code-zola-type-color);
+}
+.z-markup.z-deleted.z-git_gutter {
+  color: var(--code-zola-error-color);
+}
+.z-brackethighlighter.z-default {
+  color: var(--code-zola-style-type-color);
+}
+.z-brackethighlighter.z-quote {
+  color: var(--code-zola-constant-color);
+}
+.z-brackethighlighter.z-unmatched {
+  color: var(--code-zola-error-color);
+}
+
+
+// adjust styles for code with line numbers as recommended in:
+// https://www.getzola.org/documentation/content/syntax-highlighting/
+pre {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    // font-size: 0.875rem;
+    // font-size: var(--font-size);
+    
+    td {
+      padding: 0;
+
+      &:nth-of-type(1) {
+        text-align: center;
+        user-select: none;
+        min-width: 3rem;
+      }
+    }
+
+    td, th, tr {
+      border-bottom: none;
+    }    
+  }
+
+  // highlight to take the full length
+  mark {
+    display: block;
+    padding: 0;
+  }
+}

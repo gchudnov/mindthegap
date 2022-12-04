@@ -1,0 +1,26 @@
+/**
+ * Scroll to the Top
+ */
+
+.scroll-top {
+  @include button-icon-round;
+
+  position: fixed;
+  right: calc(var(--spacing) / 2 + var(--scrollbar-width, 0px));
+  bottom: var(--spacing);
+
+  &::after {
+    transform: rotate(180deg);
+
+    @include mask-icon("chevron");
+    background-color: var(--icon-stroke-color);
+  }
+
+  &:focus {
+    box-shadow: var(--card-box-shadow), 0 0 0 0.2rem var(--secondary-focus);
+  }
+
+  @media (min-width: map-get($breakpoints, "sm")) {
+    right: calc(var(--spacing) + var(--scrollbar-width, 0px));
+  }
+}

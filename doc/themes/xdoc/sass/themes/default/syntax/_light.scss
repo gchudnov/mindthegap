@@ -1,0 +1,18 @@
+@mixin lightSyntax {
+  --code-zola-color: #263238;
+  --code-zola-background-color: #fafafa;
+  --code-zola-text-color: #92a9b0;
+  --code-zola-invalid-color: #ffffff;
+  --code-zola-error-color: #e53935;
+  --code-zola-constant-color: #a31515;
+  --code-zola-keyword-color: #1e88e5;
+  --code-zola-operator-color: #39adb5;
+  --code-zola-tag-color: #ff5370;
+  --code-zola-function-color: #795E26;
+  --code-zola-parameter-color: #267f99;
+  --code-zola-type-color: #267f99;
+  --code-zola-style-type-color: #8796b0;
+  --code-zola-line-number-color: #c17e70;
+  --code-zola-raw-markdown-color: #e7eaec;
+  --code-zola-fenced-markdown-color: #90a4ae;
+}

@@ -1,0 +1,163 @@
+
+{%- macro theme_init() %}
+  <script src="{{ get_url(path=config.extra.bundle.theme_init, trailing_slash=false) | safe }}"{%- if config.extra.integrity %} integrity="sha384-{{ get_file_hash(path=config.extra.bundle.theme_init, sha_type=384, base64=true) | safe }}"{%- endif %}></script>
+{%- endmacro %}
+
+
+{%- macro stylesheets() %}
+  {%- if config.extra.stylesheets %}
+  {%- for ss in config.extra.stylesheets %}
+  <link rel="stylesheet" href="{{ get_url(path=ss, trailing_slash=false, cachebust=true) | safe }}" />
+  {%- endfor %}
+  {%- endif %}
+  {%- if config.extra.math.show or page.extra.math.show %}
+  <link rel="stylesheet" href="{{ get_url(path=config.extra.math.style, trailing_slash=false) }}"{%- if config.extra.integrity %} integrity="sha384-{{ get_file_hash(path=config.extra.math.style, sha_type=384, base64=true) | safe }}"{%- endif %} />
+  {%- endif %}
+{%- endmacro %}
+
+
+{%- macro javascript_defer() %}
+  <script defer src="{{ get_url(path=config.extra.bundle.code, trailing_slash=false, cachebust=true) | safe }}"{%- if config.extra.integrity %} integrity="sha384-{{ get_file_hash(path=config.extra.bundle.code, sha_type=384, base64=true) | safe }}"{%- endif %}></script>
+  {%- if config.extra.math.show or page.extra.math.show %}
+  <script defer src="{{ get_url(path=config.extra.math.code, trailing_slash=false, cachebust=true) | safe }}"{%- if config.extra.integrity %} integrity="sha384-{{ get_file_hash(path=config.extra.math.code, sha_type=384, base64=true) | safe }}"{%- endif %}></script>
+  {%- endif %}
+{%- endmacro %}
+
+
+{%- macro feed() %}
+  {%- if config.generate_feed %}
+  <link rel="alternate" type="{% if config.feed_filename is containing('atom') %}application/atom+xml{% else %}application/rss+xml{% endif %}" title="Atom/RSS Feed" href="{{ get_url(path=config.feed_filename, trailing_slash=false) | safe }}" />
+  {%- endif %}
+{%- endmacro %}
+
+
+{%- macro favicons() %}
+
+  {#- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta/name/theme-color #}
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="{{ config.extra.theme.light }}" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="{{ config.extra.theme.dark }}" />
+
+  {#- SVG icon #}
+  <link rel="icon" href="{{ get_url(path=config.extra.theme.icon, trailing_slash=false) | safe }}" type="image/svg+xml">
+
+  {#- PWA manifest #}
+  {%- set webmanifest = "site.webmanifest" %}
+  <link rel="manifest" href="{{ get_url(path=webmanifest, trailing_slash=false) | safe }}" />
+
+{%- endmacro %}
+
+
+{%- macro seo(
+  caption="",
+  subcaption="",
+  description="",
+  type="website",
+  is_noindex=false
+  )
+-%}
+  {#- https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag -#}
+  {#- https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards -#}
+  {%- set robots_meta = [] -%}
+  {%- if is_noindex -%}
+  {%- set robots_meta = robots_meta | concat(with='noindex') -%}
+  {%- endif -%}
+  {%- set robots_meta = robots_meta | concat(with='follow') -%}
+  <meta name="robots" content="{{- robots_meta | join(sep=', ') -}}" />
+
+  {%- set title = "" %}
+  {%- if caption and subcaption %}
+    {%- set title = caption ~ " " ~ config.extra.caption_separator ~ " " ~ subcaption %}
+  {%- else %}
+    {%- set title = caption %}
+  {%- endif %}
+  <title>{{ title }}</title>
+
+  {%- if not description %}
+    {%- if page.description %}
+      {%- set description = page.description %}
+    {%- else %}
+      {%- set description = config.description %}
+    {%- endif %}
+  {%- endif %}
+  <meta name="description" content="{{ description }}" />
+
+  {%- set page_url = "" %}
+  {%- if current_url %}
+    {%- set page_url = current_url %}
+  {%- else %}
+    {%- set page_url = get_url(path="404", trailing_slash=false) %}
+  {%- endif %}
+  <link rel="canonical" href="{{ page_url | safe }}" />
+
+  {#- OpenGraph - https://ogp.me/ #}
+  {%- if not is_noindex %}
+
+  {%- if config.extra.opengraph.show or page.extra.opengraph.show %}
+  <meta property="og:type" content="{{ type }}">
+  <meta property="og:title" content="{{ title }}">
+  <meta property="og:url" content="{{ page_url | safe }}">
+  {%- set banner = "" %}
+  {%- if page.extra.banner %}
+    {%- set banner = page.extra.opengraph.banner %}
+  {%- else %}
+    {%- set banner = config.extra.opengraph.banner %}
+  {%- endif %}
+  {%- if banner %}
+  <meta property="og:image" content="{{ get_url(path=banner, trailing_slash=false) }}">
+  {%- endif %}
+  <meta property="og:description" content="{{ description }}">
+  {%- if page.date %}
+  <meta property="article:published_time" content="{{ page.date | date(format='%F') }}">
+  {%- endif %}
+  {%- if page.updated %}
+  <meta property="article:modified_time" content="{{ page.updated | date(format='%F') }}">
+  {%- endif %}
+  <meta property="og:locale" content="{{ config.extra.language_region | replace(from='-', to='_') }}" />
+  <meta property="og:site_name" content="{{ config.title }}" />
+  {%- endif %}
+
+  {%- if config.extra.opengraph.twitter or page.extra.opengraph.twitter %}
+  <meta name="twitter:title" content="{{ title }}" />
+  <meta name="twitter:url" content="{{ page_url | safe }}" />
+  {%- if banner %}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="{{ get_url(path=banner, trailing_slash=false) }}" />
+  {%- else %}
+  <meta name="twitter:card" content="summary" />
+  {%- endif %}
+  <meta name="twitter:description" content="{{ description }}" />
+  {%- endif %}
+
+  {%- endif %}
+
+{%- endmacro %}
+
+
+{%- macro nav() %}
+    <nav class="container-fluid">
+      <ul>
+        <li>
+          <a href="{{ config.base_url | safe }}">
+            {{ load_data(path=config.extra.logo.embed, format="plain") | safe }}
+          </a>
+        </li>
+        <li><a class="secondary" href="{{ config.base_url | safe }}"><b>{{ config.extra.logo.title | safe }}</b></a></li>
+      </ul>
+      <ul>
+        {%- for it in config.extra.nav -%}
+        <li><a href="{{ get_url(path=it.path, trailing_slash=it.trailing_slash) }}" class="secondary" {% if m.blank %} target="_blank"{% endif %}>{{ it.name | safe }}</a></li>
+        {%- endfor -%}
+        <li><a href="https://github.com/{{ config.extra.social.github }}/" target="_blank" title="GitHub" class="secondary external">GitHub</a></li>
+        <li class="js"><button id="theme-switcher" class="theme-switcher muted"></button></li>
+        {%- if config.build_search_index %}
+        <li>
+          <form autocomplete=off class="js" id="search-form" name="searchForm">
+            <div id="search-backdrop"></div>
+            <input type="search" id="search-input" name="search" placeholder="Search">
+            <div id="search-suggestions"></div>
+          </form>
+        </li>
+        {%- endif %}
+      </ul>
+    </nav>
+{%- endmacro %}

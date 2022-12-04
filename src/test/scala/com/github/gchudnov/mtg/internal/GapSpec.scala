@@ -224,7 +224,7 @@ final class GapSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          whenever(xx.isOverlapedBy(yy)) {
+          whenever(xx.isOverlappedBy(yy)) {
             val actual = xx.gap(yy).canonical
 
             actual.isEmpty mustBe true
@@ -330,6 +330,25 @@ final class GapSpec extends TestSpec:
 
         actual.isEmpty mustBe (true)
         actual mustBe expected
+      }
+
+      "[,] if disjoint [doc]" in {
+        val a = Interval.closed(1, 4)
+        val b = Interval.closed(7, 10)
+
+        val actual   = a.gap(b).canonical
+        val expected = Interval.closed(5, 6)
+
+        actual mustBe expected
+      }
+
+      "[,] if non-disjoint [doc]" in {
+        val a = Interval.closed(5, 10)
+        val b = Interval.closed(1, 7)
+
+        val actual   = a.gap(b).canonical
+
+        actual.isEmpty mustBe true
       }
     }
 

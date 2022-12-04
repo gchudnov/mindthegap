@@ -37,12 +37,13 @@ final class IsSupersetSpec extends TestSpec:
       }
 
       "valid in special cases" in {
-        Interval.open(4, 10).isSuperset(Interval.open(4, 7)) mustBe (true)
-        Interval.open(2, 10).isSuperset(Interval.open(4, 7)) mustBe (true)
-        Interval.open(2, 7).isSuperset(Interval.open(4, 7)) mustBe (true)
-        Interval.open(4, 7).isSuperset(Interval.open(4, 7)) mustBe (true)
-
         Interval.unbounded[Int].isSuperset(Interval.closed(1, 10)) mustBe (true)
+
+        // [doc]
+        Interval.closed(4, 10).isSuperset(Interval.closed(4, 7)) mustBe (true)
+        Interval.closed(2, 10).isSuperset(Interval.closed(4, 7)) mustBe (true)
+        Interval.closed(2, 7).isSuperset(Interval.closed(4, 7)) mustBe (true)
+        Interval.closed(4, 7).isSuperset(Interval.closed(4, 7)) mustBe (true)
       }
     }
   }

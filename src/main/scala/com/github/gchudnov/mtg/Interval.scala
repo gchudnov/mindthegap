@@ -7,14 +7,6 @@ import com.github.gchudnov.mtg.internal.StaticOps
 
 /**
  * Interval
- *
- * An interval is Bounded, if it is both Left- and Right-bounded; and is said to be Unbounded otherwise. Bounded intervals are also commonly known as finite intervals.
- *
- * An empty interval has starting value greater than the ending value.
- *
- * Point is a gegenerate interval that consists of a single value.
- *
- * An interval that is neither Empty nor Point is said to be Proper.
  */
 final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
 
@@ -31,7 +23,7 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
     ordM.equiv(left, right)
 
   /**
-   * Returns true if the itnerval is proper and false otherwise.
+   * Returns true if the interval is proper and false otherwise.
    */
   def isProper(using ordM: Ordering[Mark[T]]): Boolean =
     ordM.lt(left, right)
@@ -69,13 +61,13 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
   /**
    * Inflate
    *
-   * Applies pred and succ functions to the left and right boudaries of an interval extending it.
+   * Applies pred and succ functions to the left and right boundaries of an interval extending it.
    *
    * {{{
    *   [a-, a+] -> [pred(a-), succ(a+)]
    *
    * Example:
-   *   ifnlate([1, 2]) = [0, 3]
+   *   inflate([1, 2]) = [0, 3]
    * }}}
    */
   def inflate: Interval[T] =
@@ -88,7 +80,7 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
    *   [a-, a+] -> [pred(a-), a+]
    *
    * Example:
-   *   ifnlateLeft([1, 2]) = [0, 2]
+   *   inflateLeft([1, 2]) = [0, 2]
    * }}}
    */
   def inflateLeft: Interval[T] =
@@ -101,7 +93,7 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
    *   [a-, a+] -> [a-, succ(a+)]
    *
    * Example:
-   *   ifnlateLeft([1, 2]) = [0, 3]
+   *   inflateLeft([1, 2]) = [0, 3]
    * }}}
    */
   def inflateRight: Interval[T] =
@@ -110,7 +102,7 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
   /**
    * Deflate
    *
-   * Applies succ and pred functions to the left and right boudaries of an interval reducing it it.
+   * Applies succ and pred functions to the left and right boundaries of an interval reducing it it.
    *
    * When deflating, the operation might produce an empty interval, where left boundary is greater than the right boundary.
    *
@@ -357,13 +349,13 @@ object Interval extends StaticOps:
     proper(Mark.succ(x), Mark.at(y))
 
   /**
-   * Make an arbitraty interval
+   * Make an arbitrary interval
    */
   def make[T](x: Value[T], y: Value[T]): Interval[T] =
     make(Mark.at(x), Mark.at(y))
 
   /**
-   * Make an arbitraty interval.
+   * Make an arbitrary interval.
    */
   def make[T](x: Mark[T], y: Mark[T]): Interval[T] =
     Interval(x, y)

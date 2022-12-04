@@ -1,0 +1,22 @@
+{
+  "name": "xdoc",
+  "version": "1.0.0",
+  "description": "XDoc Maker",
+  "author": "Grigorii Chudnov <g.chudnov@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/gchudnov/zola-xdoc",
+  "scripts": {
+    "icons": "scripts/icons.sh",
+    "manifest": "scripts/manifest.sh",
+    "theme": "scripts/theme.sh",
+    "katex": "scripts/katex.sh",
+    "roboto": "scripts/roboto.sh",
+    "search": "scripts/search.sh",
+    "bundle": "scripts/bundle.sh",
+    "xdoc": "npm run theme && npm run katex && npm run roboto && npm run search && npm run bundle"
+  },
+  "dependencies": {
+    "svgo": "^3.0.2",
+    "terser": "^5.15.1"
+  }
+}

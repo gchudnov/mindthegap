@@ -2,5 +2,10 @@
     "files.watcherExclude": {
         "**/target": true
     },
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "cSpell.words": [
+        "arbitraries",
+        "chrono",
+        "succ"
+    ]
 }

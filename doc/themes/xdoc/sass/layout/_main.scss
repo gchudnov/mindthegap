@@ -1,0 +1,67 @@
+/**
+ * Docs: Main (Grid)
+ */
+
+// Config
+$navHeight: 3.5rem;
+
+// Main grid
+body > main {
+  padding-top: calc(var(--block-spacing-vertical) + #{$navHeight});
+  padding-bottom: 0;
+
+  > section {
+    @if map-get($breakpoints, "lg") {
+      @media (min-width: map-get($breakpoints, "lg")) {
+        --block-spacing-horizontal: calc(var(--spacing) * 1.75);
+        grid-column-gap: calc(var(--block-spacing-horizontal) * 3);
+        display: grid;
+        grid-template-columns: 200px auto;
+      }
+    }
+  
+    @if map-get($breakpoints, "xl") {
+      @media (min-width: map-get($breakpoints, "xl")) {
+        --block-spacing-horizontal: calc(var(--spacing) * 2);
+      }
+    }
+
+    > aside,
+    div[role="document"] {
+      min-width: 0;
+    }
+
+    margin-bottom: 0;
+  }
+}
+
+// Header customization
+body > header {
+  padding: 0 0;
+
+  // > nav {
+  //   border-bottom: 1px solid var(--muted-border-color);
+  // }
+}
+
+// Footer customization
+body > footer {
+  border-top: 1px solid var(--muted-border-color);
+  background-color: var(--background-color);
+
+  // padding: var(--block-spacing-vertical) var(--block-spacing-horizontal);
+  padding: calc(var(--spacing) * 1.0) calc(var(--spacing) * 1.0);
+}
+
+// External links
+a[href*="//"]:not([role]).external::after {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  background-image: var(--icon-external);
+  background-position: top center;
+  background-size: 0.66rem auto;
+  background-repeat: no-repeat;
+  content: "";
+  white-space: nowrap;
+}

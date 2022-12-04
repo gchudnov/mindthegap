@@ -5,12 +5,30 @@ import com.github.gchudnov.mtg.Interval
 
 /**
  * Basic Interval Relations
+ * 
+ * {{{
+ *   Relation         Symbol          AAAAA
+ *                                    :   :
+ *   a.before(b)         b            :   : BBBBBBBBB  | a+ < b-
+ *   a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
+ *   a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
+ *   a.starts(b)         s            BBBBBBBBB        | a- = b- ; a+ < b+
+ *   a.during(b)         d          BBBBBBBBB          | a- > b- ; a+ < b+
+ *   a.finishes(b)       f        BBBBBBBBB            | a+ = b+ ; a- > b-
+ *   a.after(b)          B  BBBBBBBBB :   :            | a- > b+
+ *   a.isMetBy(b)        M    BBBBBBBBB   :            | a- = b+
+ *   a.isOverlappedBy(b) O      BBBBBBBBB :            | b- < a- < b+ < a+
+ *   a.isStartedBy(b)    S            BBB :            | a- = b- ; b+ < a+
+ *   a.contains(b)       D            : B :            | a- < b- ; b+ < a+
+ *   a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
+ *   a.equalsTo(b)       e            BBBBB            | a- = b- ; a+ = b+
+ * }}}
  */
 private[mtg] transparent trait BasicRel[T]:
   a: Interval[T] =>
 
   /**
-   * Before, Preceeds (b)
+   * Before, Precedes (b)
    *
    * {{{
    *   PP (Point-Point):
@@ -38,7 +56,7 @@ private[mtg] transparent trait BasicRel[T]:
     a.nonEmpty && b.nonEmpty && ordM.lt(a.right, b.left)
 
   /**
-   * After, IsPreceededBy (B)
+   * After, IsPrecededBy (B)
    */
   final def after(b: Interval[T])(using Ordering[Mark[T]]): Boolean =
     b.before(a)
@@ -90,9 +108,9 @@ private[mtg] transparent trait BasicRel[T]:
     a.isProper && b.isProper && ordM.lt(a.left, b.left) && ordM.lt(b.left, a.right) && ordM.lt(a.right, b.right)
 
   /**
-   * IsOverlapedBy (O)
+   * IsOverlappedBy (O)
    */
-  final def isOverlapedBy(b: Interval[T])(using Ordering[Mark[T]]): Boolean =
+  final def isOverlappedBy(b: Interval[T])(using Ordering[Mark[T]]): Boolean =
     b.overlaps(a)
 
   /**
@@ -205,7 +223,7 @@ private[mtg] transparent trait BasicRel[T]:
    *   a- = b- < a+ = b+
    *
    *   Relation                  AAAAA
-   *   equals(a, b)     e        BBBBB            |  a- = b- ; a+ = b+
+   *   equalsTo(a, b)   e        BBBBB            |  a- = b- ; a+ = b+
    * }}}
    */
   final def equalsTo(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =

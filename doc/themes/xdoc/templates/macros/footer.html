@@ -1,0 +1,24 @@
+{%- macro copyright() %}
+
+{%- set copyright_year_start = config.extra.copyright.year_start | default(value=now() | date(format="%Y")) | as_str %}
+{%- set copyright_year_end = config.extra.copyright.year_end | default(value=now() | date(format="%Y")) | as_str %}
+
+{%- set copyright_text = "" %}
+{%- if copyright_year_start == copyright_year_end %}
+  {%- set copyright_text = copyright_year_start %}
+{%- else %}
+  {%- set copyright_text = copyright_year_start ~ "-" ~ copyright_year_end %}
+{%- endif %}
+        <p>
+          <small>Copyright &copy; {{ copyright_text }} {{ config.extra.author }}<br/>Licensed under <a href="{{ config.extra.copyright.license_url | safe }}" target="_blank">{{ config.extra.copyright.license_type }}</a></small>
+        </p>
+{%- endmacro %}
+
+
+{%- macro footer() %}
+    <div class="grid">
+      <div>
+        {{- macros_footer::copyright() }}
+      </div>
+    </div>
+{%- endmacro %}

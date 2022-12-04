@@ -73,6 +73,10 @@ final class IsAdjacentSpec extends TestSpec:
         // [1, 4]  [5, 6]
         Interval.closed(1, 4).isAdjacent(Interval.closed(5, 6)) mustBe (true)
         Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) mustBe (true)
+
+        // [doc]
+        Interval.closed(5, 7).isAdjacent(Interval.closed(8, 10)) mustBe (true)
+        Interval.closed(1, 4).isAdjacent(Interval.closed(5, 7)) mustBe (true)
       }
     }
   }

@@ -16,7 +16,7 @@ private[mtg] transparent trait BasicOps[T]:
    *   - A ∩ B
    *   - A & B
    *
-   * An intersection of two intervals `a` and `b`: `[max(a-, b-), min(a+, b+)]` if a intersects b else undefined.
+   * An intersection of two intervals `a` and `b` is defined as the interval `c`, such that `c = a ∩ b := [max(a-, b-), min(a+, b+)]`.
    *
    * {{{
    *   A ∩ B := [max(a-, b-), min(a+, b+)]
@@ -27,6 +27,10 @@ private[mtg] transparent trait BasicOps[T]:
    * --+---------------+------+-----------+-- |
    *   1               5      7          10   |
    * }}}
+   *
+   * Laws:
+   *   - Commutative: A & B = B & A
+   *   - Associative: (A & B) & C = A & (B & C)
    */
   final def intersection(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     Interval.make(ordM.max(a.left, b.left), ordM.min(a.right, b.right))
@@ -49,7 +53,7 @@ private[mtg] transparent trait BasicOps[T]:
    * --+---------------+------+-----------+-- |
    *   1               5      7          10   |
    *
-   * Example #2 (disjoint Intervals):
+   * Example #2: (disjoint Intervals):
    *
    *   [***************]                      | [1,5]
    *                          [***********]   | [7,10]
@@ -57,6 +61,10 @@ private[mtg] transparent trait BasicOps[T]:
    * --+---------------+------+-----------+-- |
    *   1               5      7          10   |
    * }}}
+   *
+   * Laws:
+   *   - Commutative: A # B = B # A
+   *   - Associative: (A # B) # C = A # (B # C)
    */
   final def span(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
@@ -67,6 +75,8 @@ private[mtg] transparent trait BasicOps[T]:
    *   - A ∪ B
    *
    * A union of two intervals `a` and `b`: `[min(a-,b-), max(a+,b+)]` if `merges(a, b)` and undefined otherwise.
+   *
+   * NOTE: `merges` means that the intervals are `adjacent` or `intersecting`.
    *
    * {{{
    *   A union B := [min(a-,b-), max(a+,b+)] if merges(a, b) else ∅
@@ -79,7 +89,7 @@ private[mtg] transparent trait BasicOps[T]:
    * --+---------------+--+---------------+-- |
    *   1               5  6              10   |
    *
-   * Example #1 (disjoint and non-adjacent Intervals):
+   * Example #2: (disjoint and non-adjacent Intervals):
    *
    *   [***********]                          | [1,4]
    *                      [***************]   | [6,10]
@@ -87,6 +97,9 @@ private[mtg] transparent trait BasicOps[T]:
    * --+-----------+------+---------------+-- |
    *   1           4      6              10   |
    * }}}
+   *
+   * Laws:
+   *   - Commutative: A ∪ B = B ∪ A
    */
   def union(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     if a.merges(b) then
@@ -101,10 +114,10 @@ private[mtg] transparent trait BasicOps[T]:
    *
    *   - A ∥ B
    *
-   * A gap between two intervals `a` and `b`: `a ∥ b := [min(a-, b-), max(a+, b+)]`.
+   * A gap between two intervals `a` and `b`: `a ∥ b := [succ(min(a+, b+)), pred(max(a-, b-))]`.
    *
    * {{{
-   *   A ∥ B := [min(a+, b+), max(a-, b-)]
+   *   A ∥ B := [succ(min(a+, b+)), pred(max(a-, b-))]
    *
    *   [***********]                          | [5,10]
    *                          [***********]   | [15,20]
@@ -112,6 +125,9 @@ private[mtg] transparent trait BasicOps[T]:
    * --+-----------+-+------+-+-----------+-- |
    *   5          10 11    14 15         20   |
    * }}}
+   *
+   * Laws:
+   *   - Commutative: A ∥ B = B ∥ A
    */
   final def gap(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     Interval.make(ordM.min(a.right, b.right), ordM.max(a.left, b.left)).deflate
@@ -124,17 +140,17 @@ private[mtg] transparent trait BasicOps[T]:
    *   - `[a-, min(pred(b-), a+)]` if (a- < b-) and (a+ <= b+)
    *   - `[max(succ(b+), a-), a+]` if (a- >= b-) and (a+ > b+)
    *
-   * NOTE: a.minus(b) is defined only if and only if:
+   * NOTE: `a.minus(b)` is defined if and only if:
    *   - (a) `a` and `b` are disjoint;
    *   - (b) `a` contains either `b-` or `b+` but not both;
    *   - (c) either b.starts(a) or b.finishes(a) is true;
    *
-   * NOTE: a.minus(b) is undefined if:
-   *   - either a.starts(b) or a.finishes(b);
+   * NOTE: `a.minus(b)` is undefined if:
+   *   - either `a.starts(b)` or `a.finishes(b)`;
    *   - either `a` or `b` is properly included in the other;
    *
    * {{{
-   *   Example #1 ((a- < b-) AND (a+ <= b+)):
+   * Example #1: ((a- < b-) AND (a+ <= b+))   | [a-, min(pred(b-), a+)]
    *
    *   [**********************]               | [1,10]
    *             [************************]   | [5,15]
@@ -142,7 +158,7 @@ private[mtg] transparent trait BasicOps[T]:
    * --+-------+-+------------+-----------+-- |
    *   1       4 5           10          15   |
    *
-   *   Example #2 ((a- >= b-) AND (a+ > b+)):
+   * Example #2: ((a- >= b-) AND (a+ > b+))   | [max(succ(b+), a-), a+]
    *
    *             [************************]   | [5,15]
    *   [**********************]               | [1,10]

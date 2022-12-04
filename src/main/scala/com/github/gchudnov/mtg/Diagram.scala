@@ -18,7 +18,7 @@ final case class Diagram(
   annotations: List[Diagram.Annotation]
 )
 
-object Diagram extends NumericDefaults:
+object Diagram:
 
   val empty: Diagram =
     Diagram(
@@ -33,6 +33,8 @@ object Diagram extends NumericDefaults:
 
   /**
    * Theme
+   *
+   * Provides rendering options.
    */
   final case class Theme(
     space: Char,
@@ -81,9 +83,10 @@ object Diagram extends NumericDefaults:
   /**
    * View
    *
-   * TODO: instead of Numeric, we need to use Domain here and replace minus with d(...)
+   * Specifies the range to display.
+   *
    */
-  final case class View[T: Numeric](
+  final case class View[T: Domain](
     left: Option[T], // left boundary of the view
     right: Option[T] // right boundary of the view
   ):
@@ -92,11 +95,11 @@ object Diagram extends NumericDefaults:
       "left view boundary must be less or equal to the right view boundary"
     )
 
-    val size: Option[T] =
+    val size: Option[Long] =
       for
         lhs <- left
         rhs <- right
-        dx   = summon[Numeric[T]].minus(rhs, lhs)
+        dx   = summon[Domain[T]].count(lhs, rhs)
       yield dx
 
     def isEmpty: Boolean =
@@ -110,13 +113,16 @@ object Diagram extends NumericDefaults:
 
   object View:
 
-    def empty[T: Numeric]: View[T] =
+    def default[T: Domain]: View[T] =
       View(
         left = None,
         right = None
       )
 
-    def make[T: Numeric: Domain](intervals: List[Interval[T]])(using ordT: Ordering[Value[T]]): View[T] =
+    def make[T: Domain](left: Option[T], right: Option[T]): View[T] =
+      View(left = left, right = right)
+
+    private[mtg] def make[T: Domain](intervals: List[Interval[T]])(using ordT: Ordering[Value[T]]): View[T] =
       val xs: List[Interval[T]] = intervals.filter(_.nonEmpty) // TODO: If Empty intervals are displayed, we will need to change this condition
 
       val ps = xs.flatMap(toLeftRightValues).filter(_.isFinite)
@@ -153,6 +159,8 @@ object Diagram extends NumericDefaults:
 
   /**
    * Canvas
+   *
+   * Specifies the width of the text buffer to draw a diagram on.
    */
   final case class Canvas(
     width: Int,
@@ -162,7 +170,7 @@ object Diagram extends NumericDefaults:
     val right: Int = width - 1 // end of the canvas, inclusive
 
     val first: Int = left + padding  // first offset for non-inf value
-    val last: Int  = right - padding // laft offset for non-inf value
+    val last: Int  = right - padding // last offset for non-inf value
 
     val size: Int = last - first
 
@@ -173,7 +181,7 @@ object Diagram extends NumericDefaults:
       val p = Canvas.align(x.toDouble - (text.size.toDouble / 2.0))
       val q = p + text.size
 
-      // if label just slighly out of the bounds, make it visible
+      // if label just slightly out of the bounds, make it visible
       val x1 =
         if (p < 0 && isIn(x)) then 0
         else if (q >= width && isIn(x)) then width - text.size
@@ -224,7 +232,7 @@ object Diagram extends NumericDefaults:
      * @param width
      *   width of the canvas
      * @param padding
-     *   left and right padding betweein -inf and +inf and value on a canvas
+     *   left and right padding between -inf and +inf and value on a canvas
      * @return
      *   canvas
      */
@@ -234,23 +242,23 @@ object Diagram extends NumericDefaults:
     /**
      * Align value to the grid
      */
-    def align(value: Double): Int =
+    private[mtg] def align(value: Double): Int =
       value.round.toInt
 
   /**
    * Translator
    */
-  sealed trait Translator[T: Numeric]:
+  sealed trait Translator[T: Domain]:
     def translate(i: Interval[T]): Span
 
   object Translator:
-    def make[T: Numeric: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Translator[T] =
-      new BasicTranslater[T](view, canvas)
+    def make[T: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Translator[T] =
+      new BasicTranslator[T](view, canvas)
 
-  final class BasicTranslater[T: Numeric: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]) extends Translator[T]:
+  final class BasicTranslator[T: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]) extends Translator[T]:
 
     private val ok: Option[Double] =
-      view.size.map(vsz => canvas.size.toDouble / summon[Numeric[T]].toDouble(vsz))
+      view.size.map(vsz => canvas.size.toDouble / vsz.toDouble)
 
     private def translateValue(value: Value[T]): Int =
       value match
@@ -259,11 +267,11 @@ object Diagram extends NumericDefaults:
         case Value.InfPos =>
           canvas.right
         case Value.Finite(x) =>
-          val k    = ok.get        // NOTE: it is not possible to have k indefined if we have at least one Finite point
-          val numT = summon[Numeric[T]]
+          val k    = ok.get        // NOTE: it is not possible to have k undefined if we have at least one Finite point
+          val domT = summon[Domain[T]]
           val left = view.left.get // NOTE: .get is safe, otherwise `k` would be None
-          val dx   = numT.minus(x, left)
-          val dd   = numT.toDouble(dx)
+          val dx   = domT.count(left, x)
+          val dd   = dx.toDouble
           Canvas.align((k * dd) + canvas.first)
 
     override def translate(i: Interval[T]): Span =
@@ -415,21 +423,21 @@ object Diagram extends NumericDefaults:
       val addLegends     = theme.legend && legends.exists(_.nonEmpty)
       val addAnnotations = theme.annotations && annotations.exists(_.nonEmpty)
 
-      // bordedered chart
-      val bordered =
+      // with borders
+      val withBorder =
         if (addLegends || addAnnotations) then chart.map(line => if line.nonEmpty then s"${line}${theme.space}${theme.border}" else line)
         else chart
 
       // with legend
-      val legended =
-        if addLegends then bordered.zip(legends).map { case (line, legend) => if (line.nonEmpty && legend.nonEmpty) then s"${line}${theme.space}${legend}" else line }
-        else bordered
+      val withLegend =
+        if addLegends then withBorder.zip(legends).map { case (line, legend) => if (line.nonEmpty && legend.nonEmpty) then s"${line}${theme.space}${legend}" else line }
+        else withBorder
 
       // with annotations
       val annotated =
         if addAnnotations then
-          val maxLineSize = legended.map(_.size).maxOption.getOrElse(0)
-          legended.zip(annotations).map { case (line, annotation) =>
+          val maxLineSize = withLegend.map(_.size).maxOption.getOrElse(0)
+          withLegend.zip(annotations).map { case (line, annotation) =>
             if (line.nonEmpty && annotation.nonEmpty) then
               val padSize    = maxLineSize - line.size
               val paddedLine = padRight(padSize, theme.space)(line)
@@ -437,7 +445,7 @@ object Diagram extends NumericDefaults:
               s"${paddedLine}${separator}${theme.space}${annotation}"
             else line
           }
-        else legended
+        else withLegend
 
       annotated.filter(_.nonEmpty)
 
@@ -487,8 +495,8 @@ object Diagram extends NumericDefaults:
           val views = acc._1
           val last  = acc._2
 
-          val indides = last.indices
-          val i       = indides.find(i => (p > last(i) && q <= width))
+          val indices = last.indices
+          val i       = indices.find(i => (p > last(i) && q <= width))
 
           i match
             case None =>
@@ -535,11 +543,11 @@ object Diagram extends NumericDefaults:
   /**
    * Make a Diagram that can be rendered
    */
-  def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas, annotations: List[String])(using Ordering[Mark[T]]): Diagram =
+  def make[T: Domain](intervals: List[Interval[T]], view: View[T], canvas: Canvas, annotations: List[String])(using Ordering[Mark[T]]): Diagram =
     val effectiveView = if view.isEmpty then View.make(intervals) else view
     val translator    = Translator.make(effectiveView, canvas)
 
-    // if view is specified, provide labels and ticks to mark the boundries of the view
+    // if view is specified, provide labels and ticks to mark the boundaries of the view
     val (viewTicks, viewLabels) = if view.nonEmpty then
       val vi = view.toInterval
       val vs = translator.translate(vi)
@@ -571,18 +579,24 @@ object Diagram extends NumericDefaults:
       labels = (d.labels ++ viewLabels).distinct.sortBy(_.pos)
     )
 
-  def make[T: Domain: Numeric](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
+  def make[T: Domain](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
     make(intervals, view = view, canvas = canvas, annotations = List.empty[String])
 
-  def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
-    make(intervals, view = View.empty[T], canvas = canvas, annotations = List.empty[String])
+  def make[T: Domain](intervals: List[Interval[T]], view: View[T])(using Ordering[Mark[T]]): Diagram =
+    make(intervals, view = view, canvas = Canvas.default, annotations = List.empty[String])
 
-  def make[T: Domain: Numeric](intervals: List[Interval[T]], canvas: Canvas, annotations: List[String])(using Ordering[Mark[T]]): Diagram =
-    make(intervals, view = View.empty[T], canvas = canvas, annotations = annotations)
+  def make[T: Domain](intervals: List[Interval[T]])(using Ordering[Mark[T]]): Diagram =
+    make(intervals, view = View.default[T], canvas = Canvas.default, annotations = List.empty[String])
+
+  def make[T: Domain](intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
+    make(intervals, view = View.default[T], canvas = canvas, annotations = List.empty[String])
+
+  def make[T: Domain](intervals: List[Interval[T]], annotations: List[String])(using Ordering[Mark[T]]): Diagram =
+    make(intervals, view = View.default[T], canvas = Canvas.default, annotations = annotations)
 
   /**
    * Render the provided Diagram
    */
-  def render(d: Diagram, theme: Theme): List[String] =
+  def render(d: Diagram, theme: Theme = Theme.default): List[String] =
     val r = Renderer.make(theme)
     r.render(d)
