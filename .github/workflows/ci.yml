@@ -2,12 +2,12 @@ name: Build
 on:
   push:
     branches:
-      - [$default-branch]
+      - $default-branch
     tags:
       - '*'
   pull_request:
     branches:
-      - [$default-branch]
+      - $default-branch
 jobs:
   # build_code:
   #   runs-on: ubuntu-latest
