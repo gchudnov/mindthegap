@@ -10,6 +10,8 @@ object DiagramMacro:
   private def namesImpl[T: Type](exprs: Expr[Seq[T]])(using qctx: Quotes): Expr[List[String]] =
     import qctx.reflect.*
 
+    println(exprs.asTerm.show(using Printer.TreeStructure))
+
     def showExpr(e: Expr[_]): Expr[String] =
       '{${Expr(e.show)}.toString()}
 
@@ -21,7 +23,9 @@ object DiagramMacro:
             case _ => showExpr(e)
           }
         }
-      case e => List(showExpr(e))
+      case e => 
+        List(Expr("other"))
+        // List(showExpr(e))
 
     val namesExpr: Expr[List[String]] = Expr.ofList(exprNames)
 

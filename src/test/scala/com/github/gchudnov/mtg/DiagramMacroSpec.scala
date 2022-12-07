@@ -11,7 +11,7 @@ final class DiagramMacroSpec extends TestSpec:
 
         val xs = List(a, b, c)
 
-        val actual   = DiagramMacro.names(xs*)
+        val actual   = DiagramMacro.names(a, b, c)
         val expected = List("x")
 
         actual must contain theSameElementsAs (expected)
