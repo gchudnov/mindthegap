@@ -7,6 +7,7 @@ import java.time.temporal.TemporalUnit
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.OffsetTime
+import java.time.LocalTime
 
 /**
  * Default Domains
@@ -37,6 +38,9 @@ private[mtg] trait DomainDefaults:
 
   def makeLocalDateTime(unit: TemporalUnit): Domain[LocalDateTime] =
     new DomainDefaults.LocalDateTimeDomain(unit)
+
+  def makeLocalTime(unit: TemporalUnit): Domain[LocalTime] =
+    new DomainDefaults.LocalTimeDomain(unit)
 
   def makeZonedDateTime(unit: TemporalUnit): Domain[ZonedDateTime] =
     new DomainDefaults.ZonedDateTimeDomain(unit)
@@ -133,7 +137,6 @@ private[mtg] object DomainDefaults:
     override def compare(x: OffsetTime, y: OffsetTime): Int =
       x.compareTo(y)
 
-
   /**
    * Instant Domain
    */
@@ -166,6 +169,23 @@ private[mtg] object DomainDefaults:
       start.until(end, unit)
 
     override def compare(x: LocalDateTime, y: LocalDateTime): Int =
+      x.compareTo(y)
+
+  /**
+   * LocalTime Domain
+   */
+  final class LocalTimeDomain(unit: TemporalUnit) extends Domain[LocalTime]:
+
+    override def succ(x: LocalTime): LocalTime =
+      x.plus(1, unit)
+
+    override def pred(x: LocalTime): LocalTime =
+      x.minus(1, unit)
+
+    override def count(start: LocalTime, end: LocalTime): Long =
+      start.until(end, unit)
+
+    override def compare(x: LocalTime, y: LocalTime): Int =
       x.compareTo(y)
 
   /**
