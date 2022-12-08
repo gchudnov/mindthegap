@@ -581,15 +581,15 @@ object Diagram:
 
   inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
     val annotations = DiagramMacro.varNames(intervals)
-    make(intervals, view = view, canvas = canvas, annotations = List.empty[String])
+    make(intervals, view = view, canvas = canvas, annotations = annotations)
 
   inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T])(using Ordering[Mark[T]]): Diagram =
     val annotations = DiagramMacro.varNames(intervals)
-    make(intervals, view = view, canvas = Canvas.default, annotations = List.empty[String])
+    make(intervals, view = view, canvas = Canvas.default, annotations = annotations)
 
   inline def make[T: Domain](inline intervals: List[Interval[T]])(using Ordering[Mark[T]]): Diagram =
     val annotations = DiagramMacro.varNames(intervals)
-    make(intervals, view = View.default[T], canvas = Canvas.default, annotations = List.empty[String])
+    make(intervals, view = View.default[T], canvas = Canvas.default, annotations = annotations)
 
   inline def make[T: Domain](inline intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
     val annotations = DiagramMacro.varNames(intervals)
