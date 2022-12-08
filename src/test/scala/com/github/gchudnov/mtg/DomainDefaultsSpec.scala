@@ -10,6 +10,7 @@ import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.OffsetTime
 import java.time.LocalTime
+import java.time.LocalDate
 
 final class DomainDefaultsSpec extends TestSpec:
 
@@ -307,6 +308,47 @@ final class DomainDefaultsSpec extends TestSpec:
       }
     }
 
+    "LocalDate" should {
+      "pred and succ" in {
+        val valT: Domain[LocalDate] = Domain.makeLocalDate(ChronoUnit.DAYS)
+
+        val x: LocalDate = LocalDate.parse("2023-02-03")
+
+        val xp = valT.pred(x)
+        val xn = valT.succ(x)
+
+        xp mustEqual (LocalDate.parse("2023-02-02"))
+        xn mustEqual (LocalDate.parse("2023-02-04"))
+
+        val actual   = valT.pred(valT.succ(x))
+        val expected = x
+
+        actual mustEqual expected
+      }
+
+      "count" in {
+        val valT: Domain[LocalDate] = Domain.makeLocalDate(ChronoUnit.DAYS)
+
+        val x: LocalDate = LocalDate.parse("2023-02-03")
+        val y: LocalDate = LocalDate.parse("2023-02-04")
+
+        val actual   = valT.count(start = x, end = y)
+        val expected = 1
+
+        actual mustEqual expected
+      }
+
+      "compare" in {
+        val valT: Domain[LocalDate] = Domain.makeLocalDate(ChronoUnit.DAYS)
+
+        val x: LocalDate = LocalDate.parse("2023-02-03")
+        val y: LocalDate = LocalDate.parse("2023-02-04")
+
+        val actual = valT.compare(x, y)
+        (actual < 0) mustBe true
+      }
+    }
+
     "LocalTime" should {
       "pred and succ" in {
         val valT: Domain[LocalTime] = Domain.makeLocalTime(ChronoUnit.MINUTES)
@@ -387,9 +429,5 @@ final class DomainDefaultsSpec extends TestSpec:
         val actual = valT.compare(x, y)
         (actual < 0) mustBe true
       }
-    }    
+    }
   }
-
-  /*
-java.time.LocalDate	DATE	'2019-02-03'
-   */

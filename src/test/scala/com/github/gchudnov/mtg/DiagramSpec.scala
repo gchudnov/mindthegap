@@ -10,6 +10,8 @@ import com.github.gchudnov.mtg.Diagram.Annotation
 import com.github.gchudnov.mtg.Diagram.View
 import java.time.OffsetDateTime
 import java.time.Instant
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 final class DiagramSpec extends TestSpec:
 
@@ -241,8 +243,6 @@ final class DiagramSpec extends TestSpec:
       }
 
       "diagram offset-date-time" in {
-        import Diagram.given
-
         val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
 
         val odtView: View[OffsetDateTime] = View.default[OffsetDateTime]
@@ -1084,8 +1084,6 @@ final class DiagramSpec extends TestSpec:
       }
 
       "display intervals with OffsetDateTime" in {
-        import Diagram.given
-
         val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
 
         val diagram = Diagram.make[OffsetDateTime](List(a))
@@ -1101,8 +1099,6 @@ final class DiagramSpec extends TestSpec:
       }
 
       "display intervals with Instant" in {
-        import Diagram.given
-
         val a = Interval.closed(Instant.parse("2020-07-02T12:34:00Z"), Instant.parse("2021-07-02T12:34:00Z"))
 
         val diagram = Diagram.make[Instant](List(a))
@@ -1113,6 +1109,32 @@ final class DiagramSpec extends TestSpec:
           "--+----------------------------------+-- |",
           "2020-07-02T12:34:00Z                     |",
           "                    2021-07-02T12:34:00Z |"
+        )
+
+        actual mustBe expected
+      }
+
+      "display several timelines" in {
+        given Domain[LocalDate] = Domain.makeLocalDate(ChronoUnit.DAYS)
+
+        val a = Interval.leftClosed(LocalDate.parse("2023-01-01"))
+        val b = Interval.closed(LocalDate.parse("2023-01-03"), LocalDate.parse("2023-01-15"))
+        val c = Interval.empty[LocalDate]
+        val d = Interval.closed(LocalDate.parse("2023-01-10"), LocalDate.parse("2023-01-20"))
+
+        val diagram = Diagram.make[LocalDate](List(a, b, c, d))
+
+        val stackedLabelTheme = theme.copy(label = Theme.Label.Stacked)
+
+        val actual = Diagram.render(diagram, stackedLabelTheme)
+        val expected = List(
+          "  [************************************) | [2023-01-01,+∞)         : a", 
+          "      [*********************]            | [2023-01-03,2023-01-15] : b", 
+          "                                         | ∅                       : c", 
+          "                   [*****************]   | [2023-01-10,2023-01-20] : d", 
+          "--+---+------------+--------+--------+-+ |", 
+          "2023-01-01    2023-01-10      2023-01-20 |", 
+          " 2023-01-03            2023-01-15     +∞ |"
         )
 
         actual mustBe expected
