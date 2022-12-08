@@ -111,10 +111,10 @@ final class IsLessSpec extends TestSpec:
         Interval.unbounded[Int].isGreater(Interval.empty[Int]) mustBe (false)
 
         // [doc]
-        Interval.closed(1, 5).isLess(Interval.closed(5, 10)) // true        
+        Interval.closed(1, 5).isLess(Interval.closed(5, 10)) // true
 
         // [doc]
-        Interval.closed(5, 10).isGreater(Interval.closed(1, 5)) // true        
+        Interval.closed(5, 10).isGreater(Interval.closed(1, 5)) // true
       }
     }
   }

@@ -47,7 +47,7 @@ final class DomainDefaultsSpec extends TestSpec:
         val x = 10
         val y = 20
 
-        val actual   = valT.compare(x, y)
+        val actual = valT.compare(x, y)
 
         (actual < 0) mustBe true
       }
@@ -89,7 +89,7 @@ final class DomainDefaultsSpec extends TestSpec:
         val x = 2L
         val y = 1L
 
-        val actual   = valT.compare(x, y)
+        val actual = valT.compare(x, y)
 
         (actual > 0) mustBe true
       }
@@ -132,7 +132,7 @@ final class DomainDefaultsSpec extends TestSpec:
         val x = 1.0
         val y = 1.0
 
-        val actual   = valT.compare(x, y)
+        val actual = valT.compare(x, y)
 
         (actual == 0) mustBe true
       }
@@ -174,7 +174,7 @@ final class DomainDefaultsSpec extends TestSpec:
         val x: OffsetDateTime = OffsetDateTime.parse("2022-07-02T00:00Z").truncatedTo(ChronoUnit.DAYS)
         val y: OffsetDateTime = OffsetDateTime.parse("2022-07-10T00:00Z").truncatedTo(ChronoUnit.DAYS)
 
-        val actual   = valT.compare(x, y)
+        val actual = valT.compare(x, y)
         (actual < 0) mustBe true
       }
     }
@@ -215,7 +215,7 @@ final class DomainDefaultsSpec extends TestSpec:
         val x: Instant = Instant.parse("2022-06-10T00:00:00Z").truncatedTo(ChronoUnit.DAYS)
         val y: Instant = Instant.parse("2022-07-10T00:00:00Z").truncatedTo(ChronoUnit.DAYS)
 
-        val actual   = valT.compare(x, y)
+        val actual = valT.compare(x, y)
 
         (actual < 0) mustBe true
       }

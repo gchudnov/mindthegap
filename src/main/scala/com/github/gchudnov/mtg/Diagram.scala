@@ -4,6 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.ListBuffer
 
 import Show.given
+import com.github.gchudnov.mtg.internal.DiagramMacro
 
 /**
  * Diagram
@@ -84,7 +85,6 @@ object Diagram:
    * View
    *
    * Specifies the range to display.
-   *
    */
   final case class View[T: Domain](
     left: Option[T], // left boundary of the view
@@ -579,17 +579,21 @@ object Diagram:
       labels = (d.labels ++ viewLabels).distinct.sortBy(_.pos)
     )
 
-  def make[T: Domain](intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
+  inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
+    val annotations = DiagramMacro.varNames(intervals)
     make(intervals, view = view, canvas = canvas, annotations = List.empty[String])
 
-  def make[T: Domain](intervals: List[Interval[T]], view: View[T])(using Ordering[Mark[T]]): Diagram =
+  inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T])(using Ordering[Mark[T]]): Diagram =
+    val annotations = DiagramMacro.varNames(intervals)
     make(intervals, view = view, canvas = Canvas.default, annotations = List.empty[String])
 
-  def make[T: Domain](intervals: List[Interval[T]])(using Ordering[Mark[T]]): Diagram =
+  inline def make[T: Domain](inline intervals: List[Interval[T]])(using Ordering[Mark[T]]): Diagram =
+    val annotations = DiagramMacro.varNames(intervals)
     make(intervals, view = View.default[T], canvas = Canvas.default, annotations = List.empty[String])
 
-  def make[T: Domain](intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
-    make(intervals, view = View.default[T], canvas = canvas, annotations = List.empty[String])
+  inline def make[T: Domain](inline intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
+    val annotations = DiagramMacro.varNames(intervals)
+    make(intervals, view = View.default[T], canvas = canvas, annotations = annotations)
 
   def make[T: Domain](intervals: List[Interval[T]], annotations: List[String])(using Ordering[Mark[T]]): Diagram =
     make(intervals, view = View.default[T], canvas = Canvas.default, annotations = annotations)
