@@ -191,14 +191,14 @@ When printed, it produces the following output:
   3       7    10   12    15        20   |
 ```
 
-Note, that the annotations `a`, `b`, `c` are deduced automatically here, since a list of intervals, `List(a, b, c)` is provided to the `make`-function.
-In addition, a parameter, _annotations_ can be used to set annotations:
+Note, that the annotations `a`, `b`, `c` are deduced automatically here, since a list of intervals, `List(a, b, c)` is provided to `make`-method.
+In addition, _annotations_ can be set explicitly via a parameter:
 
 ```scala
 Diagram.make(intervals = List(a, b, c), annotations = List("A", "B", "C"))
 ```
 
-Annotations are not displayed if no explicit annotations are provided and they cannot be deduced from the provided intervals automatically.
+Annotations are not displayed if no explicit parameter to set them is provided and they cannot be deduced from the intervals.
 
 Adjust the output by specifying custom `View`, `Canvas` and `annotations` during diagram creation and `Theme` when rendering:
 
