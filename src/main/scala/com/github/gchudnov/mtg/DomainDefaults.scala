@@ -5,6 +5,8 @@ import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalUnit
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
+import java.time.OffsetTime
 
 /**
  * Default Domains
@@ -18,6 +20,9 @@ private[mtg] trait DomainDefaults:
   given integralDomain[T: Integral]: Domain[T] =
     new IntegralDomain()
 
+  def makeFractional[T: Fractional](unit: T): Domain[T] =
+    new DomainDefaults.FractionalDomain(unit)
+
   given offsetDateTimeDomain: Domain[OffsetDateTime] =
     new OffsetDateTimeDomain(ChronoUnit.NANOS)
 
@@ -27,14 +32,17 @@ private[mtg] trait DomainDefaults:
   def makeOffsetDateTime(unit: TemporalUnit): Domain[OffsetDateTime] =
     new DomainDefaults.OffsetDateTimeDomain(unit)
 
+  def makeOffsetTime(unit: TemporalUnit): Domain[OffsetTime] =
+    new DomainDefaults.OffsetTimeDomain(unit)
+
   def makeLocalDateTime(unit: TemporalUnit): Domain[LocalDateTime] =
     new DomainDefaults.LocalDateTimeDomain(unit)
 
+  def makeZonedDateTime(unit: TemporalUnit): Domain[ZonedDateTime] =
+    new DomainDefaults.ZonedDateTimeDomain(unit)
+
   def makeInstant(unit: TemporalUnit): Domain[Instant] =
     new DomainDefaults.InstantDomain(unit)
-
-  def makeFractional[T: Fractional](unit: T): Domain[T] =
-    new DomainDefaults.FractionalDomain(unit)
 
 /**
  * Domain Factories
@@ -109,6 +117,24 @@ private[mtg] object DomainDefaults:
       x.compareTo(y)
 
   /**
+   * OffsetTime Domain
+   */
+  final class OffsetTimeDomain(unit: TemporalUnit) extends Domain[OffsetTime]:
+
+    override def succ(x: OffsetTime): OffsetTime =
+      x.plus(1, unit)
+
+    override def pred(x: OffsetTime): OffsetTime =
+      x.minus(1, unit)
+
+    override def count(start: OffsetTime, end: OffsetTime): Long =
+      start.until(end, unit)
+
+    override def compare(x: OffsetTime, y: OffsetTime): Int =
+      x.compareTo(y)
+
+
+  /**
    * Instant Domain
    */
   final class InstantDomain(unit: TemporalUnit) extends Domain[Instant]:
@@ -140,4 +166,21 @@ private[mtg] object DomainDefaults:
       start.until(end, unit)
 
     override def compare(x: LocalDateTime, y: LocalDateTime): Int =
+      x.compareTo(y)
+
+  /**
+   * ZonedDateTime Domain
+   */
+  final class ZonedDateTimeDomain(unit: TemporalUnit) extends Domain[ZonedDateTime]:
+
+    override def succ(x: ZonedDateTime): ZonedDateTime =
+      x.plus(1, unit)
+
+    override def pred(x: ZonedDateTime): ZonedDateTime =
+      x.minus(1, unit)
+
+    override def count(start: ZonedDateTime, end: ZonedDateTime): Long =
+      start.until(end, unit)
+
+    override def compare(x: ZonedDateTime, y: ZonedDateTime): Int =
       x.compareTo(y)

@@ -7,6 +7,8 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
+import java.time.OffsetTime
 
 final class DomainDefaultsSpec extends TestSpec:
 
@@ -180,6 +182,47 @@ final class DomainDefaultsSpec extends TestSpec:
       }
     }
 
+    "OffsetTime" should {
+      "pred and succ" in {
+        val valT: Domain[OffsetTime] = Domain.makeOffsetTime(ChronoUnit.MINUTES)
+
+        val x: OffsetTime = OffsetTime.parse("18:20:28.661Z").truncatedTo(ChronoUnit.MINUTES)
+
+        val xp = valT.pred(x)
+        val xn = valT.succ(x)
+
+        xp mustEqual (OffsetTime.parse("18:19:00.000Z"))
+        xn mustEqual (OffsetTime.parse("18:21:00.000Z"))
+
+        val actual   = valT.pred(valT.succ(x))
+        val expected = x
+
+        actual mustEqual expected
+      }
+
+      "count" in {
+        val valT: Domain[OffsetTime] = Domain.makeOffsetTime(ChronoUnit.MINUTES)
+
+        val x: OffsetTime = OffsetTime.parse("18:19:00.000Z").truncatedTo(ChronoUnit.MINUTES)
+        val y: OffsetTime = OffsetTime.parse("18:21:00.000Z").truncatedTo(ChronoUnit.MINUTES)
+
+        val actual   = valT.count(start = x, end = y)
+        val expected = 2
+
+        actual mustEqual expected
+      }
+
+      "compare" in {
+        val valT: Domain[OffsetTime] = Domain.makeOffsetTime(ChronoUnit.MINUTES)
+
+        val x: OffsetTime = OffsetTime.parse("18:19:00.000Z").truncatedTo(ChronoUnit.MINUTES)
+        val y: OffsetTime = OffsetTime.parse("18:21:00.000Z").truncatedTo(ChronoUnit.MINUTES)
+
+        val actual = valT.compare(x, y)
+        (actual < 0) mustBe true
+      }
+    }
+
     "Instant" should {
       "pred and succ" in {
         val valT: Domain[Instant] = Domain.makeInstant(ChronoUnit.DAYS)
@@ -261,12 +304,51 @@ final class DomainDefaultsSpec extends TestSpec:
         val actual = valT.compare(x, y)
         (actual < 0) mustBe true
       }
+    }
+
+    "ZonedDateTime" should {
+      "pred and succ" in {
+        val valT: Domain[ZonedDateTime] = Domain.makeZonedDateTime(ChronoUnit.DAYS)
+
+        val x: ZonedDateTime = ZonedDateTime.parse("2019-02-03T00:00:00.000Z[Europe/London]").truncatedTo(ChronoUnit.DAYS)
+
+        val xp = valT.pred(x)
+        val xn = valT.succ(x)
+
+        xp mustEqual (ZonedDateTime.parse("2019-02-02T00:00Z[Europe/London]"))
+        xn mustEqual (ZonedDateTime.parse("2019-02-04T00:00Z[Europe/London]"))
+
+        val actual   = valT.pred(valT.succ(x))
+        val expected = x
+
+        actual mustEqual expected
+      }
+
+      "count" in {
+        val valT: Domain[ZonedDateTime] = Domain.makeZonedDateTime(ChronoUnit.DAYS)
+
+        val x: ZonedDateTime = ZonedDateTime.parse("2022-07-02T00:00Z[Europe/London]").truncatedTo(ChronoUnit.DAYS)
+        val y: ZonedDateTime = ZonedDateTime.parse("2022-07-10T00:00Z[Europe/London]").truncatedTo(ChronoUnit.DAYS)
+
+        val actual   = valT.count(start = x, end = y)
+        val expected = 8
+
+        actual mustEqual expected
+      }
+
+      "compare" in {
+        val valT: Domain[ZonedDateTime] = Domain.makeZonedDateTime(ChronoUnit.DAYS)
+
+        val x: ZonedDateTime = ZonedDateTime.parse("2022-07-02T00:00Z[Europe/London]").truncatedTo(ChronoUnit.DAYS)
+        val y: ZonedDateTime = ZonedDateTime.parse("2022-07-10T00:00Z[Europe/London]").truncatedTo(ChronoUnit.DAYS)
+
+        val actual = valT.compare(x, y)
+        (actual < 0) mustBe true
+      }
     }    
   }
 
   /*
 java.time.LocalDate	DATE	'2019-02-03'
 java.time.LocalTime	VARCHAR(254)	'18:20:28.661'
-java.time.OffsetTime	VARCHAR(254)	'18:20:28.661Z'
-java.time.ZonedDateTime	VARCHAR(254)	'2019-02-03T18:20:28.661Z[Europe/London]'
-  */
+   */
