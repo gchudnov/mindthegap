@@ -6,6 +6,7 @@ import org.scalactic.TolerantNumerics
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
+import java.time.LocalDateTime
 
 final class DomainDefaultsSpec extends TestSpec:
 
@@ -220,4 +221,52 @@ final class DomainDefaultsSpec extends TestSpec:
         (actual < 0) mustBe true
       }
     }
+
+    "LocalDateTime" should {
+      "pred and succ" in {
+        val valT: Domain[LocalDateTime] = Domain.makeLocalDateTime(ChronoUnit.DAYS)
+
+        val x: LocalDateTime = LocalDateTime.parse("2019-02-03T00:00:00.000").truncatedTo(ChronoUnit.DAYS)
+
+        val xp = valT.pred(x)
+        val xn = valT.succ(x)
+
+        xp mustEqual (LocalDateTime.parse("2019-02-02T00:00"))
+        xn mustEqual (LocalDateTime.parse("2019-02-04T00:00"))
+
+        val actual   = valT.pred(valT.succ(x))
+        val expected = x
+
+        actual mustEqual expected
+      }
+
+      "count" in {
+        val valT: Domain[LocalDateTime] = Domain.makeLocalDateTime(ChronoUnit.DAYS)
+
+        val x: LocalDateTime = LocalDateTime.parse("2022-07-02T00:00").truncatedTo(ChronoUnit.DAYS)
+        val y: LocalDateTime = LocalDateTime.parse("2022-07-10T00:00").truncatedTo(ChronoUnit.DAYS)
+
+        val actual   = valT.count(start = x, end = y)
+        val expected = 8
+
+        actual mustEqual expected
+      }
+
+      "compare" in {
+        val valT: Domain[LocalDateTime] = Domain.makeLocalDateTime(ChronoUnit.DAYS)
+
+        val x: LocalDateTime = LocalDateTime.parse("2022-07-02T00:00").truncatedTo(ChronoUnit.DAYS)
+        val y: LocalDateTime = LocalDateTime.parse("2022-07-10T00:00").truncatedTo(ChronoUnit.DAYS)
+
+        val actual = valT.compare(x, y)
+        (actual < 0) mustBe true
+      }
+    }    
   }
+
+  /*
+java.time.LocalDate	DATE	'2019-02-03'
+java.time.LocalTime	VARCHAR(254)	'18:20:28.661'
+java.time.OffsetTime	VARCHAR(254)	'18:20:28.661Z'
+java.time.ZonedDateTime	VARCHAR(254)	'2019-02-03T18:20:28.661Z[Europe/London]'
+  */

@@ -4,6 +4,7 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalUnit
+import java.time.LocalDateTime
 
 /**
  * Default Domains
@@ -25,6 +26,9 @@ private[mtg] trait DomainDefaults:
 
   def makeOffsetDateTime(unit: TemporalUnit): Domain[OffsetDateTime] =
     new DomainDefaults.OffsetDateTimeDomain(unit)
+
+  def makeLocalDateTime(unit: TemporalUnit): Domain[LocalDateTime] =
+    new DomainDefaults.LocalDateTimeDomain(unit)
 
   def makeInstant(unit: TemporalUnit): Domain[Instant] =
     new DomainDefaults.InstantDomain(unit)
@@ -119,4 +123,21 @@ private[mtg] object DomainDefaults:
       start.until(end, unit)
 
     override def compare(x: Instant, y: Instant): Int =
+      x.compareTo(y)
+
+  /**
+   * LocalDateTime Domain
+   */
+  final class LocalDateTimeDomain(unit: TemporalUnit) extends Domain[LocalDateTime]:
+
+    override def succ(x: LocalDateTime): LocalDateTime =
+      x.plus(1, unit)
+
+    override def pred(x: LocalDateTime): LocalDateTime =
+      x.minus(1, unit)
+
+    override def count(start: LocalDateTime, end: LocalDateTime): Long =
+      start.until(end, unit)
+
+    override def compare(x: LocalDateTime, y: LocalDateTime): Int =
       x.compareTo(y)
