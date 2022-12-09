@@ -5,7 +5,7 @@ import com.github.gchudnov.mtg.Interval
 
 /**
  * Basic Interval Relations
- * 
+ *
  * {{{
  *   Relation         Symbol          AAAAA
  *                                    :   :

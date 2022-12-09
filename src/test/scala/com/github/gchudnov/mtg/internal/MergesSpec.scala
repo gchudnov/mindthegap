@@ -107,7 +107,7 @@ final class MergesSpec extends TestSpec:
 
         // [doc]
         Interval.point(5).merges(Interval.point(6)) mustBe (true)
-        Interval.closed(4, 10).merges(Interval.closed(5, 12)) mustBe (true)      
+        Interval.closed(4, 10).merges(Interval.closed(5, 12)) mustBe (true)
       }
     }
   }

@@ -346,7 +346,7 @@ final class GapSpec extends TestSpec:
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 7)
 
-        val actual   = a.gap(b).canonical
+        val actual = a.gap(b).canonical
 
         actual.isEmpty mustBe true
       }

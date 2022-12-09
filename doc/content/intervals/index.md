@@ -97,7 +97,7 @@ Interval.open(1, 5).isPoint  // false
 
 `a.canonical` produces the canonical form of an interval where left and right boundaries are _closed_.
 
-A *canonical* form of a closed interval is the interval itself.
+A _canonical_ form of a closed interval is the interval itself.
 
 ```scala
 Interval.open(1, 5).canonical   // (1, 5) -> [2, 4]
@@ -184,12 +184,21 @@ Diagram.render(diagram)
 When printed, it produces the following output:
 
 ```text
-  [*******]                              | [3,7]
-                [**********]             | [10,15]
-                     [***************]   | [12,20]
+  [*******]                              | [3,7]   : a
+                [**********]             | [10,15] : b
+                     [***************]   | [12,20] : c
 --+-------+-----+----+-----+---------+-- |
   3       7    10   12    15        20   |
 ```
+
+Note, that the annotations `a`, `b`, `c` are deduced automatically here, since a list of intervals, `List(a, b, c)` is provided to `make`-method.
+In addition, _annotations_ can be set explicitly via a parameter:
+
+```scala
+Diagram.make(intervals = List(a, b, c), annotations = List("A", "B", "C"))
+```
+
+Annotations are not displayed if no explicit parameter to set them is provided and they cannot be deduced from the intervals.
 
 Adjust the output by specifying custom `View`, `Canvas` and `annotations` during diagram creation and `Theme` when rendering:
 
@@ -221,9 +230,9 @@ val diagram = Diagram.make(List(a, b, c), view)
 it will produce the following diagram when rendering:
 
 ```text
-                                         | [3,7]
-          [******************]           | [10,15]
-                  [********************* | [12,20]
+                                         | [3,7]   : a
+          [******************]           | [10,15] : b
+                  [********************* | [12,20] : c
 --+-------+-------+----------+-------+-- |
   8      10      12         15      17   |
 ```
@@ -244,9 +253,9 @@ val diagram = Diagram.make(List(a, b, c), canvas)
 will produce:
 
 ```text
-  [***]              | [3,7]
-        [****]       | [10,15]
-          [******]   | [12,20]
+  [***]              | [3,7]   : a
+        [****]       | [10,15] : b
+          [******]   | [12,20] : c
 --+---+-+-+--+---+-- |
   3   7  12 15  20   |
 ```
@@ -266,9 +275,9 @@ Diagram.render(diagram, theme)
 that produces the following output:
 
 ```text
-  [***]              | [3,7]
-        [****]       | [10,15]
-          [******]   | [12,20]
+  [***]              | [3,7]   : a
+        [****]       | [10,15] : b
+          [******]   | [12,20] : c
 --+---+-+-+--+---+-- |
   3   7  12 15  20   |
        10            |

@@ -35,8 +35,8 @@ trait Domain[T] extends Ordering[T]:
   /**
    * Count
    *
-   * Returns the number of points in interval defined by [start, end]. 
-   * 
+   * Returns the number of points in interval defined by [start, end].
+   *
    * In other words, it returns the cardinality (length / duration of an interval).
    *
    * @param start

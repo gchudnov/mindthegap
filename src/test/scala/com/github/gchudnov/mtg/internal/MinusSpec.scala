@@ -267,7 +267,7 @@ final class MinusSpec extends TestSpec:
         val expected = Interval.closed(11, 15)
 
         actual mustBe expected
-      }      
+      }
     }
 
     "Interval" should {
@@ -291,13 +291,13 @@ final class MinusSpec extends TestSpec:
       }
 
       "[,] if a.contains(b) [doc]" in {
-        val a = Interval.closed(1, 15)  // [1, 15]
-        val b = Interval.closed(5, 10)  // [5, 10]
+        val a = Interval.closed(1, 15) // [1, 15]
+        val b = Interval.closed(5, 10) // [5, 10]
 
         // val c = a.minus(b)           // throws UnsupportedOperationException
-        val cs = Interval.minus(a, b)   // [[1, 4], [11, 15]]
+        val cs = Interval.minus(a, b) // [[1, 4], [11, 15]]
 
-        val actual = cs.map(_.canonical)
+        val actual   = cs.map(_.canonical)
         val expected = List(Interval.closed(1, 4), Interval.closed(11, 15))
       }
     }
