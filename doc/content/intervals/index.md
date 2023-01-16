@@ -305,7 +305,14 @@ By default `Domain[T]` is implemented for _integral_ types (e.g. `Int`, `Long`) 
 
 ## Ordering
 
-Intervals can be ordered.
+Intervals can be ordered:
+
+- if `a- < b+` then `a < b`
+- if `a- == b+` then
+    - if `a+ < b+` then `a < b`
+    - if `a+ == b+` then `a == b`
+    - else `a > b`
+- else `a > b`
 
 ```scala
 val a = Interval.closed(0, 10)   // [0, 10]

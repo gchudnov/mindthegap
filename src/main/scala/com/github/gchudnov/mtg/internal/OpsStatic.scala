@@ -53,3 +53,11 @@ private[mtg] transparent trait StaticOps:
   final def minus[T: Domain](a: Interval[T], b: Interval[T])(using ordT: Ordering[Mark[T]]): List[Interval[T]] =
     if a.contains(b) then List(Interval.make(a.left, b.left.pred), Interval.make(b.right.succ, a.right))
     else List(a.minus(b))
+
+  /**
+   * Group
+   *
+   * Groups a series of intervals by executing union for the intersecting intervals.
+   */
+  final def group[T: Domain](xs: Iterable[Interval[T]]): List[Interval[T]] =
+    ???

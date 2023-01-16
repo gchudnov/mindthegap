@@ -61,8 +61,6 @@ private[mtg] transparent trait ExtendedRel[T]:
    *   a+ < b-
    *   a- > b+
    * }}}
-   *
-   * before | b after | B }}}
    */
   final def isDisjoint(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
     a.nonEmpty && b.nonEmpty && (ordM.lt(a.right, b.left) || ordM.gt(a.left, b.right))
