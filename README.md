@@ -15,7 +15,7 @@ You can find _mindthegap_ documentation [on the website](https://gchudnov.github
 Add the following dependency to your `build.sbt`:
 
 ```scala
-libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "1.1.0"
+libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "1.0.0"
 ```
 
 Import the package:

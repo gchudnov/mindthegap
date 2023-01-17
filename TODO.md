@@ -1,6 +1,9 @@
 # TODO
 
+- fix IsLess, ISGreater to conform to the ordering
+
 - add `group` operation
+- add icon to the readme, update icon in the documentation
 
 - when the screen is small, the should be a hamburger menu on the left -- see react toolkit
 
@@ -12,3 +15,5 @@
 - add laws to the documentation??
 - canonical - add a method to convert to [) interval
 - add more operators and law tests
+
+- release the library

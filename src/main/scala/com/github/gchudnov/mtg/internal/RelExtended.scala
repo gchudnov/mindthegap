@@ -143,7 +143,13 @@ private[mtg] transparent trait ExtendedRel[T]:
    * }}}
    */
   final def isLess(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
-    ordM.lt(a.left, b.left)
+    ordM.compare(a.left, b.left) match
+      case -1 =>
+        true
+      case 0 =>
+        ordM.lt(a.right, b.right)
+      case _ =>
+        false
 
   /**
    * IsGreater

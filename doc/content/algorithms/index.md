@@ -145,7 +145,7 @@ val c = a.minus(b)             // [11, 15]
 ![minus-right.svg](./minus-right.svg)
 
 **NOTE:** the operation `a.minus(b)` is not defined if `a.contains(b)` and throws `UnsupportedOperationException`.
-Use `Intervals.minus(a, b)` instead that returns a collection of intervals: `c1, c2 := a - b = list([a-, pred(b-)], [succ(b+), a+])`
+Use `Intervals.minus(a, b)` instead that returns a collection of intervals: `c1, c2 := (a - b) = list([a-, pred(b-)], [succ(b+), a+])`
 
 ```scala
 val a = Interval.closed(1, 15)  // [1, 15]

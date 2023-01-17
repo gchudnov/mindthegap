@@ -82,7 +82,7 @@ Interval.closed(5, 15).isOverlappedBy(Interval.closed(1, 10)) // true
 `a` _starts_ `b` when both intervals `a` and `b` have the same left boundary, and interval `a` is inside an the interval `b`, however not equal to it.
 The converse of relation is `b` _is started by_ `a`.
 
-Condition: `a- = b- ; a+ < b+`
+Condition: `(a- = b-) AND (a+ < b+)`
 
 ![starts.svg](./starts.svg)
 
@@ -97,7 +97,7 @@ Interval.closed(1, 6).isStartedBy(Interval.closed(1, 4)) // true
 `a` _during_ `b` when the interval `a` lies inside of the interval `b`.
 The converse of relation is `b` _contains_ `a`.
 
-Condition: `a- > b- ; a+ < b+`
+Condition: `(a- > b-) AND (a+ < b+)`
 
 ![during.svg](./during.svg)
 
@@ -112,7 +112,7 @@ Interval.closed(1, 10).contains(Interval.closed(3, 7)) // true
 `a` _finishes_ `b` when both intervals `a` and `b` have the same right boundary, and interval `a` is inside an the interval `b`, however not equal to it.
 The converse of relation is `b` _is finished by_ `a`.
 
-Condition: `a+ = b+ ; a- > b-`
+Condition: `(a+ = b+) AND (a- > b-)`
 
 ![finishes.svg](./finishes.svg)
 
@@ -126,7 +126,7 @@ Interval.closed(1, 6).isFinishedBy(Interval.closed(3, 6)) // true
 
 `a` _equals to_ `b` when the left and right boundaries of the intervals `a` and `b` are matching. It is its own converse.
 
-Condition: `a- = b- ; a+ = b+`
+Condition: `(a- = b-) AND (a+ = b+)`
 
 ![equalsTo.svg](./equalsTo.svg)
 
@@ -143,7 +143,7 @@ For convenience the library defines extended relations that are composed of seve
 
 `a` is a _subset of_ `b` when the interval `a` _starts_, _during_, _finishes_ or _equals to_ the interval `b`.
 
-Condition: `a- >= b- ; a+ <= b+`
+Condition: `(a- >= b-) AND (a+ <= b+)`
 
 ![isSubset.svg](./isSubset.svg)
 
@@ -158,7 +158,7 @@ Interval.closed(4, 7).isSubset(Interval.closed(4, 7))  // true
 
 `a` is a _superset of_ `b` when the interval `a` _is started by_, _contains_, _is finished by_ or _equals to_ `b`.
 
-Condition: `b- >= a- ; b+ <= a+`
+Condition: `(b- >= a-) AND (b+ <= a+)`
 
 ![isSuperset.svg](./isSuperset.svg)
 
@@ -173,7 +173,7 @@ Interval.closed(4, 7).isSuperset(Interval.closed(4, 7))  // true
 
 `a` and `b` are _disjoint_ if `a` does not intersect `b`. It means `a` _before_ `b` or `a` _after_ `b`.
 
-Condition: `a+ < b- OR a- > b+`
+Condition: `(a+ < b-) OR (a- > b+)`
 
 ![isDisjoint.svg](./isDisjoint.svg)
 
@@ -187,7 +187,7 @@ Interval.closed(5, 7).isDisjoint(Interval.closed(8, 10)) // true
 Two intervals `a` and `b` are _adjacent_ if they are _disjoint_ and the successor of the right boundary of `a` equals to the left boundary of `b` or
 the successor of the right boundary of `b` equals to the left boundary of `a`.
 
-Condition: `succ(a+) = b- OR succ(b+) = a-`.
+Condition: `(succ(a+) = b-) OR (succ(b+) = a-)`
 
 ![isAdjacent.svg](./isAdjacent.svg)
 
@@ -200,7 +200,7 @@ Interval.closed(1, 4).isAdjacent(Interval.closed(5, 7))  // true
 
 Two intervals `a` and `b` are _intersecting_ if `a` _is not before_ `b` and `a` _is not after_ `b`. It means that if any of the remaining 11 basic relations holds, the intervals are intersecting.
 
-Condition: `a- <= b+ ; b- <= a+`
+Condition: `(a- <= b+) AND (b- <= a+)`
 
 ![intersects.svg](./intersects.svg)
 
@@ -225,9 +225,9 @@ Interval.closed(4, 10).merges(Interval.closed(5, 12)) // true
 
 ### IsLess
 
-`a` is _less than_ `b` when the left boundary of the interval `a` is less than the left boundary of the interval `b`.
+`a` is _less than_ `b` when the left boundary of the interval `a` is less than the left boundary of the interval `b` or if left boundaries are equal, then right boundary of the interval `a` should be less than the right boundary of the interval `b`.
 
-Condition: `a- < b-`
+Condition: `(a- < b-) OR ((a- == b-) AND (a+ < b-))`
 
 ![isLess.svg](./isLess.svg)
 
@@ -237,9 +237,9 @@ Interval.closed(1, 5).isLess(Interval.closed(5, 10)) // true
 
 ### IsGreater
 
-`a` is greater-than `b` when left boundary of the interval `b` is less than the left boundary of the interval `a`.
+`a` is _greater than_ `b` when interval `b` is _less than_ interval `a`.
 
-Condition: `b- < a-`
+Condition: `(a- > b-) OR ((a- == b-) AND (a+ > b-))`
 
 ![isGreater.svg](./isGreater.svg)
 

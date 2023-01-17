@@ -71,7 +71,7 @@ will build:
 /static/site.webmanifest
 ```
 
-### 3. Bundle Theme
+### 5. Bundle Theme
 
 Bundle theme storage management.
 
@@ -85,7 +85,7 @@ The command will take `theme-init.js` and produce:
 /static/theme-init.min.js
 ```
 
-### 4. Bundle KaTeX
+### 6. Bundle KaTeX
 
 Bundle KaTeX related JavaScript and styles.
 
@@ -101,7 +101,7 @@ The command downloads [KaTeX](https://github.com/KaTeX/) and bundles it with `/s
 /static/fonts/katex*.woff2
 ```
 
-### 5. Bundle Roboto-Font
+### 7. Bundle Roboto-Font
 
 Bundle roboto font
 
@@ -115,7 +115,7 @@ The command downloads roboto font from [onts.googleapis.com](https://fonts.googl
 /static/fonts/Roboto-*.woff2
 ```
 
-### 6. Build Zola Project
+### 8. Build Zola Project
 
 ```bash
 zola build
@@ -123,7 +123,7 @@ zola build
 
 It will build and copy to `/public` resources, including JavaScript required for search.
 
-### 7. Bundle Search
+### 9. Bundle Search
 
 ```bash
 npm run search
@@ -143,7 +143,7 @@ Next, it will calculate sha-256 and sha-384 hashes for `search-bundle.min.js` an
 
 NOTE: after running, run `bundle` next, it bundles `search-facade.js`.
 
-### 8. Bundle Application
+### 10. Bundle Application
 
 ```bash
 npm run bundle

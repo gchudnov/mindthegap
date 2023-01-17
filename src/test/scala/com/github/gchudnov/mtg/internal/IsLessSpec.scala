@@ -9,11 +9,14 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
  * IsLess
  *
  * {{{
- *   isLess                    AAAAA            |  a- < b-
- *                             :   :
- *   before(a,b)      b        :   : BBBBBBBBB
- *   meets(a,b)       m        :   BBBBBBBBB
- *   overlaps(a,b)    o        : BBBBBBBBB
+ *   Relation         Symbol          AAAAA
+ *                                    :   :
+ *   a.before(b)         b            :   : BBBBBBBBB  | a+ < b-
+ *   a.meets(b)          m            :   BBBBBBBBB    | a+ = b-
+ *   a.overlaps(b)       o            : BBBBBBBBB      | a- < b- < a+ < b+
+ *   a.starts(b)         s            BBBBBBBBB        | a- = b- ; a+ < b+
+ *   a.contains(b)       D            : B :            | a- < b- ; b+ < a+
+ *   a.isFinishedBy(b)   F            : BBB            | a+ = b+ ; a- < b-
  * }}}
  */
 final class IsLessSpec extends TestSpec:
@@ -26,21 +29,6 @@ final class IsLessSpec extends TestSpec:
   "IsLess" when {
     import IntervalRelAssert.*
 
-    "a.isLess(b)" should {
-      "b.isGreater(a)" in {
-        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          whenever(xx.isLess(yy)) {
-            yy.isGreater(xx) mustBe true
-
-            if (xx.nonEmpty && yy.nonEmpty) then assertOneOf(Set(Rel.Before, Rel.Meets, Rel.Overlaps, Rel.Contains, Rel.IsFinishedBy))(xx, yy)
-          }
-        }
-      }
-    }
-
     "a.isGreater(b)" should {
       "b.isLess(a)" in {
         forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
@@ -50,7 +38,217 @@ final class IsLessSpec extends TestSpec:
           whenever(xx.isGreater(yy)) {
             yy.isLess(xx) mustBe true
 
-            if (xx.nonEmpty && yy.nonEmpty) then assertOneOf(Set(Rel.After, Rel.IsMetBy, Rel.IsOverlappedBy, Rel.During, Rel.Finishes))(xx, yy)
+            if (xx.nonEmpty && yy.nonEmpty) then assertOneOf(Set(Rel.After, Rel.IsMetBy, Rel.IsOverlappedBy, Rel.IsStartedBy, Rel.During, Rel.Finishes))(xx, yy)
+          }
+        }
+      }
+    }
+
+    "a.isLess(b)" should {
+      "b.isGreater(a)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.isLess(yy)) {
+            yy.isGreater(xx) mustBe true
+
+            if (xx.nonEmpty && yy.nonEmpty) then assertOneOf(Set(Rel.Before, Rel.Meets, Rel.Overlaps, Rel.Starts, Rel.Contains, Rel.IsFinishedBy))(xx, yy)
+          }
+        }
+      }
+
+      "true if a.before(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.before(yy)) {
+            xx.isLess(yy) mustBe (true)
+            yy.isLess(xx) mustBe (false)
+
+            xx.isGreater(yy) mustBe (false)
+            yy.isGreater(xx) mustBe (true)
+          }
+        }
+      }
+
+      "true if a.meets(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.meets(yy)) {
+            xx.isLess(yy) mustBe (true)
+            yy.isLess(xx) mustBe (false)
+
+            xx.isGreater(yy) mustBe (false)
+            yy.isGreater(xx) mustBe (true)
+          }
+        }
+      }
+
+      "true if a.overlaps(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.overlaps(yy)) {
+            xx.isLess(yy) mustBe (true)
+            yy.isLess(xx) mustBe (false)
+
+            xx.isGreater(yy) mustBe (false)
+            yy.isGreater(xx) mustBe (true)
+          }
+        }
+      }
+
+      "true if a.starts(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.starts(yy)) {
+            xx.isLess(yy) mustBe (true)
+            yy.isLess(xx) mustBe (false)
+
+            xx.isGreater(yy) mustBe (false)
+            yy.isGreater(xx) mustBe (true)
+          }
+        }
+      }
+
+      "false if a.during(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.during(yy)) {
+            xx.isLess(yy) mustBe (false)
+            yy.isLess(xx) mustBe (true)
+
+            xx.isGreater(yy) mustBe (true)
+            yy.isGreater(xx) mustBe (false)
+          }
+        }
+      }
+
+      "false if a.finishes(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.finishes(yy)) {
+            xx.isLess(yy) mustBe (false)
+            yy.isLess(xx) mustBe (true)
+
+            xx.isGreater(yy) mustBe (true)
+            yy.isGreater(xx) mustBe (false)
+          }
+        }
+      }
+
+      "false if a.after(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.after(yy)) {
+            xx.isLess(yy) mustBe (false)
+            yy.isLess(xx) mustBe (true)
+
+            xx.isGreater(yy) mustBe (true)
+            yy.isGreater(xx) mustBe (false)
+          }
+        }
+      }
+
+      "false if a.isMetBy(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.isMetBy(yy)) {
+            xx.isLess(yy) mustBe (false)
+            yy.isLess(xx) mustBe (true)
+
+            xx.isGreater(yy) mustBe (true)
+            yy.isGreater(xx) mustBe (false)
+          }
+        }
+      }
+
+      "false if a.isOverlappedBy(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.isOverlappedBy(yy)) {
+            xx.isLess(yy) mustBe (false)
+            yy.isLess(xx) mustBe (true)
+
+            xx.isGreater(yy) mustBe (true)
+            yy.isGreater(xx) mustBe (false)
+          }
+        }
+      }
+
+      "false if a.isStartedBy(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.isStartedBy(yy)) {
+            xx.isLess(yy) mustBe (false)
+            yy.isLess(xx) mustBe (true)
+
+            xx.isGreater(yy) mustBe (true)
+            yy.isGreater(xx) mustBe (false)
+          }
+        }
+      }
+
+      "true if a.contains(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.contains(yy)) {
+            xx.isLess(yy) mustBe (true)
+            yy.isLess(xx) mustBe (false)
+
+            xx.isGreater(yy) mustBe (false)
+            yy.isGreater(xx) mustBe (true)
+          }
+        }
+      }
+
+      "true if a.isFinishedBy(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.isFinishedBy(yy)) {
+            xx.isLess(yy) mustBe (true)
+            yy.isLess(xx) mustBe (false)
+
+            xx.isGreater(yy) mustBe (false)
+            yy.isGreater(xx) mustBe (true)
+          }
+        }
+      }
+
+      "false if a.equalsTo(b)" in {
+        forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.equalsTo(yy)) {
+            xx.isLess(yy) mustBe (false)
+            yy.isLess(xx) mustBe (false)
+
+            xx.isGreater(yy) mustBe (false)
+            yy.isGreater(xx) mustBe (false)
           }
         }
       }
