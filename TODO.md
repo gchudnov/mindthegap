@@ -1,6 +1,6 @@
 # TODO
 
-- fix IsLess, ISGreater to conform to the ordering
+- TODO: do not provide default isLess for the interval since it is not clear what should be the default. ?
 
 - add `group` operation
 - add icon to the readme, update icon in the documentation

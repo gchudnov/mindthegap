@@ -139,7 +139,7 @@ private[mtg] transparent trait ExtendedRel[T]:
    * A < B
    *
    * {{{
-   *   a- < b-
+   *   (a- < b-) OR ((a- == b-) AND (a+ < b-))
    * }}}
    */
   final def isLess(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
@@ -159,7 +159,7 @@ private[mtg] transparent trait ExtendedRel[T]:
    * A > B
    *
    * {{{
-   *   b- < a-
+   *   (a- > b-) OR ((a- == b-) AND (a+ > b-))
    * }}}
    */
   final def isGreater(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
