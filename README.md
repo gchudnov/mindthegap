@@ -1,5 +1,7 @@
 # mindthegap
 
+<img src="res/logo512.svg" width="192px" height="192px" align="right" />
+
 > Intervals, Relations and Algorithms
 
 [![Build](https://github.com/gchudnov/mindthegap/actions/workflows/scala.yml/badge.svg?branch=main)](https://github.com/gchudnov/mindthegap/actions/workflows/scala.yml)
