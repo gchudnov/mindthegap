@@ -6,18 +6,34 @@ import com.github.gchudnov.mtg.Domain
 
 private[mtg] object Group:
 
-  private[mtg] final case class GroupState[T: Domain](interval: Interval[T], members: Set[Int])
+  /**
+   * A single group
+   */
+  private[mtg] final case class GroupState[T: Domain](interval: Interval[T], members: Set[Int]):
+    def concat(x: Interval[T], i: Int): GroupState[T] =
+      GroupState(interval = interval.span(x), members = members + i)
 
   private[mtg] object GroupState:
-    def empty[T: Domain]: GroupState[T] =
-      GroupState(interval = Interval.empty[T], members = Set.empty[Int])
+    def of[T: Domain](x: Interval[T], i: Int): GroupState[T] =
+      GroupState(x, Set(i))
 
-  private final case class AccState[T: Domain](grouped: List[GroupState[T]], current: GroupState[T])
+  /**
+   * Accumulator
+   */
+  private final case class AccState[T: Domain](grouped: List[GroupState[T]], current: GroupState[T]):
+    def shift(x: Interval[T], i: Int): AccState[T] =
+      AccState(grouped = grouped :+ current, current = GroupState.of(x, i))
+
+    def concat(x: Interval[T], i: Int): AccState[T] =
+      this.copy(current = current.concat(x, i))
 
   private object AccState:
-    def empty[T: Domain]: AccState[T] =
-      AccState(grouped = List.empty[GroupState[T]], current = GroupState.empty[T])
+    def of[T: Domain](x: Interval[T], i: Int): AccState[T] =
+      AccState(grouped = List.empty[GroupState[T]], current = GroupState(x, Set(i)))
 
+  /**
+   * Order of Intervals
+   */
   private def groupIsLess[T: Domain](a: Interval[T], b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
     ordM.compare(a.left, b.left) match
       case -1 =>
@@ -83,11 +99,8 @@ private[mtg] object Group:
   final def groupFind[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[GroupState[T]] =
     val xs1 = xs.zipWithIndex.sortWith { case ((a, _), (b, _)) => groupIsLess(a, b) };
 
-    val acc = xs1.foldLeft(AccState.empty) { case (acc, (it, i)) =>
-      val cur = acc.current
-      if cur.interval.merges(it) then acc.copy(current = cur.copy(interval = cur.interval.union(it), members = cur.members + i))
-      else acc.copy(grouped = acc.grouped :+ cur, current = GroupState(interval = it, members = Set(i)))
+    val acc = xs1.foldLeft[Option[AccState[T]]](None) { case (acc, (it, i)) =>
+      acc.fold(Some(AccState.of(it, i)))(acc => if acc.current.interval.merges(it) then Some(acc.concat(it, i)) else Some(acc.shift(it, i)))
     }
 
-    val groups = acc.grouped :+ acc.current
-    groups
+    acc.fold(List.empty[GroupState[T]])(it => it.grouped :+ it.current)

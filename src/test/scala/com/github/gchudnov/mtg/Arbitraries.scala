@@ -19,8 +19,8 @@ object Arbitraries:
   final case class IntProb(empty: Int, point: Int, proper: Int)
 
   val intRange100: IntRange = IntRange(min = -100, max = 100)
-  val intRange10: IntRange = IntRange(min = -10, max = 10)
-  val intRange5: IntRange  = IntRange(min = -5, max = 5)
+  val intRange10: IntRange  = IntRange(min = -10, max = 10)
+  val intRange5: IntRange   = IntRange(min = -5, max = 5)
 
   val intProb226: IntProb = IntProb(empty = 2, point = 2, proper = 6)
   val intProb127: IntProb = IntProb(empty = 1, point = 2, proper = 7)
