@@ -183,8 +183,8 @@ object Diagram:
 
       // if label just slightly out of the bounds, make it visible
       val x1 =
-        if (p < 0 && isIn(x)) then 0
-        else if (q >= width && isIn(x)) then width - text.size
+        if p < 0 && isIn(x) then 0
+        else if q >= width && isIn(x) then width - text.size
         else p
 
       Label(x1, text)
@@ -425,12 +425,12 @@ object Diagram:
 
       // with borders
       val withBorder =
-        if (addLegends || addAnnotations) then chart.map(line => if line.nonEmpty then s"${line}${theme.space}${theme.border}" else line)
+        if addLegends || addAnnotations then chart.map(line => if line.nonEmpty then s"${line}${theme.space}${theme.border}" else line)
         else chart
 
       // with legend
       val withLegend =
-        if addLegends then withBorder.zip(legends).map { case (line, legend) => if (line.nonEmpty && legend.nonEmpty) then s"${line}${theme.space}${legend}" else line }
+        if addLegends then withBorder.zip(legends).map { case (line, legend) => if line.nonEmpty && legend.nonEmpty then s"${line}${theme.space}${legend}" else line }
         else withBorder
 
       // with annotations
@@ -438,7 +438,7 @@ object Diagram:
         if addAnnotations then
           val maxLineSize = withLegend.map(_.size).maxOption.getOrElse(0)
           withLegend.zip(annotations).map { case (line, annotation) =>
-            if (line.nonEmpty && annotation.nonEmpty) then
+            if line.nonEmpty && annotation.nonEmpty then
               val padSize    = maxLineSize - line.size
               val paddedLine = padRight(padSize, theme.space)(line)
               val separator  = if addLegends then s"${theme.space}${theme.comment}" else ""
@@ -515,11 +515,11 @@ object Diagram:
     private def drawLabel(l: Label, view: Array[Char]): Unit =
       l.value.toList.zipWithIndex.foreach { case (ch, i) =>
         val p = l.pos + i
-        if (p >= 0 && p < view.size) then view(p) = ch
+        if p >= 0 && p < view.size then view(p) = ch
       }
 
     private def drawTick(t: Tick, view: Array[Char]): Unit =
-      if ((t.pos >= 0) && (t.pos < view.size)) then view(t.pos) = theme.tick
+      if (t.pos >= 0) && (t.pos < view.size) then view(t.pos) = theme.tick
 
     private def drawSpan(span: Span, view: Array[Char]): Unit =
       if span.nonEmpty then
@@ -529,15 +529,15 @@ object Diagram:
         Range.inclusive(p, q).foreach(i => view(i) = theme.fill)
 
         if span.size > 1 then
-          if (span.x0 >= 0 && span.x0 < view.size) then view(span.x0) = theme.leftBound(span.includeX0)
-          if (span.x1 >= 0 && span.x1 < view.size) then view(span.x1) = theme.rightBound(span.includeX1)
+          if span.x0 >= 0 && span.x0 < view.size then view(span.x0) = theme.leftBound(span.includeX0)
+          if span.x1 >= 0 && span.x1 < view.size then view(span.x1) = theme.rightBound(span.includeX1)
 
     private[mtg] def padRight(n: Int, pad: Char)(value: String): String =
       if n > 0 then value + (pad.toString * n)
       else value
 
     private[mtg] def padWithEmptyLines(n: Int)(xs: List[String]): List[String] =
-      if ((xs.size < n) && (n > 0)) then xs ++ List.fill[String](n - xs.size)("")
+      if (xs.size < n) && (n > 0) then xs ++ List.fill[String](n - xs.size)("")
       else xs
 
   /**

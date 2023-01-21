@@ -38,7 +38,7 @@ final class IsLessSpec extends TestSpec:
           whenever(xx.isGreater(yy)) {
             yy.isLess(xx) mustBe true
 
-            if (xx.nonEmpty && yy.nonEmpty) then assertOneOf(Set(Rel.After, Rel.IsMetBy, Rel.IsOverlappedBy, Rel.IsStartedBy, Rel.During, Rel.Finishes))(xx, yy)
+            if xx.nonEmpty && yy.nonEmpty then assertOneOf(Set(Rel.After, Rel.IsMetBy, Rel.IsOverlappedBy, Rel.IsStartedBy, Rel.During, Rel.Finishes))(xx, yy)
           }
         }
       }
@@ -53,7 +53,7 @@ final class IsLessSpec extends TestSpec:
           whenever(xx.isLess(yy)) {
             yy.isGreater(xx) mustBe true
 
-            if (xx.nonEmpty && yy.nonEmpty) then assertOneOf(Set(Rel.Before, Rel.Meets, Rel.Overlaps, Rel.Starts, Rel.Contains, Rel.IsFinishedBy))(xx, yy)
+            if xx.nonEmpty && yy.nonEmpty then assertOneOf(Set(Rel.Before, Rel.Meets, Rel.Overlaps, Rel.Starts, Rel.Contains, Rel.IsFinishedBy))(xx, yy)
           }
         }
       }

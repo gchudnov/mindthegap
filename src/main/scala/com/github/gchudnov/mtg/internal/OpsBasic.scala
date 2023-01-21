@@ -81,7 +81,7 @@ private[mtg] transparent trait BasicOps[T]:
    * {{{
    *   A union B := [min(a-,b-), max(a+,b+)] if merges(a, b) else ∅
    *
-   * Example #1:
+   * Example #1 (NOTE: two intervals are adjacent):
    *
    *   [***************]                      | [1,5]
    *                      [***************]   | [6,10]
@@ -170,7 +170,7 @@ private[mtg] transparent trait BasicOps[T]:
   final def minus(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
     if a.isEmpty then Interval.empty[T]
     else if b.isEmpty then a
-    else if (ordM.lt(a.left, b.left) && ordM.lteq(a.right, b.right)) then Interval.make(a.left, ordM.min(b.left.pred, a.right))
-    else if (ordM.gteq(a.left, b.left) && ordM.gt(a.right, b.right)) then Interval.make(ordM.max(b.right.succ, a.left), a.right)
+    else if ordM.lt(a.left, b.left) && ordM.lteq(a.right, b.right) then Interval.make(a.left, ordM.min(b.left.pred, a.right))
+    else if ordM.gteq(a.left, b.left) && ordM.gt(a.right, b.right) then Interval.make(ordM.max(b.right.succ, a.left), a.right)
     else if a.contains(b) then throw new UnsupportedOperationException("a.minus(b) is not defined when a.contains(b) is true; use Intervals.minus(a, b) instead")
     else Interval.empty[T]

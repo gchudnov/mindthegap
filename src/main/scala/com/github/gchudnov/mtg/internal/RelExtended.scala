@@ -118,8 +118,7 @@ private[mtg] transparent trait ExtendedRel[T]:
    *   OR
    *   succ(a+) = b- OR succ(b+) = a-
    *
-   *   intersects(a,b)
-   *   isAdjacent(a,b)
+   *   intersects(a,b) OR isAdjacent(a,b)
    * }}}
    */
   final def merges[T1 >: T: Domain](b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =

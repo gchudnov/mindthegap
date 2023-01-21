@@ -18,11 +18,13 @@ object Arbitraries:
    */
   final case class IntProb(empty: Int, point: Int, proper: Int)
 
+  val intRange100: IntRange = IntRange(min = -100, max = 100)
   val intRange10: IntRange = IntRange(min = -10, max = 10)
   val intRange5: IntRange  = IntRange(min = -5, max = 5)
 
   val intProb226: IntProb = IntProb(empty = 2, point = 2, proper = 6)
   val intProb127: IntProb = IntProb(empty = 1, point = 2, proper = 7)
+  val intProb028: IntProb = IntProb(empty = 0, point = 2, proper = 8)
 
   /**
    * Arguments to construct an integer interval
@@ -105,7 +107,7 @@ object Arbitraries:
     val g2 = for
       ab <- genIntTupleEq.map(toSome)
       ia <- genBool50
-      ib <- if (ia) then Gen.const(false) else genBool50 // if we selected '[', the second boundary cannot be ']', otherwise it will produce a point interval.
+      ib <- if ia then Gen.const(false) else genBool50 // if we selected '[', the second boundary cannot be ']', otherwise it will produce a point interval.
     yield IntArgs(toLeft(ab._1, ia), toRight(ab._2, ib))
 
     Gen.oneOf(g1, g2)
@@ -148,8 +150,8 @@ object Arbitraries:
       oa <- Gen.option(Gen.const(ab._1))
       ob <- Gen.option(Gen.const(ab._2))
       d   = ab._2 - ab._1
-      ia <- if (d == 1) then Gen.const(true) else genBool50
-      ib <- if (d == 1) then Gen.const(true) else if ((d == 2) && !ia) then Gen.const(true) else genBool50
+      ia <- if d == 1 then Gen.const(true) else genBool50
+      ib <- if d == 1 then Gen.const(true) else if (d == 2) && !ia then Gen.const(true) else genBool50
     yield IntArgs(toLeft(oa, ia), toRight(ob, ib))
 
   /**
