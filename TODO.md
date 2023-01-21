@@ -1,7 +1,5 @@
 # TODO
 
-- TODO: do not provide default isLess for the interval since it is not clear what should be the default. ?
-
 - add `group` operation
 - add icon to the readme, update icon in the documentation
 
@@ -17,3 +15,19 @@
 - add more operators and law tests
 
 - release the library
+
+
+
+/*
+        import com.github.gchudnov.mtg.Diagram.Canvas
+        import com.github.gchudnov.mtg.Diagram.View
+        import com.github.gchudnov.mtg.Diagram
+
+        val canvas: Canvas  = Canvas.make(40, 2)
+        val view: View[Int] = View.default[Int]
+        val diagram = Diagram.make(List(a, b, c, d, e, g1, g2), view, canvas)
+
+        val actual = Diagram.render(diagram)
+
+        println(actual)
+ */

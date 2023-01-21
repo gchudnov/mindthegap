@@ -42,7 +42,28 @@ final class GroupSpec extends TestSpec:
         val actual   = Interval.group(input)
         val expected = List.empty[Interval[Int]]
 
+        val actualInfo   = Interval.groupFind(input)
+        val expectedInfo = List.empty[(Interval[Int], Set[Int])]
+
         actual mustBe expected
+        actualInfo mustBe expectedInfo
+      }
+    }
+
+    "one interval" should {
+      "be grouped" in {
+        val a = Interval.closed(0, 10)
+
+        val input = List(a)
+
+        val actual   = Interval.group(input)
+        val expected = List(a)
+
+        val actualInfo   = Interval.groupFind(input)
+        val expectedInfo = List((a, Set(0)))
+
+        actual mustBe expected
+        actualInfo mustBe expectedInfo
       }
     }
 
@@ -71,10 +92,12 @@ final class GroupSpec extends TestSpec:
         val g1 = Interval.closed(0, 50)
         val g2 = Interval.closed(60, 80)
 
-        val actual   = Interval.group(List(a, b, c, d, e))
+        val input = List(a, b, c, d, e)
+
+        val actual   = Interval.group(input)
         val expected = List(g1, g2)
 
-        val actualInfo   = Interval.groupFind(List(a, b, c, d, e))
+        val actualInfo   = Interval.groupFind(input)
         val expectedInfo = List((g1, Set(0, 1, 2)), (g2, Set(3, 4)))
 
         actual mustBe expected
@@ -107,10 +130,12 @@ final class GroupSpec extends TestSpec:
         val g1 = Interval.closed(0, 50)
         val g2 = Interval.closed(60, 80)
 
-        val actual   = Interval.group(List(a, b, c, d, e))
+        val input = List(a, b, c, d, e)
+
+        val actual   = Interval.group(input)
         val expected = List(g1, g2)
 
-        val actualInfo   = Interval.groupFind(List(a, b, c, d, e))
+        val actualInfo   = Interval.groupFind(input)
         val expectedInfo = List((g1, Set(0, 1, 2)), (g2, Set(3, 4)))
 
         actual mustBe expected
@@ -140,10 +165,12 @@ final class GroupSpec extends TestSpec:
         val g2 = Interval.closed(20, 30)
         val g3 = Interval.closed(40, 50)
 
-        val actual   = Interval.group(List(a, b, c))
+        val input = List(a, b, c)
+
+        val actual   = Interval.group(input)
         val expected = List(g1, g2, g3)
 
-        val actualInfo   = Interval.groupFind(List(a, b, c))
+        val actualInfo   = Interval.groupFind(input)
         val expectedInfo = List((g1, Set(0)), (g2, Set(1)), (g3, Set(2)))
 
         actual mustBe expected
@@ -151,17 +178,3 @@ final class GroupSpec extends TestSpec:
       }
     }
   }
-
-/*
-        import com.github.gchudnov.mtg.Diagram.Canvas
-        import com.github.gchudnov.mtg.Diagram.View
-        import com.github.gchudnov.mtg.Diagram
-
-        val canvas: Canvas  = Canvas.make(40, 2)
-        val view: View[Int] = View.default[Int]
-        val diagram = Diagram.make(List(a, b, c, d, e, g1, g2), view, canvas)
-
-        val actual = Diagram.render(diagram)
-
-        println(actual)
- */
