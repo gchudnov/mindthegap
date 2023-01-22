@@ -53,7 +53,7 @@ val c = a.span(b)               // [1, 10]
 
 ## Union
 
-A _union_ `∪` of two intervals `a` and `b` is the interval `c`, such that: `c = a ∪ b = [min(a-,b-), max(a+,b+)]` if `merges(a, b)` and `∅` otherwise.
+A _union_ `∪` of two intervals `a` and `b` is the interval `c`, such that: `c = a ∪ b = [min(a-, b-), max(a+, b+)]` if `merges(a, b)` and `∅` otherwise.
 
 The operation is similar to _span_, but in order to be merged, the intervals should be _adjacent_ or _intersecting_.
 
@@ -159,12 +159,12 @@ val cs = Interval.minus(a, b)   // [[1, 4], [11, 15]]
 
 ## Group / GroupFind
 
-Group operation takes a collection of intervals `[a1, a2, ... an]` and merges all of the _adjacent_ or _intersecting_ ones (`ak = [min(ai-,aj-), max(ai+,aj+)]` if `merges(ai, aj)`), creating a new collection of intervals -- interval groups.
+Group operation takes a collection of intervals `[a1, a2, ... an]` and merges all of the _adjacent_ or _intersecting_ ones (`ak = [min(ai-, aj-), max(ai+, aj+)]` if `merges(ai, aj)`), creating a new collection of intervals -- interval groups.
 
 There are two group-operations, that differs only in the resulting value:
 
 - `Interval.group([a1, a2, ... an])` returns a collection of grouped intervals: `[g1, g2, ... gn]`.
-- `Interval.groupFind([a1, a2, ... an])` returns a collection of tuples, consisting of grouped intervals along with the indices of the intervals that were merged: `[(g1, {i, ... }), (g2, {j, ...}), ... (gn, { k, ...})]`.
+- `Interval.groupFind([a1, a2, ... an])` returns a collection of tuples, consisting of grouped intervals along with the indices of the intervals that were merged: `[(g1, {i, ... }), (g2, {j, ... }), ... (gn, {k, ... })]`.
 
 The produced collection of intervals has the following properties:
 

@@ -17,6 +17,6 @@
   },
   "dependencies": {
     "svgo": "^3.0.2",
-    "terser": "^5.15.1"
+    "terser": "^5.16.1"
   }
 }

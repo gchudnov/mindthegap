@@ -17,10 +17,10 @@ npm -g install svgo
 
 ### 1. Build theme-aware SVG
 
-```bash
-cd res/
+From the root of the project, execute the following commands:
 
-./svg-theme.sh /path/to/svg/file.svg
+```bash
+./res/svg-theme.sh /path/to/svg/file.svg
 ```
 
 After running,

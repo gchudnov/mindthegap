@@ -4,14 +4,20 @@ A ZOLA-theme for documentation.
 
 ## Building
 
+For the example of usage of the given instructions, see: `${PROJECT_ROOT}/build.sh` that is used in github-actions.
+
 ### 1. Install Dependencies
 
+- zola
 - node.js v. >= 19.0.0
 - inkscape
 
 ```bash
 # go to the theme directory
-cd theme/xdoc
+cd doc/themes/xdoc
+
+# zola
+snap install --edge zola
 
 # inkscape
 sudo add-apt-repository ppa:inkscape.dev/stable
@@ -20,6 +26,15 @@ sudo apt install inkscape
 
 # node.js dependencies
 npm install
+
+# upgrades your package.json dependencies to the latest versions
+npm install -g npm-check-updates
+
+# run ncu to see if we want to update dependencies, defined in package.json
+ncu
+
+# update
+ncu -u
 ```
 
 ### 2. Set Environment-Variables
@@ -118,6 +133,10 @@ The command downloads roboto font from [onts.googleapis.com](https://fonts.googl
 ### 8. Build Zola Project
 
 ```bash
+# stub on first build to avoid `Error: Reason: `get_url`: Could not find or open file xdoc-bundle.min.js`
+touch "${XDOC_STATIC_DIR}/xdoc-bundle.min.js"
+
+# build (1)
 zola build
 ```
 
@@ -156,6 +175,23 @@ The command takes `search-facade.js` (created with `npm run search`), `theme-swi
 ```
 
 This bundle is loaded in the every page.
+
+### 11. Rebuild
+
+The second build will include generated `xdoc-bundle.min.js` that was previously missing on the first build.
+
+```bash
+# build (2)
+zola build
+```
+
+### 12. Serve
+
+To see the results locally, use:
+
+```bash
+zola serve
+```
 
 ## Links
 
