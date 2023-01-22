@@ -98,7 +98,7 @@ If the intervals are not disjoint, the gap is empty.
 val a = Interval.closed(5, 10) // [5, 10]
 val b = Interval.closed(1, 7)  // [1, 7]
 
-val c = a.gap(b)                // ∅
+val c = a.gap(b)               // ∅
 ```
 
 ![gap-if-intersect.svg](./gap-if-intersect.svg)
@@ -159,3 +159,29 @@ val cs = Interval.minus(a, b)   // [[1, 4], [11, 15]]
 
 ## Group / GroupFind
 
+Group operation takes a collection of intervals `[a1, a2, ... an]` and merges all _adjacent_ or _intersecting_ intervals (`ak = [min(ai-,aj-), max(ai+,aj+)] if merges(ai, aj)`), creating a new collection of intervals -- interval groups.
+
+- `Interval.group([a1, a2, ... an])` returns grouped intervals `[g1, g2, ... gn]`.
+- `Interval.groupFind([a1, a2, ... an])` returns grouped intervals along with the indices of the intervals that were merged, `[(g1, {i, ... }), (g2, { j, ... }), ... (gn, { k, ...})]`.
+
+The produced collection of intervals has the following properties:
+
+- *disjoint* and contains no overlapping intervals;
+- contain no *adjacent* intervals;
+- sorted
+
+```scala
+val a = Interval.closed(0, 10)  // [0, 10]
+val b = Interval.closed(3, 50)  // [3, 50]
+val c = Interval.closed(20, 30) // [20, 30]
+
+val d = Interval.closed(60, 70) // [60, 70]
+val e = Interval.closed(71, 80) // [71, 80]
+
+val input = List(a, b, c, d, e)
+
+val gs = Interval.group(input)     // [ [0, 50], [60, 80] ]
+val ts = Interval.groupFind(input) // [ ([0, 50], { 0, 1, 2 }), ([60, 80], { 3, 4 }) ]
+```
+
+![group.svg](./group.svg)
