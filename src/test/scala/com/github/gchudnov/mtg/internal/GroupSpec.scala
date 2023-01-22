@@ -29,7 +29,7 @@ final class GroupSpec extends TestSpec:
               val a = ab.head
               val b = ab.last
 
-              a.intersects(b) mustBe (false)
+              a.isDisjoint(b) mustBe (true)
             )
         }
       }
@@ -61,6 +61,44 @@ final class GroupSpec extends TestSpec:
 
         val actualInfo   = Interval.groupFind(input)
         val expectedInfo = List((a, Set(0)))
+
+        actual mustBe expected
+        actualInfo mustBe expectedInfo
+      }
+    }
+
+    "(-inf, +inf) interval" should {
+      "group with all other intervals" in {
+        val a = Interval.closed(0, 10)
+        val b = Interval.closed(3, 50)
+        val c = Interval.closed(20, 30)
+        val d = Interval.unbounded[Int]
+
+        val input = List(a, b, c, d)
+
+        val actual   = Interval.group(input)
+        val expected = List(d)
+
+        val actualInfo   = Interval.groupFind(input)
+        val expectedInfo = List((d, Set(0, 1, 2, 3)))
+
+        actual mustBe expected
+        actualInfo mustBe expectedInfo        
+      }
+    }
+
+    "empty and non-empty intervals" should {
+      "group" in {
+        val a = Interval.closed(0, 10)
+        val b = Interval.empty[Int]
+
+        val input = List(a, b)
+
+        val actual   = Interval.group(input)
+        val expected = List(a)
+
+        val actualInfo   = Interval.groupFind(input)
+        val expectedInfo = List((a, Set(0, 1)))
 
         actual mustBe expected
         actualInfo mustBe expectedInfo

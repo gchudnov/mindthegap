@@ -156,3 +156,6 @@ val cs = Interval.minus(a, b)   // [[1, 4], [11, 15]]
 ```
 
 ![minus-contains.svg](./minus-contains.svg)
+
+## Group / GroupFind
+

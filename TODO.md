@@ -1,6 +1,6 @@
 # TODO
 
-- add `group` operation
+- add `group` operation -- readme
 - add icon to the readme, update icon in the documentation
 
 - when the screen is small, the should be a hamburger menu on the left -- see react toolkit
