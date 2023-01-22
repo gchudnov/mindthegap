@@ -17,7 +17,7 @@ export XDOC_PROJECT_DIR=$(realpath "${XDOC_ROOT_DIR}/../..")
 export XDOC_BUILD_DIR=$(realpath "${XDOC_PROJECT_DIR}/public")
 
 # bundle icons
-export XDOC_ICON_SVG_PATH="${DIR_SELF}/res/logo512.svg"
+export XDOC_ICON_SVG_PATH="${DIR_SELF}/res/logo.svg"
 npm run icons
 
 # build Manifest

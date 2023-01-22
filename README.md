@@ -1,6 +1,6 @@
 # mindthegap
 
-<img src="res/logo512.svg" width="192px" height="192px" align="right" />
+<img src="res/logo-txt.svg" width="192px" height="192px" align="right" />
 
 > Intervals, Relations and Algorithms
 
