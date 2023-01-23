@@ -1,9 +1,10 @@
 +++
 date = 2022-11-19
 draft = false
+insert_anchor_links = "right"
 +++
 
-A library of [intervals](/intervals), [relations](/relations) and [algorithms](/algorithms).
+A library of [intervals](/intervals/), [relations](/relations/) and [algorithms](/algorithms/).
 
 ### Usage
 

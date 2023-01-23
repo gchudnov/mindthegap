@@ -44,9 +44,9 @@ language_region = "en-US"
 caption_separator = "|"
 
 nav = [
-    {path = "/intervals/", name = "Intervals", trailing_slash = false, blank = false},
-    {path = "/relations/", name = "Relations", trailing_slash = false, blank = false},
-    {path = "/algorithms/", name = "Algorithms", trailing_slash = false, blank = false},
+    {path = "/intervals/", name = "Intervals", trailing_slash = true, blank = false},
+    {path = "/relations/", name = "Relations", trailing_slash = true, blank = false},
+    {path = "/algorithms/", name = "Algorithms", trailing_slash = true, blank = false},
 ]
 
 [extra.bundle]

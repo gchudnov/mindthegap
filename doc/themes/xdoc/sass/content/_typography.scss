@@ -116,6 +116,29 @@ a,
   }
 }
 
+a.zola-anchor:before {
+  content: "#";
+}
+
+a.zola-anchor {
+  opacity: 0;
+  padding-left: .5rem;
+  transition: opacity 200ms;
+  user-select: none;
+
+  &:focus {
+    --background-color: transparent;
+  }
+}
+
+h2:hover a.zola-anchor,
+h3:hover a.zola-anchor,
+h4:hover a.zola-anchor,
+h5:hover a.zola-anchor,
+h6:hover a.zola-anchor {
+  opacity: 1;
+}
+
 // Headings
 h1,
 h2,
