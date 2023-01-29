@@ -69,3 +69,11 @@ private[mtg] transparent trait StaticOps:
    */
   final def groupFind[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[(Interval[T], Set[Int])] =
     Group.groupFind(xs).map(it => (it.interval, it.members))
+
+  /**
+   * Complement
+   *
+   * Produces a complement of the given collection of intervals.
+   */
+  final def complement[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[Interval[T]] =
+    Complement.complement(xs)

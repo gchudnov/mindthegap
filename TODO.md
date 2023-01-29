@@ -1,6 +1,6 @@
 # TODO
 
-- add complement / gap ?
+- add complement image
 - add split
 
 - when the screen is small, the should be a hamburger menu on the left -- see react toolkit
@@ -26,7 +26,7 @@
         val view: View[Int] = View.default[Int]
         val diagram = Diagram.make(List(a, b, c, d, e, g1, g2), view, canvas)
 
-        val actual = Diagram.render(diagram)
+        val diag = Diagram.render(diagram)
 
-        println(actual)
+        println(diag)
  */

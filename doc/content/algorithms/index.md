@@ -161,7 +161,7 @@ val cs = Interval.minus(a, b)   // [[1, 4], [11, 15]]
 
 Group operation takes a collection of intervals `[a1, a2, ... an]` and merges all of the _adjacent_ or _intersecting_ ones (`ak = [min(ai-, aj-), max(ai+, aj+)]` if `merges(ai, aj)`), creating a new collection of intervals -- interval groups.
 
-There are two group-operations, that differs only in the resulting value:
+There are two group operations that differ only in the resulting value:
 
 - `Interval.group([a1, a2, ... an])` returns a collection of grouped intervals: `[g1, g2, ... gn]`.
 - `Interval.groupFind([a1, a2, ... an])` returns a collection of tuples, consisting of grouped intervals along with the indices of the intervals that were merged: `[(g1, {i, ... }), (g2, {j, ... }), ... (gn, {k, ... })]`.
@@ -181,12 +181,29 @@ val d = Interval.closed(60, 70) // [60, 70]
 val e = Interval.closed(71, 80) // [71, 80]
 
 val input = List(a, b, c, d, e)
+//               0  1  2  3  4
 
 val gs = Interval.group(input)
 // [ [0, 50], [60, 80] ]
 
 val ts = Interval.groupFind(input)
-// [ ([0, 50], { 0, 1, 2 }), ([60, 80], { 3, 4 }) ]
+// [ ([0, 50], {0, 1, 2}), ([60, 80], {3, 4}) ]
 ```
 
 ![group.svg](./group.svg)
+
+## Complement
+
+Complement is a collection of gaps between grouped intervals `[a1, a2, ... an]`.
+
+```scala
+val a = Interval.closed(0, 10)  // [0, 10]
+val b = Interval.closed(5, 20)  // [5, 20]
+val c = Interval.closed(25, 30) // [25, 30]
+val d = Interval.closed(35, 40) // [35, 40]
+
+val input = List(a, b, c, d)
+
+val is   = Interval.complement(input)
+// [ (-∞, -1], [21, 24], [31, 34], [41, +∞) ]
+```

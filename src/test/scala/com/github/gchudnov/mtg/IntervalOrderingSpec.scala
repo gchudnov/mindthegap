@@ -91,8 +91,6 @@ final class IntervalOrderingSpec extends TestSpec:
         val actual   = List(a, b, c, d, e, f, g).sorted
         val expected = List(d, g, b, a, f, c, e)
 
-        actual.foreach(it => println(it))
-
         actual must contain theSameElementsInOrderAs (expected)
       }
     }
@@ -121,6 +119,34 @@ final class IntervalOrderingSpec extends TestSpec:
         val b = Interval.empty[Int]
 
         ordI.compare(a, b) mustBe -1
+      }
+    }
+
+    "point intervals" should {
+      "be sorted if we have two finite points" in {
+        val a = Interval.point(79)
+        val b = Interval.point(51)
+
+        val input = List(a, b)
+
+        val actual   = input.sorted
+        val expected = List(b, a)
+
+        actual mustBe expected
+      }
+
+      "be sorted if we have finite and infinite points" in {
+        val a = Interval.point[Int](Value.infNeg)
+        val b = Interval.point(79)
+        val c = Interval.point(51)
+        val d = Interval.point[Int](Value.infPos)
+
+        val input = List(a, b, d, c)
+
+        val actual   = input.sorted
+        val expected = List(a, c, b, d)
+
+        actual mustBe (expected)
       }
     }
 

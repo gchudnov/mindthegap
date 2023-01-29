@@ -228,7 +228,7 @@ final class GroupSpec extends TestSpec:
         val input = List(a, b, c, d, e)
 
         val gs = Interval.group(input)     // [ [0, 50], [60, 80] ]
-        val ts = Interval.groupFind(input) // [ ([0, 50], { 0, 1, 2 }), ([60, 80], { 3, 4 }) ]
+        val ts = Interval.groupFind(input) // [ ([0, 50], {0, 1, 2}), ([60, 80], {3, 4}) ]
 
         val g1 = Interval.closed(0, 50)
         val g2 = Interval.closed(60, 80)
