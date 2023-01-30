@@ -33,7 +33,7 @@ private[mtg] object Complement:
     val acc = ys.foldLeft(AccState.empty[T]) { case (acc, b) =>
       acc.last match
         case Some(a) =>
-          if a.isDisjoint(b) then acc.copy(is = acc.is ++ List(a.gap(b).canonical), last = Some(b))
+          if a.isDisjoint(b) && !a.isAdjacent(b) then acc.copy(is = acc.is ++ List(a.gap(b).canonical), last = Some(b))
           else acc.copy(last = Some(a.span(b)))
         case None =>
           acc.copy(last = Some(b))

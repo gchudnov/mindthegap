@@ -37,11 +37,28 @@ final class ComplementSpec extends TestSpec:
         forAll(Gen.choose(0, 15).flatMap(n => Gen.listOfN(n, genNonEmptyIntArgs))) { case (nArgs) =>
           val input = nArgs.map(args => Interval.make(args.left, args.right))
 
-          val actual = Interval.complement(Interval.complement(input)).map(_.canonical)
+          val actual   = Interval.complement(Interval.complement(input)).map(_.canonical)
           val expected = Interval.group(input).map(_.canonical)
 
           actual mustBe expected
         }
+      }
+    }
+
+    "two adjacent intervals" should {
+      "produce a complement" in {
+        val a = Interval.leftOpenRightClosed(77, 85)
+        val b = Interval.closed(69, 77)
+
+        val e0 = Interval.rightClosed(68)
+        val e1 = Interval.leftClosed(86)
+
+        val input = List(a, b)
+
+        val actual   = Interval.complement(input).map(_.canonical)
+        val expected = List(e0, e1)
+
+        actual mustBe expected
       }
     }
 
@@ -56,7 +73,7 @@ final class ComplementSpec extends TestSpec:
 
         val input = List(a, b)
 
-        val actual = Interval.complement(input)
+        val actual   = Interval.complement(input)
         val expected = List(e0, e1, e2)
 
         actual mustBe expected
@@ -69,7 +86,7 @@ final class ComplementSpec extends TestSpec:
 
         val input = List(a)
 
-        val actual = Interval.complement(input)
+        val actual   = Interval.complement(input)
         val expected = List.empty[Interval[Int]]
 
         actual mustBe expected
@@ -85,7 +102,7 @@ final class ComplementSpec extends TestSpec:
 
         val input = List(a, b)
 
-        val actual = Interval.complement(input)
+        val actual   = Interval.complement(input)
         val expected = List(e0)
 
         actual mustBe expected
@@ -93,19 +110,19 @@ final class ComplementSpec extends TestSpec:
     }
 
     /**
-      * {{{
-      *      [*******]                             | [0,10]  : a
-      *          [************]                    | [5,20]  : b
-      *                           [***]            | [25,30] : c
-      *                                   [***]    | [35,40] : d
-      *   (*]                                      | (-∞,-1] : e0
-      *                       [**]                 | [21,24] : e1
-      *                                [*]         | [31,34] : e2
-      *                                        [*) | [41,+∞) : e3
-      *   +-++---+---+--------+--++---++-++---++-+ |
-      *   -∞ 0   5  10       20 24   30 34   40 +∞ |
-      * }}}
-      */
+     * {{{
+     *      [*******]                             | [0,10]  : a
+     *          [************]                    | [5,20]  : b
+     *                           [***]            | [25,30] : c
+     *                                   [***]    | [35,40] : d
+     *   (*]                                      | (-∞,-1] : e0
+     *                       [**]                 | [21,24] : e1
+     *                                [*]         | [31,34] : e2
+     *                                        [*) | [41,+∞) : e3
+     *   +-++---+---+--------+--++---++-++---++-+ |
+     *   -∞ 0   5  10       20 24   30 34   40 +∞ |
+     * }}}
+     */
     "several intervals with gaps in between" should {
       "produce the complement" in {
         val a = Interval.closed(0, 10)
@@ -141,9 +158,9 @@ final class ComplementSpec extends TestSpec:
 
         val input = List(a, b, c, d)
 
-        val is   = Interval.complement(input) // [ (-∞, -1], [21, 24], [31, 34], [41, +∞) ]
+        val is = Interval.complement(input) // [ (-∞, -1], [21, 24], [31, 34], [41, +∞) ]
 
-        val actual = is
+        val actual   = is
         val expected = List(e0, e1, e2, e3)
 
         actual mustBe expected
@@ -154,7 +171,7 @@ final class ComplementSpec extends TestSpec:
 
         val canvas: Canvas  = Canvas.make(40, 2)
         val view: View[Int] = View.default[Int]
-        val diagram = Diagram.make(List(a, b, c, d, e0, e1, e2, e3), view, canvas)
+        val diagram         = Diagram.make(List(a, b, c, d, e0, e1, e2, e3), view, canvas)
 
         val diag = Diagram.render(diagram)
 
