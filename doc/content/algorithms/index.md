@@ -204,6 +204,8 @@ val d = Interval.closed(35, 40) // [35, 40]
 
 val input = List(a, b, c, d)
 
-val is   = Interval.complement(input)
+val is = Interval.complement(input)
 // [ (-∞, -1], [21, 24], [31, 34], [41, +∞) ]
 ```
+
+![complement.svg](./complement.svg)
