@@ -160,7 +160,7 @@ final class GroupSpec extends TestSpec:
      *   0  10   20  30       50  60   70  80   |
      * }}}
      */
-    "intervals where some of them are adjacent" should {
+    "some of intervals are adjacent" should {
       "group adjacent into one interval" in {
         val a = Interval.closed(0, 10)
         val b = Interval.closed(3, 50)

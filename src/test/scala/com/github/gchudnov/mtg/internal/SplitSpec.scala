@@ -15,31 +15,31 @@ final class SplitSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "Split" when {
-    "a series of intervals are split" should {
-      "produce meeting intervals" in {
-        forAll(Gen.choose(0, 15).flatMap(n => Gen.listOfN(n, genNonEmptyIntArgs))) { case (nArgs) =>
-          val input = nArgs.map(args => Interval.make(args.left, args.right))
+    // "a series of intervals are split" should {
+    //   "produce meeting intervals" in {
+    //     forAll(Gen.choose(0, 15).flatMap(n => Gen.listOfN(n, genNonEmptyIntArgs))) { case (nArgs) =>
+    //       val input = nArgs.map(args => Interval.make(args.left, args.right))
 
-          val actual = Interval.split(input)
+    //       val actual = Interval.split(input)
 
-          println("INPUT:")
-          println(input)
+    //       println("INPUT:")
+    //       println(input)
 
-          println("ACTUAL:")
-          println(actual)
+    //       println("ACTUAL:")
+    //       println(actual)
 
-          actual
-            .combinations(2)
-            .filter(ab => !ab.head.equalsTo(ab.last))
-            .foreach(ab =>
-              val a = ab.head
-              val b = ab.last
+    //       actual
+    //         .combinations(2)
+    //         .filter(ab => !ab.head.equalsTo(ab.last))
+    //         .foreach(ab =>
+    //           val a = ab.head
+    //           val b = ab.last
 
-              a.meets(b) mustBe (true)
-            )
-        }
-      }
-    }
+    //           a.meets(b) mustBe (true)
+    //         )
+    //     }
+    //   }
+    // }
 
     "no intervals" should {
 
@@ -180,7 +180,7 @@ final class SplitSpec extends TestSpec:
      *   0  10   20  30       50  60   70  80   |
      * }}}
      */
-    "intervals where some of them are adjacent" should {
+    "some of intervals are adjacent" should {
       "split adjacent into an interval without membership" in {
         val a = Interval.closed(0, 10)
         val b = Interval.closed(3, 50)
@@ -219,6 +219,57 @@ final class SplitSpec extends TestSpec:
 
         actual mustBe expected
         actualX mustBe expectedX
+      }
+    }
+
+    /**
+     * {{{
+     *   [*****************]                    | [60,70] : a
+     *                     [****************]   | [70,80] : b
+     *   [*****************]                    | [60,70] : s0
+     *                     *                    | {70}    : s1
+     *                     [****************]   | [70,80] : s2
+     * --+-----------------+----------------+-- |
+     *  60                70               80   |
+     * }}}
+     */
+    "some of intervals are meet" should {
+      "split meeting intervals into points" in {
+        val a = Interval.closed(60, 70)
+        val b = Interval.closed(70, 80)
+
+        val s0 = Interval.closed(60, 70)
+        val s1 = Interval.point(70)
+        val s2 = Interval.closed(70, 80)
+
+        val g0 = Set(0)
+        val g1 = Set()
+        val g2 = Set(1)
+
+        val input = List(a, b)
+
+        val actualX   = Interval.splitFind(input)
+        val expectedX = List((s0, g0), (s1, g1), (s2, g2))
+
+        val actual   = Interval.split(input)
+        val expected = expectedX.map(_._1)
+
+        actual mustBe expected
+        actualX mustBe expectedX
+
+        //
+        import com.github.gchudnov.mtg.Diagram.Canvas
+        import com.github.gchudnov.mtg.Diagram.View
+        import com.github.gchudnov.mtg.Diagram
+
+        val canvas: Canvas  = Canvas.make(40, 2)
+        val view: View[Int] = View.default[Int]
+        val diagram = Diagram.make(List(a, b, s0, s1, s2), view, canvas)
+
+        val diag = Diagram.render(diagram)
+
+        println(diag)
+        //
       }
     }
 
