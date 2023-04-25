@@ -101,11 +101,10 @@ final class SplitSpec extends TestSpec:
         actual.size mustBe 9
         actual mustBe expected
 
+        val actualX = Interval.split(input)
+        val expectedX = expected.map(_._1)
 
-        val actualIntervals = Interval.split(input)
-        val expectedIntervals = expected.map(_._1)
-
-        actualIntervals mustBe expectedIntervals
+        actualX mustBe expectedX
       }
     }
   }
