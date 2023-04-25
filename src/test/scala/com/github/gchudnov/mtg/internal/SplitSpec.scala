@@ -222,19 +222,53 @@ final class SplitSpec extends TestSpec:
       }
     }
 
-    /**
-     * {{{
-     *   [*****************]                    | [60,70] : a
-     *                     [****************]   | [70,80] : b
-     *   [*****************]                    | [60,70] : s0
-     *                     *                    | {70}    : s1
-     *                     [****************]   | [70,80] : s2
-     * --+-----------------+----------------+-- |
-     *  60                70               80   |
-     * }}}
-     */
-    "some of intervals are meet" should {
-      "split meeting intervals into points" in {
+    "equal intervals" should {
+
+      /**
+       * {{{
+       *   [**********************************]   | [10,20] : a
+       *   [**********************************]   | [10,20] : b
+       *   [**********************************]   | [10,20] : c
+       *   [**********************************]   | [10,20] : s0
+       * --+----------------------------------+-- |
+       *  10                                 20   |
+       * }}}
+       */
+      "produce one split" in {
+        val a = Interval.closed(10, 20)
+        val b = Interval.closed(10, 20)
+        val c = Interval.closed(10, 20)
+
+        val s0 = Interval.closed(10, 20)
+        val g0 = Set(0, 1, 2)
+
+        val input = List(a, b, c)
+
+        val actualX   = Interval.splitFind(input)
+        val expectedX = List((s0, g0))
+
+        val actual   = Interval.split(input)
+        val expected = expectedX.map(_._1)
+
+        actual mustBe expected
+        actualX mustBe expectedX
+      }
+    }
+
+    "several intervals meet" should {
+
+      /**
+       * {{{
+       *   [*****************]                    | [60,70] : a
+       *                     [****************]   | [70,80] : b
+       *   [*****************]                    | [60,70] : s0
+       *                     *                    | {70}    : s1
+       *                     [****************]   | [70,80] : s2
+       * --+-----------------+----------------+-- |
+       *  60                70               80   |
+       * }}}
+       */
+      "split 2 meeting intervals into points" in {
         val a = Interval.closed(60, 70)
         val b = Interval.closed(70, 80)
 
@@ -243,7 +277,7 @@ final class SplitSpec extends TestSpec:
         val s2 = Interval.closed(70, 80)
 
         val g0 = Set(0)
-        val g1 = Set()
+        val g1 = Set(0, 1)
         val g2 = Set(1)
 
         val input = List(a, b)
@@ -256,20 +290,45 @@ final class SplitSpec extends TestSpec:
 
         actual mustBe expected
         actualX mustBe expectedX
+      }
 
-        //
-        import com.github.gchudnov.mtg.Diagram.Canvas
-        import com.github.gchudnov.mtg.Diagram.View
-        import com.github.gchudnov.mtg.Diagram
+      /**
+       * {{{
+       *   [*****************]                    | [60,70] : a
+       *   [*****************]                    | [60,70] : b
+       *                     [****************]   | [70,80] : c
+       *                     [****************]   | [70,80] : d
+       *   [*****************]                    | [60,70] : s0
+       *                     *                    | {70}    : s1
+       *                     [****************]   | [70,80] : s2
+       * --+-----------------+----------------+-- |
+       *  60                70               80   |
+       * }}}
+       */
+      "split 4 meeting intervals into points" in {
+        val a = Interval.closed(60, 70)
+        val b = Interval.closed(60, 70)
+        val c = Interval.closed(70, 80)
+        val d = Interval.closed(70, 80)
 
-        val canvas: Canvas  = Canvas.make(40, 2)
-        val view: View[Int] = View.default[Int]
-        val diagram = Diagram.make(List(a, b, s0, s1, s2), view, canvas)
+        val s0 = Interval.closed(60, 70)
+        val s1 = Interval.point(70)
+        val s2 = Interval.closed(70, 80)
 
-        val diag = Diagram.render(diagram)
+        val g0 = Set(0, 1)
+        val g1 = Set(0, 1, 2, 3)
+        val g2 = Set(2, 3)
 
-        println(diag)
-        //
+        val input = List(a, b, c, d)
+
+        val actualX   = Interval.splitFind(input)
+        val expectedX = List((s0, g0), (s1, g1), (s2, g2))
+
+        val actual   = Interval.split(input)
+        val expected = expectedX.map(_._1)
+
+        actual mustBe expected
+        actualX mustBe expectedX
       }
     }
 
@@ -332,16 +391,15 @@ final class SplitSpec extends TestSpec:
         val input = List(a, b, c, d, e)
 
         // [ ([0, 10], {0}), ([10, 20], {0, 1}), ([20, 30], {0, 1, 2}), ([30, 35], {0, 2}), ([35, 40], {0}), ([40, 45], {0, 3}), ([45, 50], {0}), ([50, 60], {}), ([60, 70], {4}) ]
-        val actual   = Interval.splitFind(input)
-        val expected = List((s0, g0), (s1, g1), (s2, g2), (s3, g3), (s4, g4), (s5, g5), (s6, g6), (s7, g7), (s8, g8))
+        val actualX   = Interval.splitFind(input)
+        val expectedX = List((s0, g0), (s1, g1), (s2, g2), (s3, g3), (s4, g4), (s5, g5), (s6, g6), (s7, g7), (s8, g8))
 
-        actual.size mustBe 9
-        actual mustBe expected
+        val actual   = Interval.split(input)
+        val expected = expectedX.map(_._1)
 
-        val actualX   = Interval.split(input)
-        val expectedX = expected.map(_._1)
-
+        actualX.size mustBe 9
         actualX mustBe expectedX
+        actual mustBe expected
       }
     }
 
