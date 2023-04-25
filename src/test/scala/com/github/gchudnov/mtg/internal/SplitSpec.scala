@@ -2,6 +2,7 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.TestSpec
 import com.github.gchudnov.mtg.Value
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
@@ -14,32 +15,27 @@ final class SplitSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
+  val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
+
   "Split" when {
-    // "a series of intervals are split" should {
-    //   "produce meeting intervals" in {
-    //     forAll(Gen.choose(0, 15).flatMap(n => Gen.listOfN(n, genNonEmptyIntArgs))) { case (nArgs) =>
-    //       val input = nArgs.map(args => Interval.make(args.left, args.right))
+    "a series of intervals are split" should {
+      "produce meeting intervals" in {
+        forAll(Gen.choose(0, 15).flatMap(n => Gen.listOfN(n, genNonEmptyIntArgs))) { case (nArgs) =>
+          val input = nArgs.map(args => Interval.make(args.left, args.right))
 
-    //       val actual = Interval.split(input)
+          val actual = Interval.split(input)
 
-    //       println("INPUT:")
-    //       println(input)
+          actual
+            .zip(actual.tail)
+            .foreach(ab =>
+              val a = ab.head
+              val b = ab.last
 
-    //       println("ACTUAL:")
-    //       println(actual)
-
-    //       actual
-    //         .combinations(2)
-    //         .filter(ab => !ab.head.equalsTo(ab.last))
-    //         .foreach(ab =>
-    //           val a = ab.head
-    //           val b = ab.last
-
-    //           a.meets(b) mustBe (true)
-    //         )
-    //     }
-    //   }
-    // }
+              ordM.equiv(a.right, b.left) mustBe true
+            )
+        }
+      }
+    }
 
     "no intervals" should {
 
