@@ -443,4 +443,55 @@ final class SplitSpec extends TestSpec:
         actualX mustBe expectedX
       }
     }
+
+    "split [doc]" should {
+
+      /**
+       * {{{
+       *   [*************]                        | [0,20]  : a
+       *          [*************]                 | [10,30] : b
+       *                               [******]   | [40,50] : c
+       *   [******]                               | [0,10]  : s0
+       *          [******]                        | [10,20] : s1
+       *                 [******]                 | [20,30] : s2
+       *                        [******]          | [30,40] : s3
+       *                               [******]   | [40,50] : s4
+       * --+------+------+------+------+------+-- |
+       *   0     10     20     30     40     50   |
+       * }}}
+       */
+      "be expected" in {
+        val a = Interval.closed(0, 20)  // [0, 20]
+        val b = Interval.closed(10, 30) // [10, 30]
+        val c = Interval.closed(40, 50) // [40, 50]
+
+        val input = List(a, b, c)
+
+        val ss = Interval.split(input)     // [ [0, 50], [60, 80] ]
+        val gs = Interval.splitFind(input) // [ ([0, 50], {0, 1, 2}), ([60, 80], {3, 4}) ]
+
+        // ==
+        val s0 = Interval.closed(0, 10)
+        val s1 = Interval.closed(10, 20)
+        val s2 = Interval.closed(20, 30)
+        val s3 = Interval.closed(30, 40)
+        val s4 = Interval.closed(40, 50)
+
+        val g0 = Set(0)
+        val g1 = Set(0, 1)
+        val g2 = Set(1)
+        val g3 = Set()
+        val g4 = Set(2)
+
+        val actualX   = Interval.splitFind(input)
+        val expectedX = List((s0, g0), (s1, g1), (s2, g2), (s3, g3), (s4, g4))
+
+        val actual   = Interval.split(input)
+        val expected = expectedX.map(_._1)
+
+        actual mustBe expected
+        actualX mustBe expectedX
+      }
+    }
+
   }

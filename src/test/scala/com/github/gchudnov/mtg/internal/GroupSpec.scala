@@ -44,11 +44,11 @@ final class GroupSpec extends TestSpec:
       "be grouped" in {
         val input = List.empty[Interval[Int]]
 
-        val actual   = Interval.group(input)
-        val expected = List.empty[Interval[Int]]
-
         val actualX   = Interval.groupFind(input)
         val expectedX = List.empty[(Interval[Int], Set[Int])]
+
+        val actual   = Interval.group(input)
+        val expected = expectedX.map(_._1)
 
         actual mustBe expected
         actualX mustBe expectedX
@@ -72,11 +72,11 @@ final class GroupSpec extends TestSpec:
 
         val input = List(a)
 
-        val actual   = Interval.group(input)
-        val expected = List(g1)
-
         val actualX   = Interval.groupFind(input)
         val expectedX = List((a, Set(0)))
+
+        val actual   = Interval.group(input)
+        val expected = expectedX.map(_._1)
 
         actual mustBe expected
         actualX mustBe expectedX
@@ -106,11 +106,11 @@ final class GroupSpec extends TestSpec:
 
         val input = List(a, b, c, d)
 
-        val actual   = Interval.group(input)
-        val expected = List(g1)
-
         val actualX   = Interval.groupFind(input)
         val expectedX = List((g1, Set(0, 1, 2, 3)))
+
+        val actual   = Interval.group(input)
+        val expected = expectedX.map(_._1)
 
         actual mustBe expected
         actualX mustBe expectedX
@@ -136,11 +136,11 @@ final class GroupSpec extends TestSpec:
 
         val input = List(a, b)
 
-        val actual   = Interval.group(input)
-        val expected = List(g1)
-
         val actualX   = Interval.groupFind(input)
         val expectedX = List((g1, Set(0, 1)))
+
+        val actual   = Interval.group(input)
+        val expected = expectedX.map(_._1)
 
         actual mustBe expected
         actualX mustBe expectedX
@@ -174,11 +174,11 @@ final class GroupSpec extends TestSpec:
 
         val input = List(a, b, c, d, e)
 
-        val actual   = Interval.group(input)
-        val expected = List(g1, g2)
-
         val actualX   = Interval.groupFind(input)
         val expectedX = List((g1, Set(0, 1, 2)), (g2, Set(3, 4)))
+
+        val actual   = Interval.group(input)
+        val expected = expectedX.map(_._1)
 
         actual mustBe expected
         actualX mustBe expectedX
@@ -212,11 +212,11 @@ final class GroupSpec extends TestSpec:
 
         val input = List(a, b, c, d, e)
 
-        val actual   = Interval.group(input)
-        val expected = List(g1, g2)
-
         val actualX   = Interval.groupFind(input)
         val expectedX = List((g1, Set(0, 1, 2)), (g2, Set(3, 4)))
+
+        val actual   = Interval.group(input)
+        val expected = expectedX.map(_._1)
 
         actual mustBe expected
         actualX mustBe expectedX
@@ -247,11 +247,11 @@ final class GroupSpec extends TestSpec:
 
         val input = List(a, b, c)
 
-        val actual   = Interval.group(input)
-        val expected = List(g1, g2, g3)
-
         val actualX   = Interval.groupFind(input)
         val expectedX = List((g1, Set(0)), (g2, Set(1)), (g3, Set(2)))
+
+        val actual   = Interval.group(input)
+        val expected = expectedX.map(_._1)
 
         actual mustBe expected
         actualX mustBe expectedX
@@ -259,6 +259,20 @@ final class GroupSpec extends TestSpec:
     }
 
     "group [doc]" should {
+
+      /**
+       * {{{
+       *   [***]                                  | [0,10]  : a
+       *    [********************]                | [3,50]  : b
+       *            [***]                         | [20,30] : c
+       *                             [****]       | [60,70] : d
+       *                                  [***]   | [71,80] : e
+       *   [*********************]                | [0,50]  : g1
+       *                             [********]   | [60,80] : g2
+       * --++--+----+---+--------+---+----+---+-- |
+       *   0  10   20  30       50  60   70  80   |
+       * }}}
+       */
       "be expected" in {
         val a = Interval.closed(0, 10)  // [0, 10]
         val b = Interval.closed(3, 50)  // [3, 50]
@@ -272,14 +286,15 @@ final class GroupSpec extends TestSpec:
         val gs = Interval.group(input)     // [ [0, 50], [60, 80] ]
         val ts = Interval.groupFind(input) // [ ([0, 50], {0, 1, 2}), ([60, 80], {3, 4}) ]
 
+        // ==
         val g1 = Interval.closed(0, 50)
         val g2 = Interval.closed(60, 80)
 
-        val actual   = Interval.group(input)
-        val expected = List(g1, g2)
-
         val actualX   = Interval.groupFind(input)
         val expectedX = List((g1, Set(0, 1, 2)), (g2, Set(3, 4)))
+
+        val actual   = Interval.group(input)
+        val expected = expectedX.map(_._1)
 
         actual mustBe expected
         actualX mustBe expectedX
