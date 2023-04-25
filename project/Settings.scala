@@ -10,7 +10,7 @@ object Settings {
   private val scalaV = "3.2.1"
 
   private val sharedScalacOptions = Seq(
-    "-deprecation",                  // emit warning and location for usages of deprecated APIs
+    "-deprecation", // emit warning and location for usages of deprecated APIs
     // "-explain",                      // explain errors in more detail
     // "-explain-types",                // explain type errors in more detail
     "-feature",                      // emit warning and location for usages of features that should be imported explicitly
@@ -28,12 +28,12 @@ object Settings {
     "-language:postfixOps"           // Enable postfixOps
   )
 
-  val globalScalaVersion: String = scalaV
+  val globalScalaVersion: String           = scalaV
   val supportedScalaVersions: List[String] = List(scalaV)
 
   val sharedResolvers: Vector[MavenRepository] = (Seq(Resolver.mavenLocal) ++ Resolver.sonatypeOssRepos("releases")).toVector
 
-  val shared: Seq[Setting[_]] = Seq(
+  val shared: Seq[Setting[?]] = Seq(
     scalacOptions      := sharedScalacOptions,
     crossScalaVersions := supportedScalaVersions,
     scalaVersion       := scalaV,
@@ -55,9 +55,9 @@ object Settings {
     )
   )
 
-  val sonatype: Seq[Setting[_]] = Seq(
-    publishMavenStyle      := true,
-    Test / publishArtifact := false,
+  val sonatype: Seq[Setting[?]] = Seq(
+    publishMavenStyle             := true,
+    Test / publishArtifact        := false,
     publishTo                     := Some("Sonatype Releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2"),
     releaseCrossBuild             := true,
     releaseIgnoreUntrackedFiles   := true,
@@ -78,7 +78,7 @@ object Settings {
     )
   )
 
-  val noPublish: Seq[Setting[_]] = Seq(
+  val noPublish: Seq[Setting[?]] = Seq(
     publishArtifact := false,
     publish         := {},
     publishLocal    := {},

@@ -1,8 +1,8 @@
 import sbt.Keys._
 import sbt._
 
-Global / cancelable   := true
-Global / scalaVersion := Settings.globalScalaVersion
+Global / cancelable        := true
+Global / scalaVersion      := Settings.globalScalaVersion
 Global / semanticdbEnabled := true
 
 def testFilter(name: String): Boolean = (name endsWith "Spec")
@@ -20,8 +20,8 @@ lazy val mtg = (project in file("."))
   .settings(
     name := "mtg",
     libraryDependencies ++= Dependencies.Mtg,
-    buildInfoKeys       := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage    := "com.github.gchudnov.mtg",
+    buildInfoKeys    := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoPackage := "com.github.gchudnov.mtg"
   )
 
 addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")

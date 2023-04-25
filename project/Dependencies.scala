@@ -8,8 +8,8 @@ object Dependencies {
     val scalatestplus = "3.2.15.0"
   }
 
-  private val scalatest     = "org.scalatest"     %% "scalatest"  % versions.scalatest
-  private val scalacheck    = "org.scalacheck"    %% "scalacheck" % versions.scalacheck
+  private val scalatest     = "org.scalatest"     %% "scalatest"       % versions.scalatest
+  private val scalacheck    = "org.scalacheck"    %% "scalacheck"      % versions.scalacheck
   private val scalatestplus = "org.scalatestplus" %% "scalacheck-1-17" % versions.scalatestplus
 
   val Mtg: Seq[ModuleID] = {
