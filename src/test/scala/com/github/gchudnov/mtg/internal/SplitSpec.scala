@@ -251,6 +251,36 @@ final class SplitSpec extends TestSpec:
         actual mustBe expected
         actualX mustBe expectedX
       }
+
+      /**
+       * {{{
+       *                     *                    | {10} : a
+       *                     *                    | {10} : b
+       *                     *                    | {10} : c
+       *                     *                    | {10} : s0
+       * --------------------+------------------- |
+       *                    10                    |
+       * }}}
+       */
+      "produce one split for a point" in {
+        val a = Interval.point(10)
+        val b = Interval.point(10)
+        val c = Interval.point(10)
+
+        val s0 = Interval.point(10)
+        val g0 = Set(0, 1, 2)
+
+        val input = List(a, b, c)
+
+        val actualX   = Interval.splitFind(input)
+        val expectedX = List((s0, g0))
+
+        val actual   = Interval.split(input)
+        val expected = expectedX.map(_._1)
+
+        actual mustBe expected
+        actualX mustBe expectedX
+      }
     }
 
     "several intervals meet" should {
