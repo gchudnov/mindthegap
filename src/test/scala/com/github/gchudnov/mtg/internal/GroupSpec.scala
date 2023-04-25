@@ -36,6 +36,11 @@ final class GroupSpec extends TestSpec:
     }
 
     "no intervals" should {
+
+      /**
+       * {{{
+       * }}}
+       */
       "be grouped" in {
         val input = List.empty[Interval[Int]]
 
@@ -51,13 +56,24 @@ final class GroupSpec extends TestSpec:
     }
 
     "one interval" should {
+
+      /**
+       * {{{
+       *   [**********************************]   | [0,10] : a
+       *   [**********************************]   | [0,10] : g1
+       * --+----------------------------------+-- |
+       *   0                                 10   |
+       * }}}
+       */
       "be grouped" in {
         val a = Interval.closed(0, 10)
+
+        val g1 = a
 
         val input = List(a)
 
         val actual   = Interval.group(input)
-        val expected = List(a)
+        val expected = List(g1)
 
         val actualX   = Interval.groupFind(input)
         val expectedX = List((a, Set(0)))
@@ -68,19 +84,33 @@ final class GroupSpec extends TestSpec:
     }
 
     "(-inf, +inf) interval" should {
+
+      /**
+       * {{{
+       *   [******]                               | [0,10]  : a
+       *     [********************************]   | [3,50]  : b
+       *                 [******]                 | [20,30] : c
+       * (**************************************) | (-∞,+∞) : d
+       * (**************************************) | (-∞,+∞) : g1
+       * +-+-+----+------+------+-------------+-+ |
+       * -∞0 3   10     20     30            50+∞ |
+       * }}}
+       */
       "group with all other intervals" in {
         val a = Interval.closed(0, 10)
         val b = Interval.closed(3, 50)
         val c = Interval.closed(20, 30)
         val d = Interval.unbounded[Int]
 
+        val g1 = d
+
         val input = List(a, b, c, d)
 
         val actual   = Interval.group(input)
-        val expected = List(d)
+        val expected = List(g1)
 
         val actualX   = Interval.groupFind(input)
-        val expectedX = List((d, Set(0, 1, 2, 3)))
+        val expectedX = List((g1, Set(0, 1, 2, 3)))
 
         actual mustBe expected
         actualX mustBe expectedX
@@ -88,17 +118,29 @@ final class GroupSpec extends TestSpec:
     }
 
     "empty and non-empty intervals" should {
+
+      /**
+       * {{{
+       *   [**********************************]   | [0,10] : a
+       *                                          | ∅      : b
+       *   [**********************************]   | [0,10] : g1
+       * --+----------------------------------+-- |
+       *   0                                 10   |
+       * }}}
+       */
       "group" in {
         val a = Interval.closed(0, 10)
         val b = Interval.empty[Int]
 
+        val g1 = a
+
         val input = List(a, b)
 
         val actual   = Interval.group(input)
-        val expected = List(a)
+        val expected = List(g1)
 
         val actualX   = Interval.groupFind(input)
-        val expectedX = List((a, Set(0, 1)))
+        val expectedX = List((g1, Set(0, 1)))
 
         actual mustBe expected
         actualX mustBe expectedX

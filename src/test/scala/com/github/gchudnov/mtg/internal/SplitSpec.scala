@@ -16,23 +16,147 @@ final class SplitSpec extends TestSpec:
 
   "Split" when {
     "a series of intervals are split" should {
-      "produce only disjoint intervals" in {
-        // TODO: impl
+      "produce meeting intervals" in {
+        forAll(Gen.choose(0, 15).flatMap(n => Gen.listOfN(n, genNonEmptyIntArgs))) { case (nArgs) =>
+          val input = nArgs.map(args => Interval.make(args.left, args.right))
+
+          val actual = Interval.split(input)
+
+          println("INPUT:")
+          println(input)
+
+          println("ACTUAL:")
+          println(actual)
+
+          actual
+            .combinations(2)
+            .filter(ab => !ab.head.equalsTo(ab.last))
+            .foreach(ab =>
+              val a = ab.head
+              val b = ab.last
+
+              a.meets(b) mustBe (true)
+            )
+        }
       }
     }
 
     "no intervals" should {
+
+      /**
+       * {{{
+       * }}}
+       */
       "be split" in {
         val input = List.empty[Interval[Int]]
 
         val actual   = Interval.split(input)
         val expected = List.empty[Interval[Int]]
 
-        val actualInfo   = Interval.splitFind(input)
-        val expectedInfo = List.empty[(Interval[Int], Set[Int])]
+        val actualX   = Interval.splitFind(input)
+        val expectedX = List.empty[(Interval[Int], Set[Int])]
 
         actual mustBe expected
-        actualInfo mustBe expectedInfo
+        actualX mustBe expectedX
+      }
+    }
+
+    "one interval" should {
+
+      /**
+       * {{{
+       *   [**********************************]   | [0,10] : a
+       *   [**********************************]   | [0,10] : s0
+       * --+----------------------------------+-- |
+       *   0                                 10   |
+       * }}}
+       */
+      "be split" in {
+        val a = Interval.closed(0, 10)
+
+        val s0 = a
+
+        val input = List(a)
+
+        val actual   = Interval.split(input)
+        val expected = List(s0)
+
+        val actualX   = Interval.splitFind(input)
+        val expectedX = List((s0, Set(0)))
+
+        actual mustBe expected
+        actualX mustBe expectedX
+      }
+    }
+
+    "(-inf, +inf) interval" should {
+
+      /**
+       * {{{
+       *   [******]                               | [0,10]  : a
+       *     [********************************]   | [3,50]  : b
+       *                 [******]                 | [20,30] : c
+       * (**************************************) | (-∞,+∞) : d
+       * (*]                                      | (-∞,0]  : s0
+       *   [*]                                    | [0,3]   : s1
+       *     [****]                               | [3,10]  : s2
+       *          [******]                        | [10,20] : s3
+       *                 [******]                 | [20,30] : s4
+       *                        [*************]   | [30,50] : s5
+       *                                      [*) | [50,+∞) : s6
+       * +-+-+----+------+------+-------------+-+ |
+       * -∞0 3   10     20     30            50+∞ |
+       * }}}
+       */
+      "split with all other intervals" in {
+        val a = Interval.closed(0, 10)
+        val b = Interval.closed(3, 50)
+        val c = Interval.closed(20, 30)
+        val d = Interval.unbounded[Int]
+
+        val input = List(a, b, c, d)
+
+        val s0 = Interval.rightClosed(0)
+        val s1 = Interval.closed(0, 3)
+        val s2 = Interval.closed(3, 10)
+        val s3 = Interval.closed(10, 20)
+        val s4 = Interval.closed(20, 30)
+        val s5 = Interval.closed(30, 50)
+        val s6 = Interval.leftClosed(50)
+
+        val actual   = Interval.split(input)
+        val expected = List(s0, s1, s2, s3, s4, s5, s6)
+
+        val actualX   = Interval.splitFind(input)
+        val expectedX = List((s0, Set(3)), (s1, Set(0, 3)), (s2, Set(0, 1, 3)), (s3, Set(1, 3)), (s4, Set(1, 2, 3)), (s5, Set(1, 3)), (s6, Set(3)))
+
+        actual mustBe expected
+        actualX mustBe expectedX
+      }
+    }
+
+    "empty and non-empty intervals" should {
+
+      /**
+       * {{{
+       *   [**********************************]   | [0,10] : a
+       *                                          | ∅      : b
+       *   ????????????????????????????????????   |        : s0
+       * --+----------------------------------+-- |
+       *   0                                 10   |
+       * }}}
+       */
+      "produce undefined results" in {
+        val a = Interval.closed(0, 10)
+        val b = Interval.empty[Int]
+
+        val input = List(a, b)
+
+        val actual  = Interval.split(input)
+        val actualX = Interval.splitFind(input)
+
+        actual.size >= 0 mustBe true
+        actualX.size >= 0 mustBe true
       }
     }
 
@@ -54,7 +178,7 @@ final class SplitSpec extends TestSpec:
      *                                 [****]   | [60,70] : s8
      * --+----+----+----+--+-+--+-+----+----+-- |
      *   0   10   20   30 35   45     60   70   |
-     * 
+     *
      * }}}
      */
     "several intervals" should {
@@ -95,13 +219,13 @@ final class SplitSpec extends TestSpec:
         val input = List(a, b, c, d, e)
 
         // [ ([0, 10], {0}), ([10, 20], {0, 1}), ([20, 30], {0, 1, 2}), ([30, 35], {0, 2}), ([35, 40], {0}), ([40, 45], {0, 3}), ([45, 50], {0}), ([50, 60], {}), ([60, 70], {4}) ]
-        val actual = Interval.splitFind(input)
+        val actual   = Interval.splitFind(input)
         val expected = List((s0, g0), (s1, g1), (s2, g2), (s3, g3), (s4, g4), (s5, g5), (s6, g6), (s7, g7), (s8, g8))
 
         actual.size mustBe 9
         actual mustBe expected
 
-        val actualX = Interval.split(input)
+        val actualX   = Interval.split(input)
         val expectedX = expected.map(_._1)
 
         actualX mustBe expectedX

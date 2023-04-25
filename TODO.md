@@ -18,6 +18,7 @@
 
 
 /*
+        //
         import com.github.gchudnov.mtg.Diagram.Canvas
         import com.github.gchudnov.mtg.Diagram.View
         import com.github.gchudnov.mtg.Diagram
@@ -29,4 +30,5 @@
         val diag = Diagram.render(diagram)
 
         println(diag)
+        //
  */
