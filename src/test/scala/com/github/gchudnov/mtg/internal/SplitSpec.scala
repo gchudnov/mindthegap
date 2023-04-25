@@ -19,20 +19,22 @@ final class SplitSpec extends TestSpec:
 
   "Split" when {
     "a series of intervals are split" should {
-      "produce meeting intervals" in {
+      "produce intervals where a.right = b.left" in {
         forAll(Gen.choose(0, 15).flatMap(n => Gen.listOfN(n, genNonEmptyIntArgs))) { case (nArgs) =>
           val input = nArgs.map(args => Interval.make(args.left, args.right))
 
           val actual = Interval.split(input)
 
-          actual
-            .zip(actual.tail)
-            .foreach(ab =>
-              val a = ab.head
-              val b = ab.last
+          if actual.size <= 1 then input mustBe actual
+          else
+            actual
+              .zip(actual.tail)
+              .foreach(ab =>
+                val a = ab.head
+                val b = ab.last
 
-              ordM.equiv(a.right, b.left) mustBe true
-            )
+                ordM.equiv(a.right, b.left) mustBe true
+              )
         }
       }
     }
@@ -467,8 +469,11 @@ final class SplitSpec extends TestSpec:
 
         val input = List(a, b, c)
 
-        val ss = Interval.split(input)     // [ [0, 50], [60, 80] ]
-        val gs = Interval.splitFind(input) // [ ([0, 50], {0, 1, 2}), ([60, 80], {3, 4}) ]
+        val ss = Interval.split(input)
+        // [ [0, 10], [10, 20], [20, 30], [30, 40], [40, 50] ]
+
+        val gs = Interval.splitFind(input)
+        // [ ([0, 10], {0}), ([10, 20], {0, 1}), ([20, 30], {1}), ([30, 40], {}), ([40, 50], {2}) ]
 
         // ==
         val s0 = Interval.closed(0, 10)
