@@ -162,6 +162,68 @@ final class SplitSpec extends TestSpec:
 
     /**
      * {{{
+     *   [***]                                  | [0,10]  : a
+     *    [********************]                | [3,50]  : b
+     *            [***]                         | [20,30] : c
+     *                             [****]       | [60,70] : d
+     *                                  [***]   | [71,80] : e
+     *   **                                     | [0,3]   : s0
+     *    [**]                                  | [3,10]  : s1
+     *       [****]                             | [10,20] : s2
+     *            [***]                         | [20,30] : s3
+     *                [********]                | [30,50] : s4
+     *                         [***]            | [50,60] : s5
+     *                             [****]       | [60,70] : s6
+     *                                  *       | [70,71] : s7
+     *                                  [***]   | [71,80] : s8
+     * --++--+----+---+--------+---+----+---+-- |
+     *   0  10   20  30       50  60   70  80   |
+     * }}}
+     */
+    "intervals where some of them are adjacent" should {
+      "split adjacent into an interval without membership" in {
+        val a = Interval.closed(0, 10)
+        val b = Interval.closed(3, 50)
+        val c = Interval.closed(20, 30)
+
+        val d = Interval.closed(60, 70)
+        val e = Interval.closed(71, 80)
+
+        val s0 = Interval.closed(0, 3)
+        val s1 = Interval.closed(3, 10)
+        val s2 = Interval.closed(10, 20)
+        val s3 = Interval.closed(20, 30)
+        val s4 = Interval.closed(30, 50)
+        val s5 = Interval.closed(50, 60)
+        val s6 = Interval.closed(60, 70)
+        val s7 = Interval.closed(70, 71)
+        val s8 = Interval.closed(71, 80)
+
+        val g0 = Set(0)
+        val g1 = Set(0, 1)
+        val g2 = Set(1)
+        val g3 = Set(1, 2)
+        val g4 = Set(1)
+        val g5 = Set()
+        val g6 = Set(3)
+        val g7 = Set()
+        val g8 = Set(4)
+
+        val input = List(a, b, c, d, e)
+
+        val actualX   = Interval.splitFind(input)
+        val expectedX = List((s0, g0), (s1, g1), (s2, g2), (s3, g3), (s4, g4), (s5, g5), (s6, g6), (s7, g7), (s8, g8))
+
+        val actual   = Interval.split(input)
+        val expected = expectedX.map(_._1)
+
+        actual mustBe expected
+        actualX mustBe expectedX
+      }
+    }
+
+    /**
+     * {{{
      *   [************************]             | [0,50]  : a
      *        [*********]                       | [10,30] : b
      *             [*******]                    | [20,35] : c
@@ -228,6 +290,51 @@ final class SplitSpec extends TestSpec:
         val actualX   = Interval.split(input)
         val expectedX = expected.map(_._1)
 
+        actualX mustBe expectedX
+      }
+    }
+
+    /**
+     * {{{
+     *   [******]                               | [0,10]  : a
+     *                 [******]                 | [20,30] : b
+     *                               [******]   | [40,50] : c
+     *   [******]                               | [0,10]  : s0
+     *          [******]                        | [10,20] : s1
+     *                 [******]                 | [20,30] : s2
+     *                        [******]          | [30,40] : s3
+     *                               [******]   | [40,50] : s4
+     * --+------+------+------+------+------+-- |
+     *   0     10     20     30     40     50   |
+     * }}}
+     */
+    "non-intersecting intervals" should {
+      "produce separate splits" in {
+        val a = Interval.closed(0, 10)
+        val b = Interval.closed(20, 30)
+        val c = Interval.closed(40, 50)
+
+        val s0 = Interval.closed(0, 10)
+        val s1 = Interval.closed(10, 20)
+        val s2 = Interval.closed(20, 30)
+        val s3 = Interval.closed(30, 40)
+        val s4 = Interval.closed(40, 50)
+
+        val g0 = Set(0)
+        val g1 = Set()
+        val g2 = Set(1)
+        val g3 = Set()
+        val g4 = Set(2)
+
+        val input = List(a, b, c)
+
+        val actualX   = Interval.splitFind(input)
+        val expectedX = List((s0, g0), (s1, g1), (s2, g2), (s3, g3), (s4, g4))
+
+        val actual   = Interval.split(input)
+        val expected = expectedX.map(_._1)
+
+        actual mustBe expected
         actualX mustBe expectedX
       }
     }
