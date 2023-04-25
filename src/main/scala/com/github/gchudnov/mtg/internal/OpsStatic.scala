@@ -63,7 +63,7 @@ private[mtg] transparent trait StaticOps:
     Group.group(xs)
 
   /**
-   * Group
+   * GroupFind
    *
    * Groups a series of intervals by executing union for the intersecting intervals and provide group information about membership.
    */
@@ -77,3 +77,19 @@ private[mtg] transparent trait StaticOps:
    */
   final def complement[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[Interval[T]] =
     Complement.complement(xs)
+
+  /**
+   * Split
+   *
+   * Split intervals into a collection of non-overlapping intervals (splits).
+   */
+  final def split[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[Interval[T]] =
+    Split.split(xs)
+
+  /**
+   * SplitFind
+   *
+   * Split intervals into a collection of non-overlapping intervals (splits).
+   */
+  final def splitFind[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[(Interval[T], Set[Int])] =
+    Split.splitFind(xs).map(it => (it.interval, it.members))

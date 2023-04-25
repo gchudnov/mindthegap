@@ -73,7 +73,7 @@ private[mtg] object Group:
     intervals
 
   /**
-   * Group
+   * GroupFind
    *
    * Groups a series of intervals by executing union for the intersecting intervals and provide the membership information.
    *
