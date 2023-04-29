@@ -9,7 +9,7 @@ For the example of usage of the given instructions, see: `${PROJECT_ROOT}/build.
 ### 1. Install Dependencies
 
 - zola
-- node.js v. >= 19.0.0
+- node.js v. >= 20.0.0
 - inkscape
 
 ```bash
@@ -23,6 +23,11 @@ snap install --edge zola
 sudo add-apt-repository ppa:inkscape.dev/stable
 sudo apt update
 sudo apt install inkscape
+
+# OR
+sudo snap install --edge inkscape
+
+# inkscape (edge) 1.3-dev-74adff3496-2022-05-26 from Inkscape Project (inkscape✓) installed
 
 # node.js dependencies
 npm install

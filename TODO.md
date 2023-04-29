@@ -1,5 +1,7 @@
 # TODO
 
+- add examples sub-module
+
 - add split
 
 - when the screen is small, the should be a hamburger menu on the left -- see react toolkit
