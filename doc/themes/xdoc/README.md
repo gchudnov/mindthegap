@@ -9,7 +9,7 @@ For the example of usage of the given instructions, see: `${PROJECT_ROOT}/build.
 ### 1. Install Dependencies
 
 - zola
-- node.js v. >= 19.0.0
+- node.js v. >= 20.0.0
 - inkscape
 
 ```bash
@@ -23,6 +23,11 @@ snap install --edge zola
 sudo add-apt-repository ppa:inkscape.dev/stable
 sudo apt update
 sudo apt install inkscape
+
+# OR
+sudo snap install --edge inkscape
+
+# inkscape (edge) 1.3-dev-74adff3496-2022-05-26 from Inkscape Project (inkscape✓) installed
 
 # node.js dependencies
 npm install
@@ -148,19 +153,17 @@ It will build and copy to `/public` resources, including JavaScript required for
 npm run search
 ```
 
-The command will take: takes `search_index.en.js`, `elasticlunr.min.js`, `search-handler.js`, and bundles them into:
+The command takes `search_index.en.js`, `elasticlunr.min.js`, `search-handler.js`, and bundles them into:
 
 ```text
 /static/search-bundle.min.js
 ```
 
-Next, it will calculate sha-256 and sha-384 hashes for `search-bundle.min.js` and embedded them into:
+Next, it calculates sha-256 and sha-384 hashes for `search-bundle.min.js` and embeds them into:
 
 ```text
 /static/search-facade.js
 ```
-
-NOTE: after running, run `bundle` next, it bundles `search-facade.js`.
 
 ### 10. Bundle Application
 
