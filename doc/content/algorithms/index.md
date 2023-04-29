@@ -212,12 +212,12 @@ val is = Interval.complement(input)
 
 ## Split
 
-Split intervals into a collection of intervals (splits), where `a.right = b.left`.
+Split intervals into a collection of intervals (splits), where the left boundary of a next split `b-` is equal to the right boundary of the previous split, `a+`.
 
 There are two methods:
 
-- `Interval.split([a1, a2, ... an])` returns a collection of split-intervals: `[s1, s2, ... sn]`.
-- `Interval.splitFind([a1, a2, ... an])` returns a collection of tuples `[(s1, {i, ... }), (s2, {j, ... }), ... (sn, {k, ... })]` where `sk` is the split-interval and `{i, ... }` is a set of indices of intervals that belong to this split.
+- `Interval.split([a1, a2, ... an])` takes a collection of intervals and returns a collection of splits: `[s1, s2, ... sn]`.
+- `Interval.splitFind([a1, a2, ... an])` takes a collection of intervals and returns a collection of tuples `[(s1, {i, ... }), (s2, {j, ... }), ... (sn, {k, ... })]` where `sk` is the split-interval and `{i, ... }` is a set of indices of input-intervals that belong to `sk`-split.
 
 
 ```scala

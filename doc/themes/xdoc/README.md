@@ -153,19 +153,17 @@ It will build and copy to `/public` resources, including JavaScript required for
 npm run search
 ```
 
-The command will take: takes `search_index.en.js`, `elasticlunr.min.js`, `search-handler.js`, and bundles them into:
+The command takes `search_index.en.js`, `elasticlunr.min.js`, `search-handler.js`, and bundles them into:
 
 ```text
 /static/search-bundle.min.js
 ```
 
-Next, it will calculate sha-256 and sha-384 hashes for `search-bundle.min.js` and embedded them into:
+Next, it calculates sha-256 and sha-384 hashes for `search-bundle.min.js` and embeds them into:
 
 ```text
 /static/search-facade.js
 ```
-
-NOTE: after running, run `bundle` next, it bundles `search-facade.js`.
 
 ### 10. Bundle Application
 
