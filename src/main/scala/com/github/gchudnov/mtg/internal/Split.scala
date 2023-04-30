@@ -3,39 +3,50 @@ package com.github.gchudnov.mtg.internal
 import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
+import scala.collection.mutable.ListBuffer
 
 private[mtg] object Split:
 
-  enum Side:
+  private enum Side:
     case Left
     case Right
 
-  private case class Point[T](pt: Mark[T], i: Int, s: Side)
+  /**
+   * A Split Point
+   *
+   * @param pt
+   *   interval boundary
+   * @param i
+   *   interval index in the input sequence
+   * @param s
+   *   side of the interval
+   */
+  private case class SplitPoint[T](pt: Mark[T], i: Int, s: Side)
 
   /**
    * A single split
    */
-  private[mtg] final case class SplitState[T: Domain](interval: Interval[T], members: Set[Int])
+  private[mtg] final case class SingleSplit[T: Domain](interval: Interval[T], members: Set[Int])
 
   /**
    * Accumulator
    */
-  private final case class AccState[T: Domain](splits: List[SplitState[T]], opens: Set[Int], last: Point[T]):
+  private final case class AccState[T: Domain](splits: ListBuffer[SingleSplit[T]], open: Set[Int], last: SplitPoint[T]):
 
-    def withPoint(p: Point[T])(using ordM: Ordering[Mark[T]]): AccState[T] =
-      val it = Interval.make[T](last.pt, p.pt)
-      val ms = opens
-      val s  = SplitState(it, ms)
-      val ss = if isLess(last, p) then splits ++ List(s) else splits
+    def append(p: SplitPoint[T])(using ordM: Ordering[Mark[T]]): AccState[T] =
+      val tMinus = if last.s == Side.Left then last.pt else last.pt.succ
+      val tPlus  = if p.s == Side.Left then p.pt.pred else p.pt
 
-      val os = if opens.contains(p.i) then opens - p.i else opens + p.i
-      val ls = p
+      val splits1 = if ordM.lteq(tMinus, tPlus) then splits :+ SingleSplit(Interval.make(tMinus, tPlus), open) else splits
 
-      this.copy(splits = ss, opens = os, last = ls)
+      val open1 = if p.s == Side.Left then open + p.i else open - p.i
+      val last1 = p
+
+      this.copy(splits = splits1, open = open1, last = last1)
 
   private object AccState:
-    def init[T: Domain](p: Point[T]): AccState[T] =
-      AccState(splits = List.empty[SplitState[T]], opens = Set(p.i), last = p)
+    def init[T: Domain](p: SplitPoint[T]): AccState[T] =
+      AccState(splits = ListBuffer.empty[SingleSplit[T]], open = Set(p.i), last = p)
 
   private def isLess(x: Side, y: Side): Boolean =
     (x, y) match
@@ -44,7 +55,7 @@ private[mtg] object Split:
       case (_, _) =>
         false
 
-  private def isLess[T: Domain](x: Point[T], y: Point[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  private def isLess[T: Domain](x: SplitPoint[T], y: SplitPoint[T])(using ordM: Ordering[Mark[T]]): Boolean =
     ordM.compare(x.pt, y.pt) match
       case 0 =>
         isLess(x.s, y.s)
@@ -52,6 +63,12 @@ private[mtg] object Split:
         false
       case -1 =>
         true
+
+  /**
+   * Converts an interval and an index to two points
+   */
+  private def toPoints[T](x: Interval[T], i: Int): List[SplitPoint[T]] =
+    List(SplitPoint(x.left, i, Side.Left), SplitPoint(x.right, i, Side.Right))
 
   /**
    * Split
@@ -69,11 +86,11 @@ private[mtg] object Split:
    *
    * Split intervals into a collection of non-overlapping intervals (splits) and provide membership information.
    */
-  final def splitFind[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[SplitState[T]] =
-    val ms = xs.zipWithIndex.flatMap(it => List(Point(it._1.left, it._2, Side.Left), Point(it._1.right, it._2, Side.Right))).sortWith(isLess);
+  final def splitFind[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[SingleSplit[T]] =
+    val ms = xs.zipWithIndex.flatMap((x, i) => toPoints(x, i)).sortWith(isLess)
 
     val acc = ms.foldLeft[Option[AccState[T]]](None) { case (acc, p) =>
-      acc.fold(Some(AccState.init(p)))(acc => Some(acc.withPoint(p)))
+      acc.fold(Some(AccState.init(p)))(acc => Some(acc.append(p)))
     }
 
-    acc.fold(List.empty[SplitState[T]])(it => it.splits)
+    acc.fold(List.empty[SingleSplit[T]])(it => it.splits.toList)

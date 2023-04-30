@@ -157,11 +157,11 @@ val cs = Interval.minus(a, b)   // [[1, 4], [11, 15]]
 
 ![minus-contains.svg](./minus-contains.svg)
 
-## Group / GroupFind
+## Group
 
 Group operation takes a collection of intervals `[a1, a2, ... an]` and merges all of the _adjacent_ or _intersecting_ ones (`ak = [min(ai-, aj-), max(ai+, aj+)]` if `merges(ai, aj)`), creating a new collection of intervals -- interval groups.
 
-There are two methods:
+Methods:
 
 - `Interval.group([a1, a2, ... an])` returns a collection of grouped intervals: `[g1, g2, ... gn]`.
 - `Interval.groupFind([a1, a2, ... an])` returns a collection of tuples `[(g1, {i, ... }), (g2, {j, ... }), ... (gn, {k, ... })]` where `gk` is the grouped interval and `{i, ... }` is a set of indices of intervals that were grouped.
@@ -212,9 +212,9 @@ val is = Interval.complement(input)
 
 ## Split
 
-Split intervals into a collection of intervals (splits), where the left boundary of a next split `b-` is equal to the right boundary of the previous split, `a+`.
+Split intervals into a collection of intervals (splits), where every pair of splits is _adjacent_. The splits are sorted.
 
-There are two methods:
+Methods:
 
 - `Interval.split([a1, a2, ... an])` takes a collection of intervals and returns a collection of splits: `[s1, s2, ... sn]`.
 - `Interval.splitFind([a1, a2, ... an])` takes a collection of intervals and returns a collection of tuples `[(s1, {i, ... }), (s2, {j, ... }), ... (sn, {k, ... })]` where `sk` is the split-interval and `{i, ... }` is a set of indices of input-intervals that belong to `sk`-split.
@@ -228,10 +228,10 @@ val c = Interval.closed(40, 50) // [40, 50]
 val input = List(a, b, c)
 
 val ss = Interval.split(input)
-// [ [0, 10], [10, 20], [20, 30], [30, 40], [40, 50] ]
+// [ [0, 9], [10, 20], [21, 30], [31, 39], [40, 50]
 
 val gs = Interval.splitFind(input)
-// [ ([0, 10], {0}), ([10, 20], {0, 1}), ([20, 30], {1}), ([30, 40], {}), ([40, 50], {2}) ]
+// [ ([0, 9], {0}), ([10, 20], {0, 1}), ([21, 30], {1}), ([31, 39], {}), ([40, 50], {2}) ]
 ```
 
 ![split.svg](./split.svg)
