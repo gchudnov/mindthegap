@@ -70,6 +70,7 @@ final case class Canvas(
     (x >= 0 && x < width)
 
 object Canvas:
+  
   val default: Canvas =
     Canvas(
       width = 40,

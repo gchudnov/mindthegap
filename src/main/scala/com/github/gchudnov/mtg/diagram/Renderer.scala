@@ -8,8 +8,12 @@ import com.github.gchudnov.mtg.diagram.internal.BasicRenderer
  * Renderer
  */
 trait Renderer:
-  def render(d: Diagram): List[String]
+  def render(d: Diagram, theme: Theme): List[String]
 
 object Renderer:
-  def make(theme: Theme): Renderer =
-    new BasicRenderer(theme)
+
+  given defaultRenderer: Renderer = 
+    make
+
+  def make: Renderer =
+    new BasicRenderer()

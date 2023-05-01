@@ -272,9 +272,9 @@ final class DiagramSpec extends TestSpec:
         "draw an empty collection of labels" in {
           val ls = List.empty[Label]
 
-          val r = new BasicRenderer(noneLabelTheme)
+          val r = new BasicRenderer()
 
-          val actual   = r.drawLabels(ls, canvas.width)
+          val actual   = r.drawLabels(noneLabelTheme, ls, canvas.width)
           val expected = List("                                        ")
 
           actual mustBe expected
@@ -283,9 +283,9 @@ final class DiagramSpec extends TestSpec:
         "draw non-overlapping labels" in {
           val ls = List(Label(2, "5"), Label(36, "10"))
 
-          val r = new BasicRenderer(noneLabelTheme)
+          val r = new BasicRenderer()
 
-          val actual   = r.drawLabels(ls, canvas.width)
+          val actual   = r.drawLabels(noneLabelTheme, ls, canvas.width)
           val expected = List("  5                                 10  ")
 
           actual mustBe expected
@@ -294,9 +294,9 @@ final class DiagramSpec extends TestSpec:
         "draw meeting labels" in {
           val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
 
-          val r = new BasicRenderer(noneLabelTheme)
+          val r = new BasicRenderer()
 
-          val actual   = r.drawLabels(ls, canvas.width)
+          val actual   = r.drawLabels(noneLabelTheme, ls, canvas.width)
           val expected = List("-∞1  2      5           10          15+∞")
 
           actual mustBe expected
@@ -305,9 +305,9 @@ final class DiagramSpec extends TestSpec:
         "draw overlapping labels" in {
           val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
 
-          val r = new BasicRenderer(noneLabelTheme)
+          val r = new BasicRenderer()
 
-          val actual   = r.drawLabels(ls, canvas.width)
+          val actual   = r.drawLabels(noneLabelTheme, ls, canvas.width)
           val expected = List("1003400                                 ")
 
           actual mustBe expected
@@ -320,9 +320,9 @@ final class DiagramSpec extends TestSpec:
         "draw an empty collection of labels" in {
           val ls = List.empty[Label]
 
-          val r = new BasicRenderer(noOverlapLabelTheme)
+          val r = new BasicRenderer()
 
-          val actual   = r.drawLabels(ls, canvas.width)
+          val actual   = r.drawLabels(noOverlapLabelTheme, ls, canvas.width)
           val expected = List("                                        ")
 
           actual mustBe expected
@@ -331,9 +331,9 @@ final class DiagramSpec extends TestSpec:
         "draw only non-overlapping labels" in {
           val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
 
-          val r = new BasicRenderer(noOverlapLabelTheme)
+          val r = new BasicRenderer()
 
-          val actual   = r.drawLabels(ls, canvas.width)
+          val actual   = r.drawLabels(noOverlapLabelTheme, ls, canvas.width)
           val expected = List("100 400                                 ")
 
           actual mustBe expected
@@ -342,9 +342,9 @@ final class DiagramSpec extends TestSpec:
         "draw meeting labels if one of them is non-numeric" in {
           val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
 
-          val r = new BasicRenderer(noOverlapLabelTheme)
+          val r = new BasicRenderer()
 
-          val actual   = r.drawLabels(ls, canvas.width)
+          val actual   = r.drawLabels(noOverlapLabelTheme, ls, canvas.width)
           val expected = List("-∞1  2      5           10          15+∞")
 
           actual mustBe expected
@@ -353,9 +353,9 @@ final class DiagramSpec extends TestSpec:
         "draw only non-meeting labels" in {
           val ls = List(Label(0, "100"), Label(3, "300"))
 
-          val r = new BasicRenderer(noOverlapLabelTheme)
+          val r = new BasicRenderer()
 
-          val actual   = r.drawLabels(ls, canvas.width)
+          val actual   = r.drawLabels(noOverlapLabelTheme, ls, canvas.width)
           val expected = List("100                                     ")
 
           actual mustBe expected
@@ -368,9 +368,9 @@ final class DiagramSpec extends TestSpec:
         "draw an empty collection of labels" in {
           val ls = List.empty[Label]
 
-          val r = new BasicRenderer(stackedLabelTheme)
+          val r = new BasicRenderer()
 
-          val actual   = r.drawLabels(ls, canvas.width)
+          val actual   = r.drawLabels(stackedLabelTheme, ls, canvas.width)
           val expected = List("                                        ")
 
           actual mustBe expected
@@ -379,9 +379,9 @@ final class DiagramSpec extends TestSpec:
         "draw non-overlapping and non-meeting labels on one line" in {
           val ls = List(Label(2, "5"), Label(36, "10"))
 
-          val r = new BasicRenderer(stackedLabelTheme)
+          val r = new BasicRenderer()
 
-          val actual   = r.drawLabels(ls, canvas.width)
+          val actual   = r.drawLabels(stackedLabelTheme, ls, canvas.width)
           val expected = List("  5                                 10  ")
 
           actual mustBe expected
@@ -390,9 +390,9 @@ final class DiagramSpec extends TestSpec:
         "draw meeting labels" in {
           val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
 
-          val r = new BasicRenderer(stackedLabelTheme)
+          val r = new BasicRenderer()
 
-          val actual = r.drawLabels(ls, canvas.width)
+          val actual = r.drawLabels(stackedLabelTheme, ls, canvas.width)
           val expected = List(
             "-∞   2      5           10          15  ",
             "  1                                   +∞"
@@ -404,9 +404,9 @@ final class DiagramSpec extends TestSpec:
         "draw overlapping labels" in {
           val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
 
-          val r = new BasicRenderer(stackedLabelTheme)
+          val r = new BasicRenderer()
 
-          val actual = r.drawLabels(ls, canvas.width)
+          val actual = r.drawLabels(stackedLabelTheme, ls, canvas.width)
           val expected = List(
             "100 400                                 ",
             "   300                                  "
@@ -419,9 +419,9 @@ final class DiagramSpec extends TestSpec:
       "draw an empty collection of ticks" in {
         val ts = List.empty[Tick]
 
-        val r = new BasicRenderer(themeNoLegend)
+        val r = new BasicRenderer()
 
-        val actual   = r.drawTicks(ts, canvas.width)
+        val actual   = r.drawTicks(themeNoLegend, ts, canvas.width)
         val expected = List("----------------------------------------")
 
         actual mustBe expected
@@ -430,9 +430,9 @@ final class DiagramSpec extends TestSpec:
       "draw ticks" in {
         val ts = List(Tick(2), Tick(12), Tick(25), Tick(0), Tick(37), Tick(5), Tick(39))
 
-        val r = new BasicRenderer(themeNoLegend)
+        val r = new BasicRenderer()
 
-        val actual   = r.drawTicks(ts, canvas.width)
+        val actual   = r.drawTicks(themeNoLegend, ts, canvas.width)
         val expected = List("+-+--+------+------------+-----------+-+")
 
         actual mustBe expected
@@ -442,7 +442,7 @@ final class DiagramSpec extends TestSpec:
         val as = List.empty[String]
         val n  = 0
 
-        val r = new BasicRenderer(theme)
+        val r = new BasicRenderer()
 
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List.empty[String]
@@ -454,7 +454,7 @@ final class DiagramSpec extends TestSpec:
         val as = List.empty[String]
         val n  = 1
 
-        val r = new BasicRenderer(theme)
+        val r = new BasicRenderer()
 
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List("")
@@ -466,7 +466,7 @@ final class DiagramSpec extends TestSpec:
         val as = List("a", "b")
         val n  = 3
 
-        val r = new BasicRenderer(theme)
+        val r = new BasicRenderer()
 
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List("a", "b", "")
@@ -478,7 +478,7 @@ final class DiagramSpec extends TestSpec:
         val as = List("a", "b")
         val n  = 2
 
-        val r = new BasicRenderer(theme)
+        val r = new BasicRenderer()
 
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List("a", "b")
@@ -490,7 +490,7 @@ final class DiagramSpec extends TestSpec:
         val as = List("a", "b")
         val n  = 1
 
-        val r = new BasicRenderer(theme)
+        val r = new BasicRenderer()
 
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List("a", "b")
@@ -1391,25 +1391,3 @@ final class DiagramSpec extends TestSpec:
       }
     }
   }
-
-/**
-- short interval are rendered as **, should be [] or (], ...
-     * {{{
-     *   [***]                                  | [0,10]  : a
-     *    [********************]                | [3,50]  : b
-     *            [***]                         | [20,30] : c
-     *                             [****]       | [60,70] : d
-     *                                  [***]   | [71,80] : e
-     *   **                                     | [0,3]   : s0
-     *    [**]                                  | [3,10]  : s1
-     *       [****]                             | [10,20] : s2
-     *            [***]                         | [20,30] : s3
-     *                [********]                | [30,50] : s4
-     *                         [***]            | [50,60] : s5
-     *                             [****]       | [60,70] : s6
-     *                                  *       | [70,71] : s7
-     *                                  [***]   | [71,80] : s8
-     * --++--+----+---+--------+---+----+---+-- |
-     *   0  10   20  30       50  60   70  80   |
-     * }}} 
-*/

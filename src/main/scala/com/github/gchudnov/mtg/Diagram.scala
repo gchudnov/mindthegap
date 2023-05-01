@@ -10,8 +10,6 @@ import com.github.gchudnov.mtg.diagram.Legend
 import com.github.gchudnov.mtg.diagram.Annotation
 import com.github.gchudnov.mtg.diagram.internal.BasicRenderer
 import com.github.gchudnov.mtg.diagram.internal.BasicTranslator
-import scala.collection.mutable.ArrayBuffer
-import scala.collection.mutable.ListBuffer
 
 import Show.given
 import com.github.gchudnov.mtg.internal.DiagramMacro
@@ -40,7 +38,7 @@ object Diagram:
   export com.github.gchudnov.mtg.diagram.Legend
   export com.github.gchudnov.mtg.diagram.Annotation
 
-  val empty: Diagram =
+  lazy val empty: Diagram =
     Diagram(
       width = 0,
       height = 0,
@@ -110,8 +108,9 @@ object Diagram:
     make(intervals, view = View.default[T], canvas = Canvas.default, annotations = annotations)
 
   /**
-   * Render the provided Diagram
+   * Render the Diagram
    */
-  def render(d: Diagram, theme: Theme = Theme.default): List[String] =
-    val r = Renderer.make(theme)
-    r.render(d)
+  def render(d: Diagram, theme: Theme = Theme.default)(using r: Renderer): List[String] =
+    r.render(d, theme)
+
+  // TODO: add render methods so that make is redundant
