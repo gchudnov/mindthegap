@@ -1,7 +1,8 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.internal.diagram.BasicRenderer
-import com.github.gchudnov.mtg.internal.diagram.BasicTranslator
+import com.github.gchudnov.mtg.diagram.Span
+import com.github.gchudnov.mtg.diagram.internal.BasicRenderer
+import com.github.gchudnov.mtg.diagram.internal.BasicTranslator
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.ListBuffer
 
@@ -14,7 +15,7 @@ import com.github.gchudnov.mtg.internal.DiagramMacro
 final case class Diagram(
   width: Int,
   height: Int,
-  spans: List[Diagram.Span],
+  spans: List[Span],
   ticks: List[Diagram.Tick],
   labels: List[Diagram.Label],
   legends: List[Diagram.Legend],
@@ -22,6 +23,8 @@ final case class Diagram(
 )
 
 object Diagram:
+
+  export com.github.gchudnov.mtg.diagram.Span
 
   val empty: Diagram =
     Diagram(
@@ -274,33 +277,6 @@ object Diagram:
       Label(0, "")
 
   /**
-   * Span
-   *
-   * NOTE: Use negative span for an empty interval
-   */
-  final case class Span(x0: Int, x1: Int, includeX0: Boolean, includeX1: Boolean):
-
-    def isEmpty: Boolean =
-      x1 < x0
-
-    def nonEmpty: Boolean =
-      !isEmpty
-
-    def size: Int =
-      x1 - x0 + 1
-
-    def ticks: List[Tick] =
-      if isEmpty then List.empty[Tick]
-      else List(Tick(x0), Tick(x1))
-
-  object Span:
-    val empty: Span =
-      Span(1, -1, true, true)
-
-    def make(x0: Int, x1: Int, includeX0: Boolean, includeX1: Boolean): Span =
-      Span(x0, x1, includeX0, includeX1)
-
-  /**
    * Legend Entry
    */
   final case class Legend(value: String):
@@ -355,14 +331,14 @@ object Diagram:
     val (viewTicks, viewLabels) = if view.nonEmpty then
       val vi = view.toInterval
       val vs = translator.translate(vi)
-      (vs.ticks, canvas.labels(vi, vs))
+      (Span.toTicks(vs), canvas.labels(vi, vs))
     else (List.empty[Tick], List.empty[Label])
 
     val d = intervals.zipWithIndex.foldLeft(Diagram.empty) { case (acc, (i, j)) =>
       val y = acc.height
 
       val span   = translator.translate(i)
-      val ticks  = span.ticks
+      val ticks  = Span.toTicks(span)
       val labels = canvas.labels(i, span)
       val legend = Legend.make(i)
       val ann    = if j < annotations.size then Annotation(annotations(j)) else Annotation.empty

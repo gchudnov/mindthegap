@@ -1,7 +1,7 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.internal.diagram.BasicRenderer
-import com.github.gchudnov.mtg.internal.diagram.BasicTranslator
+import com.github.gchudnov.mtg.diagram.internal.BasicRenderer
+import com.github.gchudnov.mtg.diagram.internal.BasicTranslator
 import com.github.gchudnov.mtg.Diagram.Canvas
 import com.github.gchudnov.mtg.Diagram.Theme
 import com.github.gchudnov.mtg.Diagram.Span
