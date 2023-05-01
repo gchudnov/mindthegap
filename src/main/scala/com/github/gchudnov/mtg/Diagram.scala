@@ -1,6 +1,7 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.diagram.Renderer
+import com.github.gchudnov.mtg.diagram.Translator
 import com.github.gchudnov.mtg.diagram.Span
 import com.github.gchudnov.mtg.diagram.Theme
 import com.github.gchudnov.mtg.diagram.internal.BasicRenderer
@@ -41,16 +42,6 @@ object Diagram:
       legends = List.empty[Legend],
       annotations = List.empty[Annotation]
     )
-
-  /**
-   * Translator
-   */
-  trait Translator[T: Domain]:
-    def translate(i: Interval[T]): Span
-
-  object Translator:
-    def make[T: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Translator[T] =
-      new BasicTranslator[T](view, canvas)
 
   /**
    * Tick
