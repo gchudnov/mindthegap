@@ -8,7 +8,7 @@ import com.github.gchudnov.mtg.Mark
 /**
  * View
  *
- * Specifies the range to display.
+ * Specifies the range of domain values to display.
  */
 final case class View[T: Domain](
   left: Option[T], // left boundary of the view
