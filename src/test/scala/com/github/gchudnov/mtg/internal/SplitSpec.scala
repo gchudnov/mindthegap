@@ -289,7 +289,93 @@ final class SplitSpec extends TestSpec:
       }
     }
 
-    "several intervals meet" should {
+    "adjacent intervals" should {
+
+      /**
+       * {{{
+       *   *                                      | {1} : a
+       *                     *                    | {2} : b
+       *                                      *   | {3} : c
+       *   *                                      | {1} : s0
+       *                     *                    | {2} : s1
+       *                                      *   | {3} : s2
+       * --+-----------------+----------------+-- |
+       *   1                 2                3   |
+       * }}}
+       */
+      "product splits for points" in {
+        val a = Interval.point(1)
+        val b = Interval.point(2)
+        val c = Interval.point(3)
+
+        val s0 = Interval.point(1)
+        val s1 = Interval.point(2)
+        val s2 = Interval.point(3)
+
+        val g0 = Set(0)
+        val g1 = Set(1)
+        val g2 = Set(2)
+
+        val input = List(a, b, c)
+
+        val expectedX = List((s0, g0), (s1, g1), (s2, g2))
+        val expected  = expectedX.map(_._1)
+
+        val actualX = Interval.splitFind(input).map(it => (it._1.canonical, it._2))
+        val actual  = Interval.split(input).map(_.canonical)
+
+        actual mustBe expected
+        actualX mustBe expectedX
+      }
+    }
+
+    "disjoint intervals" should {
+
+      /**
+       * {{{
+       *   *                                      | {1}   : a
+       *                   *                      | {5}   : b
+       *                                      *   | {10}  : c
+       *   *                                      | {1}   : s0
+       *       [*******]                          | [2,4] : s1
+       *                   *                      | {5}   : s2
+       *                      [***********]       | [6,9] : s3
+       *                                      *   | {10}  : s4
+       * --+---+-------+---+--+-----------+---+-- |
+       *   1   2       4   5  6           9  10   |
+       * }}}
+       */
+      "produce split for points" in {
+        val a = Interval.point(1)
+        val b = Interval.point(5)
+        val c = Interval.point(10)
+
+        val s0 = Interval.point(1)
+        val s1 = Interval.closed(2, 4)
+        val s2 = Interval.point(5)
+        val s3 = Interval.closed(6, 9)
+        val s4 = Interval.point(10)
+
+        val g0 = Set(0)
+        val g1 = Set.empty[Int]
+        val g2 = Set(1)
+        val g3 = Set.empty[Int]
+        val g4 = Set(2)
+
+        val input = List(a, b, c)
+
+        val expectedX = List((s0, g0), (s1, g1), (s2, g2), (s3, g3), (s4, g4))
+        val expected  = expectedX.map(_._1)
+
+        val actualX = Interval.splitFind(input).map(it => (it._1.canonical, it._2))
+        val actual  = Interval.split(input).map(_.canonical)
+
+        actual mustBe expected
+        actualX mustBe expectedX
+      }
+    }
+
+    "meeting intervals" should {
 
       /**
        * {{{
@@ -302,7 +388,7 @@ final class SplitSpec extends TestSpec:
        *  60              69 71              80   |
        * }}}
        */
-      "split meeting intervals" in {
+      "split producing a point" in {
         val a = Interval.closed(60, 70)
         val b = Interval.closed(70, 80)
 
@@ -339,7 +425,7 @@ final class SplitSpec extends TestSpec:
        *  60              69 71              80   |
        * }}}
        */
-      "split 4 meeting intervals" in {
+      "split producing a point of we have two pairs of meeting intervals" in {
         val a = Interval.closed(60, 70)
         val b = Interval.closed(60, 70)
         val c = Interval.closed(70, 80)
