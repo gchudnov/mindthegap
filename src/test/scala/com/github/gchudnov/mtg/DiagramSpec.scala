@@ -750,6 +750,40 @@ final class DiagramSpec extends TestSpec:
         actual mustBe expected
       }
 
+      "display a leftClosed and rightClosed overlapping intervals" in {
+        val a = Interval.leftClosed(5)   // [5, +∞)
+        val b = Interval.rightClosed(10) // (-∞, 10]
+
+        val diagram = Diagram.make(List(a, b), view, canvas)
+
+        val actual = Diagram.render(diagram, themeNoLegend)
+        val expected = List(
+          "  [************************************) | a",
+          "(************************************]   | b",
+          "+-+----------------------------------+-+ |",
+          "-∞5                                 10+∞ |"
+        )
+
+        actual mustBe expected
+      }
+
+      "display a leftClosed and rightClosed non-overlapping intervals" in {
+        val a = Interval.leftClosed(10)   // [10, +∞)
+        val b = Interval.rightClosed(5) // (-∞, 5]
+
+        val diagram = Diagram.make(List(a, b), view, canvas)
+
+        val actual = Diagram.render(diagram, themeNoLegend)
+        val expected = List(
+          "                                     [*) | a", 
+          "(*]                                      | b", 
+          "+-+----------------------------------+-+ |", 
+          "-∞5                                 10+∞ |"
+        )
+
+        actual mustBe expected
+      }
+
       "display several intervals" in {
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
@@ -1362,7 +1396,7 @@ final class DiagramSpec extends TestSpec:
         val d = Interval.closed(60, 70)
         val e = Interval.closed(71, 80)
 
-        val input = List(a, b, c, d, e)
+        val input  = List(a, b, c, d, e)
         val splits = Interval.split(input)
 
         val diagram = Diagram.make(input ++ splits, view, canvas, List("a", "b", "c", "d", "e", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"))

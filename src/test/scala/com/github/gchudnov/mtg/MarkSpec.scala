@@ -1,6 +1,8 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.TestSpec
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 
 final class MarkSpec extends TestSpec:
 
@@ -242,6 +244,22 @@ final class MarkSpec extends TestSpec:
         val expected = Value.Finite(1)
 
         actual mustBe expected
+      }
+
+      "get innerValue" in {
+        val t = Table(
+          ("input", "expected"),
+          (Mark.succ(Mark.succ(1)), Value.finite(1)),
+          (Mark.pred(Mark.pred(2)), Value.finite(2)),
+          (Mark.succ(3), Value.finite(3)),
+          (Mark.pred(4), Value.finite(4)),
+          (Mark.at(5), Value.finite(5))
+        )
+
+        forAll(t) { (input, expected) =>
+          val actual = input.innerValue
+          actual mustBe expected
+        }
       }
     }
   }

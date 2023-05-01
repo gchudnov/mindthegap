@@ -43,40 +43,26 @@ object View:
       right = None
     )
 
+  // TODO: replace Option with Value[T] ???
+  // TODO: make from an Interval ???
+
   def make[T: Domain](left: Option[T], right: Option[T]): View[T] =
     View(left = left, right = right)
 
   private[mtg] def make[T: Domain](intervals: List[Interval[T]])(using ordT: Ordering[Value[T]]): View[T] =
     val xs: List[Interval[T]] = intervals.filter(_.nonEmpty) // TODO: If Empty intervals are displayed, we will need to change this condition
 
-    val ps = xs.flatMap(toLeftRightValues).filter(_.isFinite)
+    val ms = xs.map(_.normalize).flatMap(i => List(i.left, i.right))
+    val vs = ms.map(_.innerValue)
+
+    val ps = vs.filter(_.isFinite)
 
     val (vMin, vMax) = (ps.minOption, ps.maxOption) match
       case xy @ (Some(x), Some(y)) =>
+        // if a point, extend the interval
         if ordT.equiv(x, y) then (Some(x.pred), Some(y.succ)) else xy
       case xy =>
         xy
 
     val (p, q) = (vMin.map(_.get), vMax.map(_.get))
     View(left = p, right = q)
-
-  private def toLeftRightValues[T: Domain](i: Interval[T]): List[Value[T]] =
-    List(toLeftValue(i.left), toRightValue(i.right))
-
-  private def toLeftValue[T: Domain](left: Mark[T]): Value[T] =
-    left match
-      case Mark.At(x) =>
-        x
-      case Mark.Pred(_) =>
-        left.eval
-      case Mark.Succ(xx) =>
-        xx.eval
-
-  private def toRightValue[T: Domain](right: Mark[T]): Value[T] =
-    right match
-      case Mark.At(y) =>
-        y
-      case Mark.Pred(yy) =>
-        yy.eval
-      case Mark.Succ(_) =>
-        right.eval

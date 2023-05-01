@@ -48,6 +48,22 @@ enum Mark[T]:
       case Succ(x) =>
         x.eval.succ
 
+  /**
+   * Return the value without looking at the modifiers.
+   */
+  def innerValue(using Domain[T]): Value[T] =
+    this match
+      case At(x) =>
+        x
+      case Pred(At(x)) =>
+        x
+      case Succ(At(x)) =>
+        x
+      case Pred(x) =>
+        x.innerValue
+      case Succ(x) =>
+        x.innerValue
+
 object Mark:
 
   given markOrdering[T: Domain](using ordT: Ordering[Value[T]]): Ordering[Mark[T]] =
