@@ -1354,5 +1354,62 @@ final class DiagramSpec extends TestSpec:
 
         actual mustBe expected
       }
+
+      "display short intervals" in {
+        val a = Interval.closed(0, 10)
+        val b = Interval.closed(3, 50)
+        val c = Interval.closed(20, 30)
+        val d = Interval.closed(60, 70)
+        val e = Interval.closed(71, 80)
+
+        val input = List(a, b, c, d, e)
+        val splits = Interval.split(input)
+
+        val diagram = Diagram.make(input ++ splits, view, canvas, List("a", "b", "c", "d", "e", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"))
+
+        val actual = Diagram.render(diagram, theme)
+
+        val expected = List(
+          "  [***]                                  | [0,10]  : a",
+          "   [********************]                | [3,50]  : b",
+          "           [***]                         | [20,30] : c",
+          "                            [****]       | [60,70] : d",
+          "                                 [***]   | [71,80] : e",
+          "  **                                     | [0,3)   : s0",
+          "   [**]                                  | [3,10]  : s1",
+          "      (****)                             | (10,20) : s2",
+          "           [***]                         | [20,30] : s3",
+          "               (********]                | (30,50] : s4",
+          "                        (***)            | (50,60) : s5",
+          "                            [****]       | [60,70] : s6",
+          "                                 [***]   | [71,80] : s7",
+          "--++--+----+---+--------+---+----+---+-- |",
+          "  0  10   20  30       50  60   70  80   |"
+        )
+
+        actual mustBe expected
+      }
     }
   }
+
+/**
+- short interval are rendered as **, should be [] or (], ...
+     * {{{
+     *   [***]                                  | [0,10]  : a
+     *    [********************]                | [3,50]  : b
+     *            [***]                         | [20,30] : c
+     *                             [****]       | [60,70] : d
+     *                                  [***]   | [71,80] : e
+     *   **                                     | [0,3]   : s0
+     *    [**]                                  | [3,10]  : s1
+     *       [****]                             | [10,20] : s2
+     *            [***]                         | [20,30] : s3
+     *                [********]                | [30,50] : s4
+     *                         [***]            | [50,60] : s5
+     *                             [****]       | [60,70] : s6
+     *                                  *       | [70,71] : s7
+     *                                  [***]   | [71,80] : s8
+     * --++--+----+---+--------+---+----+---+-- |
+     *   0  10   20  30       50  60   70  80   |
+     * }}} 
+*/
