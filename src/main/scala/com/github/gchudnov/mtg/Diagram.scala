@@ -4,6 +4,10 @@ import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Translator
 import com.github.gchudnov.mtg.diagram.Span
 import com.github.gchudnov.mtg.diagram.Theme
+import com.github.gchudnov.mtg.diagram.Tick
+import com.github.gchudnov.mtg.diagram.Label
+import com.github.gchudnov.mtg.diagram.Legend
+import com.github.gchudnov.mtg.diagram.Annotation
 import com.github.gchudnov.mtg.diagram.internal.BasicRenderer
 import com.github.gchudnov.mtg.diagram.internal.BasicTranslator
 import scala.collection.mutable.ArrayBuffer
@@ -18,7 +22,7 @@ import com.github.gchudnov.mtg.internal.DiagramMacro
 final case class Diagram(
   width: Int,
   height: Int,
-  spans: List[Span],
+  spans: List[Diagram.Span],
   ticks: List[Diagram.Tick],
   labels: List[Diagram.Label],
   legends: List[Diagram.Legend],
@@ -31,6 +35,10 @@ object Diagram:
   export com.github.gchudnov.mtg.diagram.Theme
   export com.github.gchudnov.mtg.diagram.View
   export com.github.gchudnov.mtg.diagram.Canvas
+  export com.github.gchudnov.mtg.diagram.Tick
+  export com.github.gchudnov.mtg.diagram.Label
+  export com.github.gchudnov.mtg.diagram.Legend
+  export com.github.gchudnov.mtg.diagram.Annotation
 
   val empty: Diagram =
     Diagram(
@@ -42,56 +50,6 @@ object Diagram:
       legends = List.empty[Legend],
       annotations = List.empty[Annotation]
     )
-
-  /**
-   * Tick
-   */
-  final case class Tick(pos: Int)
-
-  /**
-   * Label
-   */
-  final case class Label(pos: Int, value: String):
-    def size: Int =
-      value.size
-
-  object Label:
-    val empty: Label =
-      Label(0, "")
-
-  /**
-   * Legend Entry
-   */
-  final case class Legend(value: String):
-    def isEmpty: Boolean =
-      value.isEmpty
-
-    def nonEmpty: Boolean =
-      value.nonEmpty
-
-  object Legend:
-    val empty: Legend =
-      Legend("")
-
-    def make[T: Domain](i: Interval[T])(using Ordering[Mark[T]]): Legend =
-      Legend(Show.asString(i))
-
-  /**
-   * Annotation Entry
-   */
-  final case class Annotation(value: String):
-    def isEmpty: Boolean =
-      value.isEmpty
-
-    def nonEmpty: Boolean =
-      value.nonEmpty
-
-  object Annotation:
-    val empty: Annotation =
-      Annotation("")
-
-    def make(value: String): Annotation =
-      Annotation(value)
 
   /**
    * Make a Diagram that can be rendered
