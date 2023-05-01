@@ -15,8 +15,8 @@ import com.github.gchudnov.mtg.Diagram.Label
 import scala.collection.mutable.ListBuffer
 
 /**
-  * Translates the interval to the canvas.
-  */
+ * Translates the interval to the canvas.
+ */
 private[mtg] final class BasicTranslator[T: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]) extends Translator[T]:
 
   private val ok: Option[Double] =

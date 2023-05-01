@@ -12,7 +12,7 @@ trait Renderer:
 
 object Renderer:
 
-  given defaultRenderer: Renderer = 
+  given defaultRenderer: Renderer =
     make
 
   def make: Renderer =

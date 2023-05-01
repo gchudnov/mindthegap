@@ -72,6 +72,16 @@ Interval.leftClosed(5)              // [5, +∞)
 Interval.rightOpen(1)               // (-∞, 1)
 Interval.rightClosed(5)             // (-∞, 5]
 Interval.unbounded[Int]             // (-∞, +∞)
+
+Interval.open(Some(1), Some(5))     // (1, 5)
+Interval.open(Some(1), None)        // (1, +∞)
+Interval.open(None, Some(5))        // (-∞, 5)
+Interval.open(None, None)           // (-∞, +∞)
+
+Interval.closed(Some(1), Some(5))   // [1, 5]
+Interval.closed(Some(1), None)      // [1, +∞)
+Interval.closed(None, Some(5))      // (-∞, 5]
+Interval.closed(None, None)         // (-∞, +∞)
 ```
 
 A special factory low-level method, `Interval.make` can be used to create an interval by providing boundaries.

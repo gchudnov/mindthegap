@@ -265,6 +265,23 @@ object Interval extends StaticOps:
     proper(Mark.succ(x), Mark.pred(y))
 
   /**
+   * Create one of the open intervals
+   *
+   * {{{
+   *   (a-, a+)
+   *   (a-, +∞)
+   *   (-∞, a+)
+   *   (-∞, +∞)
+   * }}}
+   */
+  def open[T](x: Option[T], y: Option[T])(using Ordering[Mark[T]]): Interval[T] =
+    (x, y) match
+      case (Some(x), Some(y)) => open(x, y)
+      case (Some(x), None)    => leftOpen(x)
+      case (None, Some(y))    => rightOpen(y)
+      case (None, None)       => unbounded
+
+  /**
    * Closed
    *
    * A closed intervals
@@ -275,6 +292,23 @@ object Interval extends StaticOps:
    */
   def closed[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
     proper(Mark.at(x), Mark.at(y))
+
+  /**
+   * Create one of the closed intervals
+   *
+   * {{{
+   *   [a-, a+]
+   *   [a-, +∞)
+   *   (-∞, a+]
+   *   (-∞, +∞)
+   * }}}
+   */
+  def closed[T](x: Option[T], y: Option[T])(using Ordering[Mark[T]]): Interval[T] =
+    (x, y) match
+      case (Some(x), Some(y)) => closed(x, y)
+      case (Some(x), None)    => leftClosed(x)
+      case (None, Some(y))    => rightClosed(y)
+      case (None, None)       => unbounded
 
   /**
    * LeftOpen

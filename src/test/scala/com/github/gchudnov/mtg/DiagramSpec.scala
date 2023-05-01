@@ -768,16 +768,16 @@ final class DiagramSpec extends TestSpec:
       }
 
       "display a leftClosed and rightClosed non-overlapping intervals" in {
-        val a = Interval.leftClosed(10)   // [10, +∞)
+        val a = Interval.leftClosed(10) // [10, +∞)
         val b = Interval.rightClosed(5) // (-∞, 5]
 
         val diagram = Diagram.make(List(a, b), view, canvas)
 
         val actual = Diagram.render(diagram, themeNoLegend)
         val expected = List(
-          "                                     [*) | a", 
-          "(*]                                      | b", 
-          "+-+----------------------------------+-+ |", 
+          "                                     [*) | a",
+          "(*]                                      | b",
+          "+-+----------------------------------+-+ |",
           "-∞5                                 10+∞ |"
         )
 
