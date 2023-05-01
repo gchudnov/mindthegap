@@ -577,6 +577,8 @@ final class DiagramSpec extends TestSpec:
           "                    5                    |"
         )
 
+        // TODO: it looks that some tests are broken when we changed Domain[T].count implementation, fix it
+
         actual mustBe expected
       }
 
