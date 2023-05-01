@@ -287,7 +287,7 @@ object Diagram:
       !isEmpty
 
     def size: Int =
-      x1 - x0
+      x1 - x0 + 1
 
     def ticks: List[Tick] =
       if isEmpty then List.empty[Tick]

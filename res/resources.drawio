@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e" scale="1" border="0" disableSvgWarning="true">
     <diagram id="l3MaCqEytCjUr6KCBnOf" name="ToSave">
-        <mxGraphModel dx="1030" dy="925" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="974" dy="925" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="pUpyuqXbxQz7kzesneX1-0"/>
                 <mxCell id="pUpyuqXbxQz7kzesneX1-1" parent="pUpyuqXbxQz7kzesneX1-0"/>
@@ -3202,7 +3202,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="jET6IaJT7qRV62NGseyo" name="Algorithms">
-        <mxGraphModel dx="1212" dy="-12" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="974" dy="-175" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="Vt7PdQUZiJ3FcCtICmMc-0"/>
                 <mxCell id="Vt7PdQUZiJ3FcCtICmMc-1" parent="Vt7PdQUZiJ3FcCtICmMc-0"/>
