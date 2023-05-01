@@ -309,7 +309,7 @@ trait Domain[T] extends Ordering[T]:
 
 ```
 
-where `succ(x)` and `pred(x)` are used to get the next and previous value of `x`; `count` - to return the length (duration) of an interval.
+where `succ(x)` and `pred(x)` are used to get the next and previous value of `x`; `count` - to return the length (duration) of an interval, where _start_ and _end_ points are inclusive: `[start, end]`.
 
 By default `Domain[T]` is implemented for _integral_ types (e.g. `Int`, `Long`) and date-time types `OffsetDateTime`, and `Instant`.
 
@@ -319,9 +319,9 @@ Intervals can be ordered:
 
 - if `a- < b+` then `a < b`
 - if `a- == b+` then
-    - if `a+ < b+` then `a < b`
-    - if `a+ == b+` then `a == b`
-    - else `a > b`
+  - if `a+ < b+` then `a < b`
+  - if `a+ == b+` then `a == b`
+  - else `a > b`
 - else `a > b`
 
 ```scala

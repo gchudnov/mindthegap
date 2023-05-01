@@ -84,7 +84,7 @@ private[mtg] object DomainDefaults:
       intT.minus(x, intT.one)
 
     override def count(start: T, end: T): Long =
-      intT.toLong(intT.minus(end, start))
+      intT.toLong(intT.plus(intT.minus(end, start), intT.one))
 
     override def compare(x: T, y: T): Int =
       intT.compare(x, y)
@@ -102,7 +102,7 @@ private[mtg] object DomainDefaults:
       fracT.minus(x, unit)
 
     override def count(start: T, end: T): Long =
-      fracT.toLong(fracT.div(fracT.minus(end, start), unit))
+      fracT.toLong(fracT.div(fracT.plus(fracT.minus(end, start), unit), unit))
 
     override def compare(x: T, y: T): Int =
       fracT.compare(x, y)
@@ -119,7 +119,7 @@ private[mtg] object DomainDefaults:
       x.minus(1, unit)
 
     override def count(start: OffsetDateTime, end: OffsetDateTime): Long =
-      start.until(end, unit)
+      start.until(end.plus(1, unit), unit)
 
     override def compare(x: OffsetDateTime, y: OffsetDateTime): Int =
       x.compareTo(y)
@@ -136,7 +136,7 @@ private[mtg] object DomainDefaults:
       x.minus(1, unit)
 
     override def count(start: OffsetTime, end: OffsetTime): Long =
-      start.until(end, unit)
+      start.until(end.plus(1, unit), unit)
 
     override def compare(x: OffsetTime, y: OffsetTime): Int =
       x.compareTo(y)
@@ -153,7 +153,7 @@ private[mtg] object DomainDefaults:
       x.minus(1, unit)
 
     override def count(start: Instant, end: Instant): Long =
-      start.until(end, unit)
+      start.until(end.plus(1, unit), unit)
 
     override def compare(x: Instant, y: Instant): Int =
       x.compareTo(y)
@@ -170,7 +170,7 @@ private[mtg] object DomainDefaults:
       x.minus(1, unit)
 
     override def count(start: LocalDateTime, end: LocalDateTime): Long =
-      start.until(end, unit)
+      start.until(end.plus(1, unit), unit)
 
     override def compare(x: LocalDateTime, y: LocalDateTime): Int =
       x.compareTo(y)
@@ -187,7 +187,7 @@ private[mtg] object DomainDefaults:
       x.minus(1, unit)
 
     override def count(start: LocalDate, end: LocalDate): Long =
-      start.until(end, unit)
+      start.until(end.plus(1, unit), unit)
 
     override def compare(x: LocalDate, y: LocalDate): Int =
       x.compareTo(y)
@@ -204,7 +204,7 @@ private[mtg] object DomainDefaults:
       x.minus(1, unit)
 
     override def count(start: LocalTime, end: LocalTime): Long =
-      start.until(end, unit)
+      start.until(end.plus(1, unit), unit)
 
     override def compare(x: LocalTime, y: LocalTime): Int =
       x.compareTo(y)
@@ -221,7 +221,7 @@ private[mtg] object DomainDefaults:
       x.minus(1, unit)
 
     override def count(start: ZonedDateTime, end: ZonedDateTime): Long =
-      start.until(end, unit)
+      start.until(end.plus(1, unit), unit)
 
     override def compare(x: ZonedDateTime, y: ZonedDateTime): Int =
       x.compareTo(y)

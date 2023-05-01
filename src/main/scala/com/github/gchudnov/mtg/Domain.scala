@@ -35,13 +35,14 @@ trait Domain[T] extends Ordering[T]:
   /**
    * Count
    *
-   * Returns the number of points in interval defined by [start, end].
-   *
-   * In other words, it returns the cardinality (length / duration of an interval).
+   * Returns the number of points (cardinality / duration of an interval) in interval defined by [start, end].
    *
    * @param start
+   *   inclusive value
    * @param end
+   *   inclusive value
    * @return
+   *   number of points in interval
    */
   def count(start: T, end: T): Long
 

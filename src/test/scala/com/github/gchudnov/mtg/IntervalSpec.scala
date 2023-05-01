@@ -618,4 +618,23 @@ final class IntervalSpec extends TestSpec:
         actual mustBe (expected)
       }
     }
+
+    "size" should {
+      "return the size of an interval" in {
+        val t = Table(
+          ("interval", "size"),
+          (Interval.point(1), Some(1)),
+          (Interval.closed(1, 2), Some(2)),
+          (Interval.open(1, 4), Some(2)),
+          (Interval.leftOpen(1), None),
+          (Interval.rightOpen(2), None),
+          (Interval.empty[Int], None),
+          (Interval.unbounded[Int], None)
+        )
+
+        forAll(t) { (interval, size) =>
+          interval.size mustBe (size)
+        }
+      }
+    }
   }

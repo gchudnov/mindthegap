@@ -11,6 +11,18 @@ import com.github.gchudnov.mtg.internal.StaticOps
 final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
 
   /**
+   * Get the size of the interval
+   *
+   * Returns Some(N) if the interval is finite and None otherwise.
+   */
+  def size(using Domain[T]): Option[Long] =
+    (left.eval, right.eval) match
+      case (Value.Finite(x), Value.Finite(y)) =>
+        Some(summon[Domain[T]].count(x, y))
+      case _ =>
+        None
+
+  /**
    * Returns true if the interval is empty and false otherwise.
    */
   def isEmpty(using ordM: Ordering[Mark[T]]): Boolean =
