@@ -1,5 +1,6 @@
 package com.github.gchudnov.mtg
 
+import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Span
 import com.github.gchudnov.mtg.diagram.internal.BasicRenderer
 import com.github.gchudnov.mtg.diagram.internal.BasicTranslator
@@ -309,16 +310,6 @@ object Diagram:
 
     def make(value: String): Annotation =
       Annotation(value)
-
-  /**
-   * Renderer
-   */
-  trait Renderer:
-    def render(d: Diagram): List[String]
-
-  object Renderer:
-    def make(theme: Theme): Renderer =
-      new BasicRenderer(theme)
 
   /**
    * Make a Diagram that can be rendered

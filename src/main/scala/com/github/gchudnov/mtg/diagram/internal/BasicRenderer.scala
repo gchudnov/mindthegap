@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg.diagram.internal
 
 import com.github.gchudnov.mtg.Diagram
 import com.github.gchudnov.mtg.Diagram.Theme
-import com.github.gchudnov.mtg.Diagram.Renderer
+import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Span
 import com.github.gchudnov.mtg.Diagram.Tick
 import com.github.gchudnov.mtg.Diagram.Label
