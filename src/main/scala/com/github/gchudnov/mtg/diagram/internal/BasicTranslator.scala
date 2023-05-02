@@ -19,8 +19,19 @@ import scala.collection.mutable.ListBuffer
  */
 private[mtg] final class BasicTranslator[T: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]) extends Translator[T]:
 
+  /**
+    * Answers the question: How many units of the canvas is one unit of the view?
+    */
   private val ok: Option[Double] =
-    view.size.map(vsz => canvas.size.toDouble / vsz.toDouble)
+    view.size.map(vsz => (canvas.size - 1).toDouble / (vsz - 1).toDouble)
+
+  println(("view.size", view.size))
+  println(("canvas.size", canvas.size))
+  println(("ok", ok))
+
+  // TODO: rename toSpan
+
+  // TODO: DRAW ALWAYS INCLUSIVE DIAGRAMS (CANONICAL FORM), BUT LABEL WITH (,),[,]
 
   override def translate(i: Interval[T]): Span =
     if i.isEmpty then Span.empty
@@ -30,6 +41,7 @@ private[mtg] final class BasicTranslator[T: Domain](view: View[T], canvas: Canva
     else Span.make(x0 = translateLeft(i.left), x1 = translateRight(i.right), includeX0 = includeLeft(i.left), includeX1 = includeRight(i.right))
 
   private def translateValue(value: Value[T]): Int =
+    println(("translateValue", value))
     value match
       case Value.InfNeg =>
         canvas.left
@@ -39,7 +51,7 @@ private[mtg] final class BasicTranslator[T: Domain](view: View[T], canvas: Canva
         val k    = ok.get        // NOTE: it is not possible to have k undefined if we have at least one Finite point
         val domT = summon[Domain[T]]
         val left = view.left.get // NOTE: .get is safe, otherwise `k` would be None
-        val dx   = domT.count(left, x)
+        val dx   = domT.count(left, x) - 1
         val dd   = dx.toDouble
         Canvas.align((k * dd) + canvas.first)
 

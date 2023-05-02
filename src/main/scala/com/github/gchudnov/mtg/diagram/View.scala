@@ -37,6 +37,7 @@ final case class View[T: Domain](
 
 object View:
 
+  // TODO: rename either to `infinite` OR to `all`
   def default[T: Domain]: View[T] =
     View(
       left = None,
@@ -65,4 +66,7 @@ object View:
         xy
 
     val (p, q) = (vMin.map(_.get), vMax.map(_.get))
+
+    println((p, q))
+
     View(left = p, right = q)

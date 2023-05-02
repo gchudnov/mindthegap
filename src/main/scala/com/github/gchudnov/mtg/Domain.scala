@@ -1,5 +1,7 @@
 package com.github.gchudnov.mtg
 
+// TODO: allow this trait to use for Value, Mark to avoid extra implicits
+
 /**
  * Trait to get a successor and the predecessor value.
  *

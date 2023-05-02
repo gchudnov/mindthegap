@@ -22,7 +22,9 @@ final case class Canvas(
   val first: Int = left + padding  // first offset for non-inf value
   val last: Int  = right - padding // last offset for non-inf value
 
-  val size: Int = last - first
+  val size: Int = last - first + 1
+
+  println(("left, right, first, last, size", left, right, first, last, size))
 
   /**
    * Make a label so that it is visible on the canvas.
