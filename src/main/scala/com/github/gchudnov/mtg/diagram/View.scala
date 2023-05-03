@@ -58,6 +58,9 @@ object View:
     make(left = Some(left), right = Some(right))
 
   private[mtg] def make[T: Domain](intervals: List[Interval[T]]): View[T] =
+    val ordM = summon[Domain[T]].ordMark
+    given ordV: Ordering[Value[T]] = summon[Domain[T]].ordValue
+
     val xs: List[Interval[T]] = intervals.filter(_.nonEmpty) // TODO: If Empty intervals are displayed, we will need to change this condition
 
     val ms = xs.map(_.normalize).flatMap(i => List(i.left, i.right))

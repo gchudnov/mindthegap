@@ -46,8 +46,8 @@ enum Value[+T]:
 
 object Value:
 
-  given valueOrdering[T: Ordering]: Ordering[Value[T]] =
-    new ValueOrdering[T]
+  // given valueOrdering[T: Ordering]: Ordering[Value[T]] =
+  //   new ValueOrdering[T]
 
   def finite[T](value: T): Value[T] =
     Value.Finite(value)

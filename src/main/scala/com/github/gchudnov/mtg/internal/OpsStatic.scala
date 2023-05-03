@@ -12,25 +12,25 @@ private[mtg] transparent trait StaticOps:
   /**
    * Intersection
    */
-  final def intersection[T: Domain](a: Interval[T], b: Interval[T])(using ordM: Ordering[Mark[T]]): Interval[T] =
+  final def intersection[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
     a.intersection(b)
 
   /**
    * Span
    */
-  final def span[T: Domain](a: Interval[T], b: Interval[T])(using ordM: Ordering[Mark[T]]): Interval[T] =
+  final def span[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
     a.span(b)
 
   /**
    * Union
    */
-  final def union[T: Domain](a: Interval[T], b: Interval[T])(using ordM: Ordering[Mark[T]]): Interval[T] =
+  final def union[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
     a.union(b)
 
   /**
    * Gap
    */
-  final def gap[T: Domain](a: Interval[T], b: Interval[T])(using ordM: Ordering[Mark[T]]): Interval[T] =
+  final def gap[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
     a.gap(b)
 
   /**
@@ -50,7 +50,7 @@ private[mtg] transparent trait StaticOps:
    *   1       4 5           10          15   |
    * }}}
    */
-  final def minus[T: Domain](a: Interval[T], b: Interval[T])(using ordM: Ordering[Mark[T]]): List[Interval[T]] =
+  final def minus[T: Domain](a: Interval[T], b: Interval[T]): List[Interval[T]] =
     if a.contains(b) then List(Interval.make(a.left, b.left.pred), Interval.make(b.right.succ, a.right))
     else List(a.minus(b))
 
@@ -59,7 +59,7 @@ private[mtg] transparent trait StaticOps:
    *
    * Groups a series of intervals by executing union for the intersecting intervals.
    */
-  final def group[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[Interval[T]] =
+  final def group[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
     Group.group(xs)
 
   /**
@@ -67,7 +67,7 @@ private[mtg] transparent trait StaticOps:
    *
    * Groups a series of intervals by executing union for the intersecting intervals and provide group information about membership.
    */
-  final def groupFind[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[(Interval[T], Set[Int])] =
+  final def groupFind[T: Domain](xs: Seq[Interval[T]]): List[(Interval[T], Set[Int])] =
     Group.groupFind(xs).map(it => (it.interval, it.members))
 
   /**
@@ -75,7 +75,7 @@ private[mtg] transparent trait StaticOps:
    *
    * Produces a complement of the given collection of intervals.
    */
-  final def complement[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[Interval[T]] =
+  final def complement[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
     Complement.complement(xs)
 
   /**
@@ -83,7 +83,7 @@ private[mtg] transparent trait StaticOps:
    *
    * Split intervals into a collection of non-overlapping intervals (splits).
    */
-  final def split[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[Interval[T]] =
+  final def split[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
     Split.split(xs)
 
   /**
@@ -91,5 +91,5 @@ private[mtg] transparent trait StaticOps:
    *
    * Split intervals into a collection of non-overlapping intervals (splits).
    */
-  final def splitFind[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[(Interval[T], Set[Int])] =
+  final def splitFind[T: Domain](xs: Seq[Interval[T]]): List[(Interval[T], Set[Int])] =
     Split.splitFind(xs).map(it => (it.interval, it.members))

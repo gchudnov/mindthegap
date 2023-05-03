@@ -5,6 +5,7 @@ import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.TestSpec
 import com.github.gchudnov.mtg.Value
+import com.github.gchudnov.mtg.Domain
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
 final class GapSpec extends TestSpec:

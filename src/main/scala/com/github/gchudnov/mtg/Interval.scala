@@ -8,14 +8,14 @@ import com.github.gchudnov.mtg.internal.StaticOps
 /**
  * Interval
  */
-final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
+final case class Interval[T: Domain](left: Mark[T], right: Mark[T]) extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
 
   /**
    * Get the size of the interval
    *
    * Returns Some(N) if the interval is finite and None otherwise.
    */
-  def size(using Domain[T]): Option[Long] =
+  def size: Option[Long] =
     (left.eval, right.eval) match
       case (Value.Finite(x), Value.Finite(y)) =>
         Some(summon[Domain[T]].count(x, y))
@@ -25,37 +25,37 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
   /**
    * Returns true if the interval is empty and false otherwise.
    */
-  def isEmpty(using ordM: Ordering[Mark[T]]): Boolean =
-    ordM.gt(left, right)
+  def isEmpty: Boolean =
+    summon[Domain[T]].ordMark.gt(left, right)
 
   /**
    * Returns true if the interval is degenerate (a point) or false otherwise.
    */
-  def isPoint(using ordM: Ordering[Mark[T]]): Boolean =
-    ordM.equiv(left, right)
+  def isPoint: Boolean =
+    summon[Domain[T]].ordMark.equiv(left, right)
 
   /**
    * Returns true if the interval is proper and false otherwise.
    */
-  def isProper(using ordM: Ordering[Mark[T]]): Boolean =
-    ordM.lt(left, right)
+  def isProper: Boolean =
+    summon[Domain[T]].ordMark.lt(left, right)
 
   /**
    * Returns true if the interval is non-empty and false otherwise.
    */
-  def nonEmpty(using Ordering[Mark[T]]): Boolean =
+  def nonEmpty: Boolean =
     !isEmpty
 
   /**
    * Returns true if the interval is not a point and false otherwise.
    */
-  def nonPoint(using Ordering[Mark[T]]): Boolean =
+  def nonPoint: Boolean =
     !isPoint
 
   /**
    * Returns true, if interval is not proper and false otherwise.
    */
-  def nonProper(using Ordering[Mark[T]]): Boolean =
+  def nonProper: Boolean =
     !isProper
 
   /**
@@ -163,7 +163,7 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
    *  [a-, a+]
    * }}}
    */
-  def canonical(using Domain[T]): Interval[T] =
+  def canonical: Interval[T] =
     Interval(left.at, right.at)
 
   /**
@@ -178,13 +178,13 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
    *   (a-, a+]
    * }}}
    */
-  def normalize(using Domain[T]): Interval[T] =
+  def normalize: Interval[T] =
     val l = normalizeLeft
     val r = normalizeRight
     if l != left || r != right then Interval(l, r)
     else this
 
-  private def normalizeLeft(using Domain[T]): Mark[T] =
+  private def normalizeLeft: Mark[T] =
     left match
       case Mark.At(_) =>
         left
@@ -193,7 +193,7 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
       case Mark.Succ(xx) =>
         Mark.Succ(xx.at)
 
-  private def normalizeRight(using Domain[T]): Mark[T] =
+  private def normalizeRight: Mark[T] =
     right match
       case Mark.At(_) =>
         right
@@ -204,7 +204,7 @@ final case class Interval[T](left: Mark[T], right: Mark[T]) extends BasicRel[T] 
 
 object Interval extends StaticOps:
 
-  given intervalOrdering[T](using Ordering[Mark[T]]): Ordering[Interval[T]] =
+  given intervalOrdering[T: Domain]: Ordering[Interval[T]] =
     new IntervalOrdering[T]
 
   /**
@@ -218,7 +218,7 @@ object Interval extends StaticOps:
    *   [a+, a-] = (a+, a-) = [a+, a-) = (a+, a-] = (a-, a-) = [a-, a-) = (a-, a-] = {} = ∅.
    * }}}
    */
-  def empty[T]: Interval[T] =
+  def empty[T: Domain]: Interval[T] =
     Interval(Mark.at(Value.InfPos), Mark.at(Value.InfNeg))
 
   /**
@@ -230,13 +230,13 @@ object Interval extends StaticOps:
    *   {x} = {x | a- = x = a+}
    * }}}
    */
-  def point[T](x: Mark[T]): Interval[T] =
+  def point[T: Domain](x: Mark[T]): Interval[T] =
     Interval(x, x)
 
-  def point[T](x: Value[T]): Interval[T] =
+  def point[T: Domain](x: Value[T]): Interval[T] =
     point(Mark.at(x))
 
-  def point[T](x: T): Interval[T] =
+  def point[T: Domain](x: T): Interval[T] =
     point(Mark.at(x))
 
   /**
@@ -248,8 +248,8 @@ object Interval extends StaticOps:
    *   {a-, a+}
    * }}}
    */
-  def proper[T](x: Mark[T], y: Mark[T])(using ordM: Ordering[Mark[T]]): Interval[T] =
-    require(ordM.lt(x, y), s"left boundary '${x}' must be less than the right boundary '${y}'")
+  def proper[T: Domain](x: Mark[T], y: Mark[T]): Interval[T] =
+    require(summon[Domain[T]].ordMark.lt(x, y), s"left boundary '${x}' must be less than the right boundary '${y}'")
     Interval(x, y)
 
   /**
@@ -261,7 +261,7 @@ object Interval extends StaticOps:
    *   (-∞, +∞)
    * }}}
    */
-  def unbounded[T](using Ordering[Mark[T]]): Interval[T] =
+  def unbounded[T: Domain]: Interval[T] =
     proper[T](Mark.at(Value.InfNeg), Mark.at(Value.InfPos))
 
   /**
@@ -273,7 +273,7 @@ object Interval extends StaticOps:
    *   (a-, a+) = {x | a- < x < a+}
    * }}}
    */
-  def open[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
+  def open[T: Domain](x: T, y: T): Interval[T] =
     proper(Mark.succ(x), Mark.pred(y))
 
   /**
@@ -286,7 +286,7 @@ object Interval extends StaticOps:
    *   (-∞, +∞)
    * }}}
    */
-  def open[T](x: Option[T], y: Option[T])(using Ordering[Mark[T]]): Interval[T] =
+  def open[T: Domain](x: Option[T], y: Option[T]): Interval[T] =
     (x, y) match
       case (Some(x), Some(y)) => open(x, y)
       case (Some(x), None)    => leftOpen(x)
@@ -302,7 +302,7 @@ object Interval extends StaticOps:
    *   [a-, a+] = {x | a- <= x <= a+}
    * }}}
    */
-  def closed[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
+  def closed[T: Domain](x: T, y: T): Interval[T] =
     proper(Mark.at(x), Mark.at(y))
 
   /**
@@ -315,7 +315,7 @@ object Interval extends StaticOps:
    *   (-∞, +∞)
    * }}}
    */
-  def closed[T](x: Option[T], y: Option[T])(using Ordering[Mark[T]]): Interval[T] =
+  def closed[T: Domain](x: Option[T], y: Option[T]): Interval[T] =
     (x, y) match
       case (Some(x), Some(y)) => closed(x, y)
       case (Some(x), None)    => leftClosed(x)
@@ -331,7 +331,7 @@ object Interval extends StaticOps:
    *   (a-, +∞) = {x | x > a-}
    * }}}
    */
-  def leftOpen[T](x: T)(using Ordering[Mark[T]]): Interval[T] =
+  def leftOpen[T: Domain](x: T): Interval[T] =
     proper(Mark.succ(x), Mark.at(Value.InfPos))
 
   /**
@@ -343,7 +343,7 @@ object Interval extends StaticOps:
    *   [a-, +∞) = {x | x >= a-}
    * }}}
    */
-  def leftClosed[T](x: T)(using Ordering[Mark[T]]): Interval[T] =
+  def leftClosed[T: Domain](x: T): Interval[T] =
     proper(Mark.at(x), Mark.at(Value.InfPos))
 
   /**
@@ -355,7 +355,7 @@ object Interval extends StaticOps:
    *   (-∞, a+) = {x | x < a+}
    * }}}
    */
-  def rightOpen[T](x: T)(using Ordering[Mark[T]]): Interval[T] =
+  def rightOpen[T: Domain](x: T): Interval[T] =
     proper(Mark.at(Value.InfNeg), Mark.pred(x))
 
   /**
@@ -367,7 +367,7 @@ object Interval extends StaticOps:
    *   (-∞, a+] = {x | x < a+}
    * }}}
    */
-  def rightClosed[T](x: T)(using Ordering[Mark[T]]): Interval[T] =
+  def rightClosed[T: Domain](x: T): Interval[T] =
     proper(Mark.at(Value.InfNeg), Mark.at(x))
 
   /**
@@ -379,7 +379,7 @@ object Interval extends StaticOps:
    *   [a-, a+) = {x | a- <= x < a+}
    * }}}
    */
-  def leftClosedRightOpen[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
+  def leftClosedRightOpen[T: Domain](x: T, y: T): Interval[T] =
     proper(Mark.at(x), Mark.pred(y))
 
   /**
@@ -391,17 +391,17 @@ object Interval extends StaticOps:
    *   (a-, a+] = {x | a- < x <= a+}
    * }}}
    */
-  def leftOpenRightClosed[T](x: T, y: T)(using Ordering[Mark[T]]): Interval[T] =
+  def leftOpenRightClosed[T: Domain](x: T, y: T): Interval[T] =
     proper(Mark.succ(x), Mark.at(y))
 
   /**
    * Make an arbitrary interval
    */
-  def make[T](x: Value[T], y: Value[T]): Interval[T] =
+  def make[T: Domain](x: Value[T], y: Value[T]): Interval[T] =
     make(Mark.at(x), Mark.at(y))
 
   /**
    * Make an arbitrary interval.
    */
-  def make[T](x: Mark[T], y: Mark[T]): Interval[T] =
+  def make[T: Domain](x: Mark[T], y: Mark[T]): Interval[T] =
     Interval(x, y)

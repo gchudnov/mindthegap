@@ -1,10 +1,12 @@
 package com.github.gchudnov.mtg
 
+import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.TestSpec
 
 final class MarkOrderingSpec extends TestSpec:
 
-  val ordM: Ordering[Mark[Int]] = summon[Ordering[Mark[Int]]]
+  given ordM: Ordering[Mark[Int]] = summon[Domain[Int]].ordMark
 
   "MarkOrdering" when {
     "ordM.compare(a, b)" should {

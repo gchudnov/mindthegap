@@ -1,10 +1,12 @@
 package com.github.gchudnov.mtg
 
+import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.TestSpec
 
 final class ValueOrderingSpec extends TestSpec:
 
-  val ordV: Ordering[Value[Int]] = summon[Ordering[Value[Int]]]
+  given ordV: Ordering[Value[Int]] = summon[Domain[Int]].ordValue
 
   "ValueOrdering" when {
     "ordV.compare(a, b)" should {

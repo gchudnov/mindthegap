@@ -33,11 +33,11 @@ private[mtg] object Split:
    */
   private final case class AccState[T: Domain](splits: ListBuffer[SingleSplit[T]], open: Set[Int], last: SplitPoint[T]):
 
-    def append(p: SplitPoint[T])(using ordM: Ordering[Mark[T]]): AccState[T] =
+    def append(p: SplitPoint[T]): AccState[T] =
       val tMinus = if last.s == Side.Left then last.pt else last.pt.succ
       val tPlus  = if p.s == Side.Left then p.pt.pred else p.pt
 
-      val splits1 = if ordM.lteq(tMinus, tPlus) then splits :+ SingleSplit(Interval.make(tMinus, tPlus), open) else splits
+      val splits1 = if summon[Domain[T]].ordMark.lteq(tMinus, tPlus) then splits :+ SingleSplit(Interval.make(tMinus, tPlus), open) else splits
 
       val open1 = if p.s == Side.Left then open + p.i else open - p.i
       val last1 = p
@@ -55,8 +55,8 @@ private[mtg] object Split:
       case (_, _) =>
         false
 
-  private def isLess[T: Domain](x: SplitPoint[T], y: SplitPoint[T])(using ordM: Ordering[Mark[T]]): Boolean =
-    ordM.compare(x.pt, y.pt) match
+  private def isLess[T: Domain](x: SplitPoint[T], y: SplitPoint[T]): Boolean =
+    summon[Domain[T]].ordMark.compare(x.pt, y.pt) match
       case 0 =>
         isLess(x.s, y.s)
       case 1 =>
@@ -75,7 +75,7 @@ private[mtg] object Split:
    *
    * Split intervals into a collection of non-overlapping intervals (splits).
    */
-  final def split[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[Interval[T]] =
+  final def split[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
     val splits    = splitFind(xs)
     val intervals = splits.map(_.interval)
 
@@ -86,7 +86,7 @@ private[mtg] object Split:
    *
    * Split intervals into a collection of non-overlapping intervals (splits) and provide membership information.
    */
-  final def splitFind[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[SingleSplit[T]] =
+  final def splitFind[T: Domain](xs: Seq[Interval[T]]): List[SingleSplit[T]] =
     val ms = xs.zipWithIndex.flatMap((x, i) => toPoints(x, i)).sortWith(isLess)
 
     val acc = ms.foldLeft[Option[AccState[T]]](None) { case (acc, p) =>

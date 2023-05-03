@@ -50,7 +50,7 @@ object Diagram:
   /**
    * Make a Diagram that can be rendered
    */
-  def make[T: Domain](intervals: List[Interval[T]], view: View[T], canvas: Canvas, annotations: List[String])(using Ordering[Mark[T]]): Diagram =
+  def make[T: Domain](intervals: List[Interval[T]], view: View[T], canvas: Canvas, annotations: List[String]): Diagram =
     val effectiveView = if view.isAll then View.make(intervals) else view
     val translator    = Translator.make(effectiveView, canvas)
 
@@ -86,23 +86,23 @@ object Diagram:
       labels = (d.labels ++ viewLabels).distinct.sortBy(_.pos)
     )
 
-  inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
+  inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T], canvas: Canvas): Diagram =
     val annotations = DiagramMacro.varNames(intervals)
     make(intervals, view = view, canvas = canvas, annotations = annotations)
 
-  inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T])(using Ordering[Mark[T]]): Diagram =
+  inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T]): Diagram =
     val annotations = DiagramMacro.varNames(intervals)
     make(intervals, view = view, canvas = Canvas.default, annotations = annotations)
 
-  inline def make[T: Domain](inline intervals: List[Interval[T]])(using Ordering[Mark[T]]): Diagram =
+  inline def make[T: Domain](inline intervals: List[Interval[T]]): Diagram =
     val annotations = DiagramMacro.varNames(intervals)
     make(intervals, view = View.all[T], canvas = Canvas.default, annotations = annotations)
 
-  inline def make[T: Domain](inline intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
+  inline def make[T: Domain](inline intervals: List[Interval[T]], canvas: Canvas): Diagram =
     val annotations = DiagramMacro.varNames(intervals)
     make(intervals, view = View.all[T], canvas = canvas, annotations = annotations)
 
-  def make[T: Domain](intervals: List[Interval[T]], annotations: List[String])(using Ordering[Mark[T]]): Diagram =
+  def make[T: Domain](intervals: List[Interval[T]], annotations: List[String]): Diagram =
     make(intervals, view = View.all[T], canvas = Canvas.default, annotations = annotations)
 
   /**
@@ -115,7 +115,7 @@ object Diagram:
 
   // TODO: implement it
 
-  private def toLabels[T: Domain](c: Canvas, i: Interval[T], span: Span)(using Ordering[Mark[T]]): List[Label] = 
+  private def toLabels[T: Domain](c: Canvas, i: Interval[T], span: Span): List[Label] = 
     if i.isEmpty then List.empty[Label]
     else if i.isPoint then List(Label.make(c, span.x0, Show.str(i.left.eval)))
     else

@@ -7,7 +7,7 @@ import com.github.gchudnov.mtg.Domain
 /**
  * Basic Interval Operations
  */
-private[mtg] transparent trait BasicOps[T]:
+private[mtg] transparent trait BasicOps[T: Domain]:
   a: Interval[T] =>
 
   /**
@@ -32,7 +32,8 @@ private[mtg] transparent trait BasicOps[T]:
    *   - Commutative: A & B = B & A
    *   - Associative: (A & B) & C = A & (B & C)
    */
-  final def intersection(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
+  final def intersection(b: Interval[T]): Interval[T] =
+    val ordM = summon[Domain[T]].ordMark
     Interval.make(ordM.max(a.left, b.left), ordM.min(a.right, b.right))
 
   /**
@@ -66,7 +67,8 @@ private[mtg] transparent trait BasicOps[T]:
    *   - Commutative: A # B = B # A
    *   - Associative: (A # B) # C = A # (B # C)
    */
-  final def span(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
+  final def span(b: Interval[T]): Interval[T] =
+    val ordM = summon[Domain[T]].ordMark
     Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
 
   /**
@@ -101,7 +103,7 @@ private[mtg] transparent trait BasicOps[T]:
    * Laws:
    *   - Commutative: A ∪ B = B ∪ A
    */
-  def union(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
+  def union(b: Interval[T]): Interval[T] =
     if a.merges(b) then
       if a.isEmpty && b.isEmpty then a.span(b)
       else if a.isEmpty then b
@@ -129,7 +131,8 @@ private[mtg] transparent trait BasicOps[T]:
    * Laws:
    *   - Commutative: A ∥ B = B ∥ A
    */
-  final def gap(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
+  final def gap(b: Interval[T]): Interval[T] =
+    val ordM = summon[Domain[T]].ordMark
     Interval.make(ordM.min(a.right, b.right), ordM.max(a.left, b.left)).deflate
 
   /**
@@ -167,7 +170,8 @@ private[mtg] transparent trait BasicOps[T]:
    *   1         5           10          15   |
    * }}}
    */
-  final def minus(b: Interval[T])(using ordM: Ordering[Mark[T]], domT: Domain[T]): Interval[T] =
+  final def minus(b: Interval[T]): Interval[T] =
+    val ordM = summon[Domain[T]].ordMark
     if a.isEmpty then Interval.empty[T]
     else if b.isEmpty then a
     else if ordM.lt(a.left, b.left) && ordM.lteq(a.right, b.right) then Interval.make(a.left, ordM.min(b.left.pred, a.right))

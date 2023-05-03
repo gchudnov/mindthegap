@@ -1,6 +1,7 @@
 package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Mark
+import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
 
 /**
@@ -24,7 +25,7 @@ import com.github.gchudnov.mtg.Interval
  *   a.equalsTo(b)       e            BBBBB            | a- = b- ; a+ = b+
  * }}}
  */
-private[mtg] transparent trait BasicRel[T]:
+private[mtg] transparent trait BasicRel[T: Domain]:
   a: Interval[T] =>
 
   /**
@@ -52,13 +53,14 @@ private[mtg] transparent trait BasicRel[T]:
    *   before(a,b)      b        :   : BBBBBBBBB  |  a+ < b-
    * }}}
    */
-  final def before(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def before(b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     a.nonEmpty && b.nonEmpty && ordM.lt(a.right, b.left)
 
   /**
    * After, IsPrecededBy (B)
    */
-  final def after(b: Interval[T])(using Ordering[Mark[T]]): Boolean =
+  final def after(b: Interval[T]): Boolean =
     b.before(a)
 
   /**
@@ -78,13 +80,14 @@ private[mtg] transparent trait BasicRel[T]:
    *   meets(a,b)       m        :   BBBBBBBBB    |  a+ = b-
    * }}}
    */
-  final def meets(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def meets(b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     a.isProper && b.isProper && ordM.equiv(a.right, b.left)
 
   /**
    * IsMetBy (M)
    */
-  final def isMetBy(b: Interval[T])(using Ordering[Mark[T]]): Boolean =
+  final def isMetBy(b: Interval[T]): Boolean =
     b.meets(a)
 
   /**
@@ -104,13 +107,14 @@ private[mtg] transparent trait BasicRel[T]:
    *   overlaps(a,b)    o        : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
    * }}}
    */
-  final def overlaps(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def overlaps(b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     a.isProper && b.isProper && ordM.lt(a.left, b.left) && ordM.lt(b.left, a.right) && ordM.lt(a.right, b.right)
 
   /**
    * IsOverlappedBy (O)
    */
-  final def isOverlappedBy(b: Interval[T])(using Ordering[Mark[T]]): Boolean =
+  final def isOverlappedBy(b: Interval[T]): Boolean =
     b.overlaps(a)
 
   /**
@@ -134,13 +138,14 @@ private[mtg] transparent trait BasicRel[T]:
    *   during(a,b)      d|D    BBBBBBBBB          |  a- > b- ; a+ < b+
    * }}}
    */
-  final def during(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def during(b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     a.nonEmpty && b.isProper && ordM.lt(b.left, a.left) && ordM.lt(a.right, b.right)
 
   /**
    * Contains, ProperlyIncludes (D)
    */
-  final def contains(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def contains(b: Interval[T]): Boolean =
     b.during(a)
 
   /**
@@ -164,13 +169,14 @@ private[mtg] transparent trait BasicRel[T]:
    *   starts(a,b)      s|S      BBBBBBBBB        |  a- = b- ; a+ < b+
    * }}}
    */
-  final def starts(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def starts(b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     a.nonEmpty && b.isProper && ordM.equiv(a.left, b.left) && ordM.lt(a.right, b.right)
 
   /**
    * IsStartedBy (S)
    */
-  final def isStartedBy(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def isStartedBy(b: Interval[T]): Boolean =
     b.starts(a)
 
   /**
@@ -194,13 +200,14 @@ private[mtg] transparent trait BasicRel[T]:
    *   finishes(a,b)    f|F  BBBBBBBBB            |  a+ = b+ ; a- > b-
    * }}}
    */
-  final def finishes(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def finishes(b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     a.nonEmpty && b.isProper && ordM.equiv(a.right, b.right) && ordM.lt(b.left, a.left)
 
   /**
    * IsFinishedBy (F)
    */
-  final def isFinishedBy(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def isFinishedBy(b: Interval[T]): Boolean =
     b.finishes(a)
 
   /**
@@ -226,5 +233,6 @@ private[mtg] transparent trait BasicRel[T]:
    *   equalsTo(a, b)   e        BBBBB            |  a- = b- ; a+ = b+
    * }}}
    */
-  final def equalsTo(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def equalsTo(b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     ordM.equiv(a.left, b.left) && ordM.equiv(a.right, b.right)

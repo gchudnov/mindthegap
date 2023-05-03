@@ -10,7 +10,7 @@ import org.scalatest.matchers.must.Matchers.*
 trait IntervalRelAssert:
   import IntervalRelAssert.*
 
-  private def relFnMap[T](using Ordering[Mark[T]]) =
+  private def relFnMap[T: Domain] =
     Map(
       Rel.Before         -> ((xx: Interval[T], yy: Interval[T]) => xx.before(yy)),
       Rel.After          -> ((xx: Interval[T], yy: Interval[T]) => xx.after(yy)),
@@ -49,20 +49,20 @@ trait IntervalRelAssert:
   /**
    * Finds relations two iNtervals are satisfying
    */
-  def findRelations[T](xx: Interval[T], yy: Interval[T])(using Ordering[Mark[T]]): Set[Rel] =
+  def findRelations[T: Domain](xx: Interval[T], yy: Interval[T]): Set[Rel] =
     relFnMap[T].foldLeft(Set.empty[Rel]) { case (acc, (k, fn)) =>
       val res = fn(xx, yy)
       if res then acc + k
       else acc
     }
 
-  def assertAny[T: Domain](xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Mark[T]]): Unit =
+  def assertAny[T: Domain](xx: Interval[T], yy: Interval[T]): Unit =
     val trues      = findRelations(xx, yy)
     val isNonEmpty = !(xx.isEmpty || yy.isEmpty)
     if isNonEmpty && trues.size != 1 then
       fail(s"xx: ${xx}, yy: ${yy}: |${Show.asString(xx)}, ${Show.asString(yy)}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected only one relation")
 
-  def assertOneOf[T: Domain](rs: Set[Rel])(xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Mark[T]]): Unit =
+  def assertOneOf[T: Domain](rs: Set[Rel])(xx: Interval[T], yy: Interval[T]): Unit =
     val trues = findRelations(xx, yy)
     if trues.size != 1 || !rs.contains(trues.head) then
       fail(
@@ -70,7 +70,7 @@ trait IntervalRelAssert:
             .asString(yy)}| should satisfy one of ${rs.mkString("[", ",", "]")} relations, however it satisfies ${trues.mkString("[", ",", "]")} instead"
       )
 
-  def assertOne[T: Ordering: Domain](r: Rel)(xx: Interval[T], yy: Interval[T])(using bOrd: Ordering[Mark[T]]): Unit =
+  def assertOne[T: Ordering: Domain](r: Rel)(xx: Interval[T], yy: Interval[T]): Unit =
     val relations = relFnMap[T]
 
     val fk = r

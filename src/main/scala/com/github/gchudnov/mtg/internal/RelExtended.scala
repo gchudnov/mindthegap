@@ -7,7 +7,7 @@ import com.github.gchudnov.mtg.Domain
 /**
  * Extended Interval Relations
  */
-private[mtg] transparent trait ExtendedRel[T]:
+private[mtg] transparent trait ExtendedRel[T: Domain]:
   a: Interval[T] =>
 
   /**
@@ -27,7 +27,8 @@ private[mtg] transparent trait ExtendedRel[T]:
    *   equals   | e
    * }}}
    */
-  final def isSubset(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def isSubset(b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     a.nonEmpty && b.nonEmpty && ordM.gteq(a.left, b.left) && ordM.lteq(a.right, b.right)
 
   /**
@@ -47,7 +48,8 @@ private[mtg] transparent trait ExtendedRel[T]:
    *   equals         | e
    * }}}
    */
-  final def isSuperset(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def isSuperset(b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     a.nonEmpty && b.nonEmpty && ordM.gteq(b.left, a.left) && ordM.lteq(b.right, a.right)
 
   /**
@@ -62,7 +64,8 @@ private[mtg] transparent trait ExtendedRel[T]:
    *   a- > b+
    * }}}
    */
-  final def isDisjoint(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def isDisjoint(b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     a.nonEmpty && b.nonEmpty && (ordM.lt(a.right, b.left) || ordM.gt(a.left, b.right))
 
   /**
@@ -77,7 +80,8 @@ private[mtg] transparent trait ExtendedRel[T]:
    *   after  | B
    * }}}
    */
-  final def isAdjacent[T1 >: T: Domain](b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def isAdjacent[T1 >: T: Domain](b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     a.nonEmpty && b.nonEmpty && (ordM.equiv(a.right.succ, b.left) || ordM.equiv(b.right.succ, a.left))
 
   /**
@@ -98,13 +102,14 @@ private[mtg] transparent trait ExtendedRel[T]:
    *   equals(a, b)     e        BBBBB            |  a- = b- ; a+ = b+
    * }}}
    */
-  final def intersects(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def intersects(b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     a.nonEmpty && b.nonEmpty && ordM.lteq(a.left, b.right) && ordM.lteq(b.left, a.right)
 
   /**
    * IsIntersectedBy
    */
-  final def isIntersectedBy(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def isIntersectedBy(b: Interval[T]): Boolean =
     b.intersects(a)
 
   /**
@@ -121,13 +126,14 @@ private[mtg] transparent trait ExtendedRel[T]:
    *   intersects(a,b) OR isAdjacent(a,b)
    * }}}
    */
-  final def merges[T1 >: T: Domain](b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def merges[T1 >: T: Domain](b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     (a.isEmpty || b.isEmpty) || ((ordM.lteq(a.left, b.right) && ordM.lteq(b.left, a.right)) || (ordM.equiv(a.right.succ, b.left) || ordM.equiv(b.right.succ, a.left)))
 
   /**
    * IsMergedBy
    */
-  final def isMergedBy[T1 >: T: Domain](b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def isMergedBy[T1 >: T: Domain](b: Interval[T]): Boolean =
     b.merges(a)
 
   /**
@@ -141,7 +147,8 @@ private[mtg] transparent trait ExtendedRel[T]:
    *   (a- < b-) OR ((a- == b-) AND (a+ < b-))
    * }}}
    */
-  final def isLess(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def isLess(b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     ordM.compare(a.left, b.left) match
       case -1 =>
         true
@@ -161,5 +168,5 @@ private[mtg] transparent trait ExtendedRel[T]:
    *   (a- > b-) OR ((a- == b-) AND (a+ > b-))
    * }}}
    */
-  final def isGreater(b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  final def isGreater(b: Interval[T]): Boolean =
     b.isLess(a)

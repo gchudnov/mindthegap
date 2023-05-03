@@ -16,7 +16,8 @@ private[mtg] object Complement:
   /**
    * Order of Intervals
    */
-  private def isLess[T: Domain](a: Interval[T], b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  private def isLess[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     ordM.compare(a.left, b.left) match
       case -1 =>
         true
@@ -28,7 +29,7 @@ private[mtg] object Complement:
   /**
    * Calculates complement for a given collection of intervals
    */
-  final def complement[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[Interval[T]] =
+  final def complement[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
     val ys = (List(Interval.point[T](Value.infNeg)) ++ xs ++ List(Interval.point[T](Value.infPos))).sortWith(isLess[T])
     val acc = ys.foldLeft(AccState.empty[T]) { case (acc, b) =>
       acc.last match

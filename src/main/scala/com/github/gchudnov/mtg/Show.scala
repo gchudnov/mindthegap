@@ -15,7 +15,7 @@ object Show:
 
   private val sep = ','
 
-  def asString[T: Domain](i: Interval[T])(using Ordering[Mark[T]]): String =
+  def asString[T: Domain](i: Interval[T]): String =
     if i.isEmpty then empty.toString()
     else if i.isPoint then
       val p = str(i.left.eval)

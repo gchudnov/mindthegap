@@ -10,6 +10,7 @@ import com.github.gchudnov.mtg.Diagram.Label
 import com.github.gchudnov.mtg.Diagram.Legend
 import com.github.gchudnov.mtg.Diagram.Annotation
 import com.github.gchudnov.mtg.Diagram.View
+import com.github.gchudnov.mtg.Domain
 import java.time.OffsetDateTime
 import java.time.Instant
 import java.time.LocalDate

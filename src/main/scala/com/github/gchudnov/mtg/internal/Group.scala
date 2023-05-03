@@ -34,7 +34,8 @@ private[mtg] object Group:
   /**
    * Order of Intervals
    */
-  private def isLess[T: Domain](a: Interval[T], b: Interval[T])(using ordM: Ordering[Mark[T]]): Boolean =
+  private def isLess[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    val ordM = summon[Domain[T]].ordMark
     ordM.compare(a.left, b.left) match
       case -1 =>
         true
@@ -66,7 +67,7 @@ private[mtg] object Group:
    *    List(g1, g2)
    * }}}
    */
-  final def group[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[Interval[T]] =
+  final def group[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
     val groups    = groupFind(xs)
     val intervals = groups.map(_.interval)
 
@@ -96,7 +97,7 @@ private[mtg] object Group:
    *   where members of a set are the indices of intervals that were grouped (membership information).
    * }}}
    */
-  final def groupFind[T: Domain](xs: Seq[Interval[T]])(using ordM: Ordering[Mark[T]]): List[GroupState[T]] =
+  final def groupFind[T: Domain](xs: Seq[Interval[T]]): List[GroupState[T]] =
     val xs1 = xs.zipWithIndex.sortWith { case ((a, _), (b, _)) => isLess[T](a, b) };
 
     val acc = xs1.foldLeft[Option[AccState[T]]](None) { case (acc, (it, i)) =>

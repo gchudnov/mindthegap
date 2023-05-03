@@ -66,9 +66,6 @@ enum Mark[T]:
 
 object Mark:
 
-  given markOrdering[T: Domain]: Ordering[Mark[T]] =
-    new MarkOrdering[T]
-
   def at[T](x: Value[T]): Mark.At[T] =
     Mark.At(x)
 

@@ -1,5 +1,6 @@
 package com.github.gchudnov.mtg
 
+import com.github.gchudnov.mtg.Domain
 import org.scalacheck.Gen
 
 object Arbitraries:

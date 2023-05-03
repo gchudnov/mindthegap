@@ -19,5 +19,5 @@ object Legend:
   val empty: Legend =
     Legend("")
 
-  def make[T: Domain](i: Interval[T])(using Ordering[Mark[T]]): Legend =
+  def make[T: Domain](i: Interval[T]): Legend =
     Legend(Show.asString(i))

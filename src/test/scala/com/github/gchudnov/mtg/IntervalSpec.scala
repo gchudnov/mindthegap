@@ -1,5 +1,7 @@
 package com.github.gchudnov.mtg
 
+import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.*
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
@@ -15,8 +17,9 @@ final class IntervalSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
 
-  val ordM: Ordering[Mark[Int]]     = summon[Ordering[Mark[Int]]]
+  val ordM: Ordering[Mark[Int]] = summon[Domain[Int]].ordMark
   val ordI: Ordering[Interval[Int]] = summon[Ordering[Interval[Int]]]
+
 
   "Interval" when {
 

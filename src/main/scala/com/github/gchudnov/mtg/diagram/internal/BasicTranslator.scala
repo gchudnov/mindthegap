@@ -10,7 +10,7 @@ import com.github.gchudnov.mtg.Diagram.View
 /**
  * Translates the interval to the canvas.
  */
-private[mtg] final class BasicTranslator[T: Domain](view: View[T], canvas: Canvas)(using Ordering[Mark[T]]) extends Translator[T]:
+private[mtg] final class BasicTranslator[T: Domain](view: View[T], canvas: Canvas) extends Translator[T]:
 
   /**
     * Answers the question: How many units of the canvas is one unit of the view?
