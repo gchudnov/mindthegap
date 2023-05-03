@@ -49,11 +49,13 @@ object View:
       right = None
     )
 
-  // TODO: replace Option with Value[T] ???
   // TODO: make from an Interval ???
 
   def make[T: Domain](left: Option[T], right: Option[T]): View[T] =
     View(left = left, right = right)
+
+  def make[T: Domain](left: T, right: T): View[T] =
+    make(left = Some(left), right = Some(right))
 
   private[mtg] def make[T: Domain](intervals: List[Interval[T]])(using ordT: Ordering[Value[T]]): View[T] =
     val xs: List[Interval[T]] = intervals.filter(_.nonEmpty) // TODO: If Empty intervals are displayed, we will need to change this condition
