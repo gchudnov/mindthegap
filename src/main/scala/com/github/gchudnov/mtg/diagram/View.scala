@@ -57,7 +57,7 @@ object View:
   def make[T: Domain](left: T, right: T): View[T] =
     make(left = Some(left), right = Some(right))
 
-  private[mtg] def make[T: Domain](intervals: List[Interval[T]])(using ordT: Ordering[Value[T]]): View[T] =
+  private[mtg] def make[T: Domain](intervals: List[Interval[T]]): View[T] =
     val xs: List[Interval[T]] = intervals.filter(_.nonEmpty) // TODO: If Empty intervals are displayed, we will need to change this condition
 
     val ms = xs.map(_.normalize).flatMap(i => List(i.left, i.right))
@@ -68,7 +68,7 @@ object View:
     val (vMin, vMax) = (ps.minOption, ps.maxOption) match
       case xy @ (Some(x), Some(y)) =>
         // if a point, extend the interval
-        if ordT.equiv(x, y) then (Some(x.pred), Some(y.succ)) else xy
+        if summon[Domain[T]].ordValue.equiv(x, y) then (Some(x.pred), Some(y.succ)) else xy
       case xy =>
         xy
 

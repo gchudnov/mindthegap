@@ -1,5 +1,7 @@
 package com.github.gchudnov.mtg
 
+// TODO: extract all ordering classes to Ordering package
+
 final class ValueOrdering[T: Ordering] extends Ordering[Value[T]]:
 
   override def compare(x: Value[T], y: Value[T]): Int =
