@@ -51,11 +51,11 @@ object Diagram:
    * Make a Diagram that can be rendered
    */
   def make[T: Domain](intervals: List[Interval[T]], view: View[T], canvas: Canvas, annotations: List[String])(using Ordering[Mark[T]]): Diagram =
-    val effectiveView = if view.isEmpty then View.make(intervals) else view
+    val effectiveView = if view.isAll then View.make(intervals) else view
     val translator    = Translator.make(effectiveView, canvas)
 
     // if view is specified, provide labels and ticks to mark the boundaries of the view
-    val (viewTicks, viewLabels) = if view.nonEmpty then
+    val (viewTicks, viewLabels) = if view.isLimited then
       val vi = view.toInterval
       val vs = toSpan(translator, vi)
       (Span.toTicks(vs), canvas.labels(vi, vs))
@@ -119,10 +119,20 @@ object Diagram:
     if i.isEmpty then Span.empty
     else if i.isPoint then
       val p = t.translate(i.normalize.left.eval)
-      Span(x0 = p, x1 = p, includeX0 = true, includeX1 = true)
+      Span(
+        x0 = p, 
+        x1 = p, 
+        includeX0 = true, 
+        includeX1 = true
+      )
     else 
       val i1 = i.normalize
-      Span.make(x0 = t.translate(i1.left.innerValue), x1 = t.translate(i1.right.innerValue), includeX0 = isLeftInclusive(i1.left), includeX1 = isRightInclusive(i1.right))
+      Span.make(
+        x0 = t.translate(i1.left.innerValue), 
+        x1 = t.translate(i1.right.innerValue), 
+        includeX0 = isLeftInclusive(i1.left), 
+        includeX1 = isRightInclusive(i1.right)
+      )
 
   private def isLeftInclusive[T](left: Mark[T]): Boolean =
     left match

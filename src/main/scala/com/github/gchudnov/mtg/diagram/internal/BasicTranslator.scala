@@ -22,6 +22,9 @@ private[mtg] final class BasicTranslator[T: Domain](view: View[T], canvas: Canva
   println(("canvas.size", canvas.size))
   println(("ok", ok))
 
+  // NOTE: if the translator is used for finite intervals, ok, view are always defined
+  //       it might be worth to create several translators for different cases
+
   override def translate(value: Value[T]): Int =
     println(("translateValue", value))
     value match

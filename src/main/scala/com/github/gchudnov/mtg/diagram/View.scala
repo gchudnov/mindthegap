@@ -16,7 +16,7 @@ final case class View[T: Domain](
 ):
   require(
     left.flatMap(lhs => right.map(rhs => summon[Ordering[T]].lteq(lhs, rhs))).getOrElse(true),
-    "left view boundary must be less or equal to the right view boundary"
+    "left View boundary must be less or equal to the right View boundary"
   )
 
   val size: Option[Long] =
@@ -26,11 +26,17 @@ final case class View[T: Domain](
       dx   = summon[Domain[T]].count(lhs, rhs)
     yield dx
 
-  def isEmpty: Boolean =
+  /**
+   * Check if the view is set to display all values.
+   */
+  def isAll: Boolean =
     left.isEmpty && right.isEmpty
 
-  def nonEmpty: Boolean =
-    !isEmpty
+  /**
+   * Check if the view is limited to a range of values.
+   */
+  def isLimited: Boolean =
+    !isAll
 
   def toInterval: Interval[T] =
     Interval.make(left.map(Value.finite(_)).getOrElse(Value.infNeg), right.map(Value.finite(_)).getOrElse(Value.infPos))
