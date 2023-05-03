@@ -12,6 +12,9 @@ import com.github.gchudnov.mtg.Show
  * Label
  */
 final case class Label(pos: Int, value: String):
+
+  // TODO: ^^^ what kind of pos is that? is that posX, posY ???? clarify in the name
+
   def size: Int =
     value.size
 
@@ -34,31 +37,15 @@ object Label:
 
     Label(x1, text)
 
+  // TODO: DO IT
   // TODO: extract this function to Domain, it is not specific to Label but has some knowledge about Intervals and Spans
 
   def make[T: Domain](c: Canvas, i: Interval[T], span: Span)(using Ordering[Mark[T]]): List[Label] =
     if i.isEmpty then List.empty[Label]
     else if i.isPoint then List(make(c, span.x0, Show.str(i.left.eval)))
     else
+      val i1 = i.normalize
       List(
-        make(c, span.x0, toLeftLabel(i.left)),
-        make(c, span.x1, toRightLabel(i.right))
+        make(c, span.x0, Show.str(i1.left.innerValue)),
+        make(c, span.x1, Show.str(i1.right.innerValue))
       )
-
-  private def toLeftLabel[T: Domain](left: Mark[T]): String =
-    left match
-      case Mark.At(x) =>
-        Show.str(x)
-      case Mark.Succ(xx) =>
-        Show.str(xx.eval)
-      case xx @ Mark.Pred(_) =>
-        Show.str(xx.eval)
-
-  private def toRightLabel[T: Domain](right: Mark[T]): String =
-    right match
-      case Mark.At(y) =>
-        Show.str(y)
-      case yy @ Mark.Succ(_) =>
-        Show.str(yy.eval)
-      case Mark.Pred(yy) =>
-        Show.str(yy.eval)
