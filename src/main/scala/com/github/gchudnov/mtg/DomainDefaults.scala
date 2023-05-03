@@ -59,9 +59,6 @@ private[mtg] object DomainDefaults:
 
   final class NothingDomain extends Domain[Nothing]:
 
-    override val ordValue: Ordering[Value[Nothing]] =
-      ValueOrdering[Nothing]
-
     override def succ(x: Nothing): Nothing =
       x
 
@@ -79,9 +76,6 @@ private[mtg] object DomainDefaults:
    */
   final class IntegralDomain[T: Integral] extends Domain[T]:
     val intT = summon[Integral[T]]
-
-    override val ordValue: Ordering[Value[T]] =
-      ValueOrdering[T]
 
     override def succ(x: T): T =
       intT.plus(x, intT.one)
@@ -101,9 +95,6 @@ private[mtg] object DomainDefaults:
   final class FractionalDomain[T: Fractional](unit: T) extends Domain[T]:
     val fracT = summon[Fractional[T]]
 
-    override val ordValue: Ordering[Value[T]] =
-      ValueOrdering[T]
-
     override def succ(x: T): T =
       fracT.plus(x, unit)
 
@@ -120,9 +111,6 @@ private[mtg] object DomainDefaults:
    * OffsetDateTime Domain
    */
   final class OffsetDateTimeDomain(unit: TemporalUnit) extends Domain[OffsetDateTime]:
-
-    override val ordValue: Ordering[Value[OffsetDateTime]] =
-      ValueOrdering[OffsetDateTime]
 
     override def succ(x: OffsetDateTime): OffsetDateTime =
       x.plus(1, unit)
@@ -141,9 +129,6 @@ private[mtg] object DomainDefaults:
    */
   final class OffsetTimeDomain(unit: TemporalUnit) extends Domain[OffsetTime]:
 
-    override val ordValue: Ordering[Value[OffsetTime]] =
-      ValueOrdering[OffsetTime]
-
     override def succ(x: OffsetTime): OffsetTime =
       x.plus(1, unit)
 
@@ -160,9 +145,6 @@ private[mtg] object DomainDefaults:
    * Instant Domain
    */
   final class InstantDomain(unit: TemporalUnit) extends Domain[Instant]:
-
-    override val ordValue: Ordering[Value[Instant]] =
-      ValueOrdering[Instant]
 
     override def succ(x: Instant): Instant =
       x.plus(1, unit)
@@ -181,9 +163,6 @@ private[mtg] object DomainDefaults:
    */
   final class LocalDateTimeDomain(unit: TemporalUnit) extends Domain[LocalDateTime]:
 
-    override val ordValue: Ordering[Value[LocalDateTime]] =
-      ValueOrdering[LocalDateTime]
-
     override def succ(x: LocalDateTime): LocalDateTime =
       x.plus(1, unit)
 
@@ -200,9 +179,6 @@ private[mtg] object DomainDefaults:
    * LocalDate Domain
    */
   final class LocalDateDomain(unit: TemporalUnit) extends Domain[LocalDate]:
-
-    override val ordValue: Ordering[Value[LocalDate]] =
-      ValueOrdering[LocalDate]
 
     override def succ(x: LocalDate): LocalDate =
       x.plus(1, unit)
@@ -221,9 +197,6 @@ private[mtg] object DomainDefaults:
    */
   final class LocalTimeDomain(unit: TemporalUnit) extends Domain[LocalTime]:
 
-    override val ordValue: Ordering[Value[LocalTime]] =
-      ValueOrdering[LocalTime]
-
     override def succ(x: LocalTime): LocalTime =
       x.plus(1, unit)
 
@@ -240,9 +213,6 @@ private[mtg] object DomainDefaults:
    * ZonedDateTime Domain
    */
   final class ZonedDateTimeDomain(unit: TemporalUnit) extends Domain[ZonedDateTime]:
-
-    override val ordValue: Ordering[Value[ZonedDateTime]] =
-      ValueOrdering[ZonedDateTime]
 
     override def succ(x: ZonedDateTime): ZonedDateTime =
       x.plus(1, unit)

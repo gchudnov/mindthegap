@@ -14,8 +14,13 @@ package com.github.gchudnov.mtg
  * }}}
  */
 trait Domain[T] extends Ordering[T]:
+  self: Ordering[T] =>
 
-  def ordValue: Ordering[Value[T]]
+  val ordValue: Ordering[Value[T]] = 
+    new ValueOrdering[T]()(self)
+
+  val ordMark: Ordering[Mark[T]] =
+    new MarkOrdering[T]()(this)
 
   /**
    * Successor value
