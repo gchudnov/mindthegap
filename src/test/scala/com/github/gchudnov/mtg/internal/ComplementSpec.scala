@@ -171,7 +171,7 @@ final class ComplementSpec extends TestSpec:
         import com.github.gchudnov.mtg.Diagram
 
         val canvas: Canvas  = Canvas.make(40, 2)
-        val view: View[Int] = View.default[Int]
+        val view: View[Int] = View.all[Int]
         val diagram         = Diagram.make(List(a, b, c, d, e0, e1, e2, e3), view, canvas)
 
         val diag = Diagram.render(diagram)

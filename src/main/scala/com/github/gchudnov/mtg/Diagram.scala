@@ -8,8 +8,6 @@ import com.github.gchudnov.mtg.diagram.Tick
 import com.github.gchudnov.mtg.diagram.Label
 import com.github.gchudnov.mtg.diagram.Legend
 import com.github.gchudnov.mtg.diagram.Annotation
-import com.github.gchudnov.mtg.diagram.internal.BasicRenderer
-import com.github.gchudnov.mtg.diagram.internal.BasicTranslator
 
 import Show.given
 import com.github.gchudnov.mtg.internal.DiagramMacro
@@ -59,14 +57,14 @@ object Diagram:
     // if view is specified, provide labels and ticks to mark the boundaries of the view
     val (viewTicks, viewLabels) = if view.nonEmpty then
       val vi = view.toInterval
-      val vs = translator.translate(vi)
+      val vs = toSpan(translator, vi)
       (Span.toTicks(vs), canvas.labels(vi, vs))
     else (List.empty[Tick], List.empty[Label])
 
     val d = intervals.zipWithIndex.foldLeft(Diagram.empty) { case (acc, (i, j)) =>
       val y = acc.height
 
-      val span   = translator.translate(i)
+      val span   = toSpan(translator, i)
       val ticks  = Span.toTicks(span)
       val labels = canvas.labels(i, span)
       val legend = Legend.make(i)
@@ -98,14 +96,14 @@ object Diagram:
 
   inline def make[T: Domain](inline intervals: List[Interval[T]])(using Ordering[Mark[T]]): Diagram =
     val annotations = DiagramMacro.varNames(intervals)
-    make(intervals, view = View.default[T], canvas = Canvas.default, annotations = annotations)
+    make(intervals, view = View.all[T], canvas = Canvas.default, annotations = annotations)
 
   inline def make[T: Domain](inline intervals: List[Interval[T]], canvas: Canvas)(using Ordering[Mark[T]]): Diagram =
     val annotations = DiagramMacro.varNames(intervals)
-    make(intervals, view = View.default[T], canvas = canvas, annotations = annotations)
+    make(intervals, view = View.all[T], canvas = canvas, annotations = annotations)
 
   def make[T: Domain](intervals: List[Interval[T]], annotations: List[String])(using Ordering[Mark[T]]): Diagram =
-    make(intervals, view = View.default[T], canvas = Canvas.default, annotations = annotations)
+    make(intervals, view = View.all[T], canvas = Canvas.default, annotations = annotations)
 
   /**
    * Render the Diagram
@@ -114,3 +112,32 @@ object Diagram:
     r.render(d, theme)
 
   // TODO: add render methods so that make is redundant
+
+  // TODO: implement it
+
+  private def toSpan[T: Domain](t: Translator[T], i: Interval[T]): Span = 
+    if i.isEmpty then Span.empty
+    else if i.isPoint then
+      val p = t.translate(i.normalize.left.eval)
+      Span(x0 = p, x1 = p, includeX0 = true, includeX1 = true)
+    else 
+      val i1 = i.normalize
+      Span.make(x0 = t.translate(i1.left.innerValue), x1 = t.translate(i1.right.innerValue), includeX0 = isLeftInclusive(i1.left), includeX1 = isRightInclusive(i1.right))
+
+  private def isLeftInclusive[T](left: Mark[T]): Boolean =
+    left match
+      case Mark.At(x) =>
+        x.isFinite
+      case Mark.Succ(_) =>
+        false
+      case xx @ Mark.Pred(_) =>
+        sys.error("unexpected value of a normalized interval: " + xx)
+
+  private def isRightInclusive[T](right: Mark[T]): Boolean =
+    right match
+      case Mark.At(y) =>
+        y.isFinite
+      case yy @ Mark.Succ(_) =>
+        sys.error("unexpected value of a normalized interval: " + yy)
+      case Mark.Pred(_) =>
+        false

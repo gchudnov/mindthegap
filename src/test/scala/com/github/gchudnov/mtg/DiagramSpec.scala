@@ -18,7 +18,7 @@ import java.time.temporal.ChronoUnit
 final class DiagramSpec extends TestSpec:
 
   private val canvas: Canvas  = Canvas.make(40, 2) // TODO: rename to canvas40p2
-  private val infView: View[Int] = View.default[Int]
+  private val infView: View[Int] = View.all[Int]
   private val theme: Theme    = Theme.default      // TODO: rename to defaultTheme
 
   private val themeNoLegend: Theme              = theme.copy(legend = false)
@@ -247,7 +247,7 @@ final class DiagramSpec extends TestSpec:
       "diagram offset-date-time" in {
         val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
 
-        val odtView: View[OffsetDateTime] = View.default[OffsetDateTime]
+        val odtView: View[OffsetDateTime] = View.all[OffsetDateTime]
 
         val actual = Diagram.make[OffsetDateTime](List(a), odtView, canvas)
         val expected = Diagram(
@@ -576,17 +576,6 @@ final class DiagramSpec extends TestSpec:
           "--------------------+------------------- |",
           "                    5                    |"
         )
-
-/**
- * TODO: fix this test
-        List(
-          "                         *               | a", 
-          "-------------------------+-------------- |", 
-          "                         5               |"
-        ) 
-*/
-
-        // TODO: it looks that some tests are broken when we changed Domain[T].count implementation, fix it
 
         actual mustBe expected
       }

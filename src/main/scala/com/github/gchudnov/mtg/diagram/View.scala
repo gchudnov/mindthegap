@@ -37,8 +37,7 @@ final case class View[T: Domain](
 
 object View:
 
-  // TODO: rename either to `infinite` OR to `all`
-  def default[T: Domain]: View[T] =
+  def all[T: Domain]: View[T] =
     View(
       left = None,
       right = None
