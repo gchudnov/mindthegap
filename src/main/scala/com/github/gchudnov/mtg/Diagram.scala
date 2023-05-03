@@ -58,7 +58,7 @@ object Diagram:
     val (viewTicks, viewLabels) = if view.isLimited then
       val vi = view.toInterval
       val vs = toSpan(translator, vi)
-      (Span.toTicks(vs), Label.make(canvas, vi, vs))
+      (Span.toTicks(vs), toLabels(canvas, vi, vs))
     else (List.empty[Tick], List.empty[Label])
 
     val d = intervals.zipWithIndex.foldLeft(Diagram.empty) { case (acc, (i, j)) =>
@@ -66,7 +66,7 @@ object Diagram:
 
       val span   = toSpan(translator, i)
       val ticks  = Span.toTicks(span)
-      val labels = Label.make(canvas, i, span)
+      val labels = toLabels(canvas, i, span)
       val legend = Legend.make(i)
       val ann    = if j < annotations.size then Annotation(annotations(j)) else Annotation.empty
 
@@ -114,6 +114,16 @@ object Diagram:
   // TODO: add render methods so that make is redundant
 
   // TODO: implement it
+
+  private def toLabels[T: Domain](c: Canvas, i: Interval[T], span: Span)(using Ordering[Mark[T]]): List[Label] = 
+    if i.isEmpty then List.empty[Label]
+    else if i.isPoint then List(Label.make(c, span.x0, Show.str(i.left.eval)))
+    else
+      val i1 = i.normalize
+      List(
+        Label.make(c, span.x0, Show.str(i1.left.innerValue)),
+        Label.make(c, span.x1, Show.str(i1.right.innerValue))
+      )
 
   private def toSpan[T: Domain](t: Translator[T], i: Interval[T]): Span = 
     if i.isEmpty then Span.empty
