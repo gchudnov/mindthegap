@@ -5,6 +5,10 @@ import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Value
 import com.github.gchudnov.mtg.Mark
 
+// TODO: create a View trait
+// TODO: create RangeView case class, where all boundaries are finite
+// TODO: create InfiniteView case class
+
 /**
  * View
  *
@@ -58,7 +62,7 @@ object View:
     make(left = Some(left), right = Some(right))
 
   private[mtg] def make[T: Domain](intervals: List[Interval[T]]): View[T] =
-    val ordM = summon[Domain[T]].ordMark
+    val ordM = summon[Domain[T]].ordMark // TODO: do we need this?
     given ordV: Ordering[Value[T]] = summon[Domain[T]].ordValue
 
     val xs: List[Interval[T]] = intervals.filter(_.nonEmpty) // TODO: If Empty intervals are displayed, we will need to change this condition

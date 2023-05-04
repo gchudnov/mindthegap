@@ -1,4 +1,7 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.ordering
+
+import com.github.gchudnov.mtg.Domain
+import com.github.gchudnov.mtg.Interval
 
 /**
  * Intervals are ordered:

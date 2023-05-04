@@ -4,6 +4,9 @@ import com.github.gchudnov.mtg.internal.BasicOps
 import com.github.gchudnov.mtg.internal.BasicRel
 import com.github.gchudnov.mtg.internal.ExtendedRel
 import com.github.gchudnov.mtg.internal.StaticOps
+import com.github.gchudnov.mtg.ordering.IntervalOrdering
+
+export com.github.gchudnov.mtg.ordering.IntervalOrdering
 
 /**
  * Interval

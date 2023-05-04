@@ -1,6 +1,9 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.ordering
 
-// TODO: extract all ordering classes to Ordering package
+import com.github.gchudnov.mtg.Domain
+import com.github.gchudnov.mtg.Value
+
+// TODO: update documentation for ordering
 
 final class ValueOrdering[T: Ordering] extends Ordering[Value[T]]:
 

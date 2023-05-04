@@ -1,5 +1,8 @@
 package com.github.gchudnov.mtg
 
+import com.github.gchudnov.mtg.ordering.ValueOrdering
+import com.github.gchudnov.mtg.ordering.MarkOrdering
+
 // TODO: allow this trait to use for Value, Mark to avoid extra implicits
 
 /**

@@ -1,7 +1,7 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.ordering
 
-// TODO: extract all ordering classes to Ordering package OR delete this class
-
+import com.github.gchudnov.mtg.Domain
+import com.github.gchudnov.mtg.Mark
 
 final class MarkOrdering[T: Domain] extends Ordering[Mark[T]]:
 
