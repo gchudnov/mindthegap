@@ -22,4 +22,6 @@ object Dependencies {
     ) map (_ % "test")
     compile ++ test
   }
+
+  val Examples: Seq[ModuleID] = Seq.empty[ModuleID]
 }
