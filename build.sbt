@@ -25,6 +25,7 @@ lazy val mtg = (project in file("mtg"))
   )
 
 lazy val examples = (project in file("examples"))
+  .dependsOn(mtg)
   .settings(Settings.noPublish)
   .settings(
     name := "mtg-examples",
