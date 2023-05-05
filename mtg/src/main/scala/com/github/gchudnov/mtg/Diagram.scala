@@ -59,7 +59,7 @@ object Diagram:
       val y = acc.height
 
       val span   = toSpan(translator, i)
-      val ticks  = Span.toTicks(span)
+      val ticks  = toTicks(span)
       val labels = toLabels(canvas, i, span)
       val legend = Legend.make(i)
       val ann    = if j < annotations.size then Annotation(annotations(j)) else Annotation.empty
@@ -134,6 +134,13 @@ object Diagram:
 
     l.copy(posX = x1)
 
+  /**
+   * Convert the given span to a list of ticks.
+   */
+  private def toTicks(s: Span): List[Tick] =
+    if s.isEmpty then List.empty[Tick]
+    else List(Tick(s.x0), Tick(s.x1))
+
   private def toSpan[T: Domain](t: Translator[T], i: Interval[T]): Span =
     if i.isEmpty then Span.empty
     else if i.isPoint then
@@ -186,7 +193,7 @@ object Diagram:
       case View.Range(x, y) =>
         val vi     = Interval.closed[T](x, y)
         val vs     = toSpan(translator, vi)
-        val ticks  = Span.toTicks(vs)
+        val ticks  = toTicks(vs)
         val labels = toLabels(canvas, vi, vs)
         (ticks, labels)
       case View.Infinite =>

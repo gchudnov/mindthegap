@@ -13,7 +13,7 @@ trait Renderer:
 object Renderer:
 
   given defaultRenderer: Renderer =
-    make
+    ascii
 
-  def make: Renderer =
+  def ascii: Renderer =
     new AsciiRenderer()

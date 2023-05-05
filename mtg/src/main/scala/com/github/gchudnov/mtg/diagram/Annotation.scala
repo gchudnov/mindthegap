@@ -12,7 +12,7 @@ final case class Annotation(value: String):
 
 object Annotation:
 
-  val empty: Annotation =
+  lazy val empty: Annotation =
     Annotation("")
 
   def make(value: String): Annotation =

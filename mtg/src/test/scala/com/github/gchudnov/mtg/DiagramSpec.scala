@@ -24,7 +24,7 @@ final class DiagramSpec extends TestSpec:
   private val themeNoLegend: Theme              = theme.copy(legend = false)
   private val themeNoLegendNoAnnotations: Theme = theme.copy(legend = false, annotations = false)
 
-  private val renderer = Renderer.make
+  private val renderer = Renderer.ascii
 
   "Diagram" when {
     "make" should {

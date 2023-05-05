@@ -16,7 +16,7 @@ final case class Legend(value: String):
     value.nonEmpty
 
 object Legend:
-  val empty: Legend =
+  lazy val empty: Legend =
     Legend("")
 
   def make[T: Domain](i: Interval[T]): Legend =
