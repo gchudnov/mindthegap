@@ -9,9 +9,9 @@ import com.github.gchudnov.mtg.Diagram.Label
 import scala.collection.mutable.ListBuffer
 
 /**
- * Basic Renderer
+ * ASCII Renderer
  */
-private[mtg] final class BasicRenderer() extends Renderer:
+private[mtg] final class AsciiRenderer() extends Renderer:
 
   override def render(d: Diagram, theme: Theme): List[String] =
     val spans  = drawSpans(theme, d.spans, d.width)
