@@ -76,8 +76,8 @@ object Diagram:
     }
 
     d.copy(
-      ticks = (d.ticks ++ viewTicks).distinct.sortBy(_.posX),
-      labels = (d.labels ++ viewLabels).distinct.sortBy(_.posX)
+      ticks = (d.ticks ++ viewTicks).distinct.sortBy(_.x),
+      labels = (d.labels ++ viewLabels).distinct.sortBy(_.x)
     )
 
   inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T], canvas: Canvas): Diagram =
@@ -120,19 +120,19 @@ object Diagram:
           Label.make(span.x1, Show.str(i1.right.innerValue))
         )
 
-    val ys = xs.map(x => placeOnCanvas(x, c))
+    val ys = xs.map(x => positionLabelOnCanvas(x, c))
     ys
 
-  private def placeOnCanvas(l: Label, c: Canvas): Label =
-    val p = Canvas.align(l.posX.toDouble - (l.value.size.toDouble / 2.0))
+  private def positionLabelOnCanvas(l: Label, c: Canvas): Label =
+    val p = Canvas.align(l.x.toDouble - (l.value.size.toDouble / 2.0))
     val q = p + l.value.size
 
     val x1 =
-      if p < 0 && c.contains(l.posX) then 0
-      else if q >= c.width && c.contains(l.posX) then c.width - l.value.size
+      if p < 0 && c.contains(l.x) then 0
+      else if q >= c.width && c.contains(l.x) then c.width - l.value.size
       else p
 
-    l.copy(posX = x1)
+    l.copy(x = x1)
 
   /**
    * Convert the given span to a list of ticks.

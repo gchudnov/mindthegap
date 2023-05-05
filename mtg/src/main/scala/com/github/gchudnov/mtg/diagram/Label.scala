@@ -3,7 +3,7 @@ package com.github.gchudnov.mtg.diagram
 /**
  * Label
  */
-final case class Label(posX: Int, value: String):
+final case class Label(x: Int, value: String):
 
   def size: Int =
     value.size

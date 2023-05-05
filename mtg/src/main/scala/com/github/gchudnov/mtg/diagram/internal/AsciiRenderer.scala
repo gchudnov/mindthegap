@@ -60,7 +60,7 @@ private[mtg] final class AsciiRenderer() extends Renderer:
 
   private[mtg] def drawTicks(theme: Theme, ts: List[Tick], width: Int): List[String] =
     val view = Array.fill[Char](width)(theme.axis)
-    ts.sortBy(_.posX).foreach(t => drawTick(theme, t, view))
+    ts.sortBy(_.x).foreach(t => drawTick(theme, t, view))
     List(view.mkString)
 
   private[mtg] def drawLabels(theme: Theme, ls: List[Label], width: Int): List[String] =
@@ -74,16 +74,16 @@ private[mtg] final class AsciiRenderer() extends Renderer:
 
   private def drawLabelsNone(theme: Theme, ls: List[Label], width: Int): List[String] =
     val view = Array.fill[Char](width)(theme.space)
-    ls.sortBy(_.posX).foreach(l => drawLabel(theme, l, view))
+    ls.sortBy(_.x).foreach(l => drawLabel(theme, l, view))
     List(view.mkString)
 
   private def drawLabelsNoOverlap(theme: Theme, ls: List[Label], width: Int): List[String] =
     val view = Array.fill[Char](width)(theme.space)
-    ls.sortBy(_.posX)
+    ls.sortBy(_.x)
       .foldLeft(-1)((last, l) =>
-        if (l.posX > last) || (l.posX > 0 && l.posX == last && (!view(l.posX - 1).isDigit || (l.value.nonEmpty && !l.value(0).isDigit))) then
+        if (l.x > last) || (l.x > 0 && l.x == last && (!view(l.x - 1).isDigit || (l.value.nonEmpty && !l.value(0).isDigit))) then
           drawLabel(theme, l, view)
-          l.posX + l.value.size
+          l.x + l.value.size
         else last
       )
     List(view.mkString)
@@ -91,10 +91,10 @@ private[mtg] final class AsciiRenderer() extends Renderer:
   private def drawLabelsStacked(theme: Theme, ls: List[Label], width: Int): List[String] =
     val emptyState = (Vector(Array.fill[Char](width)(theme.space)), ListBuffer[Int](-1))
     val res = ls
-      .sortBy(_.posX)
+      .sortBy(_.x)
       .foldLeft(emptyState)((acc, l) =>
-        val p = l.posX
-        val q = l.posX + l.size
+        val p = l.x
+        val q = l.x + l.size
 
         val views = acc._1
         val last  = acc._2
@@ -118,12 +118,12 @@ private[mtg] final class AsciiRenderer() extends Renderer:
 
   private def drawLabel(theme: Theme, l: Label, spot: Array[Char]): Unit =
     l.value.toList.zipWithIndex.foreach { case (ch, i) =>
-      val p = l.posX + i
+      val p = l.x + i
       if p >= 0 && p < spot.size then spot(p) = ch
     }
 
   private def drawTick(theme: Theme, t: Tick, spot: Array[Char]): Unit =
-    if (t.posX >= 0) && (t.posX < spot.size) then spot(t.posX) = theme.tick
+    if (t.x >= 0) && (t.x < spot.size) then spot(t.x) = theme.tick
 
   private def drawSpan(theme: Theme, span: Span, spot: Array[Char]): Unit =
     if span.nonEmpty then
