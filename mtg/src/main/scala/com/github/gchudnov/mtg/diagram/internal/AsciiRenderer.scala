@@ -116,25 +116,25 @@ private[mtg] final class AsciiRenderer() extends Renderer:
 
     res._1.map(_.mkString).toList
 
-  private def drawLabel(theme: Theme, l: Label, view: Array[Char]): Unit =
+  private def drawLabel(theme: Theme, l: Label, spot: Array[Char]): Unit =
     l.value.toList.zipWithIndex.foreach { case (ch, i) =>
       val p = l.posX + i
-      if p >= 0 && p < view.size then view(p) = ch
+      if p >= 0 && p < spot.size then spot(p) = ch
     }
 
-  private def drawTick(theme: Theme, t: Tick, view: Array[Char]): Unit =
-    if (t.posX >= 0) && (t.posX < view.size) then view(t.posX) = theme.tick
+  private def drawTick(theme: Theme, t: Tick, spot: Array[Char]): Unit =
+    if (t.posX >= 0) && (t.posX < spot.size) then spot(t.posX) = theme.tick
 
-  private def drawSpan(theme: Theme, span: Span, view: Array[Char]): Unit =
+  private def drawSpan(theme: Theme, span: Span, spot: Array[Char]): Unit =
     if span.nonEmpty then
       val p = math.max(span.x0, 0)
-      val q = math.min(span.x1, if view.nonEmpty then view.size - 1 else 0)
+      val q = math.min(span.x1, if spot.nonEmpty then spot.size - 1 else 0)
 
-      Range.inclusive(p, q).foreach(i => view(i) = theme.fill)
+      Range.inclusive(p, q).foreach(i => spot(i) = theme.fill)
 
       if span.size > 1 then
-        if span.x0 >= 0 && span.x0 < view.size then view(span.x0) = theme.leftBound(span.includeX0)
-        if span.x1 >= 0 && span.x1 < view.size then view(span.x1) = theme.rightBound(span.includeX1)
+        if span.x0 >= 0 && span.x0 < spot.size then spot(span.x0) = theme.leftBound(span.includeX0)
+        if span.x1 >= 0 && span.x1 < spot.size then spot(span.x1) = theme.rightBound(span.includeX1)
 
   private[mtg] def padRight(n: Int, pad: Char)(value: String): String =
     if n > 0 then value + (pad.toString * n)

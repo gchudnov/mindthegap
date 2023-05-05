@@ -33,7 +33,7 @@ final case class Canvas(
 
 object Canvas:
 
-  private val defaultWidth: Int = 40
+  private val defaultWidth: Int   = 40
   private val defaultPadding: Int = 2
 
   lazy val default: Canvas =
@@ -54,8 +54,6 @@ object Canvas:
    */
   def make(width: Int, padding: Int = defaultPadding): Canvas =
     Canvas(width = width, padding = padding)
-
-  // TODO: move the function vvv to the place it is used
 
   /**
    * Align value to the grid
