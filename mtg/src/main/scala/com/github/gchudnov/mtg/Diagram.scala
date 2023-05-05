@@ -124,7 +124,7 @@ object Diagram:
     ys
 
   private def placeOnCanvas(l: Label, c: Canvas): Label =
-    val p = c.align(l.posX.toDouble - (l.value.size.toDouble / 2.0))
+    val p = Canvas.align(l.posX.toDouble - (l.value.size.toDouble / 2.0))
     val q = p + l.value.size
 
     val x1 =

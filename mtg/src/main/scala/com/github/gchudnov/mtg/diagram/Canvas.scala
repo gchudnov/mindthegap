@@ -2,8 +2,6 @@ package com.github.gchudnov.mtg.diagram
 
 import com.github.gchudnov.mtg.Value
 
-// TODO: should canvas be a trait instead???
-
 /**
  * Canvas
  *
@@ -16,20 +14,13 @@ final case class Canvas(
   val left: Int  = 0         // start of the canvas, inclusive
   val right: Int = width - 1 // end of the canvas, inclusive
 
-  // TODO: instead of first, last, use paddedLeft, passedRight or something similar ???
+  val paddedLeft: Int  = left + padding  // first offset for non-inf value
+  val paddedRight: Int = right - padding // last offset for non-inf value
 
-  val first: Int = left + padding  // first offset for non-inf value
-  val last: Int  = right - padding // last offset for non-inf value
-
-  val size: Int = last - first + 1
-
-  println(("left, right, first, last, size", left, right, first, last, size))
+  val size: Int = paddedRight - paddedLeft + 1
 
   def contains(x: Int): Boolean =
     (x >= 0 && x < width)
-
-  def align(x: Double): Int =
-    Canvas.align(x)
 
 object Canvas:
 
@@ -53,6 +44,10 @@ object Canvas:
    *   canvas
    */
   def make(width: Int, padding: Int = defaultPadding): Canvas =
+    require(width > 0, "width must be positive")
+    require(padding >= 0, "padding must be non-negative")
+    require(padding < width / 2, "padding must be less than half of the width")
+
     Canvas(width = width, padding = padding)
 
   /**

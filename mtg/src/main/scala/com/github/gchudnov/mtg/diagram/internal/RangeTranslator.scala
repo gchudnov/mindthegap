@@ -22,4 +22,4 @@ private[mtg] final class RangeTranslator[T: Domain](view: View.Range[T], canvas:
       case Value.Finite(x) =>
         val dx = summon[Domain[T]].count(view.left, x) - 1
         val dd = dx.toDouble
-        Canvas.align((k * dd) + canvas.first)
+        Canvas.align((k * dd) + canvas.paddedLeft)
