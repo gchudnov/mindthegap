@@ -25,18 +25,21 @@ final case class Canvas(
 
   println(("left, right, first, last, size", left, right, first, last, size))
 
-  // TODO: rename to `contains` or `includes` ???
-  def isIn(x: Int): Boolean =
+  def contains(x: Int): Boolean =
     (x >= 0 && x < width)
+
+  def align(x: Double): Int =
+    Canvas.align(x)
 
 object Canvas:
 
-  // TODO: define default width and passing, use them here
+  private val defaultWidth: Int = 40
+  private val defaultPadding: Int = 2
 
-  val default: Canvas =
+  lazy val default: Canvas =
     Canvas(
-      width = 40,
-      padding = 2
+      width = defaultWidth,
+      padding = defaultPadding
     )
 
   /**
@@ -49,7 +52,7 @@ object Canvas:
    * @return
    *   canvas
    */
-  def make(width: Int, padding: Int = 2): Canvas =
+  def make(width: Int, padding: Int = defaultPadding): Canvas =
     Canvas(width = width, padding = padding)
 
   // TODO: move the function vvv to the place it is used

@@ -76,8 +76,8 @@ object Diagram:
     }
 
     d.copy(
-      ticks = (d.ticks ++ viewTicks).distinct.sortBy(_.pos),
-      labels = (d.labels ++ viewLabels).distinct.sortBy(_.pos)
+      ticks = (d.ticks ++ viewTicks).distinct.sortBy(_.posX),
+      labels = (d.labels ++ viewLabels).distinct.sortBy(_.posX)
     )
 
   inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T], canvas: Canvas): Diagram =
@@ -110,14 +110,29 @@ object Diagram:
   // TODO: implement it
 
   private def toLabels[T: Domain](c: Canvas, i: Interval[T], span: Span): List[Label] =
-    if i.isEmpty then List.empty[Label]
-    else if i.isPoint then List(Label.make(c, span.x0, Show.str(i.left.eval)))
-    else
-      val i1 = i.normalize
-      List(
-        Label.make(c, span.x0, Show.str(i1.left.innerValue)),
-        Label.make(c, span.x1, Show.str(i1.right.innerValue))
-      )
+    val xs =
+      if i.isEmpty then List.empty[Label]
+      else if i.isPoint then List(Label.make(span.x0, Show.str(i.left.eval)))
+      else
+        val i1 = i.normalize
+        List(
+          Label.make(span.x0, Show.str(i1.left.innerValue)),
+          Label.make(span.x1, Show.str(i1.right.innerValue))
+        )
+
+    val ys = xs.map(x => placeOnCanvas(x, c))
+    ys
+
+  private def placeOnCanvas(l: Label, c: Canvas): Label =
+    val p = c.align(l.posX.toDouble - (l.value.size.toDouble / 2.0))
+    val q = p + l.value.size
+
+    val x1 =
+      if p < 0 && c.contains(l.posX) then 0
+      else if q >= c.width && c.contains(l.posX) then c.width - l.value.size
+      else p
+
+    l.copy(posX = x1)
 
   private def toSpan[T: Domain](t: Translator[T], i: Interval[T]): Span =
     if i.isEmpty then Span.empty

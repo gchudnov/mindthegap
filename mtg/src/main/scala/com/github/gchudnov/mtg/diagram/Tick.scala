@@ -1,6 +1,6 @@
 package com.github.gchudnov.mtg.diagram
 
 /**
- * Tick
+ * Tick on the canvas.
  */
-final case class Tick(pos: Int)
+final case class Tick(posX: Int) extends AnyVal

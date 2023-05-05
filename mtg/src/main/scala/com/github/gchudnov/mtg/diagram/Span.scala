@@ -2,8 +2,6 @@ package com.github.gchudnov.mtg.diagram
 
 import com.github.gchudnov.mtg.Diagram.Tick
 
-// TODO: check if there is clipping, it should not be done here, but during rendering
-
 /**
  * Span
  *
@@ -26,7 +24,7 @@ final case class Span(x0: Int, x1: Int, includeX0: Boolean, includeX1: Boolean):
 
 object Span:
   val empty: Span =
-    Span(1, -1, true, true)
+    make(1, -1, true, true)
 
   def make(x0: Int, x1: Int, includeX0: Boolean, includeX1: Boolean): Span =
     Span(x0, x1, includeX0, includeX1)
