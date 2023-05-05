@@ -35,3 +35,6 @@ object IntervalSort extends App:
   val sorted = intervals.sorted
 
   println(sorted)
+
+  // TODO: asString should be an extension method
+  // sorted.foreach(println(Show.asString[Domain[Int]](_)))

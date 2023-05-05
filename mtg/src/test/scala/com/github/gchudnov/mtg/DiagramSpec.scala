@@ -1,7 +1,6 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.diagram.internal.BasicRenderer
-import com.github.gchudnov.mtg.diagram.internal.BasicTranslator
 import com.github.gchudnov.mtg.Diagram.Canvas
 import com.github.gchudnov.mtg.Diagram.Theme
 import com.github.gchudnov.mtg.Diagram.Span
@@ -18,9 +17,9 @@ import java.time.temporal.ChronoUnit
 
 final class DiagramSpec extends TestSpec:
 
-  private val canvas: Canvas  = Canvas.make(40, 2) // TODO: rename to canvas40p2
+  private val canvas: Canvas     = Canvas.make(40, 2) // TODO: rename to canvas40p2
   private val infView: View[Int] = View.all[Int]
-  private val theme: Theme    = Theme.default      // TODO: rename to defaultTheme
+  private val theme: Theme       = Theme.default      // TODO: rename to defaultTheme
 
   private val themeNoLegend: Theme              = theme.copy(legend = false)
   private val themeNoLegendNoAnnotations: Theme = theme.copy(legend = false, annotations = false)
@@ -140,7 +139,9 @@ final class DiagramSpec extends TestSpec:
       "diagram left part of a closed interval" in {
         val a = Interval.closed[Int](5, 10) // [5, 10]
 
-        val actual = Diagram.make(List(a), infView.copy(left = Some(0), right = Some(7)), canvas) // [0, 7]
+        val view = View.make(Some(0), Some(7)) // [0, 7]
+
+        val actual = Diagram.make(List(a), view, canvas)
         val expected = Diagram(
           40,
           1,
@@ -613,7 +614,8 @@ final class DiagramSpec extends TestSpec:
 
       "display a closed interval on a custom view" in {
         val a       = Interval.closed[Int](5, 10)
-        val diagram = Diagram.make(List(a), infView.copy(left = Some(0), right = Some(20)), canvas)
+        val view    = View.make(Some(0), Some(20))
+        val diagram = Diagram.make(List(a), view, canvas)
 
         val actual = Diagram.render(diagram, themeNoLegend)
         val expected = List(
@@ -627,7 +629,8 @@ final class DiagramSpec extends TestSpec:
 
       "display left part of a closed interval" in {
         val a       = Interval.closed[Int](5, 10)
-        val diagram = Diagram.make(List(a), infView.copy(left = Some(0), right = Some(7)), canvas)
+        val view    = View.make(Some(0), Some(7))
+        val diagram = Diagram.make(List(a), view, canvas)
 
         val actual = Diagram.render(diagram, themeNoLegend)
         val expected = List(
@@ -641,7 +644,8 @@ final class DiagramSpec extends TestSpec:
 
       "display right part of a closed interval" in {
         val a       = Interval.closed[Int](5, 10)
-        val diagram = Diagram.make(List(a), infView.copy(left = Some(7), right = Some(15)), canvas)
+        val view    = View.make(Some(7), Some(15))
+        val diagram = Diagram.make(List(a), view, canvas)
 
         val actual = Diagram.render(diagram, themeNoLegend)
         val expected = List(
@@ -655,7 +659,8 @@ final class DiagramSpec extends TestSpec:
 
       "display middle part of a closed interval" in {
         val a       = Interval.closed[Int](5, 10)
-        val diagram = Diagram.make(List(a), infView.copy(left = Some(7), right = Some(8)), canvas)
+        val view    = View.make(Some(7), Some(8))
+        val diagram = Diagram.make(List(a), view, canvas)
 
         val actual = Diagram.render(diagram, themeNoLegend)
         val expected = List(
@@ -918,7 +923,7 @@ final class DiagramSpec extends TestSpec:
         val b = Interval.closed(10, 15)
         val c = Interval.closed(12, 20)
 
-        val view    = View(Some(8), Some(17))
+        val view    = View.make(Some(8), Some(17))
         val diagram = Diagram.make(List(a, b, c), view)
 
         val actual = Diagram.render(diagram)

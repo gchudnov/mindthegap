@@ -52,7 +52,7 @@ object Canvas:
   def make(width: Int, padding: Int = 2): Canvas =
     Canvas(width = width, padding = padding)
 
-  // TODO: move the function vvv to the place it is used 
+  // TODO: move the function vvv to the place it is used
 
   /**
    * Align value to the grid

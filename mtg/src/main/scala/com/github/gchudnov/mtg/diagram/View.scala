@@ -5,67 +5,40 @@ import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Value
 import com.github.gchudnov.mtg.Mark
 
-// TODO: create a View trait
-// TODO: create RangeView case class, where all boundaries are finite
-// TODO: create InfiniteView case class
-
-/**
- * View
- *
- * Specifies the range of domain values to display.
- */
-final case class View[T: Domain](
-  left: Option[T], // left boundary of the view
-  right: Option[T] // right boundary of the view
-):
-  require(
-    left.flatMap(lhs => right.map(rhs => summon[Ordering[T]].lteq(lhs, rhs))).getOrElse(true),
-    "left View boundary must be less or equal to the right View boundary"
-  )
-
-  val size: Option[Long] =
-    for
-      lhs <- left
-      rhs <- right
-      dx   = summon[Domain[T]].count(lhs, rhs)
-    yield dx
-
-  /**
-   * Check if the view is set to display all values.
-   */
-  def isAll: Boolean =
-    left.isEmpty && right.isEmpty
-
-  /**
-   * Check if the view is limited to a range of values.
-   */
-  def isLimited: Boolean =
-    !isAll
-
-  def toInterval: Interval[T] =
-    Interval.make(left.map(Value.finite(_)).getOrElse(Value.infNeg), right.map(Value.finite(_)).getOrElse(Value.infPos))
+sealed trait View[+T]
 
 object View:
 
-  def all[T: Domain]: View[T] =
-    View(
-      left = None,
-      right = None
-    )
+  final case class Range[T: Domain](left: T, right: T) extends View[T]:
+    def size: Long =
+      summon[Domain[T]].count(left, right)
 
-  // TODO: make from an Interval ???
+  case object Infinite extends View[Nothing]
+
+  def all[T: Domain]: View[T] =
+    make(Interval.unbounded[T])
 
   def make[T: Domain](left: Option[T], right: Option[T]): View[T] =
-    View(left = left, right = right)
+    (left, right) match
+      case (Some(l), Some(r)) =>
+        make(Interval.closed(l, r))
+      case (Some(l), None) =>
+        make(Interval.leftClosed(l))
+      case (None, Some(r)) =>
+        make(Interval.rightClosed(r))
+      case (None, None) =>
+        make(Interval.unbounded[T])
 
   def make[T: Domain](left: T, right: T): View[T] =
-    make(left = Some(left), right = Some(right))
+    make(Interval.closed(left, right))
 
-  private[mtg] def make[T: Domain](intervals: List[Interval[T]]): View[T] =
-    val ordM = summon[Domain[T]].ordMark // TODO: do we need this?
+  def make[T: Domain](interval: Interval[T]): View[T] =
+    make(intervals = List(interval), hasEmpty = false)
+
+  private[mtg] def make[T: Domain](intervals: List[Interval[T]], hasEmpty: Boolean): View[T] =
     given ordV: Ordering[Value[T]] = summon[Domain[T]].ordValue
 
-    val xs: List[Interval[T]] = intervals.filter(_.nonEmpty) // TODO: If Empty intervals are displayed, we will need to change this condition
+    val xs: List[Interval[T]] = if hasEmpty then intervals else intervals.filter(_.nonEmpty)
 
     val ms = xs.map(_.normalize).flatMap(i => List(i.left, i.right))
     val vs = ms.map(_.innerValue)
@@ -74,13 +47,19 @@ object View:
 
     val (vMin, vMax) = (ps.minOption, ps.maxOption) match
       case xy @ (Some(x), Some(y)) =>
-        // if a point, extend the interval
-        if summon[Domain[T]].ordValue.equiv(x, y) then (Some(x.pred), Some(y.succ)) else xy
+        val cmp = ordV.compare(x, y)
+        if cmp == 0 then
+          // If points are equal, we extend the interval to the left and to the right.
+          (Some(x.pred), Some(y.succ))
+        else if cmp < 0 then xy
+        else (Some(y), Some(x))
       case xy =>
         xy
 
-    val (p, q) = (vMin.map(_.get), vMax.map(_.get))
+    val (tMin, tMax) = (vMin.map(_.get), vMax.map(_.get))
 
-    println((p, q))
-
-    View(left = p, right = q)
+    (tMin, tMax) match
+      case (Some(min), Some(max)) =>
+        Range(min, max)
+      case _ =>
+        Infinite

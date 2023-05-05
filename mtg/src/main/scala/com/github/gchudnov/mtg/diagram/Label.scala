@@ -7,6 +7,8 @@ import com.github.gchudnov.mtg.Value
 import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Show
 
+// TODO: check if there is clipping, it should not be done here, but during rendering
+
 /**
  * Label
  */

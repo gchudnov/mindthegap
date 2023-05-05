@@ -29,14 +29,14 @@ lazy val examples = (project in file("examples"))
   .settings(Settings.noPublish)
   .settings(
     name := "mtg-examples",
-    libraryDependencies ++= Dependencies.Examples,
+    libraryDependencies ++= Dependencies.Examples
   )
 
 lazy val root = (project in file("."))
   .aggregate(mtg, examples)
   .settings(Settings.noPublish)
   .settings(
-    name := "mtg-root",
+    name := "mtg-root"
   )
 
 addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")

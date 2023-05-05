@@ -19,7 +19,7 @@ import com.github.gchudnov.mtg.ordering.MarkOrdering
 trait Domain[T] extends Ordering[T]:
   self: Ordering[T] =>
 
-  val ordValue: Ordering[Value[T]] = 
+  val ordValue: Ordering[Value[T]] =
     new ValueOrdering[T]()(self)
 
   val ordMark: Ordering[Mark[T]] =

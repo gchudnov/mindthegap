@@ -1,5 +1,7 @@
 package com.github.gchudnov.mtg
 
+// TODO: asString should be an extension method
+
 object Show:
   private val infinite = '∞'
 

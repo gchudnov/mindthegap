@@ -11,7 +11,7 @@ final case class Annotation(value: String):
     value.nonEmpty
 
 object Annotation:
-  
+
   val empty: Annotation =
     Annotation("")
 

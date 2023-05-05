@@ -51,15 +51,9 @@ object Diagram:
    * Make a Diagram that can be rendered
    */
   def make[T: Domain](intervals: List[Interval[T]], view: View[T], canvas: Canvas, annotations: List[String]): Diagram =
-    val effectiveView = if view.isAll then View.make(intervals) else view
-    val translator    = Translator.make(effectiveView, canvas)
-
-    // if view is specified, provide labels and ticks to mark the boundaries of the view
-    val (viewTicks, viewLabels) = if view.isLimited then
-      val vi = view.toInterval
-      val vs = toSpan(translator, vi)
-      (Span.toTicks(vs), toLabels(canvas, vi, vs))
-    else (List.empty[Tick], List.empty[Label])
+    val effectiveView           = makeEffectiveView(intervals, view)
+    val translator              = Translator.make(effectiveView, canvas)
+    val (viewTicks, viewLabels) = makeTicksLabels(view, canvas, translator)
 
     val d = intervals.zipWithIndex.foldLeft(Diagram.empty) { case (acc, (i, j)) =>
       val y = acc.height
@@ -115,7 +109,7 @@ object Diagram:
 
   // TODO: implement it
 
-  private def toLabels[T: Domain](c: Canvas, i: Interval[T], span: Span): List[Label] = 
+  private def toLabels[T: Domain](c: Canvas, i: Interval[T], span: Span): List[Label] =
     if i.isEmpty then List.empty[Label]
     else if i.isPoint then List(Label.make(c, span.x0, Show.str(i.left.eval)))
     else
@@ -125,22 +119,22 @@ object Diagram:
         Label.make(c, span.x1, Show.str(i1.right.innerValue))
       )
 
-  private def toSpan[T: Domain](t: Translator[T], i: Interval[T]): Span = 
+  private def toSpan[T: Domain](t: Translator[T], i: Interval[T]): Span =
     if i.isEmpty then Span.empty
     else if i.isPoint then
       val p = t.translate(i.normalize.left.eval)
       Span(
-        x0 = p, 
-        x1 = p, 
-        includeX0 = true, 
+        x0 = p,
+        x1 = p,
+        includeX0 = true,
         includeX1 = true
       )
-    else 
+    else
       val i1 = i.normalize
       Span.make(
-        x0 = t.translate(i1.left.innerValue), 
-        x1 = t.translate(i1.right.innerValue), 
-        includeX0 = isLeftInclusive(i1.left), 
+        x0 = t.translate(i1.left.innerValue),
+        x1 = t.translate(i1.right.innerValue),
+        includeX0 = isLeftInclusive(i1.left),
         includeX1 = isRightInclusive(i1.right)
       )
 
@@ -161,3 +155,24 @@ object Diagram:
         sys.error("unexpected value of a normalized interval: " + yy)
       case Mark.Pred(_) =>
         false
+
+  /**
+   * Make an effective view from the given view and intervals
+   */
+  private def makeEffectiveView[T: Domain](intervals: List[Interval[T]], view: View[T]): View[T] =
+    view match
+      case v @ View.Range(_, _) =>
+        v
+      case View.Infinite =>
+        View.make(intervals, false)
+
+  private def makeTicksLabels[T: Domain](view: View[T], canvas: Canvas, translator: Translator[T]): (List[Tick], List[Label]) =
+    view match
+      case View.Range(x, y) =>
+        val vi     = Interval.closed[T](x, y)
+        val vs     = toSpan(translator, vi)
+        val ticks  = Span.toTicks(vs)
+        val labels = toLabels(canvas, vi, vs)
+        (ticks, labels)
+      case View.Infinite =>
+        (List.empty[Tick], List.empty[Label])

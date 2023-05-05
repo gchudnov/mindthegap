@@ -2,6 +2,8 @@ package com.github.gchudnov.mtg.diagram
 
 import com.github.gchudnov.mtg.Diagram.Tick
 
+// TODO: check if there is clipping, it should not be done here, but during rendering
+
 /**
  * Span
  *
