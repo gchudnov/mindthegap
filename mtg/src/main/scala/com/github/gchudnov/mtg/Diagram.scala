@@ -105,10 +105,9 @@ object Diagram:
   def render(d: Diagram, theme: Theme = Theme.default)(using r: Renderer): List[String] =
     r.render(d, theme)
 
-  // TODO: add render methods so that make is redundant
-
-  // TODO: implement it
-
+  /**
+   * Make Labels
+   */
   private def toLabels[T: Domain](c: Canvas, i: Interval[T], span: Span): List[Label] =
     val xs =
       if i.isEmpty then List.empty[Label]

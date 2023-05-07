@@ -1,7 +1,5 @@
 package com.github.gchudnov.mtg
 
-// TODO: asString should be an extension method
-
 object Show:
   private val infinite = '∞'
 
@@ -17,7 +15,7 @@ object Show:
 
   private val sep = ','
 
-  def asString[T: Domain](i: Interval[T]): String =
+  def print[T: Domain](i: Interval[T]): String =
     if i.isEmpty then empty.toString()
     else if i.isPoint then
       val p = str(i.left.eval)

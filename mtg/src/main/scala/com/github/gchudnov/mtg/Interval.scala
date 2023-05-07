@@ -210,6 +210,10 @@ object Interval extends StaticOps:
   given intervalOrdering[T: Domain]: Ordering[Interval[T]] =
     new IntervalOrdering[T]
 
+  extension [T: Domain](i: Interval[T])
+    def asString: String =
+      Show.print[T](i)
+
   /**
    * Empty
    *

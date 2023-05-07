@@ -25,12 +25,6 @@ private[mtg] trait DomainDefaults:
   def makeFractional[T: Fractional](unit: T): Domain[T] =
     new DomainDefaults.FractionalDomain(unit)
 
-  given offsetDateTimeDomain: Domain[OffsetDateTime] =
-    new OffsetDateTimeDomain(ChronoUnit.NANOS)
-
-  given instantDomain: Domain[Instant] =
-    new InstantDomain(ChronoUnit.NANOS)
-
   def makeOffsetDateTime(unit: TemporalUnit): Domain[OffsetDateTime] =
     new DomainDefaults.OffsetDateTimeDomain(unit)
 

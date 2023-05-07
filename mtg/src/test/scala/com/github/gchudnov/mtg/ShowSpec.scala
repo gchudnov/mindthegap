@@ -17,7 +17,7 @@ final class ShowSpec extends TestSpec:
       "represent an Empty interval" in {
         val value = Interval.empty[Int]
 
-        val actual   = Show.asString(value)
+        val actual   = value.asString
         val expected = "∅"
 
         actual mustBe expected
@@ -26,7 +26,7 @@ final class ShowSpec extends TestSpec:
       "represent a Point interval" in {
         val value = Interval.point(1)
 
-        val actual   = Show.asString(value)
+        val actual   = value.asString
         val expected = "{1}"
 
         actual mustBe expected
@@ -51,7 +51,7 @@ final class ShowSpec extends TestSpec:
         )
 
         forAll(t) { (xx, expected) =>
-          val actual = Show.asString(xx)
+          val actual = xx.asString
           actual mustBe expected
         }
       }

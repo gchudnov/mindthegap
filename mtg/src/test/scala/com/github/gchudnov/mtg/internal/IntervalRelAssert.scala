@@ -60,14 +60,13 @@ trait IntervalRelAssert:
     val trues      = findRelations(xx, yy)
     val isNonEmpty = !(xx.isEmpty || yy.isEmpty)
     if isNonEmpty && trues.size != 1 then
-      fail(s"xx: ${xx}, yy: ${yy}: |${Show.asString(xx)}, ${Show.asString(yy)}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected only one relation")
+      fail(s"xx: ${xx}, yy: ${yy}: |${xx.asString}, ${yy.asString}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected only one relation")
 
   def assertOneOf[T: Domain](rs: Set[Rel])(xx: Interval[T], yy: Interval[T]): Unit =
     val trues = findRelations(xx, yy)
     if trues.size != 1 || !rs.contains(trues.head) then
       fail(
-        s"xx: ${xx}, yy: ${yy}: |${Show.asString(xx)}, ${Show
-            .asString(yy)}| should satisfy one of ${rs.mkString("[", ",", "]")} relations, however it satisfies ${trues.mkString("[", ",", "]")} instead"
+        s"xx: ${xx}, yy: ${yy}: |${xx.asString}, ${yy.asString}| should satisfy one of ${rs.mkString("[", ",", "]")} relations, however it satisfies ${trues.mkString("[", ",", "]")} instead"
       )
 
   def assertOne[T: Ordering: Domain](r: Rel)(xx: Interval[T], yy: Interval[T]): Unit =
@@ -87,11 +86,11 @@ trait IntervalRelAssert:
     restFn.foreach { case (k, fn) =>
       if fn(xx, yy) then
         fail(
-          s"xx: ${xx}, yy: ${yy}; given that ${fk}|${Show.asString(xx)}, ${Show.asString(yy)}| == true; expected ${k}|${Show.asString(xx)}, ${Show.asString(yy)}| to be false, got true"
+          s"xx: ${xx}, yy: ${yy}; given that ${fk}|${xx.asString}, ${yy.asString}| == true; expected ${k}|${xx.asString}, ${yy.asString}| to be false, got true"
         )
       if fn(yy, xx) then
         fail(
-          s"xx: ${xx}, yy: ${yy}; given that ${fk}|${Show.asString(xx)}, ${Show.asString(yy)}| == true; expected ${k}|${Show.asString(yy)}, ${Show.asString(xx)}| to be false, got true"
+          s"xx: ${xx}, yy: ${yy}; given that ${fk}|${xx.asString}, ${yy.asString}| == true; expected ${k}|${yy.asString}, ${xx.asString}| to be false, got true"
         )
     }
 

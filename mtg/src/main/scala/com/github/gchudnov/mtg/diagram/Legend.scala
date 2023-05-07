@@ -20,4 +20,4 @@ object Legend:
     Legend("")
 
   def make[T: Domain](i: Interval[T]): Legend =
-    Legend(Show.asString(i))
+    Legend(i.asString)

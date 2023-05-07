@@ -17,12 +17,12 @@ import java.time.temporal.ChronoUnit
 
 final class DiagramSpec extends TestSpec:
 
-  private val canvas: Canvas     = Canvas.make(40, 2) // TODO: rename to canvas40p2
-  private val infView: View[Int] = View.all[Int]
-  private val theme: Theme       = Theme.default      // TODO: rename to defaultTheme
+  private val canvas: Canvas      = Canvas.make(40, 2)
+  private val infView: View[Int]  = View.all[Int]
+  private val defaultTheme: Theme = Theme.default
 
-  private val themeNoLegend: Theme              = theme.copy(legend = false)
-  private val themeNoLegendNoAnnotations: Theme = theme.copy(legend = false, annotations = false)
+  private val themeNoLegend: Theme              = defaultTheme.copy(legend = false)
+  private val themeNoLegendNoAnnotations: Theme = defaultTheme.copy(legend = false, annotations = false)
 
   private val renderer = Renderer.ascii
 
@@ -249,7 +249,8 @@ final class DiagramSpec extends TestSpec:
       }
 
       "diagram offset-date-time" in {
-        val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
+        given offsetDateTimeDomain: Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.DAYS)
+        val a                                              = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
 
         val odtView: View[OffsetDateTime] = View.all[OffsetDateTime]
 
@@ -325,7 +326,7 @@ final class DiagramSpec extends TestSpec:
         val a       = Interval.empty[Int]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram, theme.copy(legend = true))
+        val actual = Diagram.render(diagram, defaultTheme.copy(legend = true))
         val expected = List(
           "                                         | ∅ : a",
           "---------------------------------------- |",
@@ -586,7 +587,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
         val expected = List(
           "  [*********]                            | [1,5]   : a",
           "            [************]               | [5,10]  : b",
@@ -607,7 +608,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
         val expected = List(
           "  [************************************) | [1,+∞) : a",
           "              [************************) | [2,+∞) : b",
@@ -628,7 +629,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
         val expected = List(
           "(*]                                      | (-∞,1] : a",
           "(*************]                          | (-∞,2] : b",
@@ -651,7 +652,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
         val expected = List(
           "  [***************]                      | [1,5]  : a",
           "      [**************]                   | [2,6]  : b",
@@ -830,7 +831,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        val actual = Diagram.render(diagram, theme.copy(legend = true, annotations = true))
+        val actual = Diagram.render(diagram, defaultTheme.copy(legend = true, annotations = true))
         val expected = List(
           "  [***************]                      | [1,5]  : a",
           "                  [******************]   | [5,10] : b",
@@ -847,7 +848,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        val actual = Diagram.render(diagram, theme.copy(legend = true, annotations = false))
+        val actual = Diagram.render(diagram, defaultTheme.copy(legend = true, annotations = false))
         val expected = List(
           "  [***************]                      | [1,5]",
           "                  [******************]   | [5,10]",
@@ -864,7 +865,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        val actual = Diagram.render(diagram, theme.copy(legend = false, annotations = true))
+        val actual = Diagram.render(diagram, defaultTheme.copy(legend = false, annotations = true))
         val expected = List(
           "  [***************]                      | a",
           "                  [******************]   | b",
@@ -881,7 +882,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        val actual = Diagram.render(diagram, theme.copy(legend = false, annotations = false))
+        val actual = Diagram.render(diagram, defaultTheme.copy(legend = false, annotations = false))
         val expected = List(
           "  [***************]                     ",
           "                  [******************]  ",
@@ -893,7 +894,8 @@ final class DiagramSpec extends TestSpec:
       }
 
       "display intervals with OffsetDateTime" in {
-        val a = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
+        given offsetDateTimeDomain: Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.DAYS)
+        val a                                              = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
 
         val diagram = Diagram.make[OffsetDateTime](List(a))
 
@@ -908,7 +910,8 @@ final class DiagramSpec extends TestSpec:
       }
 
       "display intervals with Instant" in {
-        val a = Interval.closed(Instant.parse("2020-07-02T12:34:00Z"), Instant.parse("2021-07-02T12:34:00Z"))
+        given instantDomain: Domain[Instant] = Domain.makeInstant(ChronoUnit.DAYS)
+        val a                                = Interval.closed(Instant.parse("2020-07-02T12:34:00Z"), Instant.parse("2021-07-02T12:34:00Z"))
 
         val diagram = Diagram.make[Instant](List(a))
 
@@ -933,7 +936,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make[LocalDate](List(a, b, c, d))
 
-        val stackedLabelTheme = theme.copy(label = Theme.Label.Stacked)
+        val stackedLabelTheme = defaultTheme.copy(label = Theme.Label.Stacked)
 
         val actual = Diagram.render(diagram, stackedLabelTheme)
         val expected = List(
@@ -959,7 +962,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
 
         val expected = List(
           "                  [******************]   | [5,10] : a",
@@ -980,7 +983,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
 
         val expected = List(
           "                  [******************]   | [5,10] : a",
@@ -1001,7 +1004,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
 
         val expected = List(
           "  [***************]                      | [1,5]  : a",
@@ -1022,7 +1025,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
 
         val expected = List(
           "  [***************]                      | [1,5]  : a",
@@ -1043,7 +1046,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
 
         val expected = List(
           "  [***********]                          | [1,4]  : a",
@@ -1064,7 +1067,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
 
         val expected = List(
           "     [***************]                   | [5,10] : a",
@@ -1085,7 +1088,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
 
         val expected = List(
           "  [***********]                          | [5,10]  : a",
@@ -1106,7 +1109,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
 
         val expected = List(
           "  [**********************]               | [1,10] : a",
@@ -1127,7 +1130,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
 
         val expected = List(
           "            [************************]   | [5,15]  : a",
@@ -1148,7 +1151,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(List(a, b) ++ cs, infView, canvas, List("a", "b", "c1", "c2"))
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
 
         val expected = List(
           "  [**********************************]   | [1,15]  : a",
@@ -1174,7 +1177,7 @@ final class DiagramSpec extends TestSpec:
 
         val diagram = Diagram.make(input ++ splits, infView, canvas, List("a", "b", "c", "d", "e", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"))
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram, defaultTheme)
 
         val expected = List(
           "  [***]                                  | [0,10]  : a",
