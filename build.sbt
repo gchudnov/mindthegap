@@ -13,7 +13,7 @@ lazy val testSettings = Seq(
 
 lazy val allSettings = Settings.shared ++ testSettings
 
-lazy val mtg = (project in file("."))
+lazy val mtg = (project in file("mtg"))
   .enablePlugins(BuildInfoPlugin)
   .settings(allSettings)
   .settings(Settings.sonatype)
@@ -22,6 +22,21 @@ lazy val mtg = (project in file("."))
     libraryDependencies ++= Dependencies.Mtg,
     buildInfoKeys    := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "com.github.gchudnov.mtg"
+  )
+
+lazy val examples = (project in file("examples"))
+  .dependsOn(mtg)
+  .settings(Settings.noPublish)
+  .settings(
+    name := "mtg-examples",
+    libraryDependencies ++= Dependencies.Examples
+  )
+
+lazy val root = (project in file("."))
+  .aggregate(mtg, examples)
+  .settings(Settings.noPublish)
+  .settings(
+    name := "mtg-root"
   )
 
 addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")

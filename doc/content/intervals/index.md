@@ -72,6 +72,16 @@ Interval.leftClosed(5)              // [5, +∞)
 Interval.rightOpen(1)               // (-∞, 1)
 Interval.rightClosed(5)             // (-∞, 5]
 Interval.unbounded[Int]             // (-∞, +∞)
+
+Interval.open(Some(1), Some(5))     // (1, 5)
+Interval.open(Some(1), None)        // (1, +∞)
+Interval.open(None, Some(5))        // (-∞, 5)
+Interval.open(None, None)           // (-∞, +∞)
+
+Interval.closed(Some(1), Some(5))   // [1, 5]
+Interval.closed(Some(1), None)      // [1, +∞)
+Interval.closed(None, Some(5))      // (-∞, 5]
+Interval.closed(None, None)         // (-∞, +∞)
 ```
 
 A special factory low-level method, `Interval.make` can be used to create an interval by providing boundaries.
@@ -154,16 +164,16 @@ In addition, `a.deflateLeft` and `a.deflateRight` methods shrink left and right 
 
 ## Show
 
-Use `Show.asString` to pretty-print an interval:
+Use `.asString` to represent an interval in a human-readable form:
 
 ```scala
 val a = Interval.empty[Int]
 val b = Interval.point(5)
 val c = Interval.proper(None, true, Some(2), false)
 
-Show.asString(a) // ∅
-Show.asString(b) // {5}
-Show.asString(c) // [-∞,2)
+a.asString // ∅
+b.asString // {5}
+c.asString // [-∞,2)
 ```
 
 ## Display
@@ -287,7 +297,16 @@ Here we can see that labels are displayed on several lines, including the missin
 
 ## Domain
 
-To work with intervals, a `given` instance of `Domain[T]` is needed.
+To work with intervals, a `given` instance of `Domain[T]` is needed. It is provided by default for _integral_ types. For other types, a set of factory methods is provided to create a `Domain[T]` instance:
+
+- `Domain.makeFractional[T: Fractional](unit: T): Domain[T]`
+- `Domain.makeOffsetDateTime(unit: TemporalUnit): Domain[OffsetDateTime]`
+- `Domain.makeOffsetTime(unit: TemporalUnit): Domain[OffsetTime]`
+- `Domain.makeLocalDateTime(unit: TemporalUnit): Domain[LocalDateTime]`
+- `Domain.makeLocalDate(unit: TemporalUnit): Domain[LocalDate]`
+- `Domain.makeLocalTime(unit: TemporalUnit): Domain[LocalTime]`
+- `Domain.makeZonedDateTime(unit: TemporalUnit): Domain[ZonedDateTime]`
+- `Domain.makeInstant(unit: TemporalUnit): Domain[Instant]`
 
 `Domain[T]` is defined as:
 
@@ -296,12 +315,9 @@ trait Domain[T] extends Ordering[T]:
   def succ(x: T): T
   def pred(x: T): T
   def count(start: T, end: T): Long
-
 ```
 
-where `succ(x)` and `pred(x)` are used to get the next and previous value of `x`; `count` - to return the length (duration) of an interval.
-
-By default `Domain[T]` is implemented for _integral_ types (e.g. `Int`, `Long`) and date-time types `OffsetDateTime`, and `Instant`.
+where `succ(x)` and `pred(x)` are used to get the next and previous value of `x`; `count` - to return the length (duration) of an interval, where _start_ and _end_ points are inclusive: `[start, end]`.
 
 ## Ordering
 
@@ -309,9 +325,9 @@ Intervals can be ordered:
 
 - if `a- < b+` then `a < b`
 - if `a- == b+` then
-    - if `a+ < b+` then `a < b`
-    - if `a+ == b+` then `a == b`
-    - else `a > b`
+  - if `a+ < b+` then `a < b`
+  - if `a+ == b+` then `a == b`
+  - else `a > b`
 - else `a > b`
 
 ```scala

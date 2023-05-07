@@ -36,7 +36,7 @@ object Hello extends App {
   println(c)
   // Interval(At(Finite(1)),At(Finite(5)))
 
-  println(Show.asString(c))
+  println(c.asString)
   // [1,5]
 }
 ```
