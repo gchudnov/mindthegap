@@ -3,9 +3,9 @@ import sbt._
 object Dependencies {
 
   object versions {
-    val scalatest     = "3.2.15"
+    val scalatest     = "3.2.16"
     val scalacheck    = "1.17.0"
-    val scalatestplus = "3.2.15.0"
+    val scalatestplus = "3.2.16.0"
   }
 
   private val scalatest     = "org.scalatest"     %% "scalatest"       % versions.scalatest
