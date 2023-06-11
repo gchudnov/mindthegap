@@ -3,6 +3,9 @@ package com.github.gchudnov.mtg.internal
 import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
+import com.github.gchudnov.mtg.internal.alg.Complement
+import com.github.gchudnov.mtg.internal.alg.Group
+import com.github.gchudnov.mtg.internal.alg.Split
 
 /**
  * Static Interval Operations

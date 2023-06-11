@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.internal
+package com.github.gchudnov.mtg.internal.alg
 
 import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Interval
