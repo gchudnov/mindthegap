@@ -6,6 +6,7 @@ import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.TestSpec
 import com.github.gchudnov.mtg.Domain
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import com.github.gchudnov.mtg.internal.rel.IntervalRelAssert
 
 /**
  * During, Contains

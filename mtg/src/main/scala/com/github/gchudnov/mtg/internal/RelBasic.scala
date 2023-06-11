@@ -2,6 +2,7 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.internal.rel.*
 
 /**
  * Basic Interval Relations
@@ -30,37 +31,20 @@ private[mtg] transparent trait RelBasic[T: Domain]:
   /**
    * Before, Precedes (b)
    *
-   * {{{
-   *   PP (Point-Point):
-   *   {p}; {q}
-   *   p < q
-   *
-   *   PI (Point-Interval):
-   *   {p}; {a-, a+}
-   *   p < a-
-   *
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-, b+}
-   *   a- < b-
-   *   a- < b+
-   *   a+ < b-
-   *   a+ < b+
-   *
-   *   a- < a+ < b- < b+
-   *
-   *   Relation                  AAAAA
-   *   before(a,b)      b        :   : BBBBBBBBB  |  a+ < b-
-   * }}}
+   * @see
+   *   [[Before.before]]
    */
   final def before(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.nonEmpty && b.nonEmpty && ordM.lt(a.right, b.left)
+    Before.before(a, b)
 
   /**
    * After, IsPrecededBy (B)
+   * 
+   * @see
+   *   [[Before.before]]
    */
   final def after(b: Interval[T]): Boolean =
-    b.before(a)
+    Before.after(a, b)
 
   /**
    * Meets (m)
