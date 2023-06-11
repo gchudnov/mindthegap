@@ -3,6 +3,7 @@ package com.github.gchudnov.mtg.internal
 import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
+import com.github.gchudnov.mtg.internal.alg.Intersection
 
 /**
  * Basic Interval Operations
@@ -33,8 +34,7 @@ private[mtg] transparent trait AlgBasic[T: Domain]:
    *   - Associative: (A & B) & C = A & (B & C)
    */
   final def intersection(b: Interval[T]): Interval[T] =
-    val ordM = summon[Domain[T]].ordMark
-    Interval.make(ordM.max(a.left, b.left), ordM.min(a.right, b.right))
+    Intersection.intersection(a, b)
 
   /**
    * Span

@@ -6,6 +6,7 @@ import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.internal.alg.Complement
 import com.github.gchudnov.mtg.internal.alg.Group
 import com.github.gchudnov.mtg.internal.alg.Split
+import com.github.gchudnov.mtg.internal.alg.Intersection
 
 /**
  * Static Interval Operations
@@ -16,7 +17,7 @@ private[mtg] transparent trait AlgStatic:
    * Intersection
    */
   final def intersection[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
-    a.intersection(b)
+    Intersection.intersection(a, b)
 
   /**
    * Span
