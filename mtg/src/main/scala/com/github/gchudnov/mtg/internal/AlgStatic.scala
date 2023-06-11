@@ -1,6 +1,5 @@
 package com.github.gchudnov.mtg.internal
 
-import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.internal.alg.*
@@ -12,7 +11,7 @@ private[mtg] transparent trait AlgStatic:
 
   /**
    * Intersection
-   * 
+   *
    * @see
    *   [[Intersection.intersection]]
    */
@@ -21,7 +20,7 @@ private[mtg] transparent trait AlgStatic:
 
   /**
    * Span
-   * 
+   *
    * @see
    *   [[Span.span]]
    */
@@ -30,7 +29,7 @@ private[mtg] transparent trait AlgStatic:
 
   /**
    * Union
-   * 
+   *
    * @see
    *   [[Union.union]]
    */
@@ -39,7 +38,7 @@ private[mtg] transparent trait AlgStatic:
 
   /**
    * Gap
-   * 
+   *
    * @see
    *   [[Gap.gap]]
    */
@@ -58,7 +57,8 @@ private[mtg] transparent trait AlgStatic:
   /**
    * Group
    *
-   * Groups a series of intervals by executing union for the intersecting intervals.
+   * @see
+   *   [[Group.group]]
    */
   final def group[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
     Group.group(xs)
@@ -66,7 +66,8 @@ private[mtg] transparent trait AlgStatic:
   /**
    * GroupFind
    *
-   * Groups a series of intervals by executing union for the intersecting intervals and provide group information about membership.
+   * @see
+   *   [[Group.groupFind]]
    */
   final def groupFind[T: Domain](xs: Seq[Interval[T]]): List[(Interval[T], Set[Int])] =
     Group.groupFind(xs).map(it => (it.interval, it.members))
@@ -74,7 +75,8 @@ private[mtg] transparent trait AlgStatic:
   /**
    * Complement
    *
-   * Produces a complement of the given collection of intervals.
+   * @see
+   *   [[Complement.complement]]
    */
   final def complement[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
     Complement.complement(xs)
@@ -82,7 +84,8 @@ private[mtg] transparent trait AlgStatic:
   /**
    * Split
    *
-   * Split intervals into a collection of non-overlapping intervals (splits).
+   * @see
+   *   [[Split.split]]
    */
   final def split[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
     Split.split(xs)
@@ -90,7 +93,8 @@ private[mtg] transparent trait AlgStatic:
   /**
    * SplitFind
    *
-   * Split intervals into a collection of non-overlapping intervals (splits).
+   * @see
+   *   [[Split.splitFind]]
    */
   final def splitFind[T: Domain](xs: Seq[Interval[T]]): List[(Interval[T], Set[Int])] =
     Split.splitFind(xs).map(it => (it.interval, it.members))

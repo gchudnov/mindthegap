@@ -1,15 +1,9 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.Arbitraries.*
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 
-import java.time.Instant
-
 final class ShowSpec extends TestSpec:
-
-  import com.github.gchudnov.mtg.Show.given
 
   "Show" when {
     "show" should {

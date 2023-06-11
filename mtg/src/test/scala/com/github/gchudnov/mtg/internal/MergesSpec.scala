@@ -5,7 +5,6 @@ import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
-import com.github.gchudnov.mtg.Mark
 
 /**
  * Merges, IsMergedBy

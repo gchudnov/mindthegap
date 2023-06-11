@@ -2,9 +2,6 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
-import com.github.gchudnov.mtg.Mark
-import com.github.gchudnov.mtg.Show
-import com.github.gchudnov.mtg.Show.given
 import org.scalatest.matchers.must.Matchers.*
 
 trait IntervalRelAssert:
@@ -96,7 +93,7 @@ trait IntervalRelAssert:
 
 object IntervalRelAssert extends IntervalRelAssert:
 
-  enum Rel(name: String):
+  enum Rel(val name: String):
     case Before         extends Rel("b")
     case After          extends Rel("B")
     case Meets          extends Rel("m")

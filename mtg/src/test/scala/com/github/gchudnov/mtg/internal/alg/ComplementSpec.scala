@@ -176,6 +176,8 @@ final class ComplementSpec extends TestSpec:
         val diagram         = Diagram.make(List(a, b, c, d, e0, e1, e2, e3), view, canvas)
 
         val diag = Diagram.render(diagram)
+
+        diag.isEmpty mustBe (false)
       }
     }
   }

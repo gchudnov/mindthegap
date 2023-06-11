@@ -1,7 +1,6 @@
 package com.github.gchudnov.mtg.internal
 
 import scala.quoted.*
-import scala.annotation.tailrec
 
 /**
  * Diagram Macro to deduce variable names in a list;

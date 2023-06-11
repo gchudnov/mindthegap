@@ -300,6 +300,9 @@ final class MinusSpec extends TestSpec:
 
         val actual   = cs.map(_.canonical)
         val expected = List(Interval.closed(1, 4), Interval.closed(11, 15))
+
+        //
+        actual mustBe expected
       }
     }
   }

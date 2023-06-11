@@ -37,12 +37,14 @@ final class IsAdjacentSpec extends TestSpec:
               val a2 = argsX.right
 
               ordM.equiv(a2.succ, b1) mustBe (true)
+              ()
             else if xx.after(yy) then
               // succ(b+) = a-
               val a1 = argsX.left
               val b2 = argsY.right
 
               ordM.equiv(b2.succ, a1) mustBe (true)
+              ()
           }
         }
       }

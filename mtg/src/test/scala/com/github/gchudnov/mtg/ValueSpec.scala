@@ -1,7 +1,5 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.TestSpec
-
 final class ValueSpec extends TestSpec:
 
   "Value" when {

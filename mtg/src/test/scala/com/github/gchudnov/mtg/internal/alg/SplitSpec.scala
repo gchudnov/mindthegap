@@ -5,7 +5,6 @@ import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.TestSpec
-import com.github.gchudnov.mtg.Value
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 import org.scalacheck.Gen
 
@@ -654,6 +653,9 @@ final class SplitSpec extends TestSpec:
 
         actual mustBe expected
         actualX mustBe expectedX
+
+        ss mustBe expected
+        gs mustBe expectedX
       }
     }
 

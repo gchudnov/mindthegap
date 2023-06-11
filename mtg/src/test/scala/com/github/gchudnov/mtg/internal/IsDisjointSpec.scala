@@ -37,6 +37,9 @@ final class IsDisjointSpec extends TestSpec:
             val a2 = argsX.right
             val b2 = argsY.right
 
+            val cmpRes = ordM.lt(a2, b1) || ordM.gt(a1, b2)
+            cmpRes mustBe true
+
             (ordM.lt(xx.right, yy.left) || ordM.gt(xx.left, yy.right)) mustBe true
           }
         }

@@ -1,6 +1,5 @@
 package com.github.gchudnov.mtg.internal
 
-import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.internal.alg.*

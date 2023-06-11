@@ -1,6 +1,5 @@
 package com.github.gchudnov.mtg.internal.alg
 
-import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 
@@ -40,4 +39,3 @@ private[mtg] object Span:
   final def span[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
     val ordM = summon[Domain[T]].ordMark
     Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
-

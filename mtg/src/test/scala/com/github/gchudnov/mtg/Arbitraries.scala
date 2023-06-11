@@ -1,6 +1,5 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.Domain
 import org.scalacheck.Gen
 
 object Arbitraries:
@@ -49,15 +48,6 @@ object Arbitraries:
     yield (x, y)
 
   /**
-   * Generate a tuple (a, b), where a <= b. | Point, Proper
-   */
-  private def genIntTupleLtEq(using ir: IntRange): Gen[(Int, Int)] =
-    for
-      x <- Gen.choose(ir.min, ir.max)
-      y <- Gen.choose(x, ir.max)
-    yield (x, y)
-
-  /**
    * Generate a tuple (b, a), where b > a | Empty
    */
   private def genIntTupleGt(using ir: IntRange): Gen[(Int, Int)] =
@@ -80,12 +70,6 @@ object Arbitraries:
    */
   private val genBool50: Gen[Boolean] =
     Gen.oneOf(true, false)
-
-  /**
-   * Boolean Generator that produces 'true' 75% of the time.
-   */
-  private val genBool75: Gen[Boolean] =
-    Gen.prob(0.75)
 
   /**
    * Generate Empty Intervals

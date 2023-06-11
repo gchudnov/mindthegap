@@ -9,7 +9,6 @@ import com.github.gchudnov.mtg.Diagram.Label
 import com.github.gchudnov.mtg.Diagram.Legend
 import com.github.gchudnov.mtg.Diagram.Annotation
 import com.github.gchudnov.mtg.Diagram.View
-import com.github.gchudnov.mtg.Domain
 import java.time.OffsetDateTime
 import java.time.Instant
 import java.time.LocalDate
@@ -24,9 +23,7 @@ final class DiagramSpec extends TestSpec:
   private val themeNoLegend: Theme              = defaultTheme.copy(legend = false)
   private val themeNoLegendNoAnnotations: Theme = defaultTheme.copy(legend = false, annotations = false)
 
-  private val renderer = Renderer.ascii
-
-  "Diagram" when {
+    "Diagram" when {
     "make" should {
       "diagram no intervals" in {
         val actual   = Diagram.make(List.empty[Interval[Int]], infView, canvas)

@@ -3,7 +3,6 @@ package com.github.gchudnov.mtg.internal.alg
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.TestSpec
-import com.github.gchudnov.mtg.Value
 import com.github.gchudnov.mtg.Domain
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 import org.scalacheck.Gen
@@ -68,8 +67,6 @@ final class GroupSpec extends TestSpec:
        */
       "be grouped" in {
         val a = Interval.closed(0, 10)
-
-        val g1 = a
 
         val input = List(a)
 
@@ -299,6 +296,9 @@ final class GroupSpec extends TestSpec:
 
         actual mustBe expected
         actualX mustBe expectedX
+
+        gs mustBe List(g1, g2)
+        ts mustBe List((g1, Set(0, 1, 2)), (g2, Set(3, 4)))
       }
     }
   }

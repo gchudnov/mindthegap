@@ -1,6 +1,5 @@
 package com.github.gchudnov.mtg.internal.alg
 
-import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 
@@ -39,7 +38,7 @@ private[mtg] object Minus:
    *                            [*********]   | [11,15]
    * --+---------+------------+-+---------+-- |
    *   1         5           10          15   |
-   * 
+   *
    * Example #3: a - b = [c1, c2]             | [a-, pred(b-)], [succ(b+), a+]
    *
    *   [**********************************]   | [1,15]  : a

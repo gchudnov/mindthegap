@@ -4,7 +4,6 @@ import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Value
 import com.github.gchudnov.mtg.diagram.Translator
 import com.github.gchudnov.mtg.Diagram.Canvas
-import com.github.gchudnov.mtg.diagram.View
 
 private[mtg] final class InfiniteTranslator[T: Domain](canvas: Canvas) extends Translator[T]:
 
