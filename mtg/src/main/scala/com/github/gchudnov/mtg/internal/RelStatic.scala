@@ -98,3 +98,21 @@ private[mtg] transparent trait RelStatic:
    */
   final def isStartedBy[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     StartsIsStartedBy.isStartedBy(a, b)
+
+  /**
+   * Finishes, Ends (f)
+   *
+   * @see
+   *   [[FinishesIsFinishedBy.finishes]]
+   */
+  final def finishes[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    FinishesIsFinishedBy.finishes(a, b)
+
+  /**
+   * IsFinishedBy (F)
+   * 
+   * @see
+   *   [[FinishesIsFinishedBy.isFinishedBy]]
+   */
+  final def isFinishedBy[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+   FinishesIsFinishedBy.isFinishedBy(a, b)

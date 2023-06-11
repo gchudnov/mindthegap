@@ -121,33 +121,20 @@ private[mtg] transparent trait RelBasic[T: Domain]:
   /**
    * Finishes, Ends (f)
    *
-   * {{{
-   *   PI (Point-Interval):
-   *   {p}; {a-, a+}
-   *   p = a+
-   *
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-; b+}
-   *   a- > b-
-   *   a- < b+
-   *   a+ > b-
-   *   a+ = b+
-   *
-   *   b- < a- < a+ = b+
-   *
-   *   Relation                  AAAAA
-   *   finishes(a,b)    f|F  BBBBBBBBB            |  a+ = b+ ; a- > b-
-   * }}}
+   * @see
+   *   [[FinishesIsFinishedBy.finishes]]
    */
   final def finishes(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.nonEmpty && b.isProper && ordM.equiv(a.right, b.right) && ordM.lt(b.left, a.left)
+    FinishesIsFinishedBy.finishes(a, b)
 
   /**
    * IsFinishedBy (F)
+   * 
+   * @see
+   *   [[FinishesIsFinishedBy.isFinishedBy]]
    */
   final def isFinishedBy(b: Interval[T]): Boolean =
-    b.finishes(a)
+   FinishesIsFinishedBy.isFinishedBy(a, b)
 
   /**
    * Equals (e)
