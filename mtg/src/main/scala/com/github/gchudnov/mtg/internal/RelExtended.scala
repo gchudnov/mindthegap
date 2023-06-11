@@ -49,30 +49,20 @@ private[mtg] transparent trait RelExtended[T: Domain]:
   /**
    * Intersects
    *
-   * Two intervals `a` and `b` are intersecting if:
-   *
-   * {{{
-   *   a- <= b+
-   *   b- <= a+
-   *
-   *   Relation                  AAAAA
-   *   meets(a,b)       m|M      :   BBBBBBBBB    |  a+ = b-
-   *   overlaps(a,b)    o|O      : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
-   *   starts(a,b)      s|S      BBBBBBBBB        |  a- = b- ; a+ < b+
-   *   during(a,b)      d|D    BBBBBBBBB          |  a- > b- ; a+ < b+
-   *   finishes(a,b)    f|F  BBBBBBBBB            |  a+ = b+ ; a- > b-
-   *   equals(a, b)     e        BBBBB            |  a- = b- ; a+ = b+
-   * }}}
+   * @see
+   *   [[IntersectsIsIntersectedBy.intersects]]
    */
   final def intersects(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.nonEmpty && b.nonEmpty && ordM.lteq(a.left, b.right) && ordM.lteq(b.left, a.right)
+    IntersectsIsIntersectedBy.intersects(a, b)
 
   /**
    * IsIntersectedBy
+   * 
+   * @see
+   *   [[IntersectsIsIntersectedBy.isIntersectedBy]]
    */
   final def isIntersectedBy(b: Interval[T]): Boolean =
-    b.intersects(a)
+    IntersectsIsIntersectedBy.isIntersectedBy(a, b)
 
   /**
    * Merges

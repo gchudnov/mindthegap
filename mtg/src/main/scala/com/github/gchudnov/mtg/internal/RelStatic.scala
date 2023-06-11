@@ -161,3 +161,21 @@ private[mtg] transparent trait RelStatic:
    */
   final def isAdjacent[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     IsAdjacent.isAdjacent(a, b)
+
+  /**
+   * Intersects
+   *
+   * @see
+   *   [[IntersectsIsIntersectedBy.intersects]]
+   */
+  final def intersects[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    IntersectsIsIntersectedBy.intersects(a, b)
+
+  /**
+   * IsIntersectedBy
+   * 
+   * @see
+   *   [[IntersectsIsIntersectedBy.isIntersectedBy]]
+   */
+  final def isIntersectedBy[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    IntersectsIsIntersectedBy.isIntersectedBy(a, b)
