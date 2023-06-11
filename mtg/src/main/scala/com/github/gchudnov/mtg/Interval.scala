@@ -1,9 +1,9 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.internal.BasicOps
-import com.github.gchudnov.mtg.internal.BasicRel
-import com.github.gchudnov.mtg.internal.ExtendedRel
-import com.github.gchudnov.mtg.internal.StaticOps
+import com.github.gchudnov.mtg.internal.AlgBasic
+import com.github.gchudnov.mtg.internal.AlgStatic
+import com.github.gchudnov.mtg.internal.RelBasic
+import com.github.gchudnov.mtg.internal.RelExtended
 import com.github.gchudnov.mtg.ordering.IntervalOrdering
 
 export com.github.gchudnov.mtg.ordering.IntervalOrdering
@@ -11,7 +11,7 @@ export com.github.gchudnov.mtg.ordering.IntervalOrdering
 /**
  * Interval
  */
-final case class Interval[T: Domain](left: Mark[T], right: Mark[T]) extends BasicRel[T] with ExtendedRel[T] with BasicOps[T]:
+final case class Interval[T: Domain](left: Mark[T], right: Mark[T]) extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
 
   /**
    * Get the size of the interval
@@ -205,7 +205,7 @@ final case class Interval[T: Domain](left: Mark[T], right: Mark[T]) extends Basi
       case Mark.Succ(_) =>
         right.at
 
-object Interval extends StaticOps:
+object Interval extends AlgStatic:
 
   given intervalOrdering[T: Domain]: Ordering[Interval[T]] =
     new IntervalOrdering[T]

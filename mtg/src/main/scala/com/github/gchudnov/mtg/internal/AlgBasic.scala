@@ -7,7 +7,7 @@ import com.github.gchudnov.mtg.Domain
 /**
  * Basic Interval Operations
  */
-private[mtg] transparent trait BasicOps[T: Domain]:
+private[mtg] transparent trait AlgBasic[T: Domain]:
   a: Interval[T] =>
 
   /**

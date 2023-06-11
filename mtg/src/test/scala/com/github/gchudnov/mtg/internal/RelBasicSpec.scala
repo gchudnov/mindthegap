@@ -6,14 +6,14 @@ import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
-final class BasicRelSpec extends TestSpec:
+final class RelBasicSpec extends TestSpec:
 
   given intRange: IntRange = intRange5
   given intProb: IntProb   = intProb127
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  "BasicRel" when {
+  "RelBasic" when {
     "satisfy one relation only" should {
       import IntervalRelAssert.*
 

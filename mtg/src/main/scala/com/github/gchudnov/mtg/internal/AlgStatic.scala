@@ -7,7 +7,7 @@ import com.github.gchudnov.mtg.Domain
 /**
  * Static Interval Operations
  */
-private[mtg] transparent trait StaticOps:
+private[mtg] transparent trait AlgStatic:
 
   /**
    * Intersection

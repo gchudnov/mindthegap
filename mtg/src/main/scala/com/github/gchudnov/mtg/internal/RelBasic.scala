@@ -25,7 +25,7 @@ import com.github.gchudnov.mtg.Interval
  *   a.equalsTo(b)       e            BBBBB            | a- = b- ; a+ = b+
  * }}}
  */
-private[mtg] transparent trait BasicRel[T: Domain]:
+private[mtg] transparent trait RelBasic[T: Domain]:
   a: Interval[T] =>
 
   /**
