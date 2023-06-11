@@ -139,26 +139,8 @@ private[mtg] transparent trait RelBasic[T: Domain]:
   /**
    * Equals (e)
    *
-   * A = B
-   *
-   * {{{
-   *   PP (Point-Point):
-   *   {p}; {q}
-   *   p = q
-   *
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-; b+}
-   *   a- = b-
-   *   a- < b+
-   *   a+ > b-
-   *   a+ = b+
-   *
-   *   a- = b- < a+ = b+
-   *
-   *   Relation                  AAAAA
-   *   equalsTo(a, b)   e        BBBBB            |  a- = b- ; a+ = b+
-   * }}}
+   * @see
+   *   [[EqualsTo.equalsTo]]
    */
   final def equalsTo(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    ordM.equiv(a.left, b.left) && ordM.equiv(a.right, b.right)
+    EqualsTo.equalsTo(a, b)

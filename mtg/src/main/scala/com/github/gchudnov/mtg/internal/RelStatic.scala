@@ -116,3 +116,12 @@ private[mtg] transparent trait RelStatic:
    */
   final def isFinishedBy[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
    FinishesIsFinishedBy.isFinishedBy(a, b)
+
+  /**
+   * Equals (e)
+   *
+   * @see
+   *   [[EqualsTo.equalsTo]]
+   */
+  final def equalsTo[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    EqualsTo.equalsTo(a, b)
