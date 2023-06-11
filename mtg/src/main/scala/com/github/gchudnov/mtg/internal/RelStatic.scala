@@ -125,3 +125,21 @@ private[mtg] transparent trait RelStatic:
    */
   final def equalsTo[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     EqualsTo.equalsTo(a, b)
+
+  /**
+   * IsSubset
+   *
+   * @see
+   *   [[IsSubset.isSubset]]
+   */
+  final def isSubset[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    IsSubset.isSubset(a, b)
+
+  /**
+   * IsSuperset
+   *
+   * @see
+   *   [[IsSuperset.isSuperset]]
+   */
+  final def isSuperset[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    IsSuperset.isSuperset(a, b)

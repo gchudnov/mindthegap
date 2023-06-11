@@ -2,6 +2,7 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
+import com.github.gchudnov.mtg.internal.rel.*
 
 /**
  * Extended Interval Relations
@@ -12,44 +13,20 @@ private[mtg] transparent trait RelExtended[T: Domain]:
   /**
    * IsSubset
    *
-   * Checks whether A is a subset of B
-   *
-   * A ⊆ B
-   *
-   * {{{
-   *   a- >= b-
-   *   a+ <= b+
-   *
-   *   starts   | s
-   *   during   | d
-   *   finishes | f
-   *   equals   | e
-   * }}}
+   * @see
+   *   [[IsSubset.isSubset]]
    */
   final def isSubset(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.nonEmpty && b.nonEmpty && ordM.gteq(a.left, b.left) && ordM.lteq(a.right, b.right)
+    IsSubset.isSubset(a, b)
 
   /**
    * IsSuperset
    *
-   * Checks whether A is a superset of B
-   *
-   * A ⊇ B
-   *
-   * {{{
-   *   b- >= a-
-   *   b+ <= a+
-   *
-   *   is-started-by  | S
-   *   contains       | D
-   *   is-finished-by | F
-   *   equals         | e
-   * }}}
+   * @see
+   *   [[IsSuperset.isSuperset]]
    */
   final def isSuperset(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.nonEmpty && b.nonEmpty && ordM.gteq(b.left, a.left) && ordM.lteq(b.right, a.right)
+    IsSuperset.isSuperset(a, b)
 
   /**
    * IsDisjoint

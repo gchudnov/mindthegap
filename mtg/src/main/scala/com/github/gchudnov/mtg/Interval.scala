@@ -4,6 +4,7 @@ import com.github.gchudnov.mtg.internal.AlgBasic
 import com.github.gchudnov.mtg.internal.AlgStatic
 import com.github.gchudnov.mtg.internal.RelBasic
 import com.github.gchudnov.mtg.internal.RelExtended
+import com.github.gchudnov.mtg.internal.RelStatic
 import com.github.gchudnov.mtg.ordering.IntervalOrdering
 
 export com.github.gchudnov.mtg.ordering.IntervalOrdering
@@ -205,7 +206,7 @@ final case class Interval[T: Domain](left: Mark[T], right: Mark[T]) extends RelB
       case Mark.Succ(_) =>
         right.at
 
-object Interval extends AlgStatic:
+object Interval extends AlgStatic with RelStatic:
 
   given intervalOrdering[T: Domain]: Ordering[Interval[T]] =
     new IntervalOrdering[T]
