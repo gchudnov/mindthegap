@@ -654,8 +654,8 @@ final class SplitSpec extends TestSpec:
         actual mustBe expected
         actualX mustBe expectedX
 
-        ss mustBe expected
-        gs mustBe expectedX
+        ss.map(_.canonical) mustBe expected
+        gs.map(it => (it._1.canonical, it._2)) mustBe expectedX
       }
     }
 
