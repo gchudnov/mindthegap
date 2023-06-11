@@ -7,7 +7,6 @@ import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
-
 final class IsDisjointSpec extends TestSpec:
 
   given intRange: IntRange = intRange5

@@ -3,7 +3,6 @@ package com.github.gchudnov.mtg.internal.rel
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 
-
 private[mtg] object StartsIsStartedBy:
 
   /**

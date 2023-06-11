@@ -57,7 +57,7 @@ private[mtg] transparent trait RelExtended[T: Domain]:
 
   /**
    * IsIntersectedBy
-   * 
+   *
    * @see
    *   [[IntersectsIsIntersectedBy.isIntersectedBy]]
    */
@@ -75,7 +75,7 @@ private[mtg] transparent trait RelExtended[T: Domain]:
 
   /**
    * IsMergedBy
-   * 
+   *
    * @see
    *   [[MergesIsMergedBy.isMergedBy]]
    */

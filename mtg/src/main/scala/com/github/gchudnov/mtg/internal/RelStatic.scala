@@ -74,7 +74,7 @@ private[mtg] transparent trait RelStatic:
 
   /**
    * Contains, ProperlyIncludes (D)
-   * 
+   *
    * @see
    *   [[DuringContains.contains]]
    */
@@ -92,7 +92,7 @@ private[mtg] transparent trait RelStatic:
 
   /**
    * IsStartedBy (S)
-   * 
+   *
    * @see
    *   [[StartsIsStartedBy.isStartedBy]]
    */
@@ -110,12 +110,12 @@ private[mtg] transparent trait RelStatic:
 
   /**
    * IsFinishedBy (F)
-   * 
+   *
    * @see
    *   [[FinishesIsFinishedBy.isFinishedBy]]
    */
   final def isFinishedBy[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-   FinishesIsFinishedBy.isFinishedBy(a, b)
+    FinishesIsFinishedBy.isFinishedBy(a, b)
 
   /**
    * Equals (e)
@@ -173,7 +173,7 @@ private[mtg] transparent trait RelStatic:
 
   /**
    * IsIntersectedBy
-   * 
+   *
    * @see
    *   [[IntersectsIsIntersectedBy.isIntersectedBy]]
    */
@@ -191,7 +191,7 @@ private[mtg] transparent trait RelStatic:
 
   /**
    * IsMergedBy
-   * 
+   *
    * @see
    *   [[MergesIsMergedBy.isMergedBy]]
    */

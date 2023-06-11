@@ -23,7 +23,7 @@ final class DiagramSpec extends TestSpec:
   private val themeNoLegend: Theme              = defaultTheme.copy(legend = false)
   private val themeNoLegendNoAnnotations: Theme = defaultTheme.copy(legend = false, annotations = false)
 
-    "Diagram" when {
+  "Diagram" when {
     "make" should {
       "diagram no intervals" in {
         val actual   = Diagram.make(List.empty[Interval[Int]], infView, canvas)

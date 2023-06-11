@@ -29,21 +29,27 @@ private[mtg] object BeforeAfter:
    *   Relation                  AAAAA
    *   before(a,b)      b        :   : BBBBBBBBB  |  a+ < b-
    * }}}
-   * 
-   * @param a interval
-   * @param b interval
-   * @return true if a is before b
+   *
+   * @param a
+   *   interval
+   * @param b
+   *   interval
+   * @return
+   *   true if a is before b
    */
   final def before[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     val ordM = summon[Domain[T]].ordMark
     a.nonEmpty && b.nonEmpty && ordM.lt(a.right, b.left)
 
   /**
-    * After, Follows (a)
-    *
-    * @param a interval
-    * @param b interval
-    * @return true if a is after b
-    */
+   * After, Follows (a)
+   *
+   * @param a
+   *   interval
+   * @param b
+   *   interval
+   * @return
+   *   true if a is after b
+   */
   final def after[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     before(b, a)

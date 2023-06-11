@@ -39,7 +39,7 @@ private[mtg] transparent trait RelBasic[T: Domain]:
 
   /**
    * After, IsPrecededBy (B)
-   * 
+   *
    * @see
    *   [[BeforeAfter.after]]
    */
@@ -57,7 +57,7 @@ private[mtg] transparent trait RelBasic[T: Domain]:
 
   /**
    * IsMetBy (M)
-   * 
+   *
    * @see
    *   [[MeetsIsMetBy.meets]]
    */
@@ -75,7 +75,7 @@ private[mtg] transparent trait RelBasic[T: Domain]:
 
   /**
    * IsOverlappedBy (O)
-   * 
+   *
    * @see
    *   [[OverlapsIsOverlappedBy.isOverlappedBy]]
    */
@@ -93,7 +93,7 @@ private[mtg] transparent trait RelBasic[T: Domain]:
 
   /**
    * Contains, ProperlyIncludes (D)
-   * 
+   *
    * @see
    *   [[DuringContains.contains]]
    */
@@ -111,7 +111,7 @@ private[mtg] transparent trait RelBasic[T: Domain]:
 
   /**
    * IsStartedBy (S)
-   * 
+   *
    * @see
    *   [[StartsIsStartedBy.isStartedBy]]
    */
@@ -129,12 +129,12 @@ private[mtg] transparent trait RelBasic[T: Domain]:
 
   /**
    * IsFinishedBy (F)
-   * 
+   *
    * @see
    *   [[FinishesIsFinishedBy.isFinishedBy]]
    */
   final def isFinishedBy(b: Interval[T]): Boolean =
-   FinishesIsFinishedBy.isFinishedBy(a, b)
+    FinishesIsFinishedBy.isFinishedBy(a, b)
 
   /**
    * Equals (e)
