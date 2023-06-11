@@ -11,7 +11,7 @@ private[mtg] transparent trait RelStatic:
 
   /**
    * Relation: Before, Precedes (b)
-   * 
+   *
    * @see
    *   [[BeforeAfter.before]]
    */
@@ -20,7 +20,7 @@ private[mtg] transparent trait RelStatic:
 
   /**
    * Relation: After, IsPrecededBy (B)
-   * 
+   *
    * @see
    *   [[BeforeAfter.after]]
    */
@@ -38,9 +38,45 @@ private[mtg] transparent trait RelStatic:
 
   /**
    * IsMetBy (M)
-   * 
+   *
    * @see
    *   [[MeetsIsMetBy.meets]]
    */
   final def isMetBy[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     MeetsIsMetBy.isMetBy(a, b)
+
+  /**
+   * Overlaps (o)
+   *
+   * @see
+   *   [[OverlapsIsOverlappedBy.overlaps]]
+   */
+  final def overlaps[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    OverlapsIsOverlappedBy.overlaps(a, b)
+
+  /**
+   * IsOverlappedBy (O)
+   *
+   * @see
+   *   [[OverlapsIsOverlappedBy.isOverlappedBy]]
+   */
+  final def isOverlappedBy[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    OverlapsIsOverlappedBy.isOverlappedBy(a, b)
+
+  /**
+   * During, ProperlyIncludedIn (d)
+   *
+   * @see
+   *   [[DuringContains.during]]
+   */
+  final def during[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    DuringContains.during(a, b)
+
+  /**
+   * Contains, ProperlyIncludes (D)
+   * 
+   * @see
+   *   [[DuringContains.contains]]
+   */
+  final def contains[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    DuringContains.contains(a, b)

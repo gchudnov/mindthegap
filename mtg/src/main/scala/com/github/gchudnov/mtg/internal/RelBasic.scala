@@ -67,60 +67,38 @@ private[mtg] transparent trait RelBasic[T: Domain]:
   /**
    * Overlaps (o)
    *
-   * {{{
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-; b+}
-   *   a- < b-
-   *   a- < b+
-   *   a+ > b-
-   *   a+ < b+
-   *
-   *   a- < b- < a+ < b+
-   *
-   *   Relation                  AAAAA
-   *   overlaps(a,b)    o        : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
-   * }}}
+   * @see
+   *   [[OverlapsIsOverlappedBy.overlaps]]
    */
   final def overlaps(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.isProper && b.isProper && ordM.lt(a.left, b.left) && ordM.lt(b.left, a.right) && ordM.lt(a.right, b.right)
+    OverlapsIsOverlappedBy.overlaps(a, b)
 
   /**
    * IsOverlappedBy (O)
+   * 
+   * @see
+   *   [[OverlapsIsOverlappedBy.isOverlappedBy]]
    */
   final def isOverlappedBy(b: Interval[T]): Boolean =
-    b.overlaps(a)
+    OverlapsIsOverlappedBy.isOverlappedBy(a, b)
 
   /**
    * During, ProperlyIncludedIn (d)
    *
-   * {{{
-   *   PI (Point-Interval):
-   *   {p}; {a-, a+}
-   *   a- < p < a+
-   *
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-; b+}
-   *   a- > b-
-   *   a- < b+
-   *   a+ > b-
-   *   a+ < b+
-   *
-   *   b- < a- < a+ < b+
-   *
-   *   Relation                  AAAAA
-   *   during(a,b)      d|D    BBBBBBBBB          |  a- > b- ; a+ < b+
-   * }}}
+   * @see
+   *   [[DuringContains.during]]
    */
   final def during(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.nonEmpty && b.isProper && ordM.lt(b.left, a.left) && ordM.lt(a.right, b.right)
+    DuringContains.during(a, b)
 
   /**
    * Contains, ProperlyIncludes (D)
+   * 
+   * @see
+   *   [[DuringContains.contains]]
    */
   final def contains(b: Interval[T]): Boolean =
-    b.during(a)
+    DuringContains.contains(a, b)
 
   /**
    * Starts, Begins (s)
