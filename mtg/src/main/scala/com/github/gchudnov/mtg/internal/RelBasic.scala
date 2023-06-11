@@ -32,7 +32,7 @@ private[mtg] transparent trait RelBasic[T: Domain]:
    * Before, Precedes (b)
    *
    * @see
-   *   [[Before.before]]
+   *   [[BeforeAfter.before]]
    */
   final def before(b: Interval[T]): Boolean =
     BeforeAfter.before(a, b)
@@ -41,7 +41,7 @@ private[mtg] transparent trait RelBasic[T: Domain]:
    * After, IsPrecededBy (B)
    * 
    * @see
-   *   [[Before.before]]
+   *   [[BeforeAfter.after]]
    */
   final def after(b: Interval[T]): Boolean =
     BeforeAfter.after(a, b)
@@ -49,29 +49,20 @@ private[mtg] transparent trait RelBasic[T: Domain]:
   /**
    * Meets (m)
    *
-   * {{{
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-; b+}
-   *   a- < b-
-   *   a- < b+
-   *   a+ = b-
-   *   a+ < b+
-   *
-   *   a- < a+ = b- < b+
-   *
-   *   Relation                  AAAAA
-   *   meets(a,b)       m        :   BBBBBBBBB    |  a+ = b-
-   * }}}
+   * @see
+   *   [[MeetsIsMetBy.meets]]
    */
   final def meets(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.isProper && b.isProper && ordM.equiv(a.right, b.left)
+    MeetsIsMetBy.meets(a, b)
 
   /**
    * IsMetBy (M)
+   * 
+   * @see
+   *   [[MeetsIsMetBy.meets]]
    */
   final def isMetBy(b: Interval[T]): Boolean =
-    b.meets(a)
+    MeetsIsMetBy.isMetBy(a, b)
 
   /**
    * Overlaps (o)
