@@ -35,7 +35,7 @@ private[mtg] transparent trait RelBasic[T: Domain]:
    *   [[Before.before]]
    */
   final def before(b: Interval[T]): Boolean =
-    Before.before(a, b)
+    BeforeAfter.before(a, b)
 
   /**
    * After, IsPrecededBy (B)
@@ -44,7 +44,7 @@ private[mtg] transparent trait RelBasic[T: Domain]:
    *   [[Before.before]]
    */
   final def after(b: Interval[T]): Boolean =
-    Before.after(a, b)
+    BeforeAfter.after(a, b)
 
   /**
    * Meets (m)

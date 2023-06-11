@@ -13,10 +13,10 @@ private[mtg] transparent trait RelStatic:
    * Relation: Before, Precedes (b)
    */
   final def before[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    Before.before(a, b)
+    BeforeAfter.before(a, b)
 
   /**
    * Relation: After, IsPrecededBy (B)
    */
   final def after[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    Before.after(a, b)
+    BeforeAfter.after(a, b)
