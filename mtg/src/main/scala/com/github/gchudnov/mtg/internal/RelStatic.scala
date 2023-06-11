@@ -143,3 +143,21 @@ private[mtg] transparent trait RelStatic:
    */
   final def isSuperset[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     IsSuperset.isSuperset(a, b)
+
+  /**
+   * IsDisjoint
+   *
+   * @see
+   *   [[IsDisjoint.isDisjoint]]
+   */
+  final def isDisjoint[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    IsDisjoint.isDisjoint(a, b)
+
+  /**
+   * IsAdjacent
+   *
+   * @see
+   *   [[IsAdjacent.isAdjacent]]
+   */
+  final def isAdjacent[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    IsAdjacent.isAdjacent(a, b)

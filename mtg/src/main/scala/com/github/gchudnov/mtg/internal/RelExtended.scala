@@ -31,34 +31,20 @@ private[mtg] transparent trait RelExtended[T: Domain]:
   /**
    * IsDisjoint
    *
-   * Checks if there A and B are disjoint.
-   *
-   * A and B are disjoint if A does not intersect B.
-   *
-   * {{{
-   *   a+ < b-
-   *   a- > b+
-   * }}}
+   * @see
+   *   [[IsDisjoint.isDisjoint]]
    */
   final def isDisjoint(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.nonEmpty && b.nonEmpty && (ordM.lt(a.right, b.left) || ordM.gt(a.left, b.right))
+    IsDisjoint.isDisjoint(a, b)
 
   /**
    * IsAdjacent
    *
-   * Two intervals a and b are adjacent if:
-   *
-   * {{{
-   *   succ(a+) = b- OR succ(b+) = a-
-   *
-   *   before | b
-   *   after  | B
-   * }}}
+   * @see
+   *   [[IsAdjacent.isAdjacent]]
    */
-  final def isAdjacent[T1 >: T: Domain](b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.nonEmpty && b.nonEmpty && (ordM.equiv(a.right.succ, b.left) || ordM.equiv(b.right.succ, a.left))
+  final def isAdjacent(b: Interval[T]): Boolean =
+    IsAdjacent.isAdjacent(a, b)
 
   /**
    * Intersects
