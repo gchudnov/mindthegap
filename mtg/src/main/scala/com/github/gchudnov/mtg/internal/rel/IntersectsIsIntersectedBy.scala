@@ -31,4 +31,4 @@ private[mtg] object IntersectsIsIntersectedBy:
    * IsIntersectedBy
    */
   final def isIntersectedBy[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    b.intersects(a)
+    intersects(b, a)

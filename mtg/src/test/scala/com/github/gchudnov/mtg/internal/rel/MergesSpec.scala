@@ -1,11 +1,10 @@
-package com.github.gchudnov.mtg.internal
+package com.github.gchudnov.mtg.internal.rel
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
-import com.github.gchudnov.mtg.internal.rel.IntervalRelAssert
 
 /**
  * Merges, IsMergedBy

@@ -179,3 +179,39 @@ private[mtg] transparent trait RelStatic:
    */
   final def isIntersectedBy[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     IntersectsIsIntersectedBy.isIntersectedBy(a, b)
+
+  /**
+   * Merges
+   *
+   * @see
+   *   [[MergesIsMergedBy.merges]]
+   */
+  final def merges[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    MergesIsMergedBy.merges(a, b)
+
+  /**
+   * IsMergedBy
+   * 
+   * @see
+   *   [[MergesIsMergedBy.isMergedBy]]
+   */
+  final def isMergedBy[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    MergesIsMergedBy.isMergedBy(a, b)
+
+  /**
+   * IsLess
+   *
+   * @see
+   *   [[IsLessIsGreater.isLess]]
+   */
+  final def isLess[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    IsLessIsGreater.isLess(a, b)
+
+  /**
+   * IsGreater
+   *
+   * @see
+   *   [[IsLessIsGreater.isGreater]]
+   */
+  final def isGreater[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
+    IsLessIsGreater.isGreater(a, b)
