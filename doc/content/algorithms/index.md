@@ -159,17 +159,17 @@ val cs = Interval.minus(a, b)   // [[1, 4], [11, 15]]
 
 ## Group
 
-Group operation takes a collection of intervals `[a1, a2, ... an]` and merges all of the _adjacent_ or _intersecting_ ones (`ak = [min(ai-, aj-), max(ai+, aj+)]` if `merges(ai, aj)`), creating a new collection of intervals -- interval groups.
+Group operation takes a collection of intervals `[a1, a2, ... an]` and groups all of the _adjacent_ or _intersecting_ ones, `ak = [min(ai-, aj-), max(ai+, aj+)]` if `intersects(ai, aj) or (isGroupAdjacent and isAdjacent(ai, aj))`, creating a new collection of intervals -- interval groups.
 
 Methods:
 
-- `Interval.group([a1, a2, ... an])` returns a collection of grouped intervals: `[g1, g2, ... gn]`.
-- `Interval.groupFind([a1, a2, ... an])` returns a collection of tuples `[(g1, {i, ... }), (g2, {j, ... }), ... (gn, {k, ... })]` where `gk` is the grouped interval and `{i, ... }` is a set of indices of intervals that were grouped.
+- `Interval.group([a1, a2, ... an], isGroupAdjacent: Boolean = true)` returns a collection of grouped intervals: `[g1, g2, ... gn]`.
+- `Interval.groupFind([a1, a2, ... an], isGroupAdjacent: Boolean = true)` returns a collection of tuples `[(g1, {i, ... }), (g2, {j, ... }), ... (gn, {k, ... })]` where `gk` is the grouped interval and `{i, ... }` is a set of indices of intervals that were grouped.
 
 The produced collection of intervals has the following properties:
 
 - *disjoint* and contains no overlapping intervals;
-- contain no *adjacent* intervals;
+- contains no *adjacent* intervals if `isGroupAdjacent` -argument is set to `false`;
 - sorted
 
 ```scala
@@ -183,14 +183,29 @@ val e = Interval.closed(71, 80) // [71, 80]
 val input = List(a, b, c, d, e)
 //               0  1  2  3  4
 
+// isGroupAdjacent = true
 val gs = Interval.group(input)
 // [ [0, 50], [60, 80] ]
 
 val ts = Interval.groupFind(input)
 // [ ([0, 50], {0, 1, 2}), ([60, 80], {3, 4}) ]
+
+
+// isGroupAdjacent = false
+val gs = Interval.group(input, false)
+// [ [0, 50], [60, 70], [71, 80] ]
+
+val ts = Interval.groupFind(input, false)
+// [ ([0, 50], {0, 1, 2}), ([60, 70], {3}), ([71, 80], {4}) ]
 ```
 
-![group.svg](./group.svg)
+**isGroupAdjacent = true:**
+
+![group-adj.svg](./group-adj.svg)
+
+**isGroupAdjacent = false:**
+
+![group-adj.nosvg](./group-noadj.svg)
 
 ## Complement
 

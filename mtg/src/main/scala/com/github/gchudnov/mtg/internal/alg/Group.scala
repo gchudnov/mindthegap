@@ -65,9 +65,16 @@ private[mtg] object Group:
    * Returns:
    *    List(g1, g2)
    * }}}
+   *
+   * @param xs
+   *   a series of intervals
+   * @param isGroupAdjacent
+   *   if true, then adjacent intervals are grouped
+   * @return
+   *   a list of grouped intervals
    */
-  final def group[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
-    val groups    = groupFind(xs)
+  final def group[T: Domain](xs: Seq[Interval[T]], isGroupAdjacent: Boolean): List[Interval[T]] =
+    val groups    = groupFind(xs, isGroupAdjacent)
     val intervals = groups.map(_.interval)
 
     intervals
@@ -95,12 +102,20 @@ private[mtg] object Group:
    *   List((g1, Set(0, 1, 2)), (g2, Set(4, 5)))
    *   where members of a set are the indices of intervals that were grouped (membership information).
    * }}}
+   *
+   * @param xs
+   *   a series of intervals
+   * @param isGroupAdjacent
+   *   if true, then adjacent intervals are grouped
+   * @return
+   *   a list of grouped intervals
    */
-  final def groupFind[T: Domain](xs: Seq[Interval[T]]): List[GroupState[T]] =
-    val xs1 = xs.zipWithIndex.sortWith { case ((a, _), (b, _)) => isLess[T](a, b) };
+  final def groupFind[T: Domain](xs: Seq[Interval[T]], isGroupAdjacent: Boolean): List[GroupState[T]] =
+    val canGroup = if isGroupAdjacent then Interval.merges[T] else Interval.intersects[T]
+    val xs1      = xs.zipWithIndex.sortWith { case ((a, _), (b, _)) => isLess[T](a, b) };
 
     val acc = xs1.foldLeft[Option[AccState[T]]](None) { case (acc, (it, i)) =>
-      acc.fold(Some(AccState.of(it, i)))(acc => if acc.current.interval.merges(it) then Some(acc.concat(it, i)) else Some(acc.shift(it, i)))
+      acc.fold(Some(AccState.of(it, i)))(acc => if canGroup(acc.current.interval, it) then Some(acc.concat(it, i)) else Some(acc.shift(it, i)))
     }
 
     acc.fold(List.empty[GroupState[T]])(it => it.grouped :+ it.current)

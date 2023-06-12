@@ -60,8 +60,8 @@ private[mtg] transparent trait AlgStatic:
    * @see
    *   [[Group.group]]
    */
-  final def group[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
-    Group.group(xs)
+  final def group[T: Domain](xs: Seq[Interval[T]], isGroupAdjacent: Boolean = true): List[Interval[T]] =
+    Group.group(xs, isGroupAdjacent)
 
   /**
    * GroupFind
@@ -69,8 +69,8 @@ private[mtg] transparent trait AlgStatic:
    * @see
    *   [[Group.groupFind]]
    */
-  final def groupFind[T: Domain](xs: Seq[Interval[T]]): List[(Interval[T], Set[Int])] =
-    Group.groupFind(xs).map(it => (it.interval, it.members))
+  final def groupFind[T: Domain](xs: Seq[Interval[T]], isGroupAdjacent: Boolean = true): List[(Interval[T], Set[Int])] =
+    Group.groupFind(xs, isGroupAdjacent).map(it => (it.interval, it.members))
 
   /**
    * Complement

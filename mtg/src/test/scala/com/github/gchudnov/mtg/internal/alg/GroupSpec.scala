@@ -145,21 +145,58 @@ final class GroupSpec extends TestSpec:
       }
     }
 
-    /**
-     * {{{
-     *   [***]                                  | [0,10]  : a
-     *    [********************]                | [3,50]  : b
-     *            [***]                         | [20,30] : c
-     *                             [****]       | [60,70] : d
-     *                                  [***]   | [71,80] : e
-     *   [*********************]                | [0,50]  : g1
-     *                             [********]   | [60,80] : g2
-     * --++--+----+---+--------+---+----+---+-- |
-     *   0  10   20  30       50  60   70  80   |
-     * }}}
-     */
     "some of intervals are adjacent" should {
-      "group adjacent into one interval" in {
+
+      /**
+       * {{{
+       *   [***]                                  | [0,10]  : a
+       *    [********************]                | [3,50]  : b
+       *            [***]                         | [20,30] : c
+       *                             [****]       | [60,70] : d
+       *                                  [***]   | [71,80] : e
+       *   [*********************]                | [0,50]  : g1
+       *                             [********]   | [60,80] : g2
+       * --++--+----+---+--------+---+----+---+-- |
+       *   0  10   20  30       50  60   70  80   |
+       * }}}
+       */
+      "group adjacent into one interval if isAdjacent = true" in {
+        val a = Interval.closed(0, 10)
+        val b = Interval.closed(3, 50)
+        val c = Interval.closed(20, 30)
+
+        val d = Interval.closed(60, 70)
+        val e = Interval.closed(71, 80)
+
+        val g1 = Interval.closed(0, 50)
+        val g2 = Interval.closed(60, 80)
+
+        val input = List(a, b, c, d, e)
+
+        val actualX   = Interval.groupFind(input)
+        val expectedX = List((g1, Set(0, 1, 2)), (g2, Set(3, 4)))
+
+        val actual   = Interval.group(input)
+        val expected = expectedX.map(_._1)
+
+        actual mustBe expected
+        actualX mustBe expectedX
+      }
+
+      /**
+       * {{{
+       *   [***]                                  | [0,10]  : a
+       *    [********************]                | [3,50]  : b
+       *            [***]                         | [20,30] : c
+       *                             [****]       | [60,70] : d
+       *                                  [***]   | [71,80] : e
+       *   [*********************]                | [0,50]  : g1
+       *                             [********]   | [60,80] : g2
+       * --++--+----+---+--------+---+----+---+-- |
+       *   0  10   20  30       50  60   70  80   |
+       * }}}
+       */
+      "do not group adjacent into one interval if isAdjacent = false" in {
         val a = Interval.closed(0, 10)
         val b = Interval.closed(3, 50)
         val c = Interval.closed(20, 30)
@@ -271,7 +308,7 @@ final class GroupSpec extends TestSpec:
        *   0  10   20  30       50  60   70  80   |
        * }}}
        */
-      "be expected" in {
+      "be expected if adjacent intervals are grouped" in {
         val a = Interval.closed(0, 10)  // [0, 10]
         val b = Interval.closed(3, 50)  // [3, 50]
         val c = Interval.closed(20, 30) // [20, 30]
@@ -297,8 +334,51 @@ final class GroupSpec extends TestSpec:
         actual mustBe expected
         actualX mustBe expectedX
 
-        gs mustBe List(g1, g2)
-        ts mustBe List((g1, Set(0, 1, 2)), (g2, Set(3, 4)))
+        gs mustBe expected
+        ts mustBe expectedX
+      }
+
+      /**
+       * {{{
+       *   [***]                                  | [0,10]  : a
+       *    [********************]                | [3,50]  : b
+       *            [***]                         | [20,30] : c
+       *   [*********************]                | [0,50]  : g1
+       *                             [****]       | [60,70] : g2
+       *                                  [***]   | [71,80] : g3
+       * --++--+----+---+--------+---+----+---+-- |
+       *   0  10   20  30       50  60   70  80   |
+       * }}}
+       */
+      "be expected if adjacent intervals are not grouped" in {
+        val a = Interval.closed(0, 10)  // [0, 10]
+        val b = Interval.closed(3, 50)  // [3, 50]
+        val c = Interval.closed(20, 30) // [20, 30]
+
+        val d = Interval.closed(60, 70) // [60, 70]
+        val e = Interval.closed(71, 80) // [71, 80]
+
+        val input = List(a, b, c, d, e)
+
+        val gs = Interval.group(input, isGroupAdjacent = false)     // [ [0, 50], [60, 70], [71, 80] ]
+        val ts = Interval.groupFind(input, isGroupAdjacent = false) // [ ([0, 50], {0, 1, 2}), ([60, 70], {3}), ([71, 80], {4}) ]
+
+        // ==
+        val g1 = Interval.closed(0, 50)
+        val g2 = Interval.closed(60, 70)
+        val g3 = Interval.closed(71, 80)
+
+        val actualX   = Interval.groupFind(input, isGroupAdjacent = false)
+        val expectedX = List((g1, Set(0, 1, 2)), (g2, Set(3)), (g3, Set(4)))
+
+        val actual   = Interval.group(input, isGroupAdjacent = false)
+        val expected = expectedX.map(_._1)
+
+        actual mustBe expected
+        actualX mustBe expectedX
+
+        gs mustBe expected
+        ts mustBe expectedX
       }
     }
   }
