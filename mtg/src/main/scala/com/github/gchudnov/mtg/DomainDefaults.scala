@@ -2,7 +2,6 @@ package com.github.gchudnov.mtg
 
 import java.time.Instant
 import java.time.OffsetDateTime
-import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalUnit
 import java.time.LocalDateTime
 import java.time.ZonedDateTime

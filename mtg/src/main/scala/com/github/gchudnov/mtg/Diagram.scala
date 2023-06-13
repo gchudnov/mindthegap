@@ -9,7 +9,6 @@ import com.github.gchudnov.mtg.diagram.Label
 import com.github.gchudnov.mtg.diagram.Legend
 import com.github.gchudnov.mtg.diagram.Annotation
 
-import Show.given
 import com.github.gchudnov.mtg.internal.DiagramMacro
 
 /**

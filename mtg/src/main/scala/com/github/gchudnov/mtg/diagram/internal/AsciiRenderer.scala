@@ -7,6 +7,7 @@ import com.github.gchudnov.mtg.diagram.Span
 import com.github.gchudnov.mtg.Diagram.Tick
 import com.github.gchudnov.mtg.Diagram.Label
 import scala.collection.mutable.ListBuffer
+import scala.annotation.nowarn
 
 /**
  * ASCII Renderer
@@ -116,7 +117,7 @@ private[mtg] final class AsciiRenderer() extends Renderer:
 
     res._1.map(_.mkString).toList
 
-  private def drawLabel(theme: Theme, l: Label, spot: Array[Char]): Unit =
+  private def drawLabel(@nowarn theme: Theme, l: Label, spot: Array[Char]): Unit =
     l.value.toList.zipWithIndex.foreach { case (ch, i) =>
       val p = l.x + i
       if p >= 0 && p < spot.size then spot(p) = ch

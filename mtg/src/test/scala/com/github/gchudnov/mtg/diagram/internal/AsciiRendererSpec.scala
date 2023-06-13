@@ -1,15 +1,9 @@
 package com.github.gchudnov.mtg.diagram.internal
 
-import com.github.gchudnov.mtg.diagram.internal.AsciiRenderer
 import com.github.gchudnov.mtg.Diagram.Canvas
 import com.github.gchudnov.mtg.Diagram.Theme
-import com.github.gchudnov.mtg.Diagram.Span
 import com.github.gchudnov.mtg.Diagram.Tick
 import com.github.gchudnov.mtg.Diagram.Label
-import com.github.gchudnov.mtg.Diagram.Legend
-import com.github.gchudnov.mtg.Diagram.Annotation
-import com.github.gchudnov.mtg.Diagram.View
-import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.TestSpec
 
 final class DiagramSpec extends TestSpec:

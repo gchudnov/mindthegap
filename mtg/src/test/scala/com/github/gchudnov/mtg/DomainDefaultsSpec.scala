@@ -2,7 +2,6 @@ package com.github.gchudnov.mtg
 
 import org.scalactic.Equality
 import org.scalactic.TolerantNumerics
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 

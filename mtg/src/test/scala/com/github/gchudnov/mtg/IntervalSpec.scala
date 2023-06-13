@@ -1,14 +1,10 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.Interval
-import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.*
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
-
-import java.time.Instant
 
 final class IntervalSpec extends TestSpec:
 

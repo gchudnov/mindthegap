@@ -1,7 +1,5 @@
 package com.github.gchudnov.mtg.diagram
 
-import com.github.gchudnov.mtg.Value
-
 /**
  * Canvas
  *

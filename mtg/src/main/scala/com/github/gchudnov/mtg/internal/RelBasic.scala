@@ -1,8 +1,8 @@
 package com.github.gchudnov.mtg.internal
 
-import com.github.gchudnov.mtg.Mark
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.internal.rel.*
 
 /**
  * Basic Interval Relations
@@ -25,214 +25,122 @@ import com.github.gchudnov.mtg.Interval
  *   a.equalsTo(b)       e            BBBBB            | a- = b- ; a+ = b+
  * }}}
  */
-private[mtg] transparent trait BasicRel[T: Domain]:
+private[mtg] transparent trait RelBasic[T: Domain]:
   a: Interval[T] =>
 
   /**
    * Before, Precedes (b)
    *
-   * {{{
-   *   PP (Point-Point):
-   *   {p}; {q}
-   *   p < q
-   *
-   *   PI (Point-Interval):
-   *   {p}; {a-, a+}
-   *   p < a-
-   *
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-, b+}
-   *   a- < b-
-   *   a- < b+
-   *   a+ < b-
-   *   a+ < b+
-   *
-   *   a- < a+ < b- < b+
-   *
-   *   Relation                  AAAAA
-   *   before(a,b)      b        :   : BBBBBBBBB  |  a+ < b-
-   * }}}
+   * @see
+   *   [[BeforeAfter.before]]
    */
   final def before(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.nonEmpty && b.nonEmpty && ordM.lt(a.right, b.left)
+    BeforeAfter.before(a, b)
 
   /**
    * After, IsPrecededBy (B)
+   *
+   * @see
+   *   [[BeforeAfter.after]]
    */
   final def after(b: Interval[T]): Boolean =
-    b.before(a)
+    BeforeAfter.after(a, b)
 
   /**
    * Meets (m)
    *
-   * {{{
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-; b+}
-   *   a- < b-
-   *   a- < b+
-   *   a+ = b-
-   *   a+ < b+
-   *
-   *   a- < a+ = b- < b+
-   *
-   *   Relation                  AAAAA
-   *   meets(a,b)       m        :   BBBBBBBBB    |  a+ = b-
-   * }}}
+   * @see
+   *   [[MeetsIsMetBy.meets]]
    */
   final def meets(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.isProper && b.isProper && ordM.equiv(a.right, b.left)
+    MeetsIsMetBy.meets(a, b)
 
   /**
    * IsMetBy (M)
+   *
+   * @see
+   *   [[MeetsIsMetBy.meets]]
    */
   final def isMetBy(b: Interval[T]): Boolean =
-    b.meets(a)
+    MeetsIsMetBy.isMetBy(a, b)
 
   /**
    * Overlaps (o)
    *
-   * {{{
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-; b+}
-   *   a- < b-
-   *   a- < b+
-   *   a+ > b-
-   *   a+ < b+
-   *
-   *   a- < b- < a+ < b+
-   *
-   *   Relation                  AAAAA
-   *   overlaps(a,b)    o        : BBBBBBBBB      |  a- < b- < a+ ; a+ < b+
-   * }}}
+   * @see
+   *   [[OverlapsIsOverlappedBy.overlaps]]
    */
   final def overlaps(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.isProper && b.isProper && ordM.lt(a.left, b.left) && ordM.lt(b.left, a.right) && ordM.lt(a.right, b.right)
+    OverlapsIsOverlappedBy.overlaps(a, b)
 
   /**
    * IsOverlappedBy (O)
+   *
+   * @see
+   *   [[OverlapsIsOverlappedBy.isOverlappedBy]]
    */
   final def isOverlappedBy(b: Interval[T]): Boolean =
-    b.overlaps(a)
+    OverlapsIsOverlappedBy.isOverlappedBy(a, b)
 
   /**
    * During, ProperlyIncludedIn (d)
    *
-   * {{{
-   *   PI (Point-Interval):
-   *   {p}; {a-, a+}
-   *   a- < p < a+
-   *
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-; b+}
-   *   a- > b-
-   *   a- < b+
-   *   a+ > b-
-   *   a+ < b+
-   *
-   *   b- < a- < a+ < b+
-   *
-   *   Relation                  AAAAA
-   *   during(a,b)      d|D    BBBBBBBBB          |  a- > b- ; a+ < b+
-   * }}}
+   * @see
+   *   [[DuringContains.during]]
    */
   final def during(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.nonEmpty && b.isProper && ordM.lt(b.left, a.left) && ordM.lt(a.right, b.right)
+    DuringContains.during(a, b)
 
   /**
    * Contains, ProperlyIncludes (D)
+   *
+   * @see
+   *   [[DuringContains.contains]]
    */
   final def contains(b: Interval[T]): Boolean =
-    b.during(a)
+    DuringContains.contains(a, b)
 
   /**
    * Starts, Begins (s)
    *
-   * {{{
-   *   PI (Point-Interval):
-   *   {p}; {a-, a+}
-   *   p = a-
-   *
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-; b+}
-   *   a- = b-
-   *   a- < b+
-   *   a+ > b-
-   *   a+ < b+
-   *
-   *   a- = b- < a+ < b+
-   *
-   *   Relation                  AAAAA
-   *   starts(a,b)      s|S      BBBBBBBBB        |  a- = b- ; a+ < b+
-   * }}}
+   * @see
+   *   [[StartsIsStartedBy.starts]]
    */
   final def starts(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.nonEmpty && b.isProper && ordM.equiv(a.left, b.left) && ordM.lt(a.right, b.right)
+    StartsIsStartedBy.starts(a, b)
 
   /**
    * IsStartedBy (S)
+   *
+   * @see
+   *   [[StartsIsStartedBy.isStartedBy]]
    */
   final def isStartedBy(b: Interval[T]): Boolean =
-    b.starts(a)
+    StartsIsStartedBy.isStartedBy(a, b)
 
   /**
    * Finishes, Ends (f)
    *
-   * {{{
-   *   PI (Point-Interval):
-   *   {p}; {a-, a+}
-   *   p = a+
-   *
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-; b+}
-   *   a- > b-
-   *   a- < b+
-   *   a+ > b-
-   *   a+ = b+
-   *
-   *   b- < a- < a+ = b+
-   *
-   *   Relation                  AAAAA
-   *   finishes(a,b)    f|F  BBBBBBBBB            |  a+ = b+ ; a- > b-
-   * }}}
+   * @see
+   *   [[FinishesIsFinishedBy.finishes]]
    */
   final def finishes(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    a.nonEmpty && b.isProper && ordM.equiv(a.right, b.right) && ordM.lt(b.left, a.left)
+    FinishesIsFinishedBy.finishes(a, b)
 
   /**
    * IsFinishedBy (F)
+   *
+   * @see
+   *   [[FinishesIsFinishedBy.isFinishedBy]]
    */
   final def isFinishedBy(b: Interval[T]): Boolean =
-    b.finishes(a)
+    FinishesIsFinishedBy.isFinishedBy(a, b)
 
   /**
    * Equals (e)
    *
-   * A = B
-   *
-   * {{{
-   *   PP (Point-Point):
-   *   {p}; {q}
-   *   p = q
-   *
-   *   II (Interval-Interval):
-   *   {a-, a+}; {b-; b+}
-   *   a- = b-
-   *   a- < b+
-   *   a+ > b-
-   *   a+ = b+
-   *
-   *   a- = b- < a+ = b+
-   *
-   *   Relation                  AAAAA
-   *   equalsTo(a, b)   e        BBBBB            |  a- = b- ; a+ = b+
-   * }}}
+   * @see
+   *   [[EqualsTo.equalsTo]]
    */
   final def equalsTo(b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    ordM.equiv(a.left, b.left) && ordM.equiv(a.right, b.right)
+    EqualsTo.equalsTo(a, b)
