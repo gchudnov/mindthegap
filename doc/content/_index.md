@@ -40,3 +40,5 @@ object Hello extends App {
   // [1,5]
 }
 ```
+
+Check the [examples](https://github.com/gchudnov/mindthegap/tree/main/examples/src/main/scala/com/github/gchudnov/mtg/examples) directory for the list of use-cases.
