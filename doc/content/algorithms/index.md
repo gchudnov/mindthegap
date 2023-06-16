@@ -169,7 +169,7 @@ Methods:
 The produced collection of intervals has the following properties:
 
 - *disjoint* and contains no overlapping intervals;
-- contains no *adjacent* intervals if `isGroupAdjacent` -argument is set to `false`;
+- contains no *adjacent* intervals if `isGroupAdjacent` argument is set to `false`;
 - sorted
 
 ```scala
@@ -205,7 +205,7 @@ val ts = Interval.groupFind(input, false)
 
 **isGroupAdjacent = false:**
 
-![group-adj.nosvg](./group-noadj.svg)
+![group-noadj.svg](./group-noadj.svg)
 
 ## Complement
 
