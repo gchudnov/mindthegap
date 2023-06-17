@@ -291,6 +291,74 @@ final class MinusSpec extends TestSpec:
         }
       }
 
+      "[[0,2],[3,4],[5,7]] - [1,6] = [[0,1],[6,7]]" in {
+        given domD: Domain[Double] = Domain.makeFractional(0.1)
+
+        val xs = List(
+          Interval.leftClosedRightOpen(0.0, 2.0),
+          Interval.leftClosedRightOpen(3.0, 4.0),
+          Interval.leftClosedRightOpen(5.0, 7.0)
+        )
+
+        val y = Interval.leftClosedRightOpen(1.0, 6.0)
+
+        val actual = Interval.minus(xs, y)
+
+        // [[0,1],[6,7]]
+        val expected = List(
+          Interval.leftClosedRightOpen(0.0, 1.0),
+          Interval.leftClosedRightOpen(6.0, 7.0)
+        )
+
+        actual.map(_.canonical) mustBe expected.map(_.canonical)
+      }
+
+      "[[0,5]] - [2,3] = [[0,2],[3,5]]" in {
+        given domD: Domain[Double] = Domain.makeFractional(0.1)
+
+        val xs = List(
+          Interval.leftClosedRightOpen(0.0, 5.0)
+        )
+
+        val y = Interval.leftClosedRightOpen(2.0, 3.0)
+
+        val actual = Interval.minus(xs, y)
+
+        // [[0,2],[3,5]]
+        val expected = List(
+          Interval.leftClosedRightOpen(0.0, 2.0),
+          Interval.leftClosedRightOpen(3.0, 5.0)
+        )
+
+        actual.map(_.canonical) mustBe expected.map(_.canonical)
+      }
+
+      "[[-5,-4],[-3,-2],[1,2],[3,5],[8,9]] - [-1,4] = [[-5,-4],[-3,-2],[4,5],[8,9]]" in {
+        given domD: Domain[Double] = Domain.makeFractional(0.1)
+
+        val xs = List(
+          Interval.leftClosedRightOpen(-5.0, -4.0),
+          Interval.leftClosedRightOpen(-3.0, -2.0),
+          Interval.leftClosedRightOpen(1.0, 2.0),
+          Interval.leftClosedRightOpen(3.0, 5.0),
+          Interval.leftClosedRightOpen(8.0, 9.0)
+        )
+
+        val y = Interval.leftClosedRightOpen(-1.0, 4.0)
+
+        val actual = Interval.minus(xs, y)
+
+        // [[-5,-4],[-3,-2],[4,5],[8,9]]
+        val expected = List(
+          Interval.leftClosedRightOpen(-5.0, -4.0),
+          Interval.leftClosedRightOpen(-3.0, -2.0),
+          Interval.leftClosedRightOpen(4.0, 5.0),
+          Interval.leftClosedRightOpen(8.0, 9.0)
+        )
+
+        actual.map(_.canonical) mustBe expected.map(_.canonical)
+      }
+
       "[,] if a.contains(b) [doc]" in {
         val a = Interval.closed(1, 15) // [1, 15]
         val b = Interval.closed(5, 10) // [5, 10]
