@@ -55,15 +55,6 @@ private[mtg] transparent trait AlgStatic:
     Minus.minus(a, b)
 
   /**
-   * Minus
-   *
-   * @see
-   *   [[Minus.minus]]
-   */
-  final def minus[T: Domain](as: Seq[Interval[T]], b: Interval[T]): List[Interval[T]] =
-    Minus.minus(as, b)
-
-  /**
    * Group
    *
    * @see

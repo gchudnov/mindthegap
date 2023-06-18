@@ -61,35 +61,3 @@ private[mtg] object Minus:
     else if ordM.gteq(a.left, b.left) && ordM.gt(a.right, b.right) then Interval.make(ordM.max(b.right.succ, a.left), a.right)
     else if a.contains(b) then throw new UnsupportedOperationException("a.minus(b) is not defined when a.contains(b) is true; use Interval.minus(a, b) instead")
     else Interval.empty[T]
-
-  /**
-   * Order of Intervals
-   */
-  private def isLess[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
-    ordM.compare(a.left, b.left) match
-      case -1 =>
-        true
-      case 0 =>
-        ordM.lt(a.right, b.right)
-      case _ =>
-        false
-
-  /**
-   * Minus
-   *
-   * Given a set of intervals A and an interval B, returns a collection of intervals that are the result of subtracting B from A.
-   *
-   * @param xs
-   *   set of intervals
-   * @param y
-   *   interval
-   * @return
-   *   collection of intervals
-   */
-  final def minus[T: Domain](xs: Seq[Interval[T]], y: Interval[T]): List[Interval[T]] =
-    val xs1 = xs.sortWith(isLess[T]);
-    val ys1 = xs1.foldLeft(List.empty[Interval[T]]) { (acc, x) =>
-      acc ++ minus(x, y)
-    }
-    ys1.filter(_.nonEmpty)

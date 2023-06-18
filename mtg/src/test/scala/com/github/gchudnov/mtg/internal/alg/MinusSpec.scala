@@ -291,6 +291,27 @@ final class MinusSpec extends TestSpec:
         }
       }
 
+      "[,] if a.contains(b) [doc]" in {
+        val a = Interval.closed(1, 15) // [1, 15]
+        val b = Interval.closed(5, 10) // [5, 10]
+
+        // val c = a.minus(b)           // throws UnsupportedOperationException
+        val cs = Interval.minus(a, b) // [[1, 4], [11, 15]]
+
+        val actual   = cs.map(_.canonical)
+        val expected = List(Interval.closed(1, 4), Interval.closed(11, 15))
+
+        //
+        actual mustBe expected
+      }
+    }
+
+    /**
+     * MinusAll
+     *
+     * Given a set of intervals A and an interval B, returns a collection of intervals that are the result of subtracting B from A.
+     */
+    "minusAll" should {
       "[[0,2],[3,4],[5,7]] - [1,6] = [[0,1],[6,7]]" in {
         given domD: Domain[Double] = Domain.makeFractional(0.1)
 
@@ -302,7 +323,7 @@ final class MinusSpec extends TestSpec:
 
         val y = Interval.leftClosedRightOpen(1.0, 6.0)
 
-        val actual = Interval.minus(xs, y)
+        val actual = minusAll(xs, y)
 
         // [[0,1],[6,7]]
         val expected = List(
@@ -322,7 +343,7 @@ final class MinusSpec extends TestSpec:
 
         val y = Interval.leftClosedRightOpen(2.0, 3.0)
 
-        val actual = Interval.minus(xs, y)
+        val actual = minusAll(xs, y)
 
         // [[0,2],[3,5]]
         val expected = List(
@@ -333,44 +354,56 @@ final class MinusSpec extends TestSpec:
         actual.map(_.canonical) mustBe expected.map(_.canonical)
       }
 
+      /**
+       * {{{
+       * [[-5,-4],[-3,-2],[1,2],[3,5],[8,9]]
+       * -
+       * [-1,4]
+       * =
+       * [[-5,-4],[-3,-2],[4,5],[8,9]]
+       *
+       *   [**)                                   | [-5.0,-4.0) : x1
+       *        [**)                              | [-3.0,-2.0) : x2
+       *                  [*)                     | [1.0,2.0)   : x3
+       *                       [****)             | [3.0,5.0)   : x4
+       *                                    [*)   | [8.0,9.0)   : x5
+       *             [***********)                | [-1.0,4.0)  : y
+       *   [**)                                   | [-5.0,-4.0) : z1
+       *        [**)                              | [-3.0,-2.0) : z2
+       *                         [**)             | [4.0,5.0)   : z3
+       *                                    [*)   | [8.0,9.0)   : z4
+       * --+--+-+--+-+----+-+--+-+--+-------+-+-- |
+       * -5.0 -3.0 -1.0  1.0  3.0  5.0     8.0    |
+       * }}}
+       */
       "[[-5,-4],[-3,-2],[1,2],[3,5],[8,9]] - [-1,4] = [[-5,-4],[-3,-2],[4,5],[8,9]]" in {
         given domD: Domain[Double] = Domain.makeFractional(0.1)
 
-        val xs = List(
-          Interval.leftClosedRightOpen(-5.0, -4.0),
-          Interval.leftClosedRightOpen(-3.0, -2.0),
-          Interval.leftClosedRightOpen(1.0, 2.0),
-          Interval.leftClosedRightOpen(3.0, 5.0),
-          Interval.leftClosedRightOpen(8.0, 9.0)
-        )
+        val x1 = Interval.leftClosedRightOpen(-5.0, -4.0)
+        val x2 = Interval.leftClosedRightOpen(-3.0, -2.0)
+        val x3 = Interval.leftClosedRightOpen(1.0, 2.0)
+        val x4 = Interval.leftClosedRightOpen(3.0, 5.0)
+        val x5 = Interval.leftClosedRightOpen(8.0, 9.0)
 
-        val y = Interval.leftClosedRightOpen(-1.0, 4.0)
+        val xs = List(x1, x2, x3, x4, x5)
+        val y  = Interval.leftClosedRightOpen(-1.0, 4.0)
 
-        val actual = Interval.minus(xs, y)
+        val actual = minusAll(xs, y)
+
+        val z1 = Interval.leftClosedRightOpen(-5.0, -4.0)
+        val z2 = Interval.leftClosedRightOpen(-3.0, -2.0)
+        val z3 = Interval.leftClosedRightOpen(4.0, 5.0)
+        val z4 = Interval.leftClosedRightOpen(8.0, 9.0)
 
         // [[-5,-4],[-3,-2],[4,5],[8,9]]
-        val expected = List(
-          Interval.leftClosedRightOpen(-5.0, -4.0),
-          Interval.leftClosedRightOpen(-3.0, -2.0),
-          Interval.leftClosedRightOpen(4.0, 5.0),
-          Interval.leftClosedRightOpen(8.0, 9.0)
-        )
+        val expected = List(z1, z2, z3, z4)
 
         actual.map(_.canonical) mustBe expected.map(_.canonical)
       }
-
-      "[,] if a.contains(b) [doc]" in {
-        val a = Interval.closed(1, 15) // [1, 15]
-        val b = Interval.closed(5, 10) // [5, 10]
-
-        // val c = a.minus(b)           // throws UnsupportedOperationException
-        val cs = Interval.minus(a, b) // [[1, 4], [11, 15]]
-
-        val actual   = cs.map(_.canonical)
-        val expected = List(Interval.closed(1, 4), Interval.closed(11, 15))
-
-        //
-        actual mustBe expected
-      }
     }
   }
+
+  final def minusAll[T: Domain](xs: Seq[Interval[T]], y: Interval[T]): List[Interval[T]] =
+    xs.foldLeft(List.empty[Interval[T]]) { (acc, x) =>
+      acc ++ Interval.minus(x, y).filter(_.nonEmpty)
+    }
