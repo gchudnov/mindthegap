@@ -53,4 +53,4 @@ private[mtg] transparent trait AlgBasic[T: Domain]:
    *   [[Minus.minus]]
    */
   final def minus(b: Interval[T]): Interval[T] =
-    Minus.minusNotContaining(a, b)
+    Minus.minusOne(a, b)

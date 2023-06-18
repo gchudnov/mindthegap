@@ -52,7 +52,7 @@ final class MinusSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.isEmpty mustBe (false)
+          xx.nonEmpty mustBe (true)
           yy.isEmpty mustBe (true)
 
           val actual   = xx.minus(yy).canonical

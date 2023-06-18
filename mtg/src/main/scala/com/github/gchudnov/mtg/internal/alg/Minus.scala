@@ -2,6 +2,7 @@ package com.github.gchudnov.mtg.internal.alg
 
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
+import scala.collection.mutable.ListBuffer
 
 private[mtg] object Minus:
 
@@ -50,14 +51,21 @@ private[mtg] object Minus:
    * }}}
    */
   final def minus[T: Domain](a: Interval[T], b: Interval[T]): List[Interval[T]] =
-    if a.contains(b) then List(Interval.make(a.left, b.left.pred), Interval.make(b.right.succ, a.right))
-    else List(minusNotContaining(a, b))
+    if a.nonEmpty && b.isEmpty then List(a)
+    else
+      val ordM = summon[Domain[T]].ordMark
+      val rs   = new ListBuffer[Interval[T]]
+      if ordM.lt(a.right, b.left) || ordM.lt(b.right, a.left) then
+        // non-overlapping
+        rs.addOne(a)
+      else
+        // overlapping, consider 2 cases
+        if ordM.lt(a.left, b.left) then rs.addOne(Interval.make(a.left, b.left.pred))
+        if ordM.lt(b.right, a.right) then rs.addOne(Interval.make(b.right.succ, a.right))
+      rs.toList
 
-  final def minusNotContaining[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
-    val ordM = summon[Domain[T]].ordMark
-    if a.isEmpty then Interval.empty[T]
-    else if b.isEmpty then a
-    else if ordM.lt(a.left, b.left) && ordM.lteq(a.right, b.right) then Interval.make(a.left, ordM.min(b.left.pred, a.right))
-    else if ordM.gteq(a.left, b.left) && ordM.gt(a.right, b.right) then Interval.make(ordM.max(b.right.succ, a.left), a.right)
-    else if a.contains(b) then throw new UnsupportedOperationException("a.minus(b) is not defined when a.contains(b) is true; use Interval.minus(a, b) instead")
-    else Interval.empty[T]
+  final def minusOne[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
+    val cs = minus(a, b)
+    if cs.isEmpty then Interval.empty[T]
+    else if cs.size == 1 then cs.head
+    else throw new UnsupportedOperationException("a.minus(b) is not defined when a.contains(b); use Interval.minus(a, b) instead")
