@@ -5,11 +5,20 @@
 
   const THEME_ATTR = "data-theme";
 
-  const initTheme = localStorage.getItem(THEME_ATTR);
-  const isPreferDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  function detectAndApplyTheme() {
+    const initTheme = localStorage.getItem(THEME_ATTR);
+    const isPreferDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-  const effectiveTheme = (initTheme === LIGHT || (!initTheme && !isPreferDark)) ? LIGHT : DARK;
+    const effectiveTheme = (initTheme === LIGHT || (!initTheme && !isPreferDark)) ? LIGHT : DARK;
 
-  document.querySelector("html").setAttribute(THEME_ATTR, effectiveTheme);
-  localStorage.setItem(THEME_ATTR, effectiveTheme);
+    document.querySelector("html").setAttribute(THEME_ATTR, effectiveTheme);
+  }
+
+  detectAndApplyTheme();
+
+  window.matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', ({ matches }) => {
+      detectAndApplyTheme();
+    });
+
 })();
