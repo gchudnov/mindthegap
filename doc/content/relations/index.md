@@ -139,6 +139,8 @@ Interval.closed(1, 5).equalsTo(Interval.closed(1, 5)) // true
 
 For convenience the library defines extended relations that are composed of several basic relations.
 
+![relations-ext.svg](./relations-ext.svg)
+
 ### IsSubset
 
 `a` is a _subset of_ `b` when the interval `a` _starts_, _during_, _finishes_ or _equals to_ the interval `b`.
