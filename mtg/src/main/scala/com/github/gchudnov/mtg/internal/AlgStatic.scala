@@ -60,7 +60,7 @@ private[mtg] transparent trait AlgStatic:
    * @see
    *   [[Group.group]]
    */
-  final def group[T: Domain](xs: Seq[Interval[T]], isGroupAdjacent: Boolean = true): List[Interval[T]] =
+  final def group[T: Domain](xs: Iterable[Interval[T]], isGroupAdjacent: Boolean = true): List[Interval[T]] =
     Group.group(xs, isGroupAdjacent)
 
   /**
@@ -69,7 +69,7 @@ private[mtg] transparent trait AlgStatic:
    * @see
    *   [[Group.groupFind]]
    */
-  final def groupFind[T: Domain](xs: Seq[Interval[T]], isGroupAdjacent: Boolean = true): List[(Interval[T], Set[Int])] =
+  final def groupFind[T: Domain](xs: Iterable[Interval[T]], isGroupAdjacent: Boolean = true): List[(Interval[T], Set[Int])] =
     Group.groupFind(xs, isGroupAdjacent).map(it => (it.interval, it.members))
 
   /**
@@ -78,7 +78,7 @@ private[mtg] transparent trait AlgStatic:
    * @see
    *   [[Complement.complement]]
    */
-  final def complement[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
+  final def complement[T: Domain](xs: Iterable[Interval[T]]): List[Interval[T]] =
     Complement.complement(xs)
 
   /**
@@ -87,7 +87,7 @@ private[mtg] transparent trait AlgStatic:
    * @see
    *   [[Split.split]]
    */
-  final def split[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
+  final def split[T: Domain](xs: Iterable[Interval[T]]): List[Interval[T]] =
     Split.split(xs)
 
   /**
@@ -96,5 +96,5 @@ private[mtg] transparent trait AlgStatic:
    * @see
    *   [[Split.splitFind]]
    */
-  final def splitFind[T: Domain](xs: Seq[Interval[T]]): List[(Interval[T], Set[Int])] =
+  final def splitFind[T: Domain](xs: Iterable[Interval[T]]): List[(Interval[T], Set[Int])] =
     Split.splitFind(xs).map(it => (it.interval, it.members))

@@ -73,7 +73,7 @@ private[mtg] object Group:
    * @return
    *   a list of grouped intervals
    */
-  final def group[T: Domain](xs: Seq[Interval[T]], isGroupAdjacent: Boolean): List[Interval[T]] =
+  final def group[T: Domain](xs: Iterable[Interval[T]], isGroupAdjacent: Boolean): List[Interval[T]] =
     val groups    = groupFind(xs, isGroupAdjacent)
     val intervals = groups.map(_.interval)
 
@@ -110,9 +110,9 @@ private[mtg] object Group:
    * @return
    *   a list of grouped intervals
    */
-  final def groupFind[T: Domain](xs: Seq[Interval[T]], isGroupAdjacent: Boolean): List[GroupState[T]] =
+  final def groupFind[T: Domain](xs: Iterable[Interval[T]], isGroupAdjacent: Boolean): List[GroupState[T]] =
     val canGroup = if isGroupAdjacent then Interval.merges[T] else Interval.intersects[T]
-    val xs1      = xs.zipWithIndex.sortWith { case ((a, _), (b, _)) => isLess[T](a, b) };
+    val xs1      = xs.zipWithIndex.toList.sortWith { case ((a, _), (b, _)) => isLess[T](a, b) };
 
     val acc = xs1.foldLeft[Option[AccState[T]]](None) { case (acc, (it, i)) =>
       acc.fold(Some(AccState.of(it, i)))(acc => if canGroup(acc.current.interval, it) then Some(acc.concat(it, i)) else Some(acc.shift(it, i)))

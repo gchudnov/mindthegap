@@ -28,7 +28,7 @@ private[mtg] object Complement:
   /**
    * Calculates complement for a given collection of intervals
    */
-  final def complement[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
+  final def complement[T: Domain](xs: Iterable[Interval[T]]): List[Interval[T]] =
     val ys = (List(Interval.point[T](Value.infNeg)) ++ xs ++ List(Interval.point[T](Value.infPos))).sortWith(isLess[T])
     val acc = ys.foldLeft(AccState.empty[T]) { case (acc, b) =>
       acc.last match

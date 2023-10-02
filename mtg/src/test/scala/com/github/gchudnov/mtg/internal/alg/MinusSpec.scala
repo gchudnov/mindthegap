@@ -403,7 +403,7 @@ final class MinusSpec extends TestSpec:
     }
   }
 
-  final def minusAll[T: Domain](xs: Seq[Interval[T]], y: Interval[T]): List[Interval[T]] =
+  final def minusAll[T: Domain](xs: Iterable[Interval[T]], y: Interval[T]): List[Interval[T]] =
     xs.foldLeft(List.empty[Interval[T]]) { (acc, x) =>
       acc ++ Interval.minus(x, y).filter(_.nonEmpty)
     }

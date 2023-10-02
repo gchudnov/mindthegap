@@ -75,7 +75,7 @@ private[mtg] object Split:
    *
    * Split intervals into a collection of non-overlapping intervals (splits).
    */
-  final def split[T: Domain](xs: Seq[Interval[T]]): List[Interval[T]] =
+  final def split[T: Domain](xs: Iterable[Interval[T]]): List[Interval[T]] =
     val splits    = splitFind(xs)
     val intervals = splits.map(_.interval)
 
@@ -86,8 +86,8 @@ private[mtg] object Split:
    *
    * Split intervals into a collection of non-overlapping intervals (splits) and provide membership information.
    */
-  final def splitFind[T: Domain](xs: Seq[Interval[T]]): List[SingleSplit[T]] =
-    val ms = xs.zipWithIndex.flatMap((x, i) => toPoints(x, i)).sortWith(isLess)
+  final def splitFind[T: Domain](xs: Iterable[Interval[T]]): List[SingleSplit[T]] =
+    val ms = xs.zipWithIndex.toList.flatMap((x, i) => toPoints(x, i)).sortWith(isLess)
 
     val acc = ms.foldLeft[Option[AccState[T]]](None) { case (acc, p) =>
       acc.fold(Some(AccState.init(p)))(acc => Some(acc.append(p)))
