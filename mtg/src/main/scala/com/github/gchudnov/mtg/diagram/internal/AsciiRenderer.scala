@@ -35,7 +35,10 @@ private[mtg] final class AsciiRenderer() extends Renderer:
 
     // with legend
     val withLegend =
-      if addLegends then withBorder.zip(legends).map { case (line, legend) => if line.nonEmpty && legend.nonEmpty then s"${line}${theme.space}${legend}" else line }
+      if addLegends then
+        withBorder.zip(legends).map { case (line, legend) =>
+          if line.nonEmpty && legend.nonEmpty then s"${line}${theme.space}${legend}" else line
+        }
       else withBorder
 
     // with annotations
@@ -112,7 +115,7 @@ private[mtg] final class AsciiRenderer() extends Renderer:
             val view = views(j)
             drawLabel(theme, l, view)
             last(j) = q
-            (views, last)
+            (views, last),
       )
 
     res._1.map(_.mkString).toList

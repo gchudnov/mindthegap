@@ -16,7 +16,7 @@ object SortIntervals extends App:
     Interval.leftClosed(10),
     Interval.rightOpen(20),
     Interval.empty[Int],
-    Interval.unbounded[Int]
+    Interval.unbounded[Int],
   )
 
   val sorted = intervals.sorted

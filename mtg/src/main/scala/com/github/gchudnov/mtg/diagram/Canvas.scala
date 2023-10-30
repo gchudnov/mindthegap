@@ -7,7 +7,7 @@ package com.github.gchudnov.mtg.diagram
  */
 final case class Canvas(
   width: Int,
-  padding: Int
+  padding: Int,
 ):
   val left: Int  = 0         // start of the canvas, inclusive
   val right: Int = width - 1 // end of the canvas, inclusive
@@ -28,7 +28,7 @@ object Canvas:
   lazy val default: Canvas =
     Canvas(
       width = defaultWidth,
-      padding = defaultPadding
+      padding = defaultPadding,
     )
 
   /**

@@ -21,7 +21,7 @@ final case class Diagram(
   ticks: List[Diagram.Tick],
   labels: List[Diagram.Label],
   legends: List[Diagram.Legend],
-  annotations: List[Diagram.Annotation]
+  annotations: List[Diagram.Annotation],
 )
 
 object Diagram:
@@ -43,7 +43,7 @@ object Diagram:
       ticks = List.empty[Tick],
       labels = List.empty[Label],
       legends = List.empty[Legend],
-      annotations = List.empty[Annotation]
+      annotations = List.empty[Annotation],
     )
 
   /**
@@ -70,13 +70,13 @@ object Diagram:
         ticks = acc.ticks ++ ticks,
         labels = acc.labels ++ labels,
         legends = acc.legends :+ legend,
-        annotations = acc.annotations :+ ann
+        annotations = acc.annotations :+ ann,
       )
     }
 
     d.copy(
       ticks = (d.ticks ++ viewTicks).distinct.sortBy(_.x),
-      labels = (d.labels ++ viewLabels).distinct.sortBy(_.x)
+      labels = (d.labels ++ viewLabels).distinct.sortBy(_.x),
     )
 
   inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T], canvas: Canvas): Diagram =
@@ -115,7 +115,7 @@ object Diagram:
         val i1 = i.normalize
         List(
           Label.make(span.x0, Show.str(i1.left.innerValue)),
-          Label.make(span.x1, Show.str(i1.right.innerValue))
+          Label.make(span.x1, Show.str(i1.right.innerValue)),
         )
 
     val ys = xs.map(x => positionLabelOnCanvas(x, c))
@@ -147,7 +147,7 @@ object Diagram:
         x0 = p,
         x1 = p,
         includeX0 = true,
-        includeX1 = true
+        includeX1 = true,
       )
     else
       val i1 = i.normalize
@@ -155,7 +155,7 @@ object Diagram:
         x0 = t.translate(i1.left.innerValue),
         x1 = t.translate(i1.right.innerValue),
         includeX0 = isLeftInclusive(i1.left),
-        includeX1 = isRightInclusive(i1.right)
+        includeX1 = isRightInclusive(i1.right),
       )
 
   private def isLeftInclusive[T](left: Mark[T]): Boolean =

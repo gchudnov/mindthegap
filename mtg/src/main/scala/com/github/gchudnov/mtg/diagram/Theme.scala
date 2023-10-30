@@ -18,7 +18,7 @@ final case class Theme(
   comment: Char,
   legend: Boolean,
   annotations: Boolean,
-  label: Theme.Label
+  label: Theme.Label,
 ):
   def leftBound(isInclude: Boolean): Char =
     if isInclude then leftClosed else leftOpen
@@ -46,5 +46,5 @@ object Theme:
       comment = ':',
       legend = true,
       annotations = true,
-      label = Label.NoOverlap
+      label = Label.NoOverlap,
     )
