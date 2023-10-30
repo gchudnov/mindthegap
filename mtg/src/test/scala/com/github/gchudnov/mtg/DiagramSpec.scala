@@ -44,8 +44,9 @@ final class DiagramSpec extends TestSpec:
       "diagram a point" in {
         val a = Interval.point[Int](5) // [5]
 
-        val actual   = Diagram.make(List(a), infView, canvas)
-        val expected = Diagram(40, 1, List(Span(20, 20, true, true)), List(Tick(20)), List(Label(20, "5")), List(Legend("{5}")), List(Annotation("a")))
+        val actual = Diagram.make(List(a), infView, canvas)
+        val expected =
+          Diagram(40, 1, List(Span(20, 20, true, true)), List(Tick(20)), List(Label(20, "5")), List(Legend("{5}")), List(Annotation("a")))
 
         actual mustBe expected
       }
@@ -63,7 +64,7 @@ final class DiagramSpec extends TestSpec:
             List(Tick(2), Tick(37)),
             List(Label(2, "5"), Label(36, "10")),
             List(Legend("{5}"), Legend("{10}")),
-            List(Annotation("a"), Annotation("b"))
+            List(Annotation("a"), Annotation("b")),
           )
 
         actual mustBe expected
@@ -72,8 +73,16 @@ final class DiagramSpec extends TestSpec:
       "diagram a closed interval" in {
         val a = Interval.closed[Int](5, 10) // [5, 10]
 
-        val actual   = Diagram.make(List(a), infView, canvas)
-        val expected = Diagram(40, 1, List(Span(2, 37, true, true)), List(Tick(2), Tick(37)), List(Label(2, "5"), Label(36, "10")), List(Legend("[5,10]")), List(Annotation("a")))
+        val actual = Diagram.make(List(a), infView, canvas)
+        val expected = Diagram(
+          40,
+          1,
+          List(Span(2, 37, true, true)),
+          List(Tick(2), Tick(37)),
+          List(Label(2, "5"), Label(36, "10")),
+          List(Legend("[5,10]")),
+          List(Annotation("a")),
+        )
 
         actual mustBe expected
       }
@@ -81,8 +90,16 @@ final class DiagramSpec extends TestSpec:
       "diagram a closed interval with a negative boundary" in {
         val a = Interval.closed[Int](-5, 10) // [-5, 10]
 
-        val actual   = Diagram.make(List(a), infView, canvas)
-        val expected = Diagram(40, 1, List(Span(2, 37, true, true)), List(Tick(2), Tick(37)), List(Label(1, "-5"), Label(36, "10")), List(Legend("[-5,10]")), List(Annotation("a")))
+        val actual = Diagram.make(List(a), infView, canvas)
+        val expected = Diagram(
+          40,
+          1,
+          List(Span(2, 37, true, true)),
+          List(Tick(2), Tick(37)),
+          List(Label(1, "-5"), Label(36, "10")),
+          List(Legend("[-5,10]")),
+          List(Annotation("a")),
+        )
 
         actual mustBe expected
       }
@@ -92,7 +109,15 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.make(List(a), infView, canvas)
         val expected =
-          Diagram(40, 1, List(Span(0, 39, false, false)), List(Tick(0), Tick(39)), List(Label(0, "-∞"), Label(38, "+∞")), List(Legend("(-∞,+∞)")), List(Annotation("a")))
+          Diagram(
+            40,
+            1,
+            List(Span(0, 39, false, false)),
+            List(Tick(0), Tick(39)),
+            List(Label(0, "-∞"), Label(38, "+∞")),
+            List(Legend("(-∞,+∞)")),
+            List(Annotation("a")),
+          )
 
         actual mustBe expected
       }
@@ -102,7 +127,15 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.make(List(a), infView, canvas)
         val expected =
-          Diagram(40, 1, List(Span(20, 39, false, false)), List(Tick(20), Tick(39)), List(Label(20, "5"), Label(38, "+∞")), List(Legend("(5,+∞)")), List(Annotation("a")))
+          Diagram(
+            40,
+            1,
+            List(Span(20, 39, false, false)),
+            List(Tick(20), Tick(39)),
+            List(Label(20, "5"), Label(38, "+∞")),
+            List(Legend("(5,+∞)")),
+            List(Annotation("a")),
+          )
 
         actual mustBe expected
       }
@@ -112,7 +145,15 @@ final class DiagramSpec extends TestSpec:
 
         val actual = Diagram.make(List(a), infView, canvas)
         val expected =
-          Diagram(40, 1, List(Span(20, 39, true, false)), List(Tick(20), Tick(39)), List(Label(20, "5"), Label(38, "+∞")), List(Legend("[5,+∞)")), List(Annotation("a")))
+          Diagram(
+            40,
+            1,
+            List(Span(20, 39, true, false)),
+            List(Tick(20), Tick(39)),
+            List(Label(20, "5"), Label(38, "+∞")),
+            List(Legend("[5,+∞)")),
+            List(Annotation("a")),
+          )
 
         actual mustBe expected
       }
@@ -120,8 +161,16 @@ final class DiagramSpec extends TestSpec:
       "diagram a rightOpen interval" in {
         val a = Interval.rightOpen(5) // (-∞, 5)
 
-        val actual   = Diagram.make(List(a), infView, canvas)
-        val expected = Diagram(40, 1, List(Span(0, 20, false, false)), List(Tick(0), Tick(20)), List(Label(0, "-∞"), Label(20, "5")), List(Legend("(-∞,5)")), List(Annotation("a")))
+        val actual = Diagram.make(List(a), infView, canvas)
+        val expected = Diagram(
+          40,
+          1,
+          List(Span(0, 20, false, false)),
+          List(Tick(0), Tick(20)),
+          List(Label(0, "-∞"), Label(20, "5")),
+          List(Legend("(-∞,5)")),
+          List(Annotation("a")),
+        )
 
         actual mustBe expected
       }
@@ -129,8 +178,16 @@ final class DiagramSpec extends TestSpec:
       "diagram a rightClosed interval" in {
         val a = Interval.rightClosed(5) // (-∞, 5]
 
-        val actual   = Diagram.make(List(a), infView, canvas)
-        val expected = Diagram(40, 1, List(Span(0, 20, false, true)), List(Tick(0), Tick(20)), List(Label(0, "-∞"), Label(20, "5")), List(Legend("(-∞,5]")), List(Annotation("a")))
+        val actual = Diagram.make(List(a), infView, canvas)
+        val expected = Diagram(
+          40,
+          1,
+          List(Span(0, 20, false, true)),
+          List(Tick(0), Tick(20)),
+          List(Label(0, "-∞"), Label(20, "5")),
+          List(Legend("(-∞,5]")),
+          List(Annotation("a")),
+        )
 
         actual mustBe expected
       }
@@ -148,7 +205,7 @@ final class DiagramSpec extends TestSpec:
           List(Tick(2), Tick(27), Tick(37), Tick(52)),
           List(Label(2, "0"), Label(27, "5"), Label(37, "7"), Label(51, "10")),
           List(Legend("[5,10]")),
-          List(Annotation("a"))
+          List(Annotation("a")),
         )
 
         actual mustBe expected
@@ -168,12 +225,12 @@ final class DiagramSpec extends TestSpec:
             Span(2, 12, true, true),
             Span(12, 25, true, true),
             Span(0, 37, false, true),
-            Span(5, 39, false, false)
+            Span(5, 39, false, false),
           ),
           List(Tick(0), Tick(2), Tick(5), Tick(12), Tick(25), Tick(37), Tick(39)),
           List(Label(0, "-∞"), Label(2, "1"), Label(5, "2"), Label(12, "5"), Label(24, "10"), Label(36, "15"), Label(38, "+∞")),
           List(Legend("[1,5]"), Legend("[5,10]"), Legend("(-∞,15]"), Legend("(2,+∞)")),
-          List(Annotation("a"), Annotation("b"), Annotation("c"), Annotation("d"))
+          List(Annotation("a"), Annotation("b"), Annotation("c"), Annotation("d")),
         )
 
         actual mustBe expected
@@ -191,7 +248,7 @@ final class DiagramSpec extends TestSpec:
           List(Tick(2), Tick(18), Tick(37)),
           List(Label(2, "1"), Label(18, "5"), Label(36, "10")),
           List(Legend("[1,5]"), Legend("[5,10]")),
-          List(Annotation("a"), Annotation("b"))
+          List(Annotation("a"), Annotation("b")),
         )
 
         actual mustBe expected
@@ -210,7 +267,7 @@ final class DiagramSpec extends TestSpec:
           List(Tick(2), Tick(9), Tick(30), Tick(37)),
           List(Label(2, "1"), Label(9, "2"), Label(30, "5"), Label(37, "6")),
           List(Legend("[1,5]"), Legend("[2,6]"), Legend("∅")),
-          List(Annotation("a"), Annotation("b"), Annotation("c"))
+          List(Annotation("a"), Annotation("b"), Annotation("c")),
         )
 
         actual mustBe expected
@@ -234,12 +291,23 @@ final class DiagramSpec extends TestSpec:
             Span(10, 25, true, true),
             Span(14, 29, true, true),
             Span(18, 33, true, true),
-            Span(21, 37, true, true)
+            Span(21, 37, true, true),
           ),
           List(Tick(2), Tick(6), Tick(10), Tick(14), Tick(18), Tick(21), Tick(25), Tick(29), Tick(33), Tick(37)),
-          List(Label(2, "1"), Label(6, "2"), Label(10, "3"), Label(14, "4"), Label(18, "5"), Label(21, "6"), Label(25, "7"), Label(29, "8"), Label(33, "9"), Label(36, "10")),
+          List(
+            Label(2, "1"),
+            Label(6, "2"),
+            Label(10, "3"),
+            Label(14, "4"),
+            Label(18, "5"),
+            Label(21, "6"),
+            Label(25, "7"),
+            Label(29, "8"),
+            Label(33, "9"),
+            Label(36, "10"),
+          ),
           List(Legend("[1,5]"), Legend("[2,6]"), Legend("[3,7]"), Legend("[4,8]"), Legend("[5,9]"), Legend("[6,10]")),
-          List(Annotation("a"), Annotation("b"), Annotation("c"), Annotation("d"), Annotation("e"), Annotation("f"))
+          List(Annotation("a"), Annotation("b"), Annotation("c"), Annotation("d"), Annotation("e"), Annotation("f")),
         )
 
         actual mustBe expected
@@ -259,7 +327,7 @@ final class DiagramSpec extends TestSpec:
           List(Tick(2), Tick(37)),
           List(Label(0, "2020-07-02T12:34Z"), Label(23, "2021-07-02T12:34Z")),
           List(Legend("[2020-07-02T12:34Z,2021-07-02T12:34Z]")),
-          List(Annotation("a"))
+          List(Annotation("a")),
         )
 
         actual mustBe expected
@@ -284,7 +352,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "                                        ",
           "----------------------------------------",
-          "                                        "
+          "                                        ",
         )
 
         actual mustBe expected
@@ -298,7 +366,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "                                         | a",
           "---------------------------------------- |",
-          "                                         |"
+          "                                         |",
         )
 
         actual mustBe expected
@@ -313,7 +381,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "                                        ",
           "----------------------------------------",
-          "                                        "
+          "                                        ",
         )
 
         actual mustBe expected
@@ -327,7 +395,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "                                         | ∅ : a",
           "---------------------------------------- |",
-          "                                         |"
+          "                                         |",
         )
 
         actual mustBe expected
@@ -341,7 +409,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "                    *                    | a",
           "--------------------+------------------- |",
-          "                    5                    |"
+          "                    5                    |",
         )
 
         actual mustBe expected
@@ -357,7 +425,7 @@ final class DiagramSpec extends TestSpec:
           "  *                                      | a",
           "                                     *   | b",
           "--+----------------------------------+-- |",
-          "  5                                 10   |"
+          "  5                                 10   |",
         )
 
         actual mustBe expected
@@ -371,7 +439,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "  [**********************************]   | a",
           "--+----------------------------------+-- |",
-          "  5                                 10   |"
+          "  5                                 10   |",
         )
 
         actual mustBe expected
@@ -386,7 +454,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "           [********]                    | a",
           "--+--------+--------+----------------+-- |",
-          "  0        5       10               20   |"
+          "  0        5       10               20   |",
         )
 
         actual mustBe expected
@@ -401,7 +469,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "                           [************ | a",
           "--+------------------------+---------+-- |",
-          "  0                        5         7   |"
+          "  0                        5         7   |",
         )
 
         actual mustBe expected
@@ -416,7 +484,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "***************]                         | a",
           "--+------------+---------------------+-- |",
-          "  7           10                    15   |"
+          "  7           10                    15   |",
         )
 
         actual mustBe expected
@@ -431,7 +499,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "**************************************** | a",
           "--+----------------------------------+-- |",
-          "  7                                  8   |"
+          "  7                                  8   |",
         )
 
         actual mustBe expected
@@ -445,7 +513,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "  [**********************************]   | a",
           "--+----------------------------------+-- |",
-          " -5                                 10   |"
+          " -5                                 10   |",
         )
 
         actual mustBe expected
@@ -459,7 +527,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "(**************************************) | a",
           "+--------------------------------------+ |",
-          "-∞                                    +∞ |"
+          "-∞                                    +∞ |",
         )
 
         actual mustBe expected
@@ -473,7 +541,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "                    (******************) | a",
           "--------------------+------------------+ |",
-          "                    5                 +∞ |"
+          "                    5                 +∞ |",
         )
 
         actual mustBe expected
@@ -487,7 +555,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "                    [******************) | a",
           "--------------------+------------------+ |",
-          "                    5                 +∞ |"
+          "                    5                 +∞ |",
         )
 
         actual mustBe expected
@@ -501,7 +569,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "(*******************)                    | a",
           "+-------------------+------------------- |",
-          "-∞                  5                    |"
+          "-∞                  5                    |",
         )
 
         actual mustBe expected
@@ -515,7 +583,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "(*******************]                    | a",
           "+-------------------+------------------- |",
-          "-∞                  5                    |"
+          "-∞                  5                    |",
         )
 
         actual mustBe expected
@@ -532,7 +600,7 @@ final class DiagramSpec extends TestSpec:
           "  [************************************) | a",
           "(************************************]   | b",
           "+-+----------------------------------+-+ |",
-          "-∞5                                 10+∞ |"
+          "-∞5                                 10+∞ |",
         )
 
         actual mustBe expected
@@ -549,7 +617,7 @@ final class DiagramSpec extends TestSpec:
           "                                     [*) | a",
           "(*]                                      | b",
           "+-+----------------------------------+-+ |",
-          "-∞5                                 10+∞ |"
+          "-∞5                                 10+∞ |",
         )
 
         actual mustBe expected
@@ -570,7 +638,7 @@ final class DiagramSpec extends TestSpec:
           "(************************************]   | c",
           "     (*********************************) | d",
           "+-+--+------+------------+-----------+-+ |",
-          "-∞1  2      5           10          15+∞ |"
+          "-∞1  2      5           10          15+∞ |",
         )
 
         actual mustBe expected
@@ -591,7 +659,7 @@ final class DiagramSpec extends TestSpec:
           "(************************************]   | (-∞,15] : c",
           "     (*********************************) | (2,+∞)  : d",
           "+-+--+------+------------+-----------+-+ |",
-          "-∞1  2      5           10          15+∞ |"
+          "-∞1  2      5           10          15+∞ |",
         )
 
         actual mustBe expected
@@ -612,7 +680,7 @@ final class DiagramSpec extends TestSpec:
           "                         [*************) | [3,+∞) : c",
           "                                     [*) | [4,+∞) : d",
           "--+-----------+----------+-----------+-+ |",
-          "  1           2          3           4+∞ |"
+          "  1           2          3           4+∞ |",
         )
 
         actual mustBe expected
@@ -633,7 +701,7 @@ final class DiagramSpec extends TestSpec:
           "(************************]               | (-∞,3] : c",
           "(************************************]   | (-∞,4] : d",
           "+-+-----------+----------+-----------+-- |",
-          "-∞1           2          3           4   |"
+          "-∞1           2          3           4   |",
         )
 
         actual mustBe expected
@@ -658,7 +726,7 @@ final class DiagramSpec extends TestSpec:
           "                  [**************]       | [5,9]  : e",
           "                     [***************]   | [6,10] : f",
           "--+---+---+---+---+--+---+---+---+---+-- |",
-          "  1   2   3   4   5  6   7   8   9  10   |"
+          "  1   2   3   4   5  6   7   8   9  10   |",
         )
 
         actual mustBe expected
@@ -677,7 +745,7 @@ final class DiagramSpec extends TestSpec:
           "                [**********]             | [10,15] : b",
           "                     [***************]   | [12,20] : c",
           "--+-------+-----+----+-----+---------+-- |",
-          "  3       7    10   12    15        20   |"
+          "  3       7    10   12    15        20   |",
         )
 
         actual mustBe expected
@@ -697,7 +765,7 @@ final class DiagramSpec extends TestSpec:
           "          [******************]           | [10,15] : b",
           "                  [********************* | [12,20] : c",
           "--+-------+-------+----------+-------+-- |",
-          "  8      10      12         15      17   |"
+          "  8      10      12         15      17   |",
         )
 
         actual mustBe expected
@@ -717,7 +785,7 @@ final class DiagramSpec extends TestSpec:
           "        [****]       | [10,15] : b",
           "          [******]   | [12,20] : c",
           "--+---+-+-+--+---+-- |",
-          "  3   7  12 15  20   |"
+          "  3   7  12 15  20   |",
         )
 
         actual mustBe expected
@@ -740,7 +808,7 @@ final class DiagramSpec extends TestSpec:
           "          [******]   | [12,20] : c",
           "--+---+-+-+--+---+-- |",
           "  3   7  12 15  20   |",
-          "       10            |"
+          "       10            |",
         )
 
         actual mustBe expected
@@ -765,7 +833,7 @@ final class DiagramSpec extends TestSpec:
           "          [**********************]       | e",
           "                     [***************]   | f",
           "--+-+-+-+-+-------+--+---+---+---+---+-- |",
-          " 10152025300     500600 700 800 9001000  |"
+          " 10152025300     500600 700 800 9001000  |",
         )
 
         actual mustBe expected
@@ -790,7 +858,7 @@ final class DiagramSpec extends TestSpec:
           "          [**********************]       | e",
           "                     [***************]   | f",
           "--+-+-+-+-+-------+--+---+---+---+---+-- |",
-          " 100 200 300     500    700 800 900      |"
+          " 100 200 300     500    700 800 900      |",
         )
 
         actual mustBe expected
@@ -816,7 +884,7 @@ final class DiagramSpec extends TestSpec:
           "                     [***************]   | f",
           "--+-+-+-+-+-------+--+---+---+---+---+-- |",
           " 100 200 300     500    700 800 900      |",
-          "   150 250          600            1000  |"
+          "   150 250          600            1000  |",
         )
 
         actual mustBe expected
@@ -833,7 +901,7 @@ final class DiagramSpec extends TestSpec:
           "  [***************]                      | [1,5]  : a",
           "                  [******************]   | [5,10] : b",
           "--+---------------+------------------+-- |",
-          "  1               5                 10   |"
+          "  1               5                 10   |",
         )
 
         actual mustBe expected
@@ -850,7 +918,7 @@ final class DiagramSpec extends TestSpec:
           "  [***************]                      | [1,5]",
           "                  [******************]   | [5,10]",
           "--+---------------+------------------+-- |",
-          "  1               5                 10   |"
+          "  1               5                 10   |",
         )
 
         actual mustBe expected
@@ -867,7 +935,7 @@ final class DiagramSpec extends TestSpec:
           "  [***************]                      | a",
           "                  [******************]   | b",
           "--+---------------+------------------+-- |",
-          "  1               5                 10   |"
+          "  1               5                 10   |",
         )
 
         actual mustBe expected
@@ -884,7 +952,7 @@ final class DiagramSpec extends TestSpec:
           "  [***************]                     ",
           "                  [******************]  ",
           "--+---------------+------------------+--",
-          "  1               5                 10  "
+          "  1               5                 10  ",
         )
 
         actual mustBe expected
@@ -900,7 +968,7 @@ final class DiagramSpec extends TestSpec:
         val expected = List(
           "  [**********************************]   | a",
           "--+----------------------------------+-- |",
-          "2020-07-02T12:34Z      2021-07-02T12:34Z |"
+          "2020-07-02T12:34Z      2021-07-02T12:34Z |",
         )
 
         actual mustBe expected
@@ -917,7 +985,7 @@ final class DiagramSpec extends TestSpec:
           "  [**********************************]   | a",
           "--+----------------------------------+-- |",
           "2020-07-02T12:34:00Z                     |",
-          "                    2021-07-02T12:34:00Z |"
+          "                    2021-07-02T12:34:00Z |",
         )
 
         actual mustBe expected
@@ -943,7 +1011,7 @@ final class DiagramSpec extends TestSpec:
           "                   [*****************]   | [2023-01-10,2023-01-20] : d",
           "--+---+------------+--------+--------+-+ |",
           "2023-01-01    2023-01-10      2023-01-20 |",
-          " 2023-01-03            2023-01-15     +∞ |"
+          " 2023-01-03            2023-01-15     +∞ |",
         )
 
         actual mustBe expected
@@ -966,7 +1034,7 @@ final class DiagramSpec extends TestSpec:
           "  [**********************]               | [1,7]  : b",
           "                  [******]               | [5,7]  : c",
           "--+---------------+------+-----------+-- |",
-          "  1               5      7          10   |"
+          "  1               5      7          10   |",
         )
 
         actual mustBe expected
@@ -987,7 +1055,7 @@ final class DiagramSpec extends TestSpec:
           "  [**********************]               | [1,7]  : b",
           "  [**********************************]   | [1,10] : c",
           "--+---------------+------+-----------+-- |",
-          "  1               5      7          10   |"
+          "  1               5      7          10   |",
         )
 
         actual mustBe expected
@@ -1008,7 +1076,7 @@ final class DiagramSpec extends TestSpec:
           "                         [***********]   | [7,10] : b",
           "  [**********************************]   | [1,10] : c",
           "--+---------------+------+-----------+-- |",
-          "  1               5      7          10   |"
+          "  1               5      7          10   |",
         )
 
         actual mustBe expected
@@ -1029,7 +1097,7 @@ final class DiagramSpec extends TestSpec:
           "                     [***************]   | [6,10] : b",
           "  [**********************************]   | [1,10] : c",
           "--+---------------+--+---------------+-- |",
-          "  1               5  6              10   |"
+          "  1               5  6              10   |",
         )
 
         actual mustBe expected
@@ -1050,7 +1118,7 @@ final class DiagramSpec extends TestSpec:
           "                     [***************]   | [6,10] : b",
           "                                         | ∅      : c",
           "--+-----------+------+---------------+-- |",
-          "  1           4      6              10   |"
+          "  1           4      6              10   |",
         )
 
         actual mustBe expected
@@ -1071,7 +1139,7 @@ final class DiagramSpec extends TestSpec:
           "  [**********************************]   | [4,15] : b",
           "                                         | ∅      : c",
           "--+--+---------------+---------------+-- |",
-          "  4  5              10              15   |"
+          "  4  5              10              15   |",
         )
 
         actual mustBe expected
@@ -1092,7 +1160,7 @@ final class DiagramSpec extends TestSpec:
           "                         [***********]   | [15,20] : b",
           "                [******]                 | [11,14] : c",
           "--+-----------+-+------+-+-----------+-- |",
-          "  5          10       14            20   |"
+          "  5          10       14            20   |",
         )
 
         actual mustBe expected
@@ -1113,7 +1181,7 @@ final class DiagramSpec extends TestSpec:
           "            [************************]   | [5,15] : b",
           "  [*******]                              | [1,4]  : c",
           "--+-------+-+------------+-----------+-- |",
-          "  1       4 5           10          15   |"
+          "  1       4 5           10          15   |",
         )
 
         actual mustBe expected
@@ -1134,7 +1202,7 @@ final class DiagramSpec extends TestSpec:
           "  [**********************]               | [1,10]  : b",
           "                           [*********]   | [11,15] : c",
           "--+---------+------------+-+---------+-- |",
-          "  1         5           10          15   |"
+          "  1         5           10          15   |",
         )
 
         actual mustBe expected
@@ -1156,7 +1224,7 @@ final class DiagramSpec extends TestSpec:
           "  [*******]                              | [1,4]   : c1",
           "                           [*********]   | [11,15] : c2",
           "--+-------+-+------------+-+---------+-- |",
-          "  1       4 5           10          15   |"
+          "  1       4 5           10          15   |",
         )
 
         actual mustBe expected
@@ -1172,7 +1240,12 @@ final class DiagramSpec extends TestSpec:
         val input  = List(a, b, c, d, e)
         val splits = Interval.split(input)
 
-        val diagram = Diagram.make(input ++ splits, infView, canvas, List("a", "b", "c", "d", "e", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"))
+        val diagram = Diagram.make(
+          input ++ splits,
+          infView,
+          canvas,
+          List("a", "b", "c", "d", "e", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"),
+        )
 
         val actual = Diagram.render(diagram, defaultTheme)
 
@@ -1191,7 +1264,7 @@ final class DiagramSpec extends TestSpec:
           "                            [****]       | [60,70] : s6",
           "                                 [***]   | [71,80] : s7",
           "--++--+----+---+--------+---+----+---+-- |",
-          "  0  10   20  30       50  60   70  80   |"
+          "  0  10   20  30       50  60   70  80   |",
         )
 
         actual mustBe expected

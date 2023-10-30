@@ -92,7 +92,8 @@ object Arbitraries:
     val g2 = for
       ab <- genIntTupleEq.map(toSome)
       ia <- genBool50
-      ib <- if ia then Gen.const(false) else genBool50 // if we selected '[', the second boundary cannot be ']', otherwise it will produce a point interval.
+      ib <- if ia then Gen.const(false)
+            else genBool50 // if we selected '[', the second boundary cannot be ']', otherwise it will produce a point interval.
     yield IntArgs(toLeft(ab._1, ia), toRight(ab._2, ib))
 
     Gen.oneOf(g1, g2)
@@ -145,7 +146,7 @@ object Arbitraries:
   def genNonEmptyIntArgs(using ir: IntRange, ip: IntProb): Gen[IntArgs] =
     Gen.frequency(
       ip.point  -> genPointIntArgs,
-      ip.proper -> genProperIntArgs
+      ip.proper -> genProperIntArgs,
     )
 
   /**
@@ -155,7 +156,7 @@ object Arbitraries:
     Gen.frequency(
       ip.empty  -> genEmptyIntArgs,
       ip.point  -> genPointIntArgs,
-      ip.proper -> genProperIntArgs
+      ip.proper -> genProperIntArgs,
     )
 
   /**

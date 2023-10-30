@@ -37,7 +37,8 @@ private[mtg] object Split:
       val tMinus = if last.s == Side.Left then last.pt else last.pt.succ
       val tPlus  = if p.s == Side.Left then p.pt.pred else p.pt
 
-      val splits1 = if summon[Domain[T]].ordMark.lteq(tMinus, tPlus) then splits :+ SingleSplit(Interval.make(tMinus, tPlus), open) else splits
+      val splits1 =
+        if summon[Domain[T]].ordMark.lteq(tMinus, tPlus) then splits :+ SingleSplit(Interval.make(tMinus, tPlus), open) else splits
 
       val open1 = if p.s == Side.Left then open + p.i else open - p.i
       val last1 = p

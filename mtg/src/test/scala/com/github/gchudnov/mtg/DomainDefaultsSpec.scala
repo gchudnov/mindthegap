@@ -26,7 +26,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "xp", "xn"),
           (10, 9, 11),
           (0, -1, 1),
-          (-10, -11, -9)
+          (-10, -11, -9),
         )
 
         forAll(t) { (x: Int, xp: Int, xn: Int) =>
@@ -49,7 +49,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (10, 20, 11),
           (0, 10, 11),
-          (-10, 10, 21)
+          (-10, 10, 21),
         )
 
         forAll(t) { (x: Int, y: Int, expected: Int) =>
@@ -64,7 +64,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (10, 20, -1),
           (20, 10, 1),
-          (10, 10, 0)
+          (10, 10, 0),
         )
 
         forAll(t) { (x: Int, y: Int, expected: Int) =>
@@ -83,7 +83,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "xp", "xn"),
           (10L, 9L, 11L),
           (0L, -1L, 1L),
-          (-10L, -11L, -9L)
+          (-10L, -11L, -9L),
         )
 
         forAll(t) { (x: Long, xp: Long, xn: Long) =>
@@ -106,7 +106,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (10L, 20L, 11L),
           (0L, 10L, 11L),
-          (-10L, 10L, 21L)
+          (-10L, 10L, 21L),
         )
 
         forAll(t) { (x: Long, y: Long, expected: Long) =>
@@ -121,7 +121,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (10L, 20L, -1),
           (20L, 10L, 1),
-          (10L, 10L, 0)
+          (10L, 10L, 0),
         )
 
         forAll(t) { (x: Long, y: Long, expected: Int) =>
@@ -141,7 +141,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "xp", "xn"),
           (10.0, 9.999, 10.001),
           (0.0, -0.001, 0.001),
-          (-10.0, -10.001, -9.999)
+          (-10.0, -10.001, -9.999),
         )
 
         forAll(t) { (x: Double, xp: Double, xn: Double) =>
@@ -164,7 +164,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (10.0, 20.0, 10001),
           (0.0, 10.0, 10001),
-          (-10.0, 10.0, 20001)
+          (-10.0, 10.0, 20001),
         )
 
         forAll(t) { (x: Double, y: Double, expected: Int) =>
@@ -179,7 +179,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (10.0, 20.0, -1),
           (20.0, 10.0, 1),
-          (10.0, 10.0, 0)
+          (10.0, 10.0, 0),
         )
 
         forAll(t) { (x: Double, y: Double, expected: Int) =>
@@ -198,7 +198,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "xp", "xn"),
           (OffsetDateTime.parse("2022-07-02T00:00Z"), OffsetDateTime.parse("2022-07-01T00:00Z"), OffsetDateTime.parse("2022-07-03T00:00Z")),
           (OffsetDateTime.parse("2022-07-03T00:00Z"), OffsetDateTime.parse("2022-07-02T00:00Z"), OffsetDateTime.parse("2022-07-04T00:00Z")),
-          (OffsetDateTime.parse("2022-07-04T00:00Z"), OffsetDateTime.parse("2022-07-03T00:00Z"), OffsetDateTime.parse("2022-07-05T00:00Z"))
+          (OffsetDateTime.parse("2022-07-04T00:00Z"), OffsetDateTime.parse("2022-07-03T00:00Z"), OffsetDateTime.parse("2022-07-05T00:00Z")),
         )
 
         forAll(t) { (x: OffsetDateTime, xp: OffsetDateTime, xn: OffsetDateTime) =>
@@ -221,7 +221,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (OffsetDateTime.parse("2022-07-02T00:00Z"), OffsetDateTime.parse("2022-07-10T00:00Z"), 9L),
           (OffsetDateTime.parse("2022-07-02T00:00Z"), OffsetDateTime.parse("2022-07-03T00:00Z"), 2L),
-          (OffsetDateTime.parse("2022-07-02T00:00Z"), OffsetDateTime.parse("2022-07-02T00:00Z"), 1L)
+          (OffsetDateTime.parse("2022-07-02T00:00Z"), OffsetDateTime.parse("2022-07-02T00:00Z"), 1L),
         )
 
         forAll(t) { (x: OffsetDateTime, y: OffsetDateTime, expected: Long) =>
@@ -236,7 +236,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (OffsetDateTime.parse("2022-07-02T00:00Z"), OffsetDateTime.parse("2022-07-10T00:00Z"), -1),
           (OffsetDateTime.parse("2022-07-10T00:00Z"), OffsetDateTime.parse("2022-07-02T00:00Z"), 1),
-          (OffsetDateTime.parse("2022-07-02T00:00Z"), OffsetDateTime.parse("2022-07-02T00:00Z"), 0)
+          (OffsetDateTime.parse("2022-07-02T00:00Z"), OffsetDateTime.parse("2022-07-02T00:00Z"), 0),
         )
 
         forAll(t) { (x: OffsetDateTime, y: OffsetDateTime, expected: Int) =>
@@ -255,7 +255,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "xp", "xn"),
           (OffsetTime.parse("18:19:00.000Z"), OffsetTime.parse("18:18:00.000Z"), OffsetTime.parse("18:20:00.000Z")),
           (OffsetTime.parse("18:20:00.000Z"), OffsetTime.parse("18:19:00.000Z"), OffsetTime.parse("18:21:00.000Z")),
-          (OffsetTime.parse("18:21:00.000Z"), OffsetTime.parse("18:20:00.000Z"), OffsetTime.parse("18:22:00.000Z"))
+          (OffsetTime.parse("18:21:00.000Z"), OffsetTime.parse("18:20:00.000Z"), OffsetTime.parse("18:22:00.000Z")),
         )
 
         forAll(t) { (x: OffsetTime, xp: OffsetTime, xn: OffsetTime) =>
@@ -278,7 +278,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (OffsetTime.parse("18:19:00.000Z"), OffsetTime.parse("18:21:00.000Z"), 3L),
           (OffsetTime.parse("18:19:00.000Z"), OffsetTime.parse("18:20:00.000Z"), 2L),
-          (OffsetTime.parse("18:19:00.000Z"), OffsetTime.parse("18:19:00.000Z"), 1L)
+          (OffsetTime.parse("18:19:00.000Z"), OffsetTime.parse("18:19:00.000Z"), 1L),
         )
 
         forAll(t) { (x: OffsetTime, y: OffsetTime, expected: Long) =>
@@ -293,7 +293,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (OffsetTime.parse("18:19:00.000Z"), OffsetTime.parse("18:21:00.000Z"), -1),
           (OffsetTime.parse("18:21:00.000Z"), OffsetTime.parse("18:19:00.000Z"), 1),
-          (OffsetTime.parse("18:19:00.000Z"), OffsetTime.parse("18:19:00.000Z"), 0)
+          (OffsetTime.parse("18:19:00.000Z"), OffsetTime.parse("18:19:00.000Z"), 0),
         )
 
         forAll(t) { (x: OffsetTime, y: OffsetTime, expected: Int) =>
@@ -312,7 +312,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "xp", "xn"),
           (Instant.parse("2022-07-02T00:00:00Z"), Instant.parse("2022-07-01T00:00:00Z"), Instant.parse("2022-07-03T00:00:00Z")),
           (Instant.parse("2022-07-03T00:00:00Z"), Instant.parse("2022-07-02T00:00:00Z"), Instant.parse("2022-07-04T00:00:00Z")),
-          (Instant.parse("2022-07-04T00:00:00Z"), Instant.parse("2022-07-03T00:00:00Z"), Instant.parse("2022-07-05T00:00:00Z"))
+          (Instant.parse("2022-07-04T00:00:00Z"), Instant.parse("2022-07-03T00:00:00Z"), Instant.parse("2022-07-05T00:00:00Z")),
         )
 
         forAll(t) { (x: Instant, xp: Instant, xn: Instant) =>
@@ -335,7 +335,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (Instant.parse("2022-07-02T00:00:00Z"), Instant.parse("2022-07-10T00:00:00Z"), 9L),
           (Instant.parse("2022-07-02T00:00:00Z"), Instant.parse("2022-07-03T00:00:00Z"), 2L),
-          (Instant.parse("2022-07-02T00:00:00Z"), Instant.parse("2022-07-02T00:00:00Z"), 1L)
+          (Instant.parse("2022-07-02T00:00:00Z"), Instant.parse("2022-07-02T00:00:00Z"), 1L),
         )
 
         forAll(t) { (x: Instant, y: Instant, expected: Long) =>
@@ -350,7 +350,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (Instant.parse("2022-07-02T00:00:00Z"), Instant.parse("2022-07-10T00:00:00Z"), -1),
           (Instant.parse("2022-07-10T00:00:00Z"), Instant.parse("2022-07-02T00:00:00Z"), 1),
-          (Instant.parse("2022-07-02T00:00:00Z"), Instant.parse("2022-07-02T00:00:00Z"), 0)
+          (Instant.parse("2022-07-02T00:00:00Z"), Instant.parse("2022-07-02T00:00:00Z"), 0),
         )
 
         forAll(t) { (x: Instant, y: Instant, expected: Int) =>
@@ -367,9 +367,17 @@ final class DomainDefaultsSpec extends TestSpec:
       "pred and succ" in {
         val t = Table(
           ("x", "xp", "xn"),
-          (LocalDateTime.parse("2019-02-03T00:00:00.000"), LocalDateTime.parse("2019-02-02T00:00"), LocalDateTime.parse("2019-02-04T00:00")),
-          (LocalDateTime.parse("2019-02-04T00:00:00.000"), LocalDateTime.parse("2019-02-03T00:00"), LocalDateTime.parse("2019-02-05T00:00")),
-          (LocalDateTime.parse("2019-02-05T00:00:00.000"), LocalDateTime.parse("2019-02-04T00:00"), LocalDateTime.parse("2019-02-06T00:00"))
+          (
+            LocalDateTime.parse("2019-02-03T00:00:00.000"),
+            LocalDateTime.parse("2019-02-02T00:00"),
+            LocalDateTime.parse("2019-02-04T00:00"),
+          ),
+          (
+            LocalDateTime.parse("2019-02-04T00:00:00.000"),
+            LocalDateTime.parse("2019-02-03T00:00"),
+            LocalDateTime.parse("2019-02-05T00:00"),
+          ),
+          (LocalDateTime.parse("2019-02-05T00:00:00.000"), LocalDateTime.parse("2019-02-04T00:00"), LocalDateTime.parse("2019-02-06T00:00")),
         )
 
         forAll(t) { (x: LocalDateTime, xp: LocalDateTime, xn: LocalDateTime) =>
@@ -392,7 +400,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (LocalDateTime.parse("2019-02-03T00:00:00.000"), LocalDateTime.parse("2019-02-10T00:00"), 8),
           (LocalDateTime.parse("2019-02-03T00:00:00.000"), LocalDateTime.parse("2019-02-04T00:00"), 2),
-          (LocalDateTime.parse("2019-02-03T00:00:00.000"), LocalDateTime.parse("2019-02-03T00:00"), 1)
+          (LocalDateTime.parse("2019-02-03T00:00:00.000"), LocalDateTime.parse("2019-02-03T00:00"), 1),
         )
 
         forAll(t) { (x: LocalDateTime, y: LocalDateTime, expected: Int) =>
@@ -407,7 +415,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (LocalDateTime.parse("2019-02-03T00:00:00.000"), LocalDateTime.parse("2019-02-10T00:00"), -1),
           (LocalDateTime.parse("2019-02-10T00:00:00.000"), LocalDateTime.parse("2019-02-03T00:00"), 1),
-          (LocalDateTime.parse("2019-02-03T00:00:00.000"), LocalDateTime.parse("2019-02-03T00:00"), 0)
+          (LocalDateTime.parse("2019-02-03T00:00:00.000"), LocalDateTime.parse("2019-02-03T00:00"), 0),
         )
 
         forAll(t) { (x: LocalDateTime, y: LocalDateTime, expected: Int) =>
@@ -426,7 +434,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "xp", "xn"),
           (LocalDate.parse("2019-02-03"), LocalDate.parse("2019-02-02"), LocalDate.parse("2019-02-04")),
           (LocalDate.parse("2019-02-04"), LocalDate.parse("2019-02-03"), LocalDate.parse("2019-02-05")),
-          (LocalDate.parse("2019-02-05"), LocalDate.parse("2019-02-04"), LocalDate.parse("2019-02-06"))
+          (LocalDate.parse("2019-02-05"), LocalDate.parse("2019-02-04"), LocalDate.parse("2019-02-06")),
         )
 
         forAll(t) { (x: LocalDate, xp: LocalDate, xn: LocalDate) =>
@@ -449,7 +457,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (LocalDate.parse("2019-02-03"), LocalDate.parse("2019-02-10"), 8L),
           (LocalDate.parse("2019-02-03"), LocalDate.parse("2019-02-04"), 2L),
-          (LocalDate.parse("2019-02-03"), LocalDate.parse("2019-02-03"), 1L)
+          (LocalDate.parse("2019-02-03"), LocalDate.parse("2019-02-03"), 1L),
         )
 
         forAll(t) { (x: LocalDate, y: LocalDate, expected: Long) =>
@@ -464,7 +472,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (LocalDate.parse("2019-02-03"), LocalDate.parse("2019-02-10"), -1),
           (LocalDate.parse("2019-02-10"), LocalDate.parse("2019-02-03"), 1),
-          (LocalDate.parse("2019-02-03"), LocalDate.parse("2019-02-03"), 0)
+          (LocalDate.parse("2019-02-03"), LocalDate.parse("2019-02-03"), 0),
         )
 
         forAll(t) { (x: LocalDate, y: LocalDate, expected: Int) =>
@@ -483,7 +491,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "xp", "xn"),
           (LocalTime.parse("18:19:00"), LocalTime.parse("18:18:00"), LocalTime.parse("18:20:00")),
           (LocalTime.parse("18:20:00"), LocalTime.parse("18:19:00"), LocalTime.parse("18:21:00")),
-          (LocalTime.parse("18:21:00"), LocalTime.parse("18:20:00"), LocalTime.parse("18:22:00"))
+          (LocalTime.parse("18:21:00"), LocalTime.parse("18:20:00"), LocalTime.parse("18:22:00")),
         )
 
         forAll(t) { (x: LocalTime, xp: LocalTime, xn: LocalTime) =>
@@ -506,7 +514,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (LocalTime.parse("18:19:00"), LocalTime.parse("18:21:00"), 3L),
           (LocalTime.parse("18:19:00"), LocalTime.parse("18:20:00"), 2L),
-          (LocalTime.parse("18:19:00"), LocalTime.parse("18:19:00"), 1L)
+          (LocalTime.parse("18:19:00"), LocalTime.parse("18:19:00"), 1L),
         )
 
         forAll(t) { (x: LocalTime, y: LocalTime, expected: Long) =>
@@ -521,7 +529,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (LocalTime.parse("18:19:00"), LocalTime.parse("18:21:00"), -1),
           (LocalTime.parse("18:21:00"), LocalTime.parse("18:19:00"), 1),
-          (LocalTime.parse("18:19:00"), LocalTime.parse("18:19:00"), 0)
+          (LocalTime.parse("18:19:00"), LocalTime.parse("18:19:00"), 0),
         )
 
         forAll(t) { (x: LocalTime, y: LocalTime, expected: Int) =>
@@ -541,18 +549,18 @@ final class DomainDefaultsSpec extends TestSpec:
           (
             ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"),
             ZonedDateTime.parse("2019-02-02T00:00Z[Europe/London]"),
-            ZonedDateTime.parse("2019-02-04T00:00Z[Europe/London]")
+            ZonedDateTime.parse("2019-02-04T00:00Z[Europe/London]"),
           ),
           (
             ZonedDateTime.parse("2019-02-04T00:00Z[Europe/London]"),
             ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"),
-            ZonedDateTime.parse("2019-02-05T00:00Z[Europe/London]")
+            ZonedDateTime.parse("2019-02-05T00:00Z[Europe/London]"),
           ),
           (
             ZonedDateTime.parse("2019-02-05T00:00Z[Europe/London]"),
             ZonedDateTime.parse("2019-02-04T00:00Z[Europe/London]"),
-            ZonedDateTime.parse("2019-02-06T00:00Z[Europe/London]")
-          )
+            ZonedDateTime.parse("2019-02-06T00:00Z[Europe/London]"),
+          ),
         )
 
         forAll(t) { (x: ZonedDateTime, xp: ZonedDateTime, xn: ZonedDateTime) =>
@@ -575,7 +583,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"), ZonedDateTime.parse("2019-02-05T00:00Z[Europe/London]"), 3L),
           (ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"), ZonedDateTime.parse("2019-02-04T00:00Z[Europe/London]"), 2L),
-          (ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"), ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"), 1L)
+          (ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"), ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"), 1L),
         )
 
         forAll(t) { (x: ZonedDateTime, y: ZonedDateTime, expected: Long) =>
@@ -590,7 +598,7 @@ final class DomainDefaultsSpec extends TestSpec:
           ("x", "y", "expected"),
           (ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"), ZonedDateTime.parse("2019-02-05T00:00Z[Europe/London]"), -1),
           (ZonedDateTime.parse("2019-02-05T00:00Z[Europe/London]"), ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"), 1),
-          (ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"), ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"), 0)
+          (ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"), ZonedDateTime.parse("2019-02-03T00:00Z[Europe/London]"), 0),
         )
 
         forAll(t) { (x: ZonedDateTime, y: ZonedDateTime, expected: Int) =>

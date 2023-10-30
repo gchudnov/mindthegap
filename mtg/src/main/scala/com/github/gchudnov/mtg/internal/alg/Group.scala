@@ -115,7 +115,9 @@ private[mtg] object Group:
     val xs1      = xs.zipWithIndex.toList.sortWith { case ((a, _), (b, _)) => isLess[T](a, b) };
 
     val acc = xs1.foldLeft[Option[AccState[T]]](None) { case (acc, (it, i)) =>
-      acc.fold(Some(AccState.of(it, i)))(acc => if canGroup(acc.current.interval, it) then Some(acc.concat(it, i)) else Some(acc.shift(it, i)))
+      acc.fold(Some(AccState.of(it, i)))(acc =>
+        if canGroup(acc.current.interval, it) then Some(acc.concat(it, i)) else Some(acc.shift(it, i))
+      )
     }
 
     acc.fold(List.empty[GroupState[T]])(it => it.grouped :+ it.current)
