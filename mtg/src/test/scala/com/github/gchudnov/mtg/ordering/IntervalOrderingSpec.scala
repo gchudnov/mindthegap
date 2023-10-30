@@ -94,7 +94,7 @@ final class IntervalOrderingSpec extends TestSpec:
         val actual   = List(a, b, c, d, e, f, g).sorted
         val expected = List(d, g, b, a, f, c, e)
 
-        actual must contain theSameElementsInOrderAs (expected)
+        (actual must contain).theSameElementsInOrderAs(expected)
       }
     }
 

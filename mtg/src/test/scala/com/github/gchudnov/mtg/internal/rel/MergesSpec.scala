@@ -42,7 +42,7 @@ final class MergesSpec extends TestSpec:
                 Rel.IsFinishedBy,
                 Rel.EqualsTo,
                 Rel.Before,
-                Rel.After
+                Rel.After,
               )
             )(xx, yy)
 

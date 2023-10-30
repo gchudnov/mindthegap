@@ -18,8 +18,8 @@ object Dependencies {
     val test = Seq(
       scalatest,
       scalacheck,
-      scalatestplus
-    ) map (_ % "test")
+      scalatestplus,
+    ).map(_ % "test")
     compile ++ test
   }
 

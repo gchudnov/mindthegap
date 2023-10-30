@@ -28,7 +28,7 @@ object Settings {
     "-language:experimental.macros", // Allow macro definition (besides implementation and application)
     "-language:higherKinds",         // Allow higher-kinded types
     "-language:implicitConversions", // Allow definition of implicit functions called views
-    "-language:postfixOps"           // Enable postfixOps
+    "-language:postfixOps",          // Enable postfixOps
   )
 
   val globalScalaVersion: String           = scalaV
@@ -50,18 +50,18 @@ object Settings {
     scmInfo := Some(
       ScmInfo(
         url("https://github.com/gchudnov/mindthegap"),
-        "scm:git@github.com:gchudnov/mindthegap.git"
+        "scm:git@github.com:gchudnov/mindthegap.git",
       )
     ),
     developers := List(
       Developer(id = "gchudnov", name = "Grigorii Chudnov", email = "g.chudnov@gmail.com", url = url("https://github.com/gchudnov"))
-    )
+    ),
   )
 
   val sonatype: Seq[Setting[?]] = Seq(
     publishMavenStyle             := true,
     Test / publishArtifact        := false,
-    publishTo                     := Some("Sonatype Releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2"),
+    publishTo                     := Some("Sonatype Releases".at("https://oss.sonatype.org/service/local/staging/deploy/maven2")),
     releaseCrossBuild             := true,
     releaseIgnoreUntrackedFiles   := true,
     releasePublishArtifactsAction := PgpKeys.publishSigned.value,
@@ -77,15 +77,15 @@ object Settings {
       releaseStepCommandAndRemaining("sonatypeBundleRelease"),
       setNextVersion,
       commitNextVersion,
-      pushChanges
-    )
+      pushChanges,
+    ),
   )
 
   val noPublish: Seq[Setting[?]] = Seq(
     publishArtifact := false,
     publish         := {},
     publishLocal    := {},
-    publish / skip  := true
+    publish / skip  := true,
   )
 
 }
