@@ -252,7 +252,7 @@ final class MarkSpec extends TestSpec:
           (Mark.pred(Mark.pred(2)), Value.finite(2)),
           (Mark.succ(3), Value.finite(3)),
           (Mark.pred(4), Value.finite(4)),
-          (Mark.at(5), Value.finite(5))
+          (Mark.at(5), Value.finite(5)),
         )
 
         forAll(t) { (input, expected) =>

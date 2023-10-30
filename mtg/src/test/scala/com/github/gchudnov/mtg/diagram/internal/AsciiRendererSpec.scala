@@ -146,7 +146,7 @@ final class DiagramSpec extends TestSpec:
           val actual = r.drawLabels(stackedLabelTheme, ls, canvas.width)
           val expected = List(
             "-∞   2      5           10          15  ",
-            "  1                                   +∞"
+            "  1                                   +∞",
           )
 
           actual mustBe expected
@@ -160,7 +160,7 @@ final class DiagramSpec extends TestSpec:
           val actual = r.drawLabels(stackedLabelTheme, ls, canvas.width)
           val expected = List(
             "100 400                                 ",
-            "   300                                  "
+            "   300                                  ",
           )
 
           actual mustBe expected

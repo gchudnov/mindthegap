@@ -32,7 +32,19 @@ final class IntersectsSpec extends TestSpec:
             yy.intersects(xx) mustBe true
 
             assertOneOf(
-              Set(Rel.Meets, Rel.IsMetBy, Rel.Overlaps, Rel.IsOverlappedBy, Rel.During, Rel.Contains, Rel.Starts, Rel.IsStartedBy, Rel.Finishes, Rel.IsFinishedBy, Rel.EqualsTo)
+              Set(
+                Rel.Meets,
+                Rel.IsMetBy,
+                Rel.Overlaps,
+                Rel.IsOverlappedBy,
+                Rel.During,
+                Rel.Contains,
+                Rel.Starts,
+                Rel.IsStartedBy,
+                Rel.Finishes,
+                Rel.IsFinishedBy,
+                Rel.EqualsTo,
+              )
             )(xx, yy)
 
             // a- <= b+ && b- <= a+

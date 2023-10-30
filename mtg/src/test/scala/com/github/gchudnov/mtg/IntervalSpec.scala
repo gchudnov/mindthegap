@@ -86,7 +86,7 @@ final class IntervalSpec extends TestSpec:
           (Some(1), Some(5), Interval.open(1, 5)),
           (Some(1), None, Interval.leftOpen(1)),
           (None, Some(5), Interval.rightOpen(5)),
-          (None, None, Interval.unbounded[Int])
+          (None, None, Interval.unbounded[Int]),
         )
 
         forAll(table) { case (left, right, expected) =>
@@ -101,7 +101,7 @@ final class IntervalSpec extends TestSpec:
           (Some(1), Some(5), Interval.closed(1, 5)),
           (Some(1), None, Interval.leftClosed(1)),
           (None, Some(5), Interval.rightClosed(5)),
-          (None, None, Interval.unbounded[Int])
+          (None, None, Interval.unbounded[Int]),
         )
 
         forAll(table) { case (left, right, expected) =>
@@ -627,7 +627,7 @@ final class IntervalSpec extends TestSpec:
           (Interval.leftOpen(1), None),
           (Interval.rightOpen(2), None),
           (Interval.empty[Int], None),
-          (Interval.unbounded[Int], None)
+          (Interval.unbounded[Int], None),
         )
 
         forAll(t) { (interval, size) =>

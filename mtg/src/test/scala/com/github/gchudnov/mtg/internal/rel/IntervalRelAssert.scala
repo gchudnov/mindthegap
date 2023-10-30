@@ -21,7 +21,7 @@ trait IntervalRelAssert:
       Rel.IsStartedBy    -> ((xx: Interval[T], yy: Interval[T]) => xx.isStartedBy(yy)),
       Rel.Finishes       -> ((xx: Interval[T], yy: Interval[T]) => xx.finishes(yy)),
       Rel.IsFinishedBy   -> ((xx: Interval[T], yy: Interval[T]) => xx.isFinishedBy(yy)),
-      Rel.EqualsTo       -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy))
+      Rel.EqualsTo       -> ((xx: Interval[T], yy: Interval[T]) => xx.equalsTo(yy)),
     )
 
   private val invRels: Map[Rel, Rel] = Map(
@@ -40,7 +40,7 @@ trait IntervalRelAssert:
     Rel.IsStartedBy    -> Rel.Starts,
     Rel.IsFinishedBy   -> Rel.Finishes,
     // dual
-    Rel.EqualsTo -> Rel.EqualsTo
+    Rel.EqualsTo -> Rel.EqualsTo,
   )
 
   /**
@@ -57,13 +57,16 @@ trait IntervalRelAssert:
     val trues      = findRelations(xx, yy)
     val isNonEmpty = !(xx.isEmpty || yy.isEmpty)
     if isNonEmpty && trues.size != 1 then
-      fail(s"xx: ${xx}, yy: ${yy}: |${xx.asString}, ${yy.asString}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected only one relation")
+      fail(
+        s"xx: ${xx}, yy: ${yy}: |${xx.asString}, ${yy.asString}| satisfies ${trues.size} relations: ${trues.mkString("[", ",", "]")}, expected only one relation"
+      )
 
   def assertOneOf[T: Domain](rs: Set[Rel])(xx: Interval[T], yy: Interval[T]): Unit =
     val trues = findRelations(xx, yy)
     if trues.size != 1 || !rs.contains(trues.head) then
       fail(
-        s"xx: ${xx}, yy: ${yy}: |${xx.asString}, ${yy.asString}| should satisfy one of ${rs.mkString("[", ",", "]")} relations, however it satisfies ${trues.mkString("[", ",", "]")} instead"
+        s"xx: ${xx}, yy: ${yy}: |${xx.asString}, ${yy.asString}| should satisfy one of ${rs
+            .mkString("[", ",", "]")} relations, however it satisfies ${trues.mkString("[", ",", "]")} instead"
       )
 
   def assertOne[T: Ordering: Domain](r: Rel)(xx: Interval[T], yy: Interval[T]): Unit =

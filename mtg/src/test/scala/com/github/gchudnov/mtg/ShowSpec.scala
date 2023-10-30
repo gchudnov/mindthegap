@@ -41,7 +41,7 @@ final class ShowSpec extends TestSpec:
           (Interval.proper[Int](Mark.at(Value.InfNeg), Mark.at(Value.InfPos)), "(-∞,+∞)"),
           (Interval.proper[Int](Mark.at(Value.InfNeg), Mark.pred(Value.InfPos)), "(-∞,+∞)"),
           (Interval.proper[Int](Mark.succ(Value.InfNeg), Mark.at(Value.InfPos)), "(-∞,+∞)"),
-          (Interval.proper[Int](Mark.succ(Value.InfNeg), Mark.pred(Value.InfPos)), "(-∞,+∞)")
+          (Interval.proper[Int](Mark.succ(Value.InfNeg), Mark.pred(Value.InfPos)), "(-∞,+∞)"),
         )
 
         forAll(t) { (xx, expected) =>

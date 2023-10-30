@@ -318,7 +318,7 @@ final class MinusSpec extends TestSpec:
         val xs = List(
           Interval.leftClosedRightOpen(0.0, 2.0),
           Interval.leftClosedRightOpen(3.0, 4.0),
-          Interval.leftClosedRightOpen(5.0, 7.0)
+          Interval.leftClosedRightOpen(5.0, 7.0),
         )
 
         val y = Interval.leftClosedRightOpen(1.0, 6.0)
@@ -328,7 +328,7 @@ final class MinusSpec extends TestSpec:
         // [[0,1],[6,7]]
         val expected = List(
           Interval.leftClosedRightOpen(0.0, 1.0),
-          Interval.leftClosedRightOpen(6.0, 7.0)
+          Interval.leftClosedRightOpen(6.0, 7.0),
         )
 
         actual.map(_.canonical) mustBe expected.map(_.canonical)
@@ -348,7 +348,7 @@ final class MinusSpec extends TestSpec:
         // [[0,2],[3,5]]
         val expected = List(
           Interval.leftClosedRightOpen(0.0, 2.0),
-          Interval.leftClosedRightOpen(3.0, 5.0)
+          Interval.leftClosedRightOpen(3.0, 5.0),
         )
 
         actual.map(_.canonical) mustBe expected.map(_.canonical)
