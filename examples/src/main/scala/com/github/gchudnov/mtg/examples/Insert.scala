@@ -66,7 +66,7 @@ object Insert extends App:
     Interval.closed(4, 6),
     Interval.closed(7, 8),
     Interval.closed(9, 11),
-    Interval.closed(13, 17)
+    Interval.closed(13, 17),
   )
   val toInsert2 = Interval.closed(5, 9)
 

@@ -41,7 +41,7 @@ object Remove extends App:
   val input1 = List(
     Interval.leftClosedRightOpen(0.0, 2.0),
     Interval.leftClosedRightOpen(3.0, 4.0),
-    Interval.leftClosedRightOpen(5.0, 7.0)
+    Interval.leftClosedRightOpen(5.0, 7.0),
   )
   val toRemove1 = Interval.leftClosedRightOpen(1.0, 6.0)
 
@@ -97,7 +97,7 @@ object Remove extends App:
     Interval.leftClosedRightOpen(-3.0, -2.0),
     Interval.leftClosedRightOpen(1.0, 2.0),
     Interval.leftClosedRightOpen(3.0, 5.0),
-    Interval.leftClosedRightOpen(8.0, 9.0)
+    Interval.leftClosedRightOpen(8.0, 9.0),
   )
   val toRemove3 = Interval.leftClosedRightOpen(-1.0, 4.0)
 

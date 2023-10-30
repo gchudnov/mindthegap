@@ -5,7 +5,7 @@ Global / cancelable        := true
 Global / scalaVersion      := Settings.globalScalaVersion
 Global / semanticdbEnabled := true
 
-def testFilter(name: String): Boolean = (name endsWith "Spec")
+def testFilter(name: String): Boolean = (name.endsWith("Spec"))
 
 lazy val testSettings = Seq(
   Test / testOptions ++= Seq(Tests.Filter(testFilter))
@@ -21,7 +21,7 @@ lazy val mtg = (project in file("mtg"))
     name := "mtg",
     libraryDependencies ++= Dependencies.Mtg,
     buildInfoKeys    := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "com.github.gchudnov.mtg"
+    buildInfoPackage := "com.github.gchudnov.mtg",
   )
 
 lazy val examples = (project in file("examples"))
@@ -29,7 +29,7 @@ lazy val examples = (project in file("examples"))
   .settings(Settings.noPublish)
   .settings(
     name := "mtg-examples",
-    libraryDependencies ++= Dependencies.Examples
+    libraryDependencies ++= Dependencies.Examples,
   )
 
 lazy val root = (project in file("."))

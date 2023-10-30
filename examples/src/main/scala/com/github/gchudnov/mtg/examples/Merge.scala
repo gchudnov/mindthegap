@@ -38,7 +38,7 @@ object Merge extends App:
     Interval.closed(1, 3),
     Interval.closed(2, 6),
     Interval.closed(8, 10),
-    Interval.closed(15, 18)
+    Interval.closed(15, 18),
   )
 
   runExample(1, xs1)
@@ -60,7 +60,7 @@ object Merge extends App:
    */
   val xs2 = List(
     Interval.closed(1, 4),
-    Interval.closed(4, 5)
+    Interval.closed(4, 5),
   )
 
   runExample(2, xs2)

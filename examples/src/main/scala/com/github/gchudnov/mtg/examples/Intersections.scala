@@ -44,13 +44,13 @@ object Intersections extends App:
     Interval.closed(0, 2),
     Interval.closed(5, 10),
     Interval.closed(13, 23),
-    Interval.closed(24, 25)
+    Interval.closed(24, 25),
   )
   val ys1 = List(
     Interval.closed(1, 5),
     Interval.closed(8, 12),
     Interval.closed(15, 24),
-    Interval.closed(25, 26)
+    Interval.closed(25, 26),
   )
 
   runExample(1, xs1, ys1, canvasWidth = 80)
@@ -71,7 +71,7 @@ object Intersections extends App:
    */
   val xs2 = List(
     Interval.closed(1, 3),
-    Interval.closed(5, 9)
+    Interval.closed(5, 9),
   )
   val ys2 = List.empty[Interval[Int]]
 
