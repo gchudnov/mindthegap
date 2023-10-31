@@ -30,117 +30,78 @@ private[mtg] transparent trait RelBasic[T: Domain]:
 
   /**
    * Before, Precedes (b)
-   *
-   * @see
-   *   [[BeforeAfter.before]]
    */
   final def before(b: Interval[T]): Boolean =
     BeforeAfter.before(a, b)
 
   /**
    * After, IsPrecededBy (B)
-   *
-   * @see
-   *   [[BeforeAfter.after]]
    */
   final def after(b: Interval[T]): Boolean =
     BeforeAfter.after(a, b)
 
   /**
    * Meets (m)
-   *
-   * @see
-   *   [[MeetsIsMetBy.meets]]
    */
   final def meets(b: Interval[T]): Boolean =
     MeetsIsMetBy.meets(a, b)
 
   /**
    * IsMetBy (M)
-   *
-   * @see
-   *   [[MeetsIsMetBy.meets]]
    */
   final def isMetBy(b: Interval[T]): Boolean =
     MeetsIsMetBy.isMetBy(a, b)
 
   /**
    * Overlaps (o)
-   *
-   * @see
-   *   [[OverlapsIsOverlappedBy.overlaps]]
    */
   final def overlaps(b: Interval[T]): Boolean =
     OverlapsIsOverlappedBy.overlaps(a, b)
 
   /**
    * IsOverlappedBy (O)
-   *
-   * @see
-   *   [[OverlapsIsOverlappedBy.isOverlappedBy]]
    */
   final def isOverlappedBy(b: Interval[T]): Boolean =
     OverlapsIsOverlappedBy.isOverlappedBy(a, b)
 
   /**
    * During, ProperlyIncludedIn (d)
-   *
-   * @see
-   *   [[DuringContains.during]]
    */
   final def during(b: Interval[T]): Boolean =
     DuringContains.during(a, b)
 
   /**
    * Contains, ProperlyIncludes (D)
-   *
-   * @see
-   *   [[DuringContains.contains]]
    */
   final def contains(b: Interval[T]): Boolean =
     DuringContains.contains(a, b)
 
   /**
    * Starts, Begins (s)
-   *
-   * @see
-   *   [[StartsIsStartedBy.starts]]
    */
   final def starts(b: Interval[T]): Boolean =
     StartsIsStartedBy.starts(a, b)
 
   /**
    * IsStartedBy (S)
-   *
-   * @see
-   *   [[StartsIsStartedBy.isStartedBy]]
    */
   final def isStartedBy(b: Interval[T]): Boolean =
     StartsIsStartedBy.isStartedBy(a, b)
 
   /**
    * Finishes, Ends (f)
-   *
-   * @see
-   *   [[FinishesIsFinishedBy.finishes]]
    */
   final def finishes(b: Interval[T]): Boolean =
     FinishesIsFinishedBy.finishes(a, b)
 
   /**
    * IsFinishedBy (F)
-   *
-   * @see
-   *   [[FinishesIsFinishedBy.isFinishedBy]]
    */
   final def isFinishedBy(b: Interval[T]): Boolean =
     FinishesIsFinishedBy.isFinishedBy(a, b)
 
   /**
    * Equals (e)
-   *
-   * @see
-   *   [[EqualsTo.equalsTo]]
    */
   final def equalsTo(b: Interval[T]): Boolean =
     EqualsTo.equalsTo(a, b)
