@@ -10,7 +10,7 @@ import com.github.gchudnov.mtg.examples.util.Output
  * Given:
  *   - A collection of intervals where some of them might be overlapping
  *
- * Task:
+ * Then:
  *   - Merge the intervals so that there are no overlaps
  */
 object Merge extends App:

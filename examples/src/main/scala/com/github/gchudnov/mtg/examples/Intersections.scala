@@ -10,7 +10,7 @@ import com.github.gchudnov.mtg.examples.util.Output
  * Given:
  *   - Two collections of intervals, where each collection is sorted and disjoint
  *
- * Task:
+ * Then:
  *   - Find the intersection of the two collections
  */
 object Intersections extends App:

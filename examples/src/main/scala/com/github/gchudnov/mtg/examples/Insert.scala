@@ -11,7 +11,7 @@ import com.github.gchudnov.mtg.examples.util.Output
  *   - A collection of non-overlapping intervals sorted by their start positions
  *   - A single interval
  *
- * Task:
+ * Then:
  *   - Insert the interval into the collection such that the collection remains sorted by their start positions and non-overlapping.
  *
  * }}}

@@ -11,7 +11,7 @@ import com.github.gchudnov.mtg.examples.util.Output
  *   - A collection sorted, disjoint intervals
  *   - A single interval
  *
- * Task:
+ * Then:
  *   - Remove the interval from the collection
  *
  * }}}
