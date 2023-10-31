@@ -16,7 +16,7 @@ lazy val allSettings = Settings.shared ++ testSettings
 lazy val mtg = (project in file("mtg"))
   .enablePlugins(BuildInfoPlugin)
   .settings(allSettings)
-  .settings(Settings.sonatype)
+  .settings(Settings.publishGithub)
   .settings(
     name := "mtg",
     libraryDependencies ++= Dependencies.Mtg,

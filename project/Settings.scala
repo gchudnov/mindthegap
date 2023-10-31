@@ -34,7 +34,11 @@ object Settings {
   val globalScalaVersion: String           = scalaV
   val supportedScalaVersions: List[String] = List(scalaV)
 
-  val sharedResolvers: Vector[MavenRepository] = (Seq(Resolver.mavenLocal) ++ Resolver.sonatypeOssRepos("releases")).toVector
+  val sharedResolvers: Vector[MavenRepository] = Seq(
+    Resolver.mavenLocal,
+    Resolver.jcenterRepo,
+    "GitHub Package Registry".at("https://maven.pkg.github.com/gchudnov/_"),
+  ).toVector
 
   val shared: Seq[Setting[?]] = Seq(
     scalacOptions      := sharedScalacOptions,
@@ -58,10 +62,17 @@ object Settings {
     ),
   )
 
-  val sonatype: Seq[Setting[?]] = Seq(
-    publishMavenStyle             := true,
-    Test / publishArtifact        := false,
-    publishTo                     := Some("Sonatype Releases".at("https://oss.sonatype.org/service/local/staging/deploy/maven2")),
+  val publishSonatype: Seq[Setting[?]] = Seq(
+    publishMavenStyle      := true,
+    pomIncludeRepository   := { _ => false },
+    Test / publishArtifact := false,
+    credentials            := Seq(Credentials(Path.userHome / ".sbt" / ".credentials-sonatype")),
+    usePgpKeyHex("8A64557ABEC7965C31A1DF8DE12F2C6DE96AF6D1"),
+    publishTo := {
+      val nexus = "https://s01.oss.sonatype.org/"
+      if (isSnapshot.value) Some("snapshots".at(nexus + "content/repositories/snapshots"))
+      else Some("releases".at(nexus + "service/local/staging/deploy/maven2"))
+    },
     releaseCrossBuild             := true,
     releaseIgnoreUntrackedFiles   := true,
     releasePublishArtifactsAction := PgpKeys.publishSigned.value,
@@ -79,6 +90,15 @@ object Settings {
       commitNextVersion,
       pushChanges,
     ),
+  )
+
+  val publishGithub: Seq[Setting[?]] = Seq(
+    publishMavenStyle := true,
+    // pomIncludeRepository          := { _ => false },
+    Test / publishArtifact := false,
+    credentials            := Seq(Credentials(Path.userHome / ".sbt" / ".credentials-github")),
+    publishTo              := Some("GitHub MindTheGap Package Registry".at("https://maven.pkg.github.com/gchudnov/mindthegap")),
+    publishConfiguration   := publishConfiguration.value.withOverwrite(true),
   )
 
   val noPublish: Seq[Setting[?]] = Seq(
