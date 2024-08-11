@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.internal
+package com.github.gchudnov.mtg.diagram.internal
 
 import scala.quoted.*
 

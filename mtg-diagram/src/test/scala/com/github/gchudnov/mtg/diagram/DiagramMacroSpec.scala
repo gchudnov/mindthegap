@@ -1,9 +1,10 @@
-package com.github.gchudnov.mtg.internal
+package com.github.gchudnov.mtg.diagram
 
-import com.github.gchudnov.mtg.TestSpec
 import com.github.gchudnov.mtg.Interval
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-final class DiagramMacroSpec extends TestSpec:
+final class DiagramMacroSpec extends AnyWordSpec with Matchers:
 
   "DiagramMacro" when {
     "names are extracted from a passed list of variables" should {
@@ -12,7 +13,7 @@ final class DiagramMacroSpec extends TestSpec:
         val b = 20
         val c = 30
 
-        val actual   = DiagramMacro.varNames(List(a, b, c))
+        val actual   = com.github.gchudnov.mtg.diagram.internal.DiagramMacro.varNames(List(a, b, c))
         val expected = List("a", "b", "c")
 
         actual must contain theSameElementsAs (expected)
@@ -25,7 +26,7 @@ final class DiagramMacroSpec extends TestSpec:
         val b = Interval.closed(10, 15)
         val c = Interval.closed(12, 20)
 
-        val actual   = DiagramMacro.varNames(List(a, b, c))
+        val actual   = com.github.gchudnov.mtg.diagram.internal.DiagramMacro.varNames(List(a, b, c))
         val expected = List("a", "b", "c")
 
         actual must contain theSameElementsAs (expected)
@@ -34,7 +35,7 @@ final class DiagramMacroSpec extends TestSpec:
 
     "names are extracted from a passed list of constants" should {
       "return an empty list" in {
-        val actual   = DiagramMacro.varNames(List(10, 20, 30))
+        val actual   = com.github.gchudnov.mtg.diagram.internal.DiagramMacro.varNames(List(10, 20, 30))
         val expected = List.empty[String]
 
         actual must contain theSameElementsAs (expected)
@@ -44,7 +45,7 @@ final class DiagramMacroSpec extends TestSpec:
     "names are extracted from a passed variable" should {
       "return an empty list" in {
         val xs       = List(10, 20, 30)
-        val actual   = DiagramMacro.varNames(xs)
+        val actual   = com.github.gchudnov.mtg.diagram.internal.DiagramMacro.varNames(xs)
         val expected = List.empty[String]
 
         actual must contain theSameElementsAs (expected)
