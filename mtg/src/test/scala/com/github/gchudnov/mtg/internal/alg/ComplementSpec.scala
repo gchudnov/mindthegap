@@ -144,40 +144,4 @@ final class ComplementSpec extends TestSpec:
         actual mustBe expected
       }
     }
-
-    "complement [doc]" should {
-      "be expected" in {
-        val a = Interval.closed(0, 10)  // [0, 10]
-        val b = Interval.closed(5, 20)  // [5, 20]
-        val c = Interval.closed(25, 30) // [25, 30]
-        val d = Interval.closed(35, 40) // [35, 40]
-
-        val e0 = Interval.rightClosed(-1) // (-∞, -1]
-        val e1 = Interval.closed(21, 24)  // [21, 24]
-        val e2 = Interval.closed(31, 34)  // [31, 34]
-        val e3 = Interval.leftClosed(41)  // [41, +∞)
-
-        val input = List(a, b, c, d)
-
-        val is = Interval.complement(input) // [ (-∞, -1], [21, 24], [31, 34], [41, +∞) ]
-
-        val actual   = is
-        val expected = List(e0, e1, e2, e3)
-
-        actual mustBe expected
-
-        ///
-        import com.github.gchudnov.mtg.Diagram.Canvas
-        import com.github.gchudnov.mtg.Diagram.View
-        import com.github.gchudnov.mtg.Diagram
-
-        val canvas: Canvas  = Canvas.make(40, 2)
-        val view: View[Int] = View.all[Int]
-        val diagram         = Diagram.make(List(a, b, c, d, e0, e1, e2, e3), view, canvas)
-
-        val diag = Diagram.render(diagram)
-
-        diag.isEmpty mustBe (false)
-      }
-    }
   }

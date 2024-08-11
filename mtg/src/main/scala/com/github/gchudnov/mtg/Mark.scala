@@ -1,5 +1,7 @@
 package com.github.gchudnov.mtg
 
+// TODO: change Mark to Point ???
+
 enum Mark[T]:
   case At(value: Value[T])
   case Pred(x: Mark[T])

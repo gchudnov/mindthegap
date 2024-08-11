@@ -17,7 +17,8 @@ final case class Interval[T: Domain](left: Mark[T], right: Mark[T]) extends RelB
   /**
    * Get the size of the interval
    *
-   * Returns Some(N) if the interval is finite and None otherwise.
+   * @return
+   *   Some(N) if the interval is finite and None otherwise.
    */
   def size: Option[Long] =
     (left.eval, right.eval) match

@@ -3,6 +3,9 @@ package com.github.gchudnov.mtg.examples
 import com.github.gchudnov.mtg.*
 import java.time.temporal.ChronoUnit
 import java.time.OffsetDateTime
+import com.github.gchudnov.mtg.diagram.Diagram
+import com.github.gchudnov.mtg.diagram.Canvas
+import com.github.gchudnov.mtg.diagram.View
 
 /**
  * Custom Canvas

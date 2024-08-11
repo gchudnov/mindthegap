@@ -1,12 +1,15 @@
 package com.github.gchudnov.mtg.diagram.internal
 
-import com.github.gchudnov.mtg.Diagram.Canvas
-import com.github.gchudnov.mtg.Diagram.Theme
-import com.github.gchudnov.mtg.Diagram.Tick
-import com.github.gchudnov.mtg.Diagram.Label
-import com.github.gchudnov.mtg.TestSpec
+import com.github.gchudnov.mtg.diagram.Diagram.Canvas
+import com.github.gchudnov.mtg.diagram.Diagram.Theme
+import com.github.gchudnov.mtg.diagram.Diagram.Tick
+import com.github.gchudnov.mtg.diagram.Diagram.Label
+import com.github.gchudnov.mtg.diagram.internal.AsciiRenderer
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-final class DiagramSpec extends TestSpec:
+
+final class DiagramSpec extends AnyWordSpec with Matchers:
 
   private val canvas: Canvas = Canvas.make(40, 2)
 

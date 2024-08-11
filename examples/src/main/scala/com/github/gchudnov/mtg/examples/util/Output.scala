@@ -2,6 +2,7 @@ package com.github.gchudnov.mtg.examples.util
 
 import com.github.gchudnov.mtg.*
 import com.github.gchudnov.mtg.diagram.*
+import com.github.gchudnov.mtg.diagram.Diagram
 
 object Output:
 

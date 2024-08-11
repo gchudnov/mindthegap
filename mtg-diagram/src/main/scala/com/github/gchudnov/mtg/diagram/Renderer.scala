@@ -1,7 +1,5 @@
 package com.github.gchudnov.mtg.diagram
 
-import com.github.gchudnov.mtg.Diagram
-import com.github.gchudnov.mtg.Diagram.Theme
 import com.github.gchudnov.mtg.diagram.internal.AsciiRenderer
 
 /**

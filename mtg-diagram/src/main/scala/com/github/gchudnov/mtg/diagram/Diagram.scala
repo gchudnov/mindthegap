@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.diagram
 
 import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Translator
@@ -10,6 +10,9 @@ import com.github.gchudnov.mtg.diagram.Legend
 import com.github.gchudnov.mtg.diagram.Annotation
 
 import com.github.gchudnov.mtg.internal.DiagramMacro
+import com.github.gchudnov.mtg.Domain
+import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.Mark
 
 /**
  * Diagram

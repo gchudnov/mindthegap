@@ -1,20 +1,24 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.diagram
 
 import com.github.gchudnov.mtg.diagram.Renderer
-import com.github.gchudnov.mtg.Diagram.Canvas
-import com.github.gchudnov.mtg.Diagram.Theme
-import com.github.gchudnov.mtg.Diagram.Span
-import com.github.gchudnov.mtg.Diagram.Tick
-import com.github.gchudnov.mtg.Diagram.Label
-import com.github.gchudnov.mtg.Diagram.Legend
-import com.github.gchudnov.mtg.Diagram.Annotation
-import com.github.gchudnov.mtg.Diagram.View
+import com.github.gchudnov.mtg.diagram.Diagram.Canvas
+import com.github.gchudnov.mtg.diagram.Diagram.Theme
+import com.github.gchudnov.mtg.diagram.Diagram.Span
+import com.github.gchudnov.mtg.diagram.Diagram.Tick
+import com.github.gchudnov.mtg.diagram.Diagram.Label
+import com.github.gchudnov.mtg.diagram.Diagram.Legend
+import com.github.gchudnov.mtg.diagram.Diagram.Annotation
+import com.github.gchudnov.mtg.diagram.Diagram.View
 import java.time.OffsetDateTime
 import java.time.Instant
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import com.github.gchudnov.mtg.Interval
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import com.github.gchudnov.mtg.Domain
 
-final class DiagramSpec extends TestSpec:
+final class DiagramSpec extends AnyWordSpec with Matchers:
 
   private val canvas: Canvas      = Canvas.make(40, 2)
   private val infView: View[Int]  = View.all[Int]
@@ -1228,6 +1232,40 @@ final class DiagramSpec extends TestSpec:
         )
 
         actual mustBe expected
+      }
+
+      "display complement" in {
+        val a = Interval.closed(0, 10)  // [0, 10]
+        val b = Interval.closed(5, 20)  // [5, 20]
+        val c = Interval.closed(25, 30) // [25, 30]
+        val d = Interval.closed(35, 40) // [35, 40]
+
+        val e0 = Interval.rightClosed(-1) // (-∞, -1]
+        val e1 = Interval.closed(21, 24)  // [21, 24]
+        val e2 = Interval.closed(31, 34)  // [31, 34]
+        val e3 = Interval.leftClosed(41)  // [41, +∞)
+
+        val input = List(a, b, c, d)
+
+        val is = Interval.complement(input) // [ (-∞, -1], [21, 24], [31, 34], [41, +∞) ]
+
+        val actual   = is
+        val expected = List(e0, e1, e2, e3)
+
+        actual mustBe expected
+
+        ///
+        import com.github.gchudnov.mtg.diagram.Diagram.Canvas
+        import com.github.gchudnov.mtg.diagram.Diagram.View
+        import com.github.gchudnov.mtg.diagram.Diagram
+
+        val canvas: Canvas  = Canvas.make(40, 2)
+        val view: View[Int] = View.all[Int]
+        val diagram         = Diagram.make(List(a, b, c, d, e0, e1, e2, e3), view, canvas)
+
+        val diag = Diagram.render(diagram)
+
+        diag.isEmpty mustBe (false)
       }
 
       "display short intervals" in {
