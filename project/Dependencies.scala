@@ -3,14 +3,14 @@ import sbt._
 object Dependencies {
 
   object versions {
-    val scalatest     = "3.2.17"
-    val scalacheck    = "1.17.0"
-    val scalatestplus = "3.2.17.0"
+    val scalatest     = "3.2.19"
+    val scalacheck    = "1.18.0"
+    val scalatestplus = "3.2.19.0"
   }
 
   private val scalatest     = "org.scalatest"     %% "scalatest"       % versions.scalatest
   private val scalacheck    = "org.scalacheck"    %% "scalacheck"      % versions.scalacheck
-  private val scalatestplus = "org.scalatestplus" %% "scalacheck-1-17" % versions.scalatestplus
+  private val scalatestplus = "org.scalatestplus" %% "scalacheck-1-18" % versions.scalatestplus
 
   val Mtg: Seq[ModuleID] = {
     val compile = Seq(
