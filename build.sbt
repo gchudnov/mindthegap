@@ -14,18 +14,24 @@ lazy val testSettings = Seq(
 lazy val allSettings = Settings.shared ++ testSettings
 
 lazy val mtg = (project in file("mtg"))
-  .enablePlugins(BuildInfoPlugin)
   .settings(allSettings)
   .settings(Settings.publishGithub)
   .settings(
     name := "mtg",
     libraryDependencies ++= Dependencies.Mtg,
-    buildInfoKeys    := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "com.github.gchudnov.mtg",
+  )
+
+lazy val mtgStdout = (project in file("mtg-stdout"))
+  .dependsOn(mtg)
+  .settings(allSettings)
+  .settings(Settings.publishGithub)
+  .settings(
+    name := "mtg-stdout",
+    libraryDependencies ++= Dependencies.Mtg,
   )
 
 lazy val examples = (project in file("examples"))
-  .dependsOn(mtg)
+  .dependsOn(mtg, mtgStdout)
   .settings(Settings.noPublish)
   .settings(
     name := "mtg-examples",
@@ -33,7 +39,7 @@ lazy val examples = (project in file("examples"))
   )
 
 lazy val root = (project in file("."))
-  .aggregate(mtg, examples)
+  .aggregate(mtg, mtgStdout, examples)
   .settings(Settings.noPublish)
   .settings(
     name := "mtg-root"
