@@ -110,12 +110,12 @@ object Diagram:
   private def toLabels[T: Domain](c: Canvas, i: Interval[T], span: Span): List[Label] =
     val xs =
       if i.isEmpty then List.empty[Label]
-      else if i.isPoint then List(Label.make(span.x0, Show.str(i.left.eval)))
+      else if i.isPoint then List(Label.make(span.x0, i.left.eval.toString())) // TODO: Show.str
       else
         val i1 = i.normalize
         List(
-          Label.make(span.x0, Show.str(i1.left.innerValue)),
-          Label.make(span.x1, Show.str(i1.right.innerValue)),
+          Label.make(span.x0, i1.left.innerValue.toString()), // TODO: Show.str
+          Label.make(span.x1, i1.right.innerValue.toString()), // TODO: Show.str
         )
 
     val ys = xs.map(x => positionLabelOnCanvas(x, c))

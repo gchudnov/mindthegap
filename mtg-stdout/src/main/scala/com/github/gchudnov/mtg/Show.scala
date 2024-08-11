@@ -15,6 +15,10 @@ object Show:
 
   private val sep = ','
 
+  extension [T: Domain](i: Interval[T])
+    def asString: String =
+      Show.print[T](i)
+
   def print[T: Domain](i: Interval[T]): String =
     if i.isEmpty then empty.toString()
     else if i.isPoint then

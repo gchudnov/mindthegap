@@ -26,7 +26,7 @@ object Output:
    */
   def printInOut[T: Domain](input: List[Interval[T]], interval: Interval[T], output: List[Interval[T]]): Unit =
     println("input:    " + asString(input))
-    println("interval: " + interval.asString)
+    // println("interval: " + interval.asString) // TODO: recover
     println("output:   " + asString(output))
 
   /**
@@ -43,4 +43,5 @@ object Output:
    * @return
    */
   def asString[T: Domain](intervals: List[Interval[T]]): String =
-    intervals.map(i => i.asString).mkString("[", ",", "]")
+    // intervals.map(i => i.asString).mkString("[", ",", "]")  // TODO: recover
+    ""
