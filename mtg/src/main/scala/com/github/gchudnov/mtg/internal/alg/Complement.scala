@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg.internal.alg
 
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
-import com.github.gchudnov.mtg.Value
+import com.github.gchudnov.mtg.internal.Value
 
 private[mtg] object Complement:
 

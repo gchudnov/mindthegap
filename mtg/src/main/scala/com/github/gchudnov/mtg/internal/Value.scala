@@ -1,6 +1,8 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.internal
 
-enum Value[+T]:
+import com.github.gchudnov.mtg.Domain
+
+private[mtg] enum Value[+T]:
   case Finite(x: T)
   case InfNeg extends Value[Nothing]
   case InfPos extends Value[Nothing]
@@ -44,7 +46,7 @@ enum Value[+T]:
       case x @ Value.InfPos =>
         x
 
-object Value:
+private[mtg] object Value:
 
   // given valueOrdering[T: Ordering]: Ordering[Value[T]] =
   //   new ValueOrdering[T]

@@ -1,6 +1,6 @@
 package com.github.gchudnov.mtg.internal.ordering
 
-import com.github.gchudnov.mtg.Value
+import com.github.gchudnov.mtg.internal.Value
 
 /**
   * Ordering of the values.

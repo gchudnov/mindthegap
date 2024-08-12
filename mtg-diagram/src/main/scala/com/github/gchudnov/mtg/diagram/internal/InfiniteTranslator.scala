@@ -1,7 +1,7 @@
 package com.github.gchudnov.mtg.diagram.internal
 
 import com.github.gchudnov.mtg.Domain
-import com.github.gchudnov.mtg.Value
+import com.github.gchudnov.mtg.internal.Value
 import com.github.gchudnov.mtg.diagram.Translator
 import com.github.gchudnov.mtg.diagram.{Canvas}
 

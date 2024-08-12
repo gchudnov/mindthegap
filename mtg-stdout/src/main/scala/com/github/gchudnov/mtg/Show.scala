@@ -1,4 +1,6 @@
 package com.github.gchudnov.mtg
+import internal.Value
+import internal.Endpoint
 
 object Show:
   private val infinite = '∞'
@@ -34,31 +36,31 @@ object Show:
 
   private[mtg] def str[T](x: Value[T]): String =
     x match
-      case Value.InfNeg =>
+      case internal.Value.InfNeg =>
         s"-${infinite}"
-      case Value.InfPos =>
+      case internal.Value.InfPos =>
         s"+${infinite}"
-      case Value.Finite(x) =>
+      case internal.Value.Finite(x) =>
         x.toString()
 
   private def showLeft[T: Domain](left: Endpoint[T]): String =
     val (x, isInclude) = left match
-      case Endpoint.At(x) =>
+      case internal.Endpoint.At(x) =>
         (x, !x.isInf)
-      case Endpoint.Pred(_) =>
+      case internal.Endpoint.Pred(_) =>
         val x = left.eval
         (x, !x.isInf)
-      case Endpoint.Succ(xx) =>
+      case internal.Endpoint.Succ(xx) =>
         (xx.eval, false)
     s"${leftBound(isInclude)}${str(x)}"
 
   private def showRight[T: Domain](right: Endpoint[T]): String =
     val (y, isInclude) = right match
-      case Endpoint.At(y) =>
+      case internal.Endpoint.At(y) =>
         (y, !y.isInf)
-      case Endpoint.Pred(yy) =>
+      case internal.Endpoint.Pred(yy) =>
         (yy.eval, false)
-      case Endpoint.Succ(yy) =>
+      case internal.Endpoint.Succ(yy) =>
         val y = right.eval
         (y, !y.isInf)
     s"${str(y)}${rightBound(isInclude)}"

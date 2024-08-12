@@ -33,18 +33,18 @@ final class ShowSpec extends AnyWordSpec with Matchers:
         // NOTE: it is not possible to have closed boundaries for infinity: [-∞,+∞]
         val t = Table(
           ("x", "expected"),
-          (Interval.proper(Endpoint.at(1), Endpoint.at(2)), "[1,2]"),
-          (Interval.proper(Endpoint.at(1), Endpoint.pred(3)), "[1,3)"),
-          (Interval.proper(Endpoint.succ(1), Endpoint.at(3)), "(1,3]"),
-          (Interval.proper(Endpoint.succ(1), Endpoint.pred(4)), "(1,4)"),
-          (Interval.proper(Endpoint.at(Value.InfNeg), Endpoint.at(2)), "(-∞,2]"),
-          (Interval.proper(Endpoint.succ(Value.InfNeg), Endpoint.pred(2)), "(-∞,2)"),
-          (Interval.proper(Endpoint.at(1), Endpoint.at(Value.InfPos)), "[1,+∞)"),
-          (Interval.proper(Endpoint.succ(1), Endpoint.pred(Value.InfPos)), "(1,+∞)"),
-          (Interval.proper[Int](Endpoint.at(Value.InfNeg), Endpoint.at(Value.InfPos)), "(-∞,+∞)"),
-          (Interval.proper[Int](Endpoint.at(Value.InfNeg), Endpoint.pred(Value.InfPos)), "(-∞,+∞)"),
-          (Interval.proper[Int](Endpoint.succ(Value.InfNeg), Endpoint.at(Value.InfPos)), "(-∞,+∞)"),
-          (Interval.proper[Int](Endpoint.succ(Value.InfNeg), Endpoint.pred(Value.InfPos)), "(-∞,+∞)"),
+          (Interval.proper(internal.Endpoint.at(1), internal.Endpoint.at(2)), "[1,2]"),
+          (Interval.proper(internal.Endpoint.at(1), internal.Endpoint.pred(3)), "[1,3)"),
+          (Interval.proper(internal.Endpoint.succ(1), internal.Endpoint.at(3)), "(1,3]"),
+          (Interval.proper(internal.Endpoint.succ(1), internal.Endpoint.pred(4)), "(1,4)"),
+          (Interval.proper(internal.Endpoint.at(internal.Value.InfNeg), internal.Endpoint.at(2)), "(-∞,2]"),
+          (Interval.proper(internal.Endpoint.succ(internal.Value.InfNeg), internal.Endpoint.pred(2)), "(-∞,2)"),
+          (Interval.proper(internal.Endpoint.at(1), internal.Endpoint.at(internal.Value.InfPos)), "[1,+∞)"),
+          (Interval.proper(internal.Endpoint.succ(1), internal.Endpoint.pred(internal.Value.InfPos)), "(1,+∞)"),
+          (Interval.proper[Int](internal.Endpoint.at(internal.Value.InfNeg), internal.Endpoint.at(internal.Value.InfPos)), "(-∞,+∞)"),
+          (Interval.proper[Int](internal.Endpoint.at(internal.Value.InfNeg), internal.Endpoint.pred(internal.Value.InfPos)), "(-∞,+∞)"),
+          (Interval.proper[Int](internal.Endpoint.succ(internal.Value.InfNeg), internal.Endpoint.at(internal.Value.InfPos)), "(-∞,+∞)"),
+          (Interval.proper[Int](internal.Endpoint.succ(internal.Value.InfNeg), internal.Endpoint.pred(internal.Value.InfPos)), "(-∞,+∞)"),
         )
 
         forAll(t) { (xx, expected) =>

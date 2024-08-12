@@ -1,6 +1,6 @@
 package com.github.gchudnov.mtg.internal.alg
 
-import com.github.gchudnov.mtg.Endpoint
+import com.github.gchudnov.mtg.internal.Endpoint
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 import scala.collection.mutable.ListBuffer

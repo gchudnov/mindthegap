@@ -1,7 +1,7 @@
 package com.github.gchudnov.mtg.ordering
 
 import com.github.gchudnov.mtg.Domain
-import com.github.gchudnov.mtg.Value
+import com.github.gchudnov.mtg.internal.Value
 import com.github.gchudnov.mtg.TestSpec
 
 final class ValueOrderingSpec extends TestSpec:

@@ -3,6 +3,8 @@ package com.github.gchudnov.mtg
 import com.github.gchudnov.mtg.internal.ordering.ValueOrdering
 import com.github.gchudnov.mtg.internal.ordering.EndpointOrdering
 import com.github.gchudnov.mtg.internal.DomainLowPriority
+import internal.Value
+import internal.Endpoint
 
 /**
  * Trait to get a successor and the predecessor value.

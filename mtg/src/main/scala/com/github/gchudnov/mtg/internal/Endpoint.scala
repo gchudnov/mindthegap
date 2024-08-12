@@ -1,9 +1,12 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.internal
+
+import com.github.gchudnov.mtg.Domain
+
 
 /**
  * Interval's endpoint.
  */
-enum Endpoint[T]:
+private[mtg] enum Endpoint[T]:
   case At(value: Value[T])
   case Pred(x: Endpoint[T])
   case Succ(x: Endpoint[T])
@@ -56,7 +59,7 @@ enum Endpoint[T]:
    * 
    * TODO: most likely remove -- check dependencies in diagraming
    */
-  private[mtg] def innerValue(using Domain[T]): Value[T] =
+  def innerValue(using Domain[T]): Value[T] =
     this match
       case At(x) =>
         x
@@ -69,7 +72,7 @@ enum Endpoint[T]:
       case Succ(x) =>
         x.innerValue
 
-object Endpoint:
+private[mtg] object Endpoint:
 
   def at[T](x: Value[T]): Endpoint.At[T] =
     Endpoint.At(x)

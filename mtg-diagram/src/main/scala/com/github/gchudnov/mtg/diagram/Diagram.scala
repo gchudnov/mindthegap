@@ -12,7 +12,7 @@ import com.github.gchudnov.mtg.diagram.Annotation
 import com.github.gchudnov.mtg.diagram.internal.DiagramMacro
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
-import com.github.gchudnov.mtg.Endpoint
+import com.github.gchudnov.mtg.internal.Endpoint
 
 /**
  * Diagram
