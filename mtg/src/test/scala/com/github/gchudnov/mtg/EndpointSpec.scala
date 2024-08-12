@@ -3,10 +3,10 @@ package com.github.gchudnov.mtg
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 
-final class MarkSpec extends TestSpec:
+final class EndpointSpec extends TestSpec:
 
-  "Mark" when {
-    "Mark.At" should {
+  "Endpoint" when {
+    "Endpoint.At" should {
       "construct from T" in {
         val actual   = Endpoint.at(1)
         val expected = Endpoint.At(Value.Finite(1))
@@ -81,8 +81,8 @@ final class MarkSpec extends TestSpec:
       }
     }
 
-    "Mark.Pred" should {
-      "construct from Mark" in {
+    "Endpoint.Pred" should {
+      "construct from Endpoint" in {
         val actual   = Endpoint.pred(Endpoint.at(1))
         val expected = Endpoint.Pred(Endpoint.At(Value.Finite(1)))
 
@@ -149,8 +149,8 @@ final class MarkSpec extends TestSpec:
       }
     }
 
-    "Mark.Succ" should {
-      "construct from Mark" in {
+    "Endpoint.Succ" should {
+      "construct from Endpoint" in {
         val actual   = Endpoint.succ(Endpoint.at(1))
         val expected = Endpoint.Succ(Endpoint.At(Value.Finite(1)))
 
