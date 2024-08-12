@@ -5,7 +5,8 @@ import com.github.gchudnov.mtg.*
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
-import internal.Endpoint
+import com.github.gchudnov.mtg.internal.Endpoint
+import com.github.gchudnov.mtg.internal.Value
 
 final class IntervalSpec extends TestSpec:
 
@@ -60,25 +61,25 @@ final class IntervalSpec extends TestSpec:
 
       "handle edge cases" in {
         // [0, 0)
-        Interval.make(internal.Endpoint.at(0), internal.Endpoint.pred(0)).isEmpty mustBe true
+        Interval.make(Endpoint.at(0), Endpoint.pred(0)).isEmpty mustBe true
 
         // [-inf, +inf]
-        Interval.make[Int](internal.Endpoint.at(internal.Value.infNeg), internal.Endpoint.at(internal.Value.infPos)).isProper mustBe true
+        Interval.make[Int](Endpoint.at(Value.infNeg), Endpoint.at(Value.infPos)).isProper mustBe true
 
         // (-inf, +inf)
-        Interval.make[Int](internal.Endpoint.succ(internal.Value.infNeg), internal.Endpoint.pred(internal.Value.infPos)).isProper mustBe true
+        Interval.make[Int](Endpoint.succ(Value.infNeg), Endpoint.pred(Value.infPos)).isProper mustBe true
 
         // (3, 5)
-        Interval.make(internal.Endpoint.succ(3), internal.Endpoint.pred(5)).isPoint mustBe true
+        Interval.make(Endpoint.succ(3), Endpoint.pred(5)).isPoint mustBe true
 
         // [4, 4]
-        Interval.make(internal.Endpoint.at(4), internal.Endpoint.at(4)).isPoint mustBe true
+        Interval.make(Endpoint.at(4), Endpoint.at(4)).isPoint mustBe true
 
         // (3, 4]
-        Interval.make(internal.Endpoint.succ(3), internal.Endpoint.at(4)).isPoint mustBe true
+        Interval.make(Endpoint.succ(3), Endpoint.at(4)).isPoint mustBe true
 
         // [4, 5)
-        Interval.make(internal.Endpoint.at(4), internal.Endpoint.pred(5)).isPoint mustBe true
+        Interval.make(Endpoint.at(4), Endpoint.pred(5)).isPoint mustBe true
       }
 
       "create an open interval from Option[T]" in {
@@ -125,8 +126,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (true)
 
-        a.leftEndpoint mustBe internal.Endpoint.at(internal.Value.infPos)
-        a.rightEndpoint mustBe internal.Endpoint.at(internal.Value.infNeg)
+        a.leftEndpoint mustBe Endpoint.at(Value.infPos)
+        a.rightEndpoint mustBe Endpoint.at(Value.infNeg)
       }
 
       "Interval.point(x)" in {
@@ -140,13 +141,13 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (false)
         a.nonProper mustBe (true)
 
-        ordE.equiv(a.leftEndpoint, internal.Endpoint.at(5)) mustBe true
-        ordE.equiv(a.rightEndpoint, internal.Endpoint.at(5)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(5)) mustBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(5)) mustBe true
       }
 
       "Interval.proper(x, y)" in {
         // (1, 5)
-        val a = Interval.proper(internal.Endpoint.succ(1), internal.Endpoint.pred(5))
+        val a = Interval.proper(Endpoint.succ(1), Endpoint.pred(5))
 
         a.isEmpty mustBe (false)
         a.isPoint mustBe (false)
@@ -170,8 +171,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordE.equiv(a.leftEndpoint, internal.Endpoint.at(internal.Value.infNeg)) mustBe true
-        ordE.equiv(a.rightEndpoint, internal.Endpoint.at(internal.Value.infPos)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) mustBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) mustBe true
       }
 
       "Interval.open(x, y)" in {
@@ -185,8 +186,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordE.equiv(a.leftEndpoint, internal.Endpoint.succ(1)) mustBe true
-        ordE.equiv(a.rightEndpoint, internal.Endpoint.pred(5)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.succ(1)) mustBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.pred(5)) mustBe true
       }
 
       "Interval.closed(x, y)" in {
@@ -200,8 +201,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordE.equiv(a.leftEndpoint, internal.Endpoint.at(1)) mustBe true
-        ordE.equiv(a.rightEndpoint, internal.Endpoint.at(5)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(1)) mustBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(5)) mustBe true
       }
 
       "Interval.leftOpen(x)" in {
@@ -215,8 +216,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordE.equiv(a.leftEndpoint, internal.Endpoint.succ(1)) mustBe true
-        ordE.equiv(a.rightEndpoint, internal.Endpoint.at(internal.Value.infPos)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.succ(1)) mustBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) mustBe true
       }
 
       "Interval.leftClosed(x)" in {
@@ -230,8 +231,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordE.equiv(a.leftEndpoint, internal.Endpoint.at(5)) mustBe true
-        ordE.equiv(a.rightEndpoint, internal.Endpoint.at(internal.Value.infPos)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(5)) mustBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) mustBe true
       }
 
       "Interval.rightOpen(x)" in {
@@ -245,8 +246,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordE.equiv(a.leftEndpoint, internal.Endpoint.at(internal.Value.infNeg)) mustBe true
-        ordE.equiv(a.rightEndpoint, internal.Endpoint.pred(1)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) mustBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.pred(1)) mustBe true
       }
 
       "Interval.rightClosed(x)" in {
@@ -260,8 +261,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordE.equiv(a.leftEndpoint, internal.Endpoint.at(internal.Value.infNeg)) mustBe true
-        ordE.equiv(a.rightEndpoint, internal.Endpoint.at(5)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) mustBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(5)) mustBe true
       }
 
       "Interval.leftClosedRightOpen(x, y)" in {
@@ -275,8 +276,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordE.equiv(a.leftEndpoint, internal.Endpoint.at(1)) mustBe true
-        ordE.equiv(a.rightEndpoint, internal.Endpoint.pred(10)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(1)) mustBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.pred(10)) mustBe true
       }
 
       "Interval.leftOpenRightClosed(x, y)" in {
@@ -290,8 +291,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordE.equiv(a.leftEndpoint, internal.Endpoint.succ(1)) mustBe true
-        ordE.equiv(a.rightEndpoint, internal.Endpoint.at(10)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.succ(1)) mustBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(10)) mustBe true
       }
 
     }
@@ -312,8 +313,8 @@ final class IntervalSpec extends TestSpec:
 
         // {2} = {2}
         Interval.point(2).canonical mustBe Interval.point(2)
-        Interval.make(internal.Endpoint.at(2), internal.Endpoint.at(2)).canonical mustBe Interval.point(2)
-        Interval.make(internal.Endpoint.succ(1), internal.Endpoint.pred(3)).canonical mustBe Interval.point(2)
+        Interval.make(Endpoint.at(2), Endpoint.at(2)).canonical mustBe Interval.point(2)
+        Interval.make(Endpoint.succ(1), Endpoint.pred(3)).canonical mustBe Interval.point(2)
       }
 
       "double canonical is canonical" in {
@@ -324,43 +325,43 @@ final class IntervalSpec extends TestSpec:
     "normalize" should {
       "provide a normal form of the intervals" in {
         // [1, 5] -> [1, 5]
-        Interval.make(internal.Endpoint.at(1), internal.Endpoint.at(5)).normalize mustBe Interval.closed(1, 5)
+        Interval.make(Endpoint.at(1), Endpoint.at(5)).normalize mustBe Interval.closed(1, 5)
 
         // )1, 5] -> [0, 5]
-        Interval.make(internal.Endpoint.pred(1), internal.Endpoint.at(5)).normalize mustBe Interval.closed(0, 5)
+        Interval.make(Endpoint.pred(1), Endpoint.at(5)).normalize mustBe Interval.closed(0, 5)
 
         // ))1, 5] -> [-1, 5]
-        Interval.make(internal.Endpoint.pred(internal.Endpoint.pred(1)), internal.Endpoint.at(5)).normalize mustBe Interval.closed(-1, 5)
+        Interval.make(Endpoint.pred(Endpoint.pred(1)), Endpoint.at(5)).normalize mustBe Interval.closed(-1, 5)
 
         // (1, 5] -> (1, 5]
-        Interval.make(internal.Endpoint.succ(1), internal.Endpoint.at(5)).normalize mustBe Interval.leftOpenRightClosed(1, 5)
+        Interval.make(Endpoint.succ(1), Endpoint.at(5)).normalize mustBe Interval.leftOpenRightClosed(1, 5)
 
         // ((1, 5] -> (2, 5]
-        Interval.make(internal.Endpoint.succ(internal.Endpoint.succ(1)), internal.Endpoint.at(5)).normalize mustBe Interval.leftOpenRightClosed(2, 5)
+        Interval.make(Endpoint.succ(Endpoint.succ(1)), Endpoint.at(5)).normalize mustBe Interval.leftOpenRightClosed(2, 5)
 
         // [1, 5) -> [1, 5)
-        Interval.make(internal.Endpoint.at(1), internal.Endpoint.pred(5)).normalize mustBe Interval.leftClosedRightOpen(1, 5)
+        Interval.make(Endpoint.at(1), Endpoint.pred(5)).normalize mustBe Interval.leftClosedRightOpen(1, 5)
 
         // [1, 5)) -> [1, 4)
-        Interval.make(internal.Endpoint.at(1), internal.Endpoint.pred(internal.Endpoint.pred(5))).normalize mustBe Interval.leftClosedRightOpen(1, 4)
+        Interval.make(Endpoint.at(1), Endpoint.pred(Endpoint.pred(5))).normalize mustBe Interval.leftClosedRightOpen(1, 4)
 
         // [1, 5( -> [1, 6]
-        Interval.make(internal.Endpoint.at(1), internal.Endpoint.succ(5)).normalize mustBe Interval.closed(1, 6)
+        Interval.make(Endpoint.at(1), Endpoint.succ(5)).normalize mustBe Interval.closed(1, 6)
 
         // [1, 5(( -> [1, 7]
-        Interval.make(internal.Endpoint.at(1), internal.Endpoint.succ(internal.Endpoint.succ(5))).normalize mustBe Interval.closed(1, 7)
+        Interval.make(Endpoint.at(1), Endpoint.succ(Endpoint.succ(5))).normalize mustBe Interval.closed(1, 7)
 
         // ))1, 5((
-        Interval.make(internal.Endpoint.pred(internal.Endpoint.pred(1)), internal.Endpoint.succ(internal.Endpoint.succ(5))).normalize mustBe Interval.closed(-1, 7)
+        Interval.make(Endpoint.pred(Endpoint.pred(1)), Endpoint.succ(Endpoint.succ(5))).normalize mustBe Interval.closed(-1, 7)
       }
     }
 
     "swap" should {
       "swap left and right in positive interval" in {
-        val a = Interval.make(internal.Endpoint.at(1), internal.Endpoint.at(5))
+        val a = Interval.make(Endpoint.at(1), Endpoint.at(5))
 
         val actual   = a.swap
-        val expected = Interval.make(internal.Endpoint.at(5), internal.Endpoint.at(1))
+        val expected = Interval.make(Endpoint.at(5), Endpoint.at(1))
 
         a.isEmpty mustBe (false)
         actual.isEmpty mustBe (true)
@@ -369,10 +370,10 @@ final class IntervalSpec extends TestSpec:
       }
 
       "swap left and right in negative interval" in {
-        val a = Interval.make(internal.Endpoint.at(5), internal.Endpoint.at(1))
+        val a = Interval.make(Endpoint.at(5), Endpoint.at(1))
 
         val actual   = a.swap
-        val expected = Interval.make(internal.Endpoint.at(1), internal.Endpoint.at(5))
+        val expected = Interval.make(Endpoint.at(1), Endpoint.at(5))
 
         a.isEmpty mustBe (true)
         actual.isEmpty mustBe (false)
@@ -381,7 +382,7 @@ final class IntervalSpec extends TestSpec:
       }
 
       "double-swap restores the original interval" in {
-        val a = Interval.make(internal.Endpoint.at(5), internal.Endpoint.at(1))
+        val a = Interval.make(Endpoint.at(5), Endpoint.at(1))
 
         val actual   = a.swap.swap
         val expected = a

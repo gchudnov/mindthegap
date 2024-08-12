@@ -1,4 +1,8 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.internal
+
+import com.github.gchudnov.mtg.TestSpec
+import com.github.gchudnov.mtg.Domain
+
 
 final class ValueSpec extends TestSpec:
 
@@ -6,8 +10,8 @@ final class ValueSpec extends TestSpec:
 
     "constructed" should {
       "construct Value.Finite" in {
-        val actual   = internal.Value.finite(1)
-        val expected = internal.Value.Finite(1)
+        val actual   = Value.finite(1)
+        val expected = Value.Finite(1)
 
         actual.isFinite mustBe (true)
         actual.isInfNeg mustBe (false)
@@ -17,8 +21,8 @@ final class ValueSpec extends TestSpec:
       }
 
       "construct Value.InfNeg" in {
-        val actual   = internal.Value.infNeg
-        val expected = internal.Value.InfNeg
+        val actual   = Value.infNeg
+        val expected = Value.InfNeg
 
         actual.isFinite mustBe (false)
         actual.isInfNeg mustBe (true)
@@ -28,8 +32,8 @@ final class ValueSpec extends TestSpec:
       }
 
       "construct Value.InfPos" in {
-        val actual   = internal.Value.infPos
-        val expected = internal.Value.InfPos
+        val actual   = Value.infPos
+        val expected = Value.InfPos
 
         actual.isFinite mustBe (false)
         actual.isInfNeg mustBe (false)
@@ -41,79 +45,79 @@ final class ValueSpec extends TestSpec:
 
     "Value.Finite(x)" should {
       "check the properties" in {
-        val x = internal.Value.Finite(1)
+        val x = Value.Finite(1)
 
         x.isFinite mustBe (true)
         x.isInfNeg mustBe (false)
         x.isInfPos mustBe (false)
 
         x match
-          case internal.Value.Finite(y) =>
+          case Value.Finite(y) =>
             y mustBe (1)
           case other =>
             fail(s"expected to match with Value.Finite(y), got ${other}")
       }
 
       "x.succ" in {
-        val x = internal.Value.Finite(1)
-        x.succ mustBe internal.Value.Finite(2)
+        val x = Value.Finite(1)
+        x.succ mustBe Value.Finite(2)
       }
 
       "x.pred" in {
-        val x = internal.Value.Finite(1)
-        x.pred mustBe internal.Value.Finite(0)
+        val x = Value.Finite(1)
+        x.pred mustBe Value.Finite(0)
       }
     }
 
     "Value.InfNeg" should {
       "check the properties" in {
-        val x = internal.Value.InfNeg
+        val x = Value.InfNeg
 
         x.isFinite mustBe (false)
         x.isInfNeg mustBe (true)
         x.isInfPos mustBe (false)
 
         x match
-          case internal.Value.InfNeg =>
+          case Value.InfNeg =>
           // no-op
           case other =>
             fail(s"expected to match with Value.InfNeg, got ${other}")
       }
 
       "x.succ" in {
-        val x = internal.Value.InfNeg
-        x.succ[Int] mustBe internal.Value.InfNeg
+        val x = Value.InfNeg
+        x.succ[Int] mustBe Value.InfNeg
       }
 
       "x.pred" in {
-        val x = internal.Value.InfNeg
-        x.pred[Int] mustBe internal.Value.InfNeg
+        val x = Value.InfNeg
+        x.pred[Int] mustBe Value.InfNeg
       }
     }
 
     "Value.InfPos" should {
       "check the properties" in {
-        val x = internal.Value.InfPos
+        val x = Value.InfPos
 
         x.isFinite mustBe (false)
         x.isInfNeg mustBe (false)
         x.isInfPos mustBe (true)
 
         x match
-          case internal.Value.InfPos =>
+          case Value.InfPos =>
           // no-op
           case other =>
             fail(s"expected to match with Value.InfPos, got ${other}")
       }
 
       "x.succ" in {
-        val x = internal.Value.InfPos
-        x.succ[Int] mustBe internal.Value.InfPos
+        val x = Value.InfPos
+        x.succ[Int] mustBe Value.InfPos
       }
 
       "x.pred" in {
-        val x = internal.Value.InfPos
-        x.pred[Int] mustBe internal.Value.InfPos
+        val x = Value.InfPos
+        x.pred[Int] mustBe Value.InfPos
       }
     }
   }

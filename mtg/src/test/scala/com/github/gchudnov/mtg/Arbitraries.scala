@@ -1,7 +1,8 @@
 package com.github.gchudnov.mtg
 
+import com.github.gchudnov.mtg.internal.Endpoint
+import com.github.gchudnov.mtg.internal.Value
 import org.scalacheck.Gen
-import internal.Endpoint
 
 object Arbitraries:
 
@@ -181,21 +182,21 @@ object Arbitraries:
   private def toLeft[T](value: Option[T], isInclude: Boolean): Endpoint[T] =
     (value, isInclude) match
       case (Some(x), true) =>
-        internal.Endpoint.at(internal.Value.finite(x))
+        Endpoint.at(Value.finite(x))
       case (Some(x), false) =>
-        internal.Endpoint.succ(internal.Value.finite(x))
+        Endpoint.succ(Value.finite(x))
       case (None, true) =>
-        internal.Endpoint.at(internal.Value.infNeg)
+        Endpoint.at(Value.infNeg)
       case (None, false) =>
-        internal.Endpoint.succ(internal.Value.infNeg)
+        Endpoint.succ(Value.infNeg)
 
   private def toRight[T](value: Option[T], isInclude: Boolean): Endpoint[T] =
     (value, isInclude) match
       case (Some(x), true) =>
-        internal.Endpoint.at(internal.Value.finite(x))
+        Endpoint.at(Value.finite(x))
       case (Some(x), false) =>
-        internal.Endpoint.pred(internal.Value.finite(x))
+        Endpoint.pred(Value.finite(x))
       case (None, true) =>
-        internal.Endpoint.at(internal.Value.infPos)
+        Endpoint.at(Value.infPos)
       case (None, false) =>
-        internal.Endpoint.pred(internal.Value.infPos)
+        Endpoint.pred(Value.infPos)
