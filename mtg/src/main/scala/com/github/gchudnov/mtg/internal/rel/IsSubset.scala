@@ -23,5 +23,5 @@ private[mtg] object IsSubset:
    * }}}
    */
   final def isSubset[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
+    val ordM = summon[Domain[T]].ordEndpoint
     a.nonEmpty && b.nonEmpty && ordM.gteq(a.left, b.left) && ordM.lteq(a.right, b.right)

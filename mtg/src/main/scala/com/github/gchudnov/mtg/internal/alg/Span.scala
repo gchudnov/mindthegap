@@ -37,5 +37,5 @@ private[mtg] object Span:
    *   - Associative: (A # B) # C = A # (B # C)
    */
   final def span[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
-    val ordM = summon[Domain[T]].ordMark
+    val ordM = summon[Domain[T]].ordEndpoint
     Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))

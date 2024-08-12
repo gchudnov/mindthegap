@@ -14,7 +14,7 @@ final class MinusSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordMark
+  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "Minus" when {
     "a.minus(b)" should {

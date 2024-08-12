@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg.ordering
 
 import com.github.gchudnov.mtg.Value
 
-final class ValueOrdering[T: Ordering] extends Ordering[Value[T]]:
+private[mtg] final class ValueOrdering[T: Ordering] extends Ordering[Value[T]]:
 
   override def compare(x: Value[T], y: Value[T]): Int =
     (x, y) match

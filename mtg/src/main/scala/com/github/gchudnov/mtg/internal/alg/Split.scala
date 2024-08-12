@@ -38,7 +38,7 @@ private[mtg] object Split:
       val tPlus  = if p.s == Side.Left then p.pt.pred else p.pt
 
       val splits1 =
-        if summon[Domain[T]].ordMark.lteq(tMinus, tPlus) then splits :+ SingleSplit(Interval.make(tMinus, tPlus), open) else splits
+        if summon[Domain[T]].ordEndpoint.lteq(tMinus, tPlus) then splits :+ SingleSplit(Interval.make(tMinus, tPlus), open) else splits
 
       val open1 = if p.s == Side.Left then open + p.i else open - p.i
       val last1 = p
@@ -57,7 +57,7 @@ private[mtg] object Split:
         false
 
   private def isLess[T: Domain](x: SplitPoint[T], y: SplitPoint[T]): Boolean =
-    summon[Domain[T]].ordMark.compare(x.pt, y.pt) match
+    summon[Domain[T]].ordEndpoint.compare(x.pt, y.pt) match
       case 0 =>
         isLess(x.s, y.s)
       case 1 =>

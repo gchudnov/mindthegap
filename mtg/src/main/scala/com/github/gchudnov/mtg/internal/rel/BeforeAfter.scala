@@ -38,7 +38,7 @@ private[mtg] object BeforeAfter:
    *   true if a is before b
    */
   final def before[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
+    val ordM = summon[Domain[T]].ordEndpoint
     a.nonEmpty && b.nonEmpty && ordM.lt(a.right, b.left)
 
   /**

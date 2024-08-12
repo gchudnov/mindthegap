@@ -29,5 +29,5 @@ private[mtg] object EqualsTo:
    * }}}
    */
   final def equalsTo[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
+    val ordM = summon[Domain[T]].ordEndpoint
     ordM.equiv(a.left, b.left) && ordM.equiv(a.right, b.right)

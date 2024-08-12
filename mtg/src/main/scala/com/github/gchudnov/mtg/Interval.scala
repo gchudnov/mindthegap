@@ -31,19 +31,19 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
    * Returns true if the interval is empty and false otherwise.
    */
   def isEmpty: Boolean =
-    summon[Domain[T]].ordMark.gt(left, right)
+    summon[Domain[T]].ordEndpoint.gt(left, right)
 
   /**
    * Returns true if the interval is degenerate (a point) or false otherwise.
    */
   def isPoint: Boolean =
-    summon[Domain[T]].ordMark.equiv(left, right)
+    summon[Domain[T]].ordEndpoint.equiv(left, right)
 
   /**
    * Returns true if the interval is proper and false otherwise.
    */
   def isProper: Boolean =
-    summon[Domain[T]].ordMark.lt(left, right)
+    summon[Domain[T]].ordEndpoint.lt(left, right)
 
   /**
    * Returns true if the interval is non-empty and false otherwise.
@@ -254,7 +254,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def proper[T: Domain](x: Endpoint[T], y: Endpoint[T]): Interval[T] =
-    require(summon[Domain[T]].ordMark.lt(x, y), s"left endpoint '${x}' must be less than the right endpoint '${y}'")
+    require(summon[Domain[T]].ordEndpoint.lt(x, y), s"left endpoint '${x}' must be less than the right endpoint '${y}'")
     Interval(x, y)
 
   /**

@@ -116,7 +116,7 @@ object Intersections extends App:
             acc.rs :+ z
           else acc.rs
 
-        if domT.ordMark.lt(x.right, y.right) then iterate(Acc(acc.i + 1, acc.j, rs))
+        if domT.ordEndpoint.lt(x.right, y.right) then iterate(Acc(acc.i + 1, acc.j, rs))
         else iterate(Acc(acc.i, acc.j + 1, rs))
 
     iterate(Acc.empty)

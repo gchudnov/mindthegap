@@ -7,7 +7,7 @@ import com.github.gchudnov.mtg.TestSpec
 
 final class MarkOrderingSpec extends TestSpec:
 
-  given ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordMark
+  given ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "MarkOrdering" when {
     "ordM.compare(a, b)" should {

@@ -13,7 +13,7 @@ final class IntervalSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
 
-  val ordM: Ordering[Endpoint[Int]]     = summon[Domain[Int]].ordMark
+  val ordM: Ordering[Endpoint[Int]]     = summon[Domain[Int]].ordEndpoint
   val ordI: Ordering[Interval[Int]] = summon[Ordering[Interval[Int]]]
 
   "Interval" when {

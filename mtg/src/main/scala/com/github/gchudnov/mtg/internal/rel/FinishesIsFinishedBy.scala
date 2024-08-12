@@ -27,7 +27,7 @@ private[mtg] object FinishesIsFinishedBy:
    * }}}
    */
   final def finishes[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
+    val ordM = summon[Domain[T]].ordEndpoint
     a.nonEmpty && b.isProper && ordM.equiv(a.right, b.right) && ordM.lt(b.left, a.left)
 
   /**

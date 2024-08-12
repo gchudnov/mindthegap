@@ -27,7 +27,7 @@ private[mtg] object DuringContains:
    * }}}
    */
   final def during[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
+    val ordM = summon[Domain[T]].ordEndpoint
     a.nonEmpty && b.isProper && ordM.lt(b.left, a.left) && ordM.lt(a.right, b.right)
 
   /**

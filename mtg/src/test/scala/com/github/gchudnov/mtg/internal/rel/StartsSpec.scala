@@ -22,7 +22,7 @@ final class StartsSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordMark
+  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "Starts" when {
     import IntervalRelAssert.*

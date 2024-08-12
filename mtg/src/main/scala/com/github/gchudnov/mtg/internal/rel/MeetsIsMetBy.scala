@@ -23,7 +23,7 @@ private[mtg] object MeetsIsMetBy:
    * }}}
    */
   final def meets[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordMark
+    val ordM = summon[Domain[T]].ordEndpoint
     a.isProper && b.isProper && ordM.equiv(a.right, b.left)
 
   /**
