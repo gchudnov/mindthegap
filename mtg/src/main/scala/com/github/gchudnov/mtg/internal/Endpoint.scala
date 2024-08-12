@@ -2,7 +2,6 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.Domain
 
-
 /**
  * Interval's endpoint.
  */
@@ -55,11 +54,9 @@ private[mtg] enum Endpoint[T]:
         x.eval.succ
 
   /**
-   * Return the value without looking at the modifiers.
-   * 
-   * TODO: most likely remove -- check dependencies in diagraming
+   * Unwrap the value so that it is either pred, succ, or at, without nested pred or succ.
    */
-  def innerValue(using Domain[T]): Value[T] =
+  def unwrap(using Domain[T]): Value[T] =
     this match
       case At(x) =>
         x
@@ -68,9 +65,9 @@ private[mtg] enum Endpoint[T]:
       case Succ(At(x)) =>
         x
       case Pred(x) =>
-        x.innerValue
+        x.unwrap
       case Succ(x) =>
-        x.innerValue
+        x.unwrap
 
 private[mtg] object Endpoint:
 

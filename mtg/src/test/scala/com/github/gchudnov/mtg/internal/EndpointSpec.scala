@@ -248,7 +248,7 @@ final class EndpointSpec extends TestSpec:
         actual mustBe expected
       }
 
-      "get innerValue" in {
+      "unwrap" in {
         val t = Table(
           ("input", "expected"),
           (Endpoint.succ(Endpoint.succ(1)), Value.finite(1)),
@@ -259,7 +259,7 @@ final class EndpointSpec extends TestSpec:
         )
 
         forAll(t) { (input, expected) =>
-          val actual = input.innerValue
+          val actual = input.unwrap
           actual mustBe expected
         }
       }

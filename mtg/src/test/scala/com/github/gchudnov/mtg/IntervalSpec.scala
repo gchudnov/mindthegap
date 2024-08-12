@@ -637,4 +637,44 @@ final class IntervalSpec extends TestSpec:
         }
       }
     }
+
+    "left" should {
+      "return the left endpoint value" in {
+        val t = Table(
+          ("interval", "left"),
+          (Interval.point(1), Some(1)),
+          (Interval.closed(1, 2), Some(1)),
+          (Interval.open(1, 4), Some(1)),
+          (Interval.leftOpen(1), Some(1)),
+          (Interval.rightOpen(2), None),
+          (Interval.empty[Int], None),
+          (Interval.unbounded[Int], None),
+        )
+
+        forAll(t) { (interval, left) =>
+          interval.left mustBe (left)
+        }
+      }
+    }
+
+    "right" should {
+      "return the right endpoint value" in {
+        val t = Table(
+          ("interval", "right"),
+          (Interval.point(1), Some(1)),
+          (Interval.closed(1, 2), Some(2)),
+          (Interval.open(1, 4), Some(4)),
+          (Interval.leftOpen(1), None),
+          (Interval.rightOpen(2), Some(2)),
+          (Interval.empty[Int], None),
+          (Interval.unbounded[Int], None),
+        )
+
+        forAll(t) { (interval, right) =>
+          interval.right mustBe (right)
+        }
+      }
+    }
+
+    // TODO: add tests for: left, right, isLeftOpen, isLeftClosed, isRightOpen, isRightClosed
   }

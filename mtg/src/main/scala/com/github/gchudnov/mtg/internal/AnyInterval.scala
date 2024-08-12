@@ -14,10 +14,10 @@ import com.github.gchudnov.mtg.Interval
 private[mtg] final case class AnyInterval[T: Domain](override val leftEndpoint: Endpoint[T], override val rightEndpoint: Endpoint[T]) extends Interval[T]:
 
   override def left: Option[T] =
-    leftEndpoint.eval.opt
+    leftEndpoint.unwrap.opt
 
   override def right: Option[T] =
-    rightEndpoint.eval.opt
+    rightEndpoint.unwrap.opt
 
   override def size: Option[Long] =
     (leftEndpoint.eval, rightEndpoint.eval) match

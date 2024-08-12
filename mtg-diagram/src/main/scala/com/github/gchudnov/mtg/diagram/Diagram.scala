@@ -117,8 +117,8 @@ object Diagram:
       else
         val i1 = i.normalize
         List(
-          Label.make(span.x0, i1.leftEndpoint.innerValue.toString()), // TODO: Show.str
-          Label.make(span.x1, i1.rightEndpoint.innerValue.toString()), // TODO: Show.str
+          Label.make(span.x0, i1.leftEndpoint.unwrap.toString()), // TODO: Show.str
+          Label.make(span.x1, i1.rightEndpoint.unwrap.toString()), // TODO: Show.str
         )
 
     val ys = xs.map(x => positionLabelOnCanvas(x, c))
@@ -155,8 +155,8 @@ object Diagram:
     else
       val i1 = i.normalize
       Span.make(
-        x0 = t.translate(i1.leftEndpoint.innerValue),
-        x1 = t.translate(i1.rightEndpoint.innerValue),
+        x0 = t.translate(i1.leftEndpoint.unwrap),
+        x1 = t.translate(i1.rightEndpoint.unwrap),
         includeX0 = isLeftInclusive(i1.leftEndpoint),
         includeX1 = isRightInclusive(i1.rightEndpoint),
       )
