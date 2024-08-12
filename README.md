@@ -17,7 +17,7 @@ You can find _mindthegap_ documentation [on the website](https://gchudnov.github
 Add the following dependency to your `build.sbt`:
 
 ```scala
-libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "1.0.0"
+libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "2.0.0"
 ```
 
 Import the package:
@@ -54,7 +54,8 @@ object Hello extends App {
 # coverage reports will be saved in target/scala-<scala-version>/scoverage-report directory. 
 sbt clean coverage test coverageReport
 
-sbt mtg/clean mtg/coverage mtg/test mtg/coverageReport
+# run coverage for the single module
+sbt mtg/coverage mtg/test mtg/coverageReport
 
 # if run in the sbt cli
 set coverageEnabled := false; clean; coverage; test; coverageReport

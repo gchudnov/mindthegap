@@ -401,12 +401,6 @@ object Interval extends AlgStatic with RelStatic:
     proper(Endpoint.succ(x), Endpoint.at(y))
 
   /**
-   * Make an arbitrary interval
-   */
-  private[mtg] def make[T: Domain](x: Value[T], y: Value[T]): Interval[T] =
-    make(Endpoint.at(x), Endpoint.at(y))
-
-  /**
    * Make an arbitrary interval.
    */
   private[mtg] def make[T: Domain](x: Endpoint[T], y: Endpoint[T]): Interval[T] =
