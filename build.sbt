@@ -19,6 +19,7 @@ lazy val mtg = (project in file("mtg"))
   .settings(
     name := "mtg",
     libraryDependencies ++= Dependencies.Mtg,
+    coverageEnabled := true,
   )
 
 lazy val mtgDiagram = (project in file("mtg-diagram"))

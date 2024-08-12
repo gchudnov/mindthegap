@@ -3,7 +3,7 @@ package com.github.gchudnov.mtg
 import com.github.gchudnov.mtg.internal.*
 import com.github.gchudnov.mtg.internal.ordering.IntervalOrdering
 
-export com.github.gchudnov.mtg.internal.ordering.IntervalOrdering
+// export com.github.gchudnov.mtg.internal.ordering.IntervalOrdering
 
 /**
  * Interval

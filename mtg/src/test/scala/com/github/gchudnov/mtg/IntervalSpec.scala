@@ -144,9 +144,24 @@ final class IntervalSpec extends TestSpec:
         ordE.equiv(a.rightEndpoint, Endpoint.at(5)) mustBe true
       }
 
-      "Interval.proper(x, y)" in {
+      "Interval.proper(x, y) if enpoints are provided" in {
         // (1, 5)
         val a = Interval.proper(Endpoint.succ(1), Endpoint.pred(5))
+
+        a.isEmpty mustBe (false)
+        a.isPoint mustBe (false)
+        a.isProper mustBe (true)
+
+        a.nonEmpty mustBe (true)
+        a.nonPoint mustBe (true)
+        a.nonProper mustBe (false)
+
+        ordI.equiv(a, Interval.closed(2, 4)) mustBe (true)
+      }
+
+      "Interval.proper(x, y) if values are provided" in {
+        // (1, 5) == [2, 4]
+        val a = Interval.proper(2, 4)
 
         a.isEmpty mustBe (false)
         a.isPoint mustBe (false)
