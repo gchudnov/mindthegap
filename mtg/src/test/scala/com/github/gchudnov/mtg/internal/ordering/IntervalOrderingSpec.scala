@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.ordering
+package com.github.gchudnov.mtg.internal.ordering
 
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain

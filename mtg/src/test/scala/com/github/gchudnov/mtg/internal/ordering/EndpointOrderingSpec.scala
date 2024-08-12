@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.ordering
+package com.github.gchudnov.mtg.internal.ordering
 
 import com.github.gchudnov.mtg.internal.Endpoint
 import com.github.gchudnov.mtg.internal.Value
