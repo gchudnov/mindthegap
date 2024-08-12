@@ -28,6 +28,13 @@ private[mtg] enum Value[+T]:
       case Value.InfPos =>
         throw new NoSuchElementException("InfPos.get")
 
+  def opt: Option[T] =
+    this match
+      case Value.Finite(x) =>
+        Some(x)
+      case _ =>
+        None
+
   def succ[U >: T: Domain]: Value[U] =
     this match
       case Value.Finite(x) =>

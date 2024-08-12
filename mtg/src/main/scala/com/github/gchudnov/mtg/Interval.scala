@@ -21,11 +21,21 @@ trait Interval[T: Domain] extends RelBasic[T] with RelExtended[T] with AlgBasic[
    * Left endpoint
    */
   private[mtg] def leftEndpoint: Endpoint[T]
-  
+
   /**
    * Right endpoint
    */
   private[mtg] def rightEndpoint: Endpoint[T]
+
+  /**
+   * Get the left endpoint value
+   */
+  def left: Option[T]
+
+  /**
+   * Get the right endpoint value
+   */
+  def right: Option[T]
 
   /**
    * Get the size of the interval
