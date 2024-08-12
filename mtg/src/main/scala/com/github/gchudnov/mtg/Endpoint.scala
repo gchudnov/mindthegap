@@ -1,7 +1,8 @@
 package com.github.gchudnov.mtg
 
-// TODO: change Mark to Point ???
-
+/**
+ * Interval's endpoint.
+ */
 enum Endpoint[T]:
   case At(value: Value[T])
   case Pred(x: Endpoint[T])

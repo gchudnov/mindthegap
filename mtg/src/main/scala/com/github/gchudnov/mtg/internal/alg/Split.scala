@@ -15,7 +15,7 @@ private[mtg] object Split:
    * A Split Point
    *
    * @param pt
-   *   interval boundary
+   *   interval endpoint
    * @param i
    *   interval index in the input sequence
    * @param s

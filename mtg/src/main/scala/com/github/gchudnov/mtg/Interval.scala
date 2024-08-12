@@ -64,7 +64,7 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
     !isProper
 
   /**
-   * Swap left and right boundary.
+   * Swap left and right endpoint.
    *
    * Can be used to create an empty interval out of a non-empty one or vice-versa.
    *
@@ -78,7 +78,7 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
   /**
    * Inflate
    *
-   * Applies pred and succ functions to the left and right boundaries of an interval extending it.
+   * Applies pred and succ functions to the left and right endpoints of an interval extending it.
    *
    * {{{
    *   [a-, a+] -> [pred(a-), succ(a+)]
@@ -119,9 +119,9 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
   /**
    * Deflate
    *
-   * Applies succ and pred functions to the left and right boundaries of an interval reducing it it.
+   * Applies succ and pred functions to the left and right endpoints of an interval reducing it it.
    *
-   * When deflating, the operation might produce an empty interval, where left boundary is greater than the right boundary.
+   * When deflating, the operation might produce an empty interval, where left endpoint is greater than the right endpoint.
    *
    * {{{
    *   [a-, a+] -> [succ(a-), pred(a+)]
@@ -162,7 +162,7 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
   /**
    * Canonical
    *
-   * A canonical form of an interval is where the interval is closed on both starting and finishing sides:
+   * A canonical form of an interval is where the interval is closed on both endpoints:
    *
    * {{{
    *  [a-, a+]
@@ -229,7 +229,7 @@ object Interval extends AlgStatic with RelStatic:
   /**
    * Point
    *
-   * A degenerate interval where the left boundary is equal to the right boundary.
+   * A degenerate interval where the left endpoint is equal to the right endpoint.
    *
    * {{{
    *   {x} = {x | a- = x = a+}
@@ -254,7 +254,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def proper[T: Domain](x: Endpoint[T], y: Endpoint[T]): Interval[T] =
-    require(summon[Domain[T]].ordMark.lt(x, y), s"left boundary '${x}' must be less than the right boundary '${y}'")
+    require(summon[Domain[T]].ordMark.lt(x, y), s"left endpoint '${x}' must be less than the right endpoint '${y}'")
     Interval(x, y)
 
   /**
