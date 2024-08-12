@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.internal
 
 import org.scalactic.Equality
 import org.scalactic.TolerantNumerics
@@ -13,10 +13,12 @@ import java.time.ZonedDateTime
 import java.time.OffsetTime
 import java.time.LocalTime
 import java.time.LocalDate
+import com.github.gchudnov.mtg.TestSpec
+import com.github.gchudnov.mtg.Domain
 
-final class DomainDefaultsSpec extends TestSpec:
+final class DomainLowPrioritySpec extends TestSpec:
 
-  "Domains" when {
+  "DomainLowPriority" when {
 
     "Int" should {
       val valT: Domain[Int] = summon[Domain[Int]]
