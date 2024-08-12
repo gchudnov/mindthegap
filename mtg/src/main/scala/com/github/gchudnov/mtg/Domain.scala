@@ -18,13 +18,11 @@ import internal.DomainLowPriority
 trait Domain[T] extends Ordering[T]:
   self: Ordering[T] =>
 
-  // TODO: fix warnings
-
   val ordValue: Ordering[Value[T]] =
-    new ValueOrdering[T]()(self)
+    new ValueOrdering[T]()(using self)
 
   val ordMark: Ordering[Mark[T]] =
-    new MarkOrdering[T]()(this)
+    new MarkOrdering[T]()(using this)
 
   /**
    * Successor value
