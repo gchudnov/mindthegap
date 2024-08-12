@@ -105,18 +105,19 @@ object Intersections extends App:
         Acc(0, 0, Vector.empty[Interval[T]])
 
     def iterate(acc: Acc): List[Interval[T]] =
-      if acc.i >= xs.length || acc.j >= ys.length then acc.rs.toList
-      else
-        val x = xs(acc.i)
-        val y = ys(acc.j)
+      // if acc.i >= xs.length || acc.j >= ys.length then acc.rs.toList
+      // else
+      //   val x = xs(acc.i)
+      //   val y = ys(acc.j)
 
-        val rs =
-          if x.intersects(y) then
-            val z = x.intersection(y)
-            acc.rs :+ z
-          else acc.rs
+      //   val rs =
+      //     if x.intersects(y) then
+      //       val z = x.intersection(y)
+      //       acc.rs :+ z
+      //     else acc.rs
 
-        if domT.ordEndpoint.lt(x.right, y.right) then iterate(Acc(acc.i + 1, acc.j, rs))
-        else iterate(Acc(acc.i, acc.j + 1, rs))
+      //   if domT.ordEndpoint.lt(x.rightEndpoint, y.rightEndpoint) then iterate(Acc(acc.i + 1, acc.j, rs))
+      //   else iterate(Acc(acc.i, acc.j + 1, rs))
+      ??? // TODO: fix it
 
     iterate(Acc.empty)

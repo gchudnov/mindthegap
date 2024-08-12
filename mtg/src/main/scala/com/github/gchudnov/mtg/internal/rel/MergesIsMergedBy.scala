@@ -22,7 +22,7 @@ private[mtg] object MergesIsMergedBy:
   final def merges[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     val ordM = summon[Domain[T]].ordEndpoint
     (a.isEmpty || b.isEmpty) || (
-      (ordM.lteq(a.left, b.right) && ordM.lteq(b.left, a.right)) || (ordM.equiv(a.right.succ, b.left) || ordM.equiv(b.right.succ, a.left))
+      (ordM.lteq(a.leftEndpoint, b.rightEndpoint) && ordM.lteq(b.leftEndpoint, a.rightEndpoint)) || (ordM.equiv(a.rightEndpoint.succ, b.leftEndpoint) || ordM.equiv(b.rightEndpoint.succ, a.leftEndpoint))
     )
 
   /**

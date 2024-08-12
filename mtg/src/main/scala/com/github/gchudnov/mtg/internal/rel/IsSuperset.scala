@@ -24,4 +24,4 @@ private[mtg] object IsSuperset:
    */
   final def isSuperset[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     val ordM = summon[Domain[T]].ordEndpoint
-    a.nonEmpty && b.nonEmpty && ordM.gteq(b.left, a.left) && ordM.lteq(b.right, a.right)
+    a.nonEmpty && b.nonEmpty && ordM.gteq(b.leftEndpoint, a.leftEndpoint) && ordM.lteq(b.rightEndpoint, a.rightEndpoint)

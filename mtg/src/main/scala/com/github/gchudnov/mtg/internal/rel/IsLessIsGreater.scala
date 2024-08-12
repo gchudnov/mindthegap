@@ -18,11 +18,11 @@ private[mtg] object IsLessIsGreater:
    */
   final def isLess[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     val ordM = summon[Domain[T]].ordEndpoint
-    ordM.compare(a.left, b.left) match
+    ordM.compare(a.leftEndpoint, b.leftEndpoint) match
       case -1 =>
         true
       case 0 =>
-        ordM.lt(a.right, b.right)
+        ordM.lt(a.rightEndpoint, b.rightEndpoint)
       case _ =>
         false
 

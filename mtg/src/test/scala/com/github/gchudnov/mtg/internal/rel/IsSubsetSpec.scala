@@ -43,7 +43,7 @@ final class IsSubsetSpec extends TestSpec:
             assertOneOf(Set(Rel.Starts, Rel.During, Rel.Finishes, Rel.EqualsTo))(xx, yy)
 
             // b- <= a- && b+ >= a+
-            (ordM.lteq(yy.left, xx.left) && ordM.gteq(yy.right, xx.right)) mustBe true
+            (ordM.lteq(yy.leftEndpoint, xx.leftEndpoint) && ordM.gteq(yy.rightEndpoint, xx.rightEndpoint)) mustBe true
           }
         }
       }

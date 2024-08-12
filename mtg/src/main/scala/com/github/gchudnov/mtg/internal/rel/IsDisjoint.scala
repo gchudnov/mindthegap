@@ -19,4 +19,4 @@ private[mtg] object IsDisjoint:
    */
   final def isDisjoint[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     val ordM = summon[Domain[T]].ordEndpoint
-    a.nonEmpty && b.nonEmpty && (ordM.lt(a.right, b.left) || ordM.gt(a.left, b.right))
+    a.nonEmpty && b.nonEmpty && (ordM.lt(a.rightEndpoint, b.leftEndpoint) || ordM.gt(a.leftEndpoint, b.rightEndpoint))

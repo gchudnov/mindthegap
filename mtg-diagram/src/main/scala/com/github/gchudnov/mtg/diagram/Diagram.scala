@@ -113,12 +113,12 @@ object Diagram:
   private def toLabels[T: Domain](c: Canvas, i: Interval[T], span: Span): List[Label] =
     val xs =
       if i.isEmpty then List.empty[Label]
-      else if i.isPoint then List(Label.make(span.x0, i.left.eval.toString())) // TODO: Show.str
+      else if i.isPoint then List(Label.make(span.x0, i.leftEndpoint.eval.toString())) // TODO: Show.str
       else
         val i1 = i.normalize
         List(
-          Label.make(span.x0, i1.left.innerValue.toString()), // TODO: Show.str
-          Label.make(span.x1, i1.right.innerValue.toString()), // TODO: Show.str
+          Label.make(span.x0, i1.leftEndpoint.innerValue.toString()), // TODO: Show.str
+          Label.make(span.x1, i1.rightEndpoint.innerValue.toString()), // TODO: Show.str
         )
 
     val ys = xs.map(x => positionLabelOnCanvas(x, c))
@@ -145,7 +145,7 @@ object Diagram:
   private def toSpan[T: Domain](t: Translator[T], i: Interval[T]): Span =
     if i.isEmpty then Span.empty
     else if i.isPoint then
-      val p = t.translate(i.normalize.left.eval)
+      val p = t.translate(i.normalize.leftEndpoint.eval)
       Span(
         x0 = p,
         x1 = p,
@@ -155,10 +155,10 @@ object Diagram:
     else
       val i1 = i.normalize
       Span.make(
-        x0 = t.translate(i1.left.innerValue),
-        x1 = t.translate(i1.right.innerValue),
-        includeX0 = isLeftInclusive(i1.left),
-        includeX1 = isRightInclusive(i1.right),
+        x0 = t.translate(i1.leftEndpoint.innerValue),
+        x1 = t.translate(i1.rightEndpoint.innerValue),
+        includeX0 = isLeftInclusive(i1.leftEndpoint),
+        includeX1 = isRightInclusive(i1.rightEndpoint),
       )
 
   private def isLeftInclusive[T](left: Endpoint[T]): Boolean =

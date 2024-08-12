@@ -40,7 +40,7 @@ object View:
 
     val xs: List[Interval[T]] = if hasEmpty then intervals else intervals.filter(_.nonEmpty)
 
-    val ms = xs.map(_.normalize).flatMap(i => List(i.left, i.right))
+    val ms = xs.map(_.normalize).flatMap(i => List(i.leftEndpoint, i.rightEndpoint))
     val vs = ms.map(_.innerValue)
 
     val ps = vs.filter(_.isFinite)

@@ -69,7 +69,7 @@ private[mtg] object Split:
    * Converts an interval and an index to two points
    */
   private def toPoints[T](x: Interval[T], i: Int): List[SplitPoint[T]] =
-    List(SplitPoint(x.left, i, Side.Left), SplitPoint(x.right, i, Side.Right))
+    List(SplitPoint(x.leftEndpoint, i, Side.Left), SplitPoint(x.rightEndpoint, i, Side.Right))
 
   /**
    * Split

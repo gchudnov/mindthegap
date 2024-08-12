@@ -20,11 +20,11 @@ import com.github.gchudnov.mtg.Interval
 private[mtg] final class IntervalOrdering[T: Domain] extends Ordering[Interval[T]]:
 
   override def compare(a: Interval[T], b: Interval[T]): Int =
-    val ordM = summon[Domain[T]].ordEndpoint
-    ordM.compare(a.left, b.left) match
+    val ordE = summon[Domain[T]].ordEndpoint
+    ordE.compare(a.leftEndpoint, b.leftEndpoint) match
       case -1 =>
         -1
       case 0 =>
-        ordM.compare(a.right, b.right)
+        ordE.compare(a.rightEndpoint, b.rightEndpoint)
       case _: Int =>
         1

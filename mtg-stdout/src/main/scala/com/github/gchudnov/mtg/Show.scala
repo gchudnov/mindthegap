@@ -22,9 +22,9 @@ object Show:
   def print[T: Domain](i: Interval[T]): String =
     if i.isEmpty then empty.toString()
     else if i.isPoint then
-      val p = str(i.left.eval)
+      val p = str(i.leftEndpoint.eval)
       s"${leftPoint}${p}${rightPoint}"
-    else s"${showLeft(i.left)}${sep}${showRight(i.right)}"
+    else s"${showLeft(i.leftEndpoint)}${sep}${showRight(i.rightEndpoint)}"
 
   private[mtg] def leftBound(isInclude: Boolean): Char =
     if isInclude then leftClosed else leftOpen

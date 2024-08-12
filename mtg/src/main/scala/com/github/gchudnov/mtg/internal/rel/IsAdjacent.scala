@@ -19,4 +19,4 @@ private[mtg] object IsAdjacent:
    */
   final def isAdjacent[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     val ordM = summon[Domain[T]].ordEndpoint
-    a.nonEmpty && b.nonEmpty && (ordM.equiv(a.right.succ, b.left) || ordM.equiv(b.right.succ, a.left))
+    a.nonEmpty && b.nonEmpty && (ordM.equiv(a.rightEndpoint.succ, b.leftEndpoint) || ordM.equiv(b.rightEndpoint.succ, a.leftEndpoint))

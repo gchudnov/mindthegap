@@ -5,6 +5,7 @@ import com.github.gchudnov.mtg.internal.AlgStatic
 import com.github.gchudnov.mtg.internal.RelBasic
 import com.github.gchudnov.mtg.internal.RelExtended
 import com.github.gchudnov.mtg.internal.RelStatic
+import com.github.gchudnov.mtg.internal.AnyInterval
 import com.github.gchudnov.mtg.internal.ordering.IntervalOrdering
 
 export com.github.gchudnov.mtg.internal.ordering.IntervalOrdering
@@ -12,7 +13,17 @@ export com.github.gchudnov.mtg.internal.ordering.IntervalOrdering
 /**
  * Interval
  */
-final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
+trait Interval[T: Domain] extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
+
+  /**
+   * Left endpoint
+   */
+  private[mtg] def leftEndpoint: Endpoint[T]
+  
+  /**
+   * Right endpoint
+   */
+  private[mtg] def rightEndpoint: Endpoint[T]
 
   /**
    * Get the size of the interval
@@ -20,48 +31,39 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
    * @return
    *   Some(N) if the interval is finite and None otherwise.
    */
-  def size: Option[Long] =
-    (left.eval, right.eval) match
-      case (Value.Finite(x), Value.Finite(y)) =>
-        Some(summon[Domain[T]].count(x, y))
-      case _ =>
-        None
+  def size: Option[Long]
 
   /**
    * Returns true if the interval is empty and false otherwise.
    */
-  def isEmpty: Boolean =
-    summon[Domain[T]].ordEndpoint.gt(left, right)
+  def isEmpty: Boolean
 
   /**
    * Returns true if the interval is degenerate (a point) or false otherwise.
    */
-  def isPoint: Boolean =
-    summon[Domain[T]].ordEndpoint.equiv(left, right)
+  def isPoint: Boolean
 
   /**
    * Returns true if the interval is proper and false otherwise.
    */
-  def isProper: Boolean =
-    summon[Domain[T]].ordEndpoint.lt(left, right)
+  def isProper: Boolean
+
+  // TODO: isLeftOpen, isLeftClosed, isRightOpen, isRightClosed
 
   /**
    * Returns true if the interval is non-empty and false otherwise.
    */
-  def nonEmpty: Boolean =
-    !isEmpty
+  def nonEmpty: Boolean
 
   /**
    * Returns true if the interval is not a point and false otherwise.
    */
-  def nonPoint: Boolean =
-    !isPoint
+  def nonPoint: Boolean
 
   /**
    * Returns true, if interval is not proper and false otherwise.
    */
-  def nonProper: Boolean =
-    !isProper
+  def nonProper: Boolean
 
   /**
    * Swap left and right endpoint.
@@ -72,8 +74,7 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
    *   [a-, a+] -> [a+, a-]
    * }}}
    */
-  def swap: Interval[T] =
-    Interval(right, left)
+  def swap: Interval[T]
 
   /**
    * Inflate
@@ -87,8 +88,7 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
    *   inflate([1, 2]) = [0, 3]
    * }}}
    */
-  def inflate: Interval[T] =
-    Interval(left.pred, right.succ)
+  def inflate: Interval[T]
 
   /**
    * Inflate only the left side of the interval
@@ -100,8 +100,7 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
    *   inflateLeft([1, 2]) = [0, 2]
    * }}}
    */
-  def inflateLeft: Interval[T] =
-    Interval(left.pred, right)
+  def inflateLeft: Interval[T]
 
   /**
    * Inflate only the right side of the interval
@@ -113,8 +112,7 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
    *   inflateLeft([1, 2]) = [0, 3]
    * }}}
    */
-  def inflateRight: Interval[T] =
-    Interval(left, right.succ)
+  def inflateRight: Interval[T]
 
   /**
    * Deflate
@@ -130,8 +128,7 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
    *   deflate([1, 2]) = [2, 1]
    * }}}
    */
-  def deflate: Interval[T] =
-    Interval(left.succ, right.pred)
+  def deflate: Interval[T]
 
   /**
    * Deflate the left side of the interval
@@ -143,8 +140,7 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
    *   deflateLeft([1, 2]) = [2, 2]
    * }}}
    */
-  def deflateLeft: Interval[T] =
-    Interval(left.succ, right)
+  def deflateLeft: Interval[T]
 
   /**
    * Deflate the right side of the interval
@@ -156,8 +152,7 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
    *   deflateRight([1, 2]) = [1, 1]
    * }}}
    */
-  def deflateRight: Interval[T] =
-    Interval(left, right.pred)
+  def deflateRight: Interval[T]
 
   /**
    * Canonical
@@ -168,8 +163,7 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
    *  [a-, a+]
    * }}}
    */
-  def canonical: Interval[T] =
-    Interval(left.at, right.at)
+  def canonical: Interval[T]
 
   /**
    * Normalize
@@ -183,30 +177,11 @@ final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) exte
    *   (a-, a+]
    * }}}
    */
-  def normalize: Interval[T] =
-    val l = normalizeLeft
-    val r = normalizeRight
-    if l != left || r != right then Interval(l, r)
-    else this
+  def normalize: Interval[T]
 
-  private def normalizeLeft: Endpoint[T] =
-    left match
-      case Endpoint.At(_) =>
-        left
-      case Endpoint.Pred(_) =>
-        left.at
-      case Endpoint.Succ(xx) =>
-        Endpoint.Succ(xx.at)
-
-  private def normalizeRight: Endpoint[T] =
-    right match
-      case Endpoint.At(_) =>
-        right
-      case Endpoint.Pred(yy) =>
-        Endpoint.Pred(yy.at)
-      case Endpoint.Succ(_) =>
-        right.at
-
+/**
+ * Companion object for the Interval.
+ */
 object Interval extends AlgStatic with RelStatic:
 
   given intervalOrdering[T: Domain]: Ordering[Interval[T]] =
@@ -224,7 +199,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def empty[T: Domain]: Interval[T] =
-    Interval(Endpoint.at(Value.InfPos), Endpoint.at(Value.InfNeg))
+    AnyInterval(Endpoint.at(Value.InfPos), Endpoint.at(Value.InfNeg))
 
   /**
    * Point
@@ -235,13 +210,13 @@ object Interval extends AlgStatic with RelStatic:
    *   {x} = {x | a- = x = a+}
    * }}}
    */
-  def point[T: Domain](x: Endpoint[T]): Interval[T] =
-    Interval(x, x)
-
-  def point[T: Domain](x: Value[T]): Interval[T] =
+  def point[T: Domain](x: T): Interval[T] =
     point(Endpoint.at(x))
 
-  def point[T: Domain](x: T): Interval[T] =
+  private[mtg] def point[T: Domain](x: Endpoint[T]): Interval[T] =
+    AnyInterval(x, x)
+
+  private[mtg] def point[T: Domain](x: Value[T]): Interval[T] =
     point(Endpoint.at(x))
 
   /**
@@ -253,9 +228,12 @@ object Interval extends AlgStatic with RelStatic:
    *   {a-, a+}
    * }}}
    */
-  def proper[T: Domain](x: Endpoint[T], y: Endpoint[T]): Interval[T] =
+  def proper[T: Domain](x: T, y: T): Interval[T] =
+    proper(Endpoint.at(x), Endpoint.at(y))
+
+  private[mtg] def proper[T: Domain](x: Endpoint[T], y: Endpoint[T]): Interval[T] =
     require(summon[Domain[T]].ordEndpoint.lt(x, y), s"left endpoint '${x}' must be less than the right endpoint '${y}'")
-    Interval(x, y)
+    AnyInterval(x, y)
 
   /**
    * Unbounded
@@ -402,11 +380,11 @@ object Interval extends AlgStatic with RelStatic:
   /**
    * Make an arbitrary interval
    */
-  def make[T: Domain](x: Value[T], y: Value[T]): Interval[T] =
+  private[mtg] def make[T: Domain](x: Value[T], y: Value[T]): Interval[T] =
     make(Endpoint.at(x), Endpoint.at(y))
 
   /**
    * Make an arbitrary interval.
    */
-  def make[T: Domain](x: Endpoint[T], y: Endpoint[T]): Interval[T] =
-    Interval(x, y)
+  private[mtg] def make[T: Domain](x: Endpoint[T], y: Endpoint[T]): Interval[T] =
+    AnyInterval(x, y)

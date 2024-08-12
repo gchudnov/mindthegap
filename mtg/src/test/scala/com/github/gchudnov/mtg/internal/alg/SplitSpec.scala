@@ -19,7 +19,7 @@ final class SplitSpec extends TestSpec:
 
   "Split" when {
     "a series of intervals are split" should {
-      "produce intervals where a.right = b.left" in {
+      "produce intervals where a.rightEndpoint = b.leftEndpoint" in {
         forAll(Gen.choose(0, 15).flatMap(n => Gen.listOfN(n, genNonEmptyIntArgs))) { case (nArgs) =>
           val input = nArgs.map(args => Interval.make(args.left, args.right))
 
@@ -33,7 +33,7 @@ final class SplitSpec extends TestSpec:
                 val a = ab.head
                 val b = ab.last
 
-                ordM.equiv(a.right.succ, b.left) mustBe true
+                ordM.equiv(a.rightEndpoint.succ, b.leftEndpoint) mustBe true
               )
         }
       }

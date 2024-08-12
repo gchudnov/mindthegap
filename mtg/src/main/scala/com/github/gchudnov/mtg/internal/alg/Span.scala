@@ -38,4 +38,4 @@ private[mtg] object Span:
    */
   final def span[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
     val ordM = summon[Domain[T]].ordEndpoint
-    Interval.make(ordM.min(a.left, b.left), ordM.max(a.right, b.right))
+    Interval.make(ordM.min(a.leftEndpoint, b.leftEndpoint), ordM.max(a.rightEndpoint, b.rightEndpoint))

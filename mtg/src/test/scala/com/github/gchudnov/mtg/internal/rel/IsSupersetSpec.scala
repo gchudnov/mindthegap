@@ -32,7 +32,7 @@ final class IsSupersetSpec extends TestSpec:
             assertOneOf(Set(Rel.IsStartedBy, Rel.Contains, Rel.IsFinishedBy, Rel.EqualsTo))(xx, yy)
 
             // a- <= b- && a+ >= b+
-            (ordM.lteq(xx.left, yy.left) && ordM.gteq(xx.right, yy.right)) mustBe true
+            (ordM.lteq(xx.leftEndpoint, yy.leftEndpoint) && ordM.gteq(xx.rightEndpoint, yy.rightEndpoint)) mustBe true
           }
         }
       }

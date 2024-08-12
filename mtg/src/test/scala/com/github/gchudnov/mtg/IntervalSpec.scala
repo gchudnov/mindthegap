@@ -124,8 +124,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (true)
 
-        a.left mustBe Endpoint.at(Value.infPos)
-        a.right mustBe Endpoint.at(Value.infNeg)
+        a.leftEndpoint mustBe Endpoint.at(Value.infPos)
+        a.rightEndpoint mustBe Endpoint.at(Value.infNeg)
       }
 
       "Interval.point(x)" in {
@@ -139,8 +139,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (false)
         a.nonProper mustBe (true)
 
-        ordM.equiv(a.left, Endpoint.at(5)) mustBe true
-        ordM.equiv(a.right, Endpoint.at(5)) mustBe true
+        ordM.equiv(a.leftEndpoint, Endpoint.at(5)) mustBe true
+        ordM.equiv(a.rightEndpoint, Endpoint.at(5)) mustBe true
       }
 
       "Interval.proper(x, y)" in {
@@ -169,8 +169,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordM.equiv(a.left, Endpoint.at(Value.infNeg)) mustBe true
-        ordM.equiv(a.right, Endpoint.at(Value.infPos)) mustBe true
+        ordM.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) mustBe true
+        ordM.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) mustBe true
       }
 
       "Interval.open(x, y)" in {
@@ -184,8 +184,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordM.equiv(a.left, Endpoint.succ(1)) mustBe true
-        ordM.equiv(a.right, Endpoint.pred(5)) mustBe true
+        ordM.equiv(a.leftEndpoint, Endpoint.succ(1)) mustBe true
+        ordM.equiv(a.rightEndpoint, Endpoint.pred(5)) mustBe true
       }
 
       "Interval.closed(x, y)" in {
@@ -199,8 +199,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordM.equiv(a.left, Endpoint.at(1)) mustBe true
-        ordM.equiv(a.right, Endpoint.at(5)) mustBe true
+        ordM.equiv(a.leftEndpoint, Endpoint.at(1)) mustBe true
+        ordM.equiv(a.rightEndpoint, Endpoint.at(5)) mustBe true
       }
 
       "Interval.leftOpen(x)" in {
@@ -214,8 +214,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordM.equiv(a.left, Endpoint.succ(1)) mustBe true
-        ordM.equiv(a.right, Endpoint.at(Value.infPos)) mustBe true
+        ordM.equiv(a.leftEndpoint, Endpoint.succ(1)) mustBe true
+        ordM.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) mustBe true
       }
 
       "Interval.leftClosed(x)" in {
@@ -229,8 +229,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordM.equiv(a.left, Endpoint.at(5)) mustBe true
-        ordM.equiv(a.right, Endpoint.at(Value.infPos)) mustBe true
+        ordM.equiv(a.leftEndpoint, Endpoint.at(5)) mustBe true
+        ordM.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) mustBe true
       }
 
       "Interval.rightOpen(x)" in {
@@ -244,8 +244,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordM.equiv(a.left, Endpoint.at(Value.infNeg)) mustBe true
-        ordM.equiv(a.right, Endpoint.pred(1)) mustBe true
+        ordM.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) mustBe true
+        ordM.equiv(a.rightEndpoint, Endpoint.pred(1)) mustBe true
       }
 
       "Interval.rightClosed(x)" in {
@@ -259,8 +259,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordM.equiv(a.left, Endpoint.at(Value.infNeg)) mustBe true
-        ordM.equiv(a.right, Endpoint.at(5)) mustBe true
+        ordM.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) mustBe true
+        ordM.equiv(a.rightEndpoint, Endpoint.at(5)) mustBe true
       }
 
       "Interval.leftClosedRightOpen(x, y)" in {
@@ -274,8 +274,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordM.equiv(a.left, Endpoint.at(1)) mustBe true
-        ordM.equiv(a.right, Endpoint.pred(10)) mustBe true
+        ordM.equiv(a.leftEndpoint, Endpoint.at(1)) mustBe true
+        ordM.equiv(a.rightEndpoint, Endpoint.pred(10)) mustBe true
       }
 
       "Interval.leftOpenRightClosed(x, y)" in {
@@ -289,8 +289,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint mustBe (true)
         a.nonProper mustBe (false)
 
-        ordM.equiv(a.left, Endpoint.succ(1)) mustBe true
-        ordM.equiv(a.right, Endpoint.at(10)) mustBe true
+        ordM.equiv(a.leftEndpoint, Endpoint.succ(1)) mustBe true
+        ordM.equiv(a.rightEndpoint, Endpoint.at(10)) mustBe true
       }
 
     }
