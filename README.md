@@ -54,8 +54,10 @@ object Hello extends App {
 # coverage reports will be saved in target/scala-<scala-version>/scoverage-report directory. 
 sbt clean coverage test coverageReport
 
+sbt mtg/clean mtg/coverage mtg/test mtg/coverageReport
+
 # if run in the sbt cli
-coverageOff; clean; coverage; test; coverageReport;
+set coverageEnabled := false; clean; coverage; test; coverageReport
 ```
 
 ## Links

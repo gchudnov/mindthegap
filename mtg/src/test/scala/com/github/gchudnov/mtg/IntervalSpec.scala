@@ -174,6 +174,12 @@ final class IntervalSpec extends TestSpec:
         ordI.equiv(a, Interval.closed(2, 4)) mustBe (true)
       }
 
+      "Interval.proper(x, y) throws an exception if left endpoint is greater than right endpoint" in {
+        assertThrows[IllegalArgumentException] {
+          Interval.proper(5, 1)
+        }
+      }
+
       "Interval.unbounded" in {
         val a = Interval.unbounded[Int]
 
