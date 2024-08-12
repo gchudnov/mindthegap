@@ -26,5 +26,5 @@ private[mtg] object Gap:
    *   - Commutative: A ∥ B = B ∥ A
    */
   final def gap[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
-    val ordM = summon[Domain[T]].ordEndpoint
-    Interval.make(ordM.min(a.rightEndpoint, b.rightEndpoint), ordM.max(a.leftEndpoint, b.leftEndpoint)).deflate
+    val ordE = summon[Domain[T]].ordEndpoint
+    Interval.make(ordE.min(a.rightEndpoint, b.rightEndpoint), ordE.max(a.leftEndpoint, b.leftEndpoint)).deflate

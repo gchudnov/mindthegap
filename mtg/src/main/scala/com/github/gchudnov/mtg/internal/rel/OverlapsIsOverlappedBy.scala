@@ -23,8 +23,8 @@ private[mtg] object OverlapsIsOverlappedBy:
    * }}}
    */
   final def overlaps[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordEndpoint
-    a.isProper && b.isProper && ordM.lt(a.leftEndpoint, b.leftEndpoint) && ordM.lt(b.leftEndpoint, a.rightEndpoint) && ordM.lt(a.rightEndpoint, b.rightEndpoint)
+    val ordE = summon[Domain[T]].ordEndpoint
+    a.isProper && b.isProper && ordE.lt(a.leftEndpoint, b.leftEndpoint) && ordE.lt(b.leftEndpoint, a.rightEndpoint) && ordE.lt(a.rightEndpoint, b.rightEndpoint)
 
   /**
    * IsOverlappedBy (O)

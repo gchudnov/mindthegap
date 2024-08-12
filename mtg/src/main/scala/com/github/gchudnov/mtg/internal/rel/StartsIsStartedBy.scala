@@ -27,8 +27,8 @@ private[mtg] object StartsIsStartedBy:
    * }}}
    */
   final def starts[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordEndpoint
-    a.nonEmpty && b.isProper && ordM.equiv(a.leftEndpoint, b.leftEndpoint) && ordM.lt(a.rightEndpoint, b.rightEndpoint)
+    val ordE = summon[Domain[T]].ordEndpoint
+    a.nonEmpty && b.isProper && ordE.equiv(a.leftEndpoint, b.leftEndpoint) && ordE.lt(a.rightEndpoint, b.rightEndpoint)
 
   /**
    * IsStartedBy (S)

@@ -28,5 +28,5 @@ private[mtg] object Intersection:
    *   - Associative: (A & B) & C = A & (B & C)
    */
   final def intersection[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
-    val ordM = summon[Domain[T]].ordEndpoint
-    Interval.make(ordM.max(a.leftEndpoint, b.leftEndpoint), ordM.min(a.rightEndpoint, b.rightEndpoint))
+    val ordE = summon[Domain[T]].ordEndpoint
+    Interval.make(ordE.max(a.leftEndpoint, b.leftEndpoint), ordE.min(a.rightEndpoint, b.rightEndpoint))

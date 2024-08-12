@@ -22,7 +22,7 @@ final class FinishesSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
+  val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "Finishes" when {
     import IntervalRelAssert.*
@@ -42,7 +42,7 @@ final class FinishesSpec extends TestSpec:
             val a2 = argsX.right
             val b2 = argsY.right
 
-            (ordM.equiv(a2, b2) && yy.isSuperset(xx) && !xx.equalsTo(yy)) mustBe true
+            (ordE.equiv(a2, b2) && yy.isSuperset(xx) && !xx.equalsTo(yy)) mustBe true
           }
         }
       }
@@ -63,7 +63,7 @@ final class FinishesSpec extends TestSpec:
             val a2 = argsX.right
             val b2 = argsY.right
 
-            (ordM.equiv(a2, b2) && xx.isSuperset(yy) && !xx.equalsTo(yy)) mustBe true
+            (ordE.equiv(a2, b2) && xx.isSuperset(yy) && !xx.equalsTo(yy)) mustBe true
           }
         }
       }

@@ -22,7 +22,7 @@ final class EqualsToSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
+  val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "EqualsTo" when {
     import IntervalRelAssert.*
@@ -54,7 +54,7 @@ final class EqualsToSpec extends TestSpec:
             val a2 = argsX.right
             val b2 = argsY.right
 
-            val eqBoundaries = (ordM.equiv(a1, b1) && ordM.equiv(a2, b2))
+            val eqBoundaries = (ordE.equiv(a1, b1) && ordE.equiv(a2, b2))
 
             yy.equalsTo(xx) mustBe true
             eqBoundaries mustBe true

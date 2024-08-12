@@ -53,15 +53,15 @@ private[mtg] object Minus:
   final def minus[T: Domain](a: Interval[T], b: Interval[T]): List[Interval[T]] =
     if a.nonEmpty && b.isEmpty then List(a)
     else
-      val ordM = summon[Domain[T]].ordEndpoint
+      val ordE = summon[Domain[T]].ordEndpoint
       val rs   = new ListBuffer[Interval[T]]
-      if ordM.lt(a.rightEndpoint, b.leftEndpoint) || ordM.lt(b.rightEndpoint, a.leftEndpoint) then
+      if ordE.lt(a.rightEndpoint, b.leftEndpoint) || ordE.lt(b.rightEndpoint, a.leftEndpoint) then
         // non-overlapping
         rs.addOne(a)
       else
         // overlapping, consider 2 cases
-        if ordM.lt(a.leftEndpoint, b.leftEndpoint) then rs.addOne(Interval.make(a.leftEndpoint, b.leftEndpoint.pred))
-        if ordM.lt(b.rightEndpoint, a.rightEndpoint) then rs.addOne(Interval.make(b.rightEndpoint.succ, a.rightEndpoint))
+        if ordE.lt(a.leftEndpoint, b.leftEndpoint) then rs.addOne(Interval.make(a.leftEndpoint, b.leftEndpoint.pred))
+        if ordE.lt(b.rightEndpoint, a.rightEndpoint) then rs.addOne(Interval.make(b.rightEndpoint.succ, a.rightEndpoint))
       rs.toList
 
   final def minusOne[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =

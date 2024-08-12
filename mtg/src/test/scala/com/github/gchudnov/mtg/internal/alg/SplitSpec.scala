@@ -15,7 +15,7 @@ final class SplitSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
+  val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "Split" when {
     "a series of intervals are split" should {
@@ -33,7 +33,7 @@ final class SplitSpec extends TestSpec:
                 val a = ab.head
                 val b = ab.last
 
-                ordM.equiv(a.rightEndpoint.succ, b.leftEndpoint) mustBe true
+                ordE.equiv(a.rightEndpoint.succ, b.leftEndpoint) mustBe true
               )
         }
       }

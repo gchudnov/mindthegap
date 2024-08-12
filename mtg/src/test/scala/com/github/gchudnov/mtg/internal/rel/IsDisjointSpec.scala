@@ -14,7 +14,7 @@ final class IsDisjointSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
+  val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "IsDisjoint" when {
     import IntervalRelAssert.*
@@ -37,10 +37,10 @@ final class IsDisjointSpec extends TestSpec:
             val a2 = argsX.right
             val b2 = argsY.right
 
-            val cmpRes = ordM.lt(a2, b1) || ordM.gt(a1, b2)
+            val cmpRes = ordE.lt(a2, b1) || ordE.gt(a1, b2)
             cmpRes mustBe true
 
-            (ordM.lt(xx.rightEndpoint, yy.leftEndpoint) || ordM.gt(xx.leftEndpoint, yy.rightEndpoint)) mustBe true
+            (ordE.lt(xx.rightEndpoint, yy.leftEndpoint) || ordE.gt(xx.leftEndpoint, yy.rightEndpoint)) mustBe true
           }
         }
       }

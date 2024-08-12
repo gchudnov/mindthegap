@@ -22,7 +22,7 @@ final class BeforeSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
+  val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "Before" when {
     import IntervalRelAssert.*
@@ -42,7 +42,7 @@ final class BeforeSpec extends TestSpec:
             val a2 = argsX.right
             val b1 = argsY.left
 
-            ordM.lt(a2, b1) mustBe true
+            ordE.lt(a2, b1) mustBe true
           }
         }
       }
@@ -63,7 +63,7 @@ final class BeforeSpec extends TestSpec:
             val a1 = argsX.left
             val b2 = argsY.right
 
-            ordM.gt(a1, b2) mustBe true
+            ordE.gt(a1, b2) mustBe true
           }
         }
       }

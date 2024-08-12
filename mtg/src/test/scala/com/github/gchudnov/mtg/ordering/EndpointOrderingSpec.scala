@@ -7,24 +7,24 @@ import com.github.gchudnov.mtg.TestSpec
 
 final class EndpointOrderingSpec extends TestSpec:
 
-  given ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
+  given ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "EndpointOrdering" when {
-    "ordM.compare(a, b)" should {
+    "ordE.compare(a, b)" should {
       "compare" in {
         val a = Endpoint.at(1)
         val b = Endpoint.succ(a)
         val c = Endpoint.pred(a)
 
-        ordM.compare(a, a) mustBe (0)
-        ordM.compare(a, b) mustBe (-1)
-        ordM.compare(a, c) mustBe (1)
-        ordM.compare(b, a) mustBe (1)
-        ordM.compare(b, b) mustBe (0)
-        ordM.compare(b, c) mustBe (1)
-        ordM.compare(c, a) mustBe (-1)
-        ordM.compare(c, b) mustBe (-1)
-        ordM.compare(c, c) mustBe (0)
+        ordE.compare(a, a) mustBe (0)
+        ordE.compare(a, b) mustBe (-1)
+        ordE.compare(a, c) mustBe (1)
+        ordE.compare(b, a) mustBe (1)
+        ordE.compare(b, b) mustBe (0)
+        ordE.compare(b, c) mustBe (1)
+        ordE.compare(c, a) mustBe (-1)
+        ordE.compare(c, b) mustBe (-1)
+        ordE.compare(c, c) mustBe (0)
       }
 
       "compare value with infinity" in {
@@ -32,15 +32,15 @@ final class EndpointOrderingSpec extends TestSpec:
         val b = Endpoint.at[Int](Value.infNeg)
         val c = Endpoint.at[Int](Value.infPos)
 
-        ordM.compare(a, a) mustBe (0)
-        ordM.compare(a, b) mustBe (1)
-        ordM.compare(a, c) mustBe (-1)
-        ordM.compare(b, a) mustBe (-1)
-        ordM.compare(b, b) mustBe (0)
-        ordM.compare(b, c) mustBe (-1)
-        ordM.compare(c, a) mustBe (1)
-        ordM.compare(c, b) mustBe (1)
-        ordM.compare(c, c) mustBe (0)
+        ordE.compare(a, a) mustBe (0)
+        ordE.compare(a, b) mustBe (1)
+        ordE.compare(a, c) mustBe (-1)
+        ordE.compare(b, a) mustBe (-1)
+        ordE.compare(b, b) mustBe (0)
+        ordE.compare(b, c) mustBe (-1)
+        ordE.compare(c, a) mustBe (1)
+        ordE.compare(c, b) mustBe (1)
+        ordE.compare(c, c) mustBe (0)
       }
 
       "compare (lt) value with infinity" in {
@@ -48,15 +48,15 @@ final class EndpointOrderingSpec extends TestSpec:
         val b = Endpoint.at[Int](Value.infNeg)
         val c = Endpoint.at[Int](Value.infPos)
 
-        ordM.lt(a, a) mustBe (false)
-        ordM.lt(a, b) mustBe (false)
-        ordM.lt(a, c) mustBe (true)
-        ordM.lt(b, a) mustBe (true)
-        ordM.lt(b, b) mustBe (false)
-        ordM.lt(b, c) mustBe (true)
-        ordM.lt(c, a) mustBe (false)
-        ordM.lt(c, b) mustBe (false)
-        ordM.lt(c, c) mustBe (false)
+        ordE.lt(a, a) mustBe (false)
+        ordE.lt(a, b) mustBe (false)
+        ordE.lt(a, c) mustBe (true)
+        ordE.lt(b, a) mustBe (true)
+        ordE.lt(b, b) mustBe (false)
+        ordE.lt(b, c) mustBe (true)
+        ordE.lt(c, a) mustBe (false)
+        ordE.lt(c, b) mustBe (false)
+        ordE.lt(c, c) mustBe (false)
       }
     }
 

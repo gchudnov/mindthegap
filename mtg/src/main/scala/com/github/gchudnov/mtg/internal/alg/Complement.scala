@@ -16,12 +16,12 @@ private[mtg] object Complement:
    * Order of Intervals
    */
   private def isLess[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordEndpoint
-    ordM.compare(a.leftEndpoint, b.leftEndpoint) match
+    val ordE = summon[Domain[T]].ordEndpoint
+    ordE.compare(a.leftEndpoint, b.leftEndpoint) match
       case -1 =>
         true
       case 0 =>
-        ordM.lt(a.rightEndpoint, b.rightEndpoint)
+        ordE.lt(a.rightEndpoint, b.rightEndpoint)
       case _ =>
         false
 

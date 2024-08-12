@@ -14,7 +14,7 @@ final class IsAdjacentSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
+  val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "IsAdjacent" when {
     import IntervalRelAssert.*
@@ -36,14 +36,14 @@ final class IsAdjacentSpec extends TestSpec:
               val b1 = argsY.left
               val a2 = argsX.right
 
-              ordM.equiv(a2.succ, b1) mustBe (true)
+              ordE.equiv(a2.succ, b1) mustBe (true)
               ()
             else if xx.after(yy) then
               // succ(b+) = a-
               val a1 = argsX.left
               val b2 = argsY.right
 
-              ordM.equiv(b2.succ, a1) mustBe (true)
+              ordE.equiv(b2.succ, a1) mustBe (true)
               ()
           }
         }

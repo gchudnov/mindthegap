@@ -24,8 +24,8 @@ private[mtg] object IntersectsIsIntersectedBy:
    * }}}
    */
   final def intersects[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordEndpoint
-    a.nonEmpty && b.nonEmpty && ordM.lteq(a.leftEndpoint, b.rightEndpoint) && ordM.lteq(b.leftEndpoint, a.rightEndpoint)
+    val ordE = summon[Domain[T]].ordEndpoint
+    a.nonEmpty && b.nonEmpty && ordE.lteq(a.leftEndpoint, b.rightEndpoint) && ordE.lteq(b.leftEndpoint, a.rightEndpoint)
 
   /**
    * IsIntersectedBy

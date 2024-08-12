@@ -14,7 +14,7 @@ final class IsSupersetSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
+  val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "IsSuperset" when {
     import IntervalRelAssert.*
@@ -32,7 +32,7 @@ final class IsSupersetSpec extends TestSpec:
             assertOneOf(Set(Rel.IsStartedBy, Rel.Contains, Rel.IsFinishedBy, Rel.EqualsTo))(xx, yy)
 
             // a- <= b- && a+ >= b+
-            (ordM.lteq(xx.leftEndpoint, yy.leftEndpoint) && ordM.gteq(xx.rightEndpoint, yy.rightEndpoint)) mustBe true
+            (ordE.lteq(xx.leftEndpoint, yy.leftEndpoint) && ordE.gteq(xx.rightEndpoint, yy.rightEndpoint)) mustBe true
           }
         }
       }

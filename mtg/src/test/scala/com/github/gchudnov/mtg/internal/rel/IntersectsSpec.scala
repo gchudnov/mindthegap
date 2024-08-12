@@ -17,7 +17,7 @@ final class IntersectsSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
+  val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "Intersects" when {
     import IntervalRelAssert.*
@@ -54,7 +54,7 @@ final class IntersectsSpec extends TestSpec:
             val a2 = argsX.right
             val b2 = argsY.right
 
-            (ordM.lteq(a1, b2) && ordM.lteq(b1, a2)) mustBe (true)
+            (ordE.lteq(a1, b2) && ordE.lteq(b1, a2)) mustBe (true)
           }
         }
       }

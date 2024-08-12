@@ -22,7 +22,7 @@ final class DuringSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
+  val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "During" when {
     import IntervalRelAssert.*
@@ -45,7 +45,7 @@ final class DuringSpec extends TestSpec:
             val a2 = argsX.right
             val b2 = argsY.right
 
-            (ordM.gt(a1, b1) && ordM.lt(a2, b2)) mustBe true
+            (ordE.gt(a1, b1) && ordE.lt(a2, b2)) mustBe true
           }
         }
       }
@@ -69,7 +69,7 @@ final class DuringSpec extends TestSpec:
             val a2 = argsX.right
             val b2 = argsY.right
 
-            (ordM.lt(a1, b1) && ordM.lt(b2, a2)) mustBe true
+            (ordE.lt(a1, b1) && ordE.lt(b2, a2)) mustBe true
           }
         }
       }

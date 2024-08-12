@@ -22,7 +22,7 @@ final class MeetsSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
+  val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "Meets" when {
     import IntervalRelAssert.*
@@ -42,7 +42,7 @@ final class MeetsSpec extends TestSpec:
             val a2 = argsX.right
             val b1 = argsY.left
 
-            ordM.equiv(a2, b1) mustBe true
+            ordE.equiv(a2, b1) mustBe true
           }
         }
       }
@@ -63,7 +63,7 @@ final class MeetsSpec extends TestSpec:
             val a1 = argsX.left
             val b2 = argsY.right
 
-            ordM.equiv(b2, a1) mustBe true
+            ordE.equiv(b2, a1) mustBe true
           }
         }
       }

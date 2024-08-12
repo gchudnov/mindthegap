@@ -27,8 +27,8 @@ private[mtg] object DuringContains:
    * }}}
    */
   final def during[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
-    val ordM = summon[Domain[T]].ordEndpoint
-    a.nonEmpty && b.isProper && ordM.lt(b.leftEndpoint, a.leftEndpoint) && ordM.lt(a.rightEndpoint, b.rightEndpoint)
+    val ordE = summon[Domain[T]].ordEndpoint
+    a.nonEmpty && b.isProper && ordE.lt(b.leftEndpoint, a.leftEndpoint) && ordE.lt(a.rightEndpoint, b.rightEndpoint)
 
   /**
    * Contains, ProperlyIncludes (D)

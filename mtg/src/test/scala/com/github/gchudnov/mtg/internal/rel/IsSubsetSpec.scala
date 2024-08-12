@@ -26,7 +26,7 @@ final class IsSubsetSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
+  val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
   "IsSubset" when {
     import IntervalRelAssert.*
@@ -43,7 +43,7 @@ final class IsSubsetSpec extends TestSpec:
             assertOneOf(Set(Rel.Starts, Rel.During, Rel.Finishes, Rel.EqualsTo))(xx, yy)
 
             // b- <= a- && b+ >= a+
-            (ordM.lteq(yy.leftEndpoint, xx.leftEndpoint) && ordM.gteq(yy.rightEndpoint, xx.rightEndpoint)) mustBe true
+            (ordE.lteq(yy.leftEndpoint, xx.leftEndpoint) && ordE.gteq(yy.rightEndpoint, xx.rightEndpoint)) mustBe true
           }
         }
       }
