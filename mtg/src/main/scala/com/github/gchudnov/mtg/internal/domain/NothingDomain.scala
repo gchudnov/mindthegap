@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg.internal.domain
 
 import com.github.gchudnov.mtg.Domain
 
-private[internal] final class NothingDomain extends Domain[Nothing]:
+private[internal] final class NothingDomain extends AnyDomain[Nothing]:
 
   override def succ(x: Nothing): Nothing =
     x

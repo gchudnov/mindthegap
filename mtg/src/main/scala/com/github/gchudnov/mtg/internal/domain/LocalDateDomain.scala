@@ -7,7 +7,7 @@ import java.time.LocalDate
 /**
  * LocalDate Domain
  */
-private[internal] final class LocalDateDomain(unit: TemporalUnit) extends Domain[LocalDate]:
+private[internal] final class LocalDateDomain(unit: TemporalUnit) extends AnyDomain[LocalDate]:
 
   override def succ(x: LocalDate): LocalDate =
     x.plus(1, unit)

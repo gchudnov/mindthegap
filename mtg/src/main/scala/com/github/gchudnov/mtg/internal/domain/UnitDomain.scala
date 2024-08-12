@@ -2,7 +2,10 @@ package com.github.gchudnov.mtg.internal.domain
 
 import com.github.gchudnov.mtg.Domain
 
-private[internal] final class UnitDomain extends Domain[Unit]:
+/**
+ * Unit domain.
+ */
+private[internal] final class UnitDomain extends AnyDomain[Unit]:
 
   override def succ(x: Unit): Unit =
     x

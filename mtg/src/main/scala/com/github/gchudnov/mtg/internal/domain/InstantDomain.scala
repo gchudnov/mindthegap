@@ -7,7 +7,7 @@ import java.time.Instant
 /**
  * Instant Domain
  */
-private[internal] final class InstantDomain(unit: TemporalUnit) extends Domain[Instant]:
+private[internal] final class InstantDomain(unit: TemporalUnit) extends AnyDomain[Instant]:
 
   override def succ(x: Instant): Instant =
     x.plus(1, unit)

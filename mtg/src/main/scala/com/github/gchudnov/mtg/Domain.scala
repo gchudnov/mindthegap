@@ -1,8 +1,8 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.ordering.ValueOrdering
-import com.github.gchudnov.mtg.ordering.EndpointOrdering
-import internal.DomainLowPriority
+import com.github.gchudnov.mtg.internal.ordering.ValueOrdering
+import com.github.gchudnov.mtg.internal.ordering.EndpointOrdering
+import com.github.gchudnov.mtg.internal.DomainLowPriority
 
 /**
  * Trait to get a successor and the predecessor value.
@@ -16,13 +16,16 @@ import internal.DomainLowPriority
  * }}}
  */
 trait Domain[T] extends Ordering[T]:
-  self: Ordering[T] =>
 
-  val ordValue: Ordering[Value[T]] =
-    new ValueOrdering[T]()(using self)
+  /**
+   * Ordering of the value.
+   */
+  def ordValue: Ordering[Value[T]]
 
-  val ordEndpoint: Ordering[Endpoint[T]] =
-    new EndpointOrdering[T]()(using this)
+  /**
+   * Ordering of the endpoint.
+   */
+  def ordEndpoint: Ordering[Endpoint[T]]
 
   /**
    * Successor value
