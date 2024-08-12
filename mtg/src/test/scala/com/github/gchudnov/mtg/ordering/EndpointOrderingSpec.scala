@@ -5,11 +5,11 @@ import com.github.gchudnov.mtg.Value
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.TestSpec
 
-final class MarkOrderingSpec extends TestSpec:
+final class EndpointOrderingSpec extends TestSpec:
 
   given ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
-  "MarkOrdering" when {
+  "EndpointOrdering" when {
     "ordM.compare(a, b)" should {
       "compare" in {
         val a = Endpoint.at(1)
