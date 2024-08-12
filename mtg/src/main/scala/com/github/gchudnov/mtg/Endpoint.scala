@@ -53,8 +53,10 @@ enum Endpoint[T]:
 
   /**
    * Return the value without looking at the modifiers.
+   * 
+   * TODO: most likely remove -- check dependencies in diagraming
    */
-  def innerValue(using Domain[T]): Value[T] =
+  private[mtg] def innerValue(using Domain[T]): Value[T] =
     this match
       case At(x) =>
         x
