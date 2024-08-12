@@ -35,6 +35,18 @@ private[mtg] final case class AnyInterval[T: Domain](override val leftEndpoint: 
   override def isProper: Boolean =
     summon[Domain[T]].ordEndpoint.lt(leftEndpoint, rightEndpoint)
 
+  override def isLeftOpen: Boolean =
+    leftEndpoint.isSucc
+
+  override def isLeftClosed: Boolean =
+    leftEndpoint.isAt
+
+  override def isRightOpen: Boolean =
+    rightEndpoint.isPred
+
+  override def isRightClosed: Boolean =
+    rightEndpoint.isAt
+
   override def nonEmpty: Boolean =
     !isEmpty
 

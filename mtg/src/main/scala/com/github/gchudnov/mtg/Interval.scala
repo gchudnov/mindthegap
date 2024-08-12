@@ -1,21 +1,14 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.internal.AlgBasic
-import com.github.gchudnov.mtg.internal.AlgStatic
-import com.github.gchudnov.mtg.internal.RelBasic
-import com.github.gchudnov.mtg.internal.RelExtended
-import com.github.gchudnov.mtg.internal.RelStatic
-import com.github.gchudnov.mtg.internal.AnyInterval
+import com.github.gchudnov.mtg.internal.*
 import com.github.gchudnov.mtg.internal.ordering.IntervalOrdering
-import internal.Value
-import internal.Endpoint
 
 export com.github.gchudnov.mtg.internal.ordering.IntervalOrdering
 
 /**
  * Interval
  */
-trait Interval[T: Domain] extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
+trait Interval[T] extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
 
   /**
    * Left endpoint
@@ -60,7 +53,25 @@ trait Interval[T: Domain] extends RelBasic[T] with RelExtended[T] with AlgBasic[
    */
   def isProper: Boolean
 
-  // TODO: isLeftOpen, isLeftClosed, isRightOpen, isRightClosed
+  /**
+   * Returns true if the left endpoint is open and false otherwise.
+   */
+  def isLeftOpen: Boolean
+
+  /**
+   * Returns true if the left endpoint is closed and false otherwise.
+   */
+  def isLeftClosed: Boolean
+
+  /**
+   * Returns true if the right endpoint is open and false otherwise.
+   */
+  def isRightOpen: Boolean
+
+  /**
+   * Returns true if the right endpoint is closed and false otherwise.
+   */
+  def isRightClosed: Boolean
 
   /**
    * Returns true if the interval is non-empty and false otherwise.
@@ -211,7 +222,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def empty[T: Domain]: Interval[T] =
-    AnyInterval(internal.Endpoint.at(internal.Value.InfPos), internal.Endpoint.at(internal.Value.InfNeg))
+    AnyInterval(Endpoint.at(Value.InfPos), Endpoint.at(Value.InfNeg))
 
   /**
    * Point
@@ -223,13 +234,13 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def point[T: Domain](x: T): Interval[T] =
-    point(internal.Endpoint.at(x))
+    point(Endpoint.at(x))
 
   private[mtg] def point[T: Domain](x: Endpoint[T]): Interval[T] =
     AnyInterval(x, x)
 
   private[mtg] def point[T: Domain](x: Value[T]): Interval[T] =
-    point(internal.Endpoint.at(x))
+    point(Endpoint.at(x))
 
   /**
    * Proper
@@ -241,7 +252,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def proper[T: Domain](x: T, y: T): Interval[T] =
-    proper(internal.Endpoint.at(x), internal.Endpoint.at(y))
+    proper(Endpoint.at(x), Endpoint.at(y))
 
   private[mtg] def proper[T: Domain](x: Endpoint[T], y: Endpoint[T]): Interval[T] =
     require(summon[Domain[T]].ordEndpoint.lt(x, y), s"left endpoint '${x}' must be less than the right endpoint '${y}'")
@@ -257,7 +268,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def unbounded[T: Domain]: Interval[T] =
-    proper[T](internal.Endpoint.at(internal.Value.InfNeg), internal.Endpoint.at(internal.Value.InfPos))
+    proper[T](Endpoint.at(Value.InfNeg), Endpoint.at(Value.InfPos))
 
   /**
    * Open
@@ -269,7 +280,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def open[T: Domain](x: T, y: T): Interval[T] =
-    proper(internal.Endpoint.succ(x), internal.Endpoint.pred(y))
+    proper(Endpoint.succ(x), Endpoint.pred(y))
 
   /**
    * Create one of the open intervals
@@ -298,7 +309,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def closed[T: Domain](x: T, y: T): Interval[T] =
-    proper(internal.Endpoint.at(x), internal.Endpoint.at(y))
+    proper(Endpoint.at(x), Endpoint.at(y))
 
   /**
    * Create one of the closed intervals
@@ -327,7 +338,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def leftOpen[T: Domain](x: T): Interval[T] =
-    proper(internal.Endpoint.succ(x), internal.Endpoint.at(internal.Value.InfPos))
+    proper(Endpoint.succ(x), Endpoint.at(Value.InfPos))
 
   /**
    * LeftClosed
@@ -339,7 +350,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def leftClosed[T: Domain](x: T): Interval[T] =
-    proper(internal.Endpoint.at(x), internal.Endpoint.at(internal.Value.InfPos))
+    proper(Endpoint.at(x), Endpoint.at(Value.InfPos))
 
   /**
    * RightOpen
@@ -351,7 +362,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def rightOpen[T: Domain](x: T): Interval[T] =
-    proper(internal.Endpoint.at(internal.Value.InfNeg), internal.Endpoint.pred(x))
+    proper(Endpoint.at(Value.InfNeg), Endpoint.pred(x))
 
   /**
    * RightClosed
@@ -363,7 +374,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def rightClosed[T: Domain](x: T): Interval[T] =
-    proper(internal.Endpoint.at(internal.Value.InfNeg), internal.Endpoint.at(x))
+    proper(Endpoint.at(Value.InfNeg), Endpoint.at(x))
 
   /**
    * LeftClosedRightOpen
@@ -375,7 +386,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def leftClosedRightOpen[T: Domain](x: T, y: T): Interval[T] =
-    proper(internal.Endpoint.at(x), internal.Endpoint.pred(y))
+    proper(Endpoint.at(x), Endpoint.pred(y))
 
   /**
    * LeftOpenRightClosed
@@ -387,13 +398,13 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def leftOpenRightClosed[T: Domain](x: T, y: T): Interval[T] =
-    proper(internal.Endpoint.succ(x), internal.Endpoint.at(y))
+    proper(Endpoint.succ(x), Endpoint.at(y))
 
   /**
    * Make an arbitrary interval
    */
   private[mtg] def make[T: Domain](x: Value[T], y: Value[T]): Interval[T] =
-    make(internal.Endpoint.at(x), internal.Endpoint.at(y))
+    make(Endpoint.at(x), Endpoint.at(y))
 
   /**
    * Make an arbitrary interval.
