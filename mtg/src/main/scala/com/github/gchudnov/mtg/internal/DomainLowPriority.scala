@@ -19,11 +19,14 @@ private[mtg] trait DomainLowPriority:
   given nothingDomain: Domain[Nothing] =
     new NothingDomain
 
+  given unitDomain: Domain[Unit] =
+    new UnitDomain
+
   given integralDomain[T: Integral]: Domain[T] =
     new IntegralDomain()
 
-  // TODO: add with default precision
 
+  // TODO: add below with default precision
 
   def makeFractional[T: Fractional](unit: T): Domain[T] =
     new FractionalDomain(unit)

@@ -5,7 +5,7 @@ import com.github.gchudnov.mtg.Domain
 /**
  * Fractional Domain: Double, Float with step size
  */
-final class FractionalDomain[T: Fractional](unit: T) extends Domain[T]:
+private[internal] final class FractionalDomain[T: Fractional](unit: T) extends Domain[T]:
   val fracT = summon[Fractional[T]]
 
   override def succ(x: T): T =

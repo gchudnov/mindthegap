@@ -7,7 +7,7 @@ import java.time.OffsetDateTime
 /**
  * OffsetDateTime Domain
  */
-final class OffsetDateTimeDomain(unit: TemporalUnit) extends Domain[OffsetDateTime]:
+private[internal] final class OffsetDateTimeDomain(unit: TemporalUnit) extends Domain[OffsetDateTime]:
 
   override def succ(x: OffsetDateTime): OffsetDateTime =
     x.plus(1, unit)

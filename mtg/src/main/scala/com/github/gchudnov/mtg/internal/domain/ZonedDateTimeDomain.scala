@@ -7,7 +7,7 @@ import java.time.ZonedDateTime
 /**
  * ZonedDateTime Domain
  */
-final class ZonedDateTimeDomain(unit: TemporalUnit) extends Domain[ZonedDateTime]:
+private[internal] final class ZonedDateTimeDomain(unit: TemporalUnit) extends Domain[ZonedDateTime]:
 
   override def succ(x: ZonedDateTime): ZonedDateTime =
     x.plus(1, unit)
