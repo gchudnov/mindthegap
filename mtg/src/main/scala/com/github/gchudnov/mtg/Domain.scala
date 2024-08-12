@@ -2,6 +2,7 @@ package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.ordering.ValueOrdering
 import com.github.gchudnov.mtg.ordering.MarkOrdering
+import internal.DomainLowPriority
 
 /**
  * Trait to get a successor and the predecessor value.
@@ -16,6 +17,8 @@ import com.github.gchudnov.mtg.ordering.MarkOrdering
  */
 trait Domain[T] extends Ordering[T]:
   self: Ordering[T] =>
+
+  // TODO: fix warnings
 
   val ordValue: Ordering[Value[T]] =
     new ValueOrdering[T]()(self)
@@ -57,4 +60,4 @@ trait Domain[T] extends Ordering[T]:
    */
   def count(start: T, end: T): Long
 
-object Domain extends DomainDefaults
+object Domain extends DomainLowPriority
