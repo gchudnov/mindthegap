@@ -41,24 +41,24 @@ object Show:
       case Value.Finite(x) =>
         x.toString()
 
-  private def showLeft[T: Domain](left: Mark[T]): String =
+  private def showLeft[T: Domain](left: Endpoint[T]): String =
     val (x, isInclude) = left match
-      case Mark.At(x) =>
+      case Endpoint.At(x) =>
         (x, !x.isInf)
-      case Mark.Pred(_) =>
+      case Endpoint.Pred(_) =>
         val x = left.eval
         (x, !x.isInf)
-      case Mark.Succ(xx) =>
+      case Endpoint.Succ(xx) =>
         (xx.eval, false)
     s"${leftBound(isInclude)}${str(x)}"
 
-  private def showRight[T: Domain](right: Mark[T]): String =
+  private def showRight[T: Domain](right: Endpoint[T]): String =
     val (y, isInclude) = right match
-      case Mark.At(y) =>
+      case Endpoint.At(y) =>
         (y, !y.isInf)
-      case Mark.Pred(yy) =>
+      case Endpoint.Pred(yy) =>
         (yy.eval, false)
-      case Mark.Succ(yy) =>
+      case Endpoint.Succ(yy) =>
         val y = right.eval
         (y, !y.isInf)
     s"${str(y)}${rightBound(isInclude)}"

@@ -3,7 +3,7 @@ package com.github.gchudnov.mtg.diagram
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Value
-import com.github.gchudnov.mtg.Mark
+import com.github.gchudnov.mtg.Endpoint
 
 sealed trait View[+T]
 

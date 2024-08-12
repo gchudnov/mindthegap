@@ -21,7 +21,7 @@ trait Domain[T] extends Ordering[T]:
   val ordValue: Ordering[Value[T]] =
     new ValueOrdering[T]()(using self)
 
-  val ordMark: Ordering[Mark[T]] =
+  val ordMark: Ordering[Endpoint[T]] =
     new MarkOrdering[T]()(using this)
 
   /**

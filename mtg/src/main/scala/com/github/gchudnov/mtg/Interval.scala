@@ -12,7 +12,7 @@ export com.github.gchudnov.mtg.ordering.IntervalOrdering
 /**
  * Interval
  */
-final case class Interval[T: Domain](left: Mark[T], right: Mark[T]) extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
+final case class Interval[T: Domain](left: Endpoint[T], right: Endpoint[T]) extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
 
   /**
    * Get the size of the interval
@@ -189,22 +189,22 @@ final case class Interval[T: Domain](left: Mark[T], right: Mark[T]) extends RelB
     if l != left || r != right then Interval(l, r)
     else this
 
-  private def normalizeLeft: Mark[T] =
+  private def normalizeLeft: Endpoint[T] =
     left match
-      case Mark.At(_) =>
+      case Endpoint.At(_) =>
         left
-      case Mark.Pred(_) =>
+      case Endpoint.Pred(_) =>
         left.at
-      case Mark.Succ(xx) =>
-        Mark.Succ(xx.at)
+      case Endpoint.Succ(xx) =>
+        Endpoint.Succ(xx.at)
 
-  private def normalizeRight: Mark[T] =
+  private def normalizeRight: Endpoint[T] =
     right match
-      case Mark.At(_) =>
+      case Endpoint.At(_) =>
         right
-      case Mark.Pred(yy) =>
-        Mark.Pred(yy.at)
-      case Mark.Succ(_) =>
+      case Endpoint.Pred(yy) =>
+        Endpoint.Pred(yy.at)
+      case Endpoint.Succ(_) =>
         right.at
 
 object Interval extends AlgStatic with RelStatic:
@@ -224,7 +224,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def empty[T: Domain]: Interval[T] =
-    Interval(Mark.at(Value.InfPos), Mark.at(Value.InfNeg))
+    Interval(Endpoint.at(Value.InfPos), Endpoint.at(Value.InfNeg))
 
   /**
    * Point
@@ -235,14 +235,14 @@ object Interval extends AlgStatic with RelStatic:
    *   {x} = {x | a- = x = a+}
    * }}}
    */
-  def point[T: Domain](x: Mark[T]): Interval[T] =
+  def point[T: Domain](x: Endpoint[T]): Interval[T] =
     Interval(x, x)
 
   def point[T: Domain](x: Value[T]): Interval[T] =
-    point(Mark.at(x))
+    point(Endpoint.at(x))
 
   def point[T: Domain](x: T): Interval[T] =
-    point(Mark.at(x))
+    point(Endpoint.at(x))
 
   /**
    * Proper
@@ -253,7 +253,7 @@ object Interval extends AlgStatic with RelStatic:
    *   {a-, a+}
    * }}}
    */
-  def proper[T: Domain](x: Mark[T], y: Mark[T]): Interval[T] =
+  def proper[T: Domain](x: Endpoint[T], y: Endpoint[T]): Interval[T] =
     require(summon[Domain[T]].ordMark.lt(x, y), s"left boundary '${x}' must be less than the right boundary '${y}'")
     Interval(x, y)
 
@@ -267,7 +267,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def unbounded[T: Domain]: Interval[T] =
-    proper[T](Mark.at(Value.InfNeg), Mark.at(Value.InfPos))
+    proper[T](Endpoint.at(Value.InfNeg), Endpoint.at(Value.InfPos))
 
   /**
    * Open
@@ -279,7 +279,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def open[T: Domain](x: T, y: T): Interval[T] =
-    proper(Mark.succ(x), Mark.pred(y))
+    proper(Endpoint.succ(x), Endpoint.pred(y))
 
   /**
    * Create one of the open intervals
@@ -308,7 +308,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def closed[T: Domain](x: T, y: T): Interval[T] =
-    proper(Mark.at(x), Mark.at(y))
+    proper(Endpoint.at(x), Endpoint.at(y))
 
   /**
    * Create one of the closed intervals
@@ -337,7 +337,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def leftOpen[T: Domain](x: T): Interval[T] =
-    proper(Mark.succ(x), Mark.at(Value.InfPos))
+    proper(Endpoint.succ(x), Endpoint.at(Value.InfPos))
 
   /**
    * LeftClosed
@@ -349,7 +349,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def leftClosed[T: Domain](x: T): Interval[T] =
-    proper(Mark.at(x), Mark.at(Value.InfPos))
+    proper(Endpoint.at(x), Endpoint.at(Value.InfPos))
 
   /**
    * RightOpen
@@ -361,7 +361,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def rightOpen[T: Domain](x: T): Interval[T] =
-    proper(Mark.at(Value.InfNeg), Mark.pred(x))
+    proper(Endpoint.at(Value.InfNeg), Endpoint.pred(x))
 
   /**
    * RightClosed
@@ -373,7 +373,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def rightClosed[T: Domain](x: T): Interval[T] =
-    proper(Mark.at(Value.InfNeg), Mark.at(x))
+    proper(Endpoint.at(Value.InfNeg), Endpoint.at(x))
 
   /**
    * LeftClosedRightOpen
@@ -385,7 +385,7 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def leftClosedRightOpen[T: Domain](x: T, y: T): Interval[T] =
-    proper(Mark.at(x), Mark.pred(y))
+    proper(Endpoint.at(x), Endpoint.pred(y))
 
   /**
    * LeftOpenRightClosed
@@ -397,16 +397,16 @@ object Interval extends AlgStatic with RelStatic:
    * }}}
    */
   def leftOpenRightClosed[T: Domain](x: T, y: T): Interval[T] =
-    proper(Mark.succ(x), Mark.at(y))
+    proper(Endpoint.succ(x), Endpoint.at(y))
 
   /**
    * Make an arbitrary interval
    */
   def make[T: Domain](x: Value[T], y: Value[T]): Interval[T] =
-    make(Mark.at(x), Mark.at(y))
+    make(Endpoint.at(x), Endpoint.at(y))
 
   /**
    * Make an arbitrary interval.
    */
-  def make[T: Domain](x: Mark[T], y: Mark[T]): Interval[T] =
+  def make[T: Domain](x: Endpoint[T], y: Endpoint[T]): Interval[T] =
     Interval(x, y)

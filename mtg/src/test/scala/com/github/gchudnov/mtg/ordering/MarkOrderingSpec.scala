@@ -1,20 +1,20 @@
 package com.github.gchudnov.mtg.ordering
 
-import com.github.gchudnov.mtg.Mark
+import com.github.gchudnov.mtg.Endpoint
 import com.github.gchudnov.mtg.Value
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.TestSpec
 
 final class MarkOrderingSpec extends TestSpec:
 
-  given ordM: Ordering[Mark[Int]] = summon[Domain[Int]].ordMark
+  given ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordMark
 
   "MarkOrdering" when {
     "ordM.compare(a, b)" should {
       "compare" in {
-        val a = Mark.at(1)
-        val b = Mark.succ(a)
-        val c = Mark.pred(a)
+        val a = Endpoint.at(1)
+        val b = Endpoint.succ(a)
+        val c = Endpoint.pred(a)
 
         ordM.compare(a, a) mustBe (0)
         ordM.compare(a, b) mustBe (-1)
@@ -28,9 +28,9 @@ final class MarkOrderingSpec extends TestSpec:
       }
 
       "compare value with infinity" in {
-        val a = Mark.at(Value.finite(1))
-        val b = Mark.at[Int](Value.infNeg)
-        val c = Mark.at[Int](Value.infPos)
+        val a = Endpoint.at(Value.finite(1))
+        val b = Endpoint.at[Int](Value.infNeg)
+        val c = Endpoint.at[Int](Value.infPos)
 
         ordM.compare(a, a) mustBe (0)
         ordM.compare(a, b) mustBe (1)
@@ -44,9 +44,9 @@ final class MarkOrderingSpec extends TestSpec:
       }
 
       "compare (lt) value with infinity" in {
-        val a = Mark.at(Value.finite(1))
-        val b = Mark.at[Int](Value.infNeg)
-        val c = Mark.at[Int](Value.infPos)
+        val a = Endpoint.at(Value.finite(1))
+        val b = Endpoint.at[Int](Value.infNeg)
+        val c = Endpoint.at[Int](Value.infPos)
 
         ordM.lt(a, a) mustBe (false)
         ordM.lt(a, b) mustBe (false)
@@ -62,10 +62,10 @@ final class MarkOrderingSpec extends TestSpec:
 
     "complex values" should {
       "order them" in {
-        val xs = List[Mark[Int]](Mark.at(1), Mark.succ(Mark.succ(1)), Mark.pred(1), Mark.pred(Mark.pred(1)))
+        val xs = List[Endpoint[Int]](Endpoint.at(1), Endpoint.succ(Endpoint.succ(1)), Endpoint.pred(1), Endpoint.pred(Endpoint.pred(1)))
 
         val actual   = xs.sorted
-        val expected = List[Mark[Int]](Mark.pred(Mark.pred(1)), Mark.pred(1), Mark.at(1), Mark.succ(Mark.succ(1)))
+        val expected = List[Endpoint[Int]](Endpoint.pred(Endpoint.pred(1)), Endpoint.pred(1), Endpoint.at(1), Endpoint.succ(Endpoint.succ(1)))
 
         actual must contain theSameElementsAs (expected)
       }

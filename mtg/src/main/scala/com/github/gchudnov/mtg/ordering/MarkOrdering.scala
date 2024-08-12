@@ -1,9 +1,9 @@
 package com.github.gchudnov.mtg.ordering
 
 import com.github.gchudnov.mtg.Domain
-import com.github.gchudnov.mtg.Mark
+import com.github.gchudnov.mtg.Endpoint
 
-final class MarkOrdering[T: Domain] extends Ordering[Mark[T]]:
+final class MarkOrdering[T: Domain] extends Ordering[Endpoint[T]]:
 
-  override def compare(x: Mark[T], y: Mark[T]): Int =
+  override def compare(x: Endpoint[T], y: Endpoint[T]): Int =
     summon[Domain[T]].ordValue.compare(x.eval, y.eval)

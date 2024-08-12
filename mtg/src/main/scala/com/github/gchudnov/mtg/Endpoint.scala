@@ -2,10 +2,10 @@ package com.github.gchudnov.mtg
 
 // TODO: change Mark to Point ???
 
-enum Mark[T]:
+enum Endpoint[T]:
   case At(value: Value[T])
-  case Pred(x: Mark[T])
-  case Succ(x: Mark[T])
+  case Pred(x: Endpoint[T])
+  case Succ(x: Endpoint[T])
 
   def isAt: Boolean =
     this.ordinal == 0
@@ -16,7 +16,7 @@ enum Mark[T]:
   def isSucc: Boolean =
     this.ordinal == 2
 
-  def pred: Mark[T] =
+  def pred: Endpoint[T] =
     this match
       case x @ At(_) =>
         Pred(x)
@@ -25,7 +25,7 @@ enum Mark[T]:
       case Succ(x) =>
         x
 
-  def succ: Mark[T] =
+  def succ: Endpoint[T] =
     this match
       case x @ At(_) =>
         Succ(x)
@@ -34,12 +34,12 @@ enum Mark[T]:
       case x @ Succ(_) =>
         Succ(x)
 
-  def at(using Domain[T]): Mark.At[T] =
+  def at(using Domain[T]): Endpoint.At[T] =
     this match
       case x @ At(_) =>
         x
       case other =>
-        Mark.At(other.eval)
+        Endpoint.At(other.eval)
 
   def eval(using Domain[T]): Value[T] =
     this match
@@ -66,28 +66,28 @@ enum Mark[T]:
       case Succ(x) =>
         x.innerValue
 
-object Mark:
+object Endpoint:
 
-  def at[T](x: Value[T]): Mark.At[T] =
-    Mark.At(x)
+  def at[T](x: Value[T]): Endpoint.At[T] =
+    Endpoint.At(x)
 
-  def at[T](value: T): Mark.At[T] =
+  def at[T](value: T): Endpoint.At[T] =
     at(Value.finite(value))
 
-  def pred[T](x: Mark[T]): Mark.Pred[T] =
+  def pred[T](x: Endpoint[T]): Endpoint.Pred[T] =
     Pred(x)
 
-  def pred[T](x: Value[T]): Mark.Pred[T] =
-    pred(Mark.at(x))
+  def pred[T](x: Value[T]): Endpoint.Pred[T] =
+    pred(Endpoint.at(x))
 
-  def pred[T](value: T): Mark.Pred[T] =
+  def pred[T](value: T): Endpoint.Pred[T] =
     pred(Value.finite(value))
 
-  def succ[T](x: Mark[T]): Mark.Succ[T] =
+  def succ[T](x: Endpoint[T]): Endpoint.Succ[T] =
     Succ(x)
 
-  def succ[T](x: Value[T]): Mark.Succ[T] =
-    succ(Mark.at(x))
+  def succ[T](x: Value[T]): Endpoint.Succ[T] =
+    succ(Endpoint.at(x))
 
-  def succ[T](value: T): Mark.Succ[T] =
+  def succ[T](value: T): Endpoint.Succ[T] =
     succ(Value.finite(value))

@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg.internal.rel
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
-import com.github.gchudnov.mtg.Mark
+import com.github.gchudnov.mtg.Endpoint
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
@@ -22,7 +22,7 @@ final class StartsSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
-  val ordM: Ordering[Mark[Int]] = summon[Domain[Int]].ordMark
+  val ordM: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordMark
 
   "Starts" when {
     import IntervalRelAssert.*

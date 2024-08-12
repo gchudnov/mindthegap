@@ -12,7 +12,7 @@ import com.github.gchudnov.mtg.diagram.Annotation
 import com.github.gchudnov.mtg.diagram.internal.DiagramMacro
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
-import com.github.gchudnov.mtg.Mark
+import com.github.gchudnov.mtg.Endpoint
 
 /**
  * Diagram
@@ -161,22 +161,22 @@ object Diagram:
         includeX1 = isRightInclusive(i1.right),
       )
 
-  private def isLeftInclusive[T](left: Mark[T]): Boolean =
+  private def isLeftInclusive[T](left: Endpoint[T]): Boolean =
     left match
-      case Mark.At(x) =>
+      case Endpoint.At(x) =>
         x.isFinite
-      case Mark.Succ(_) =>
+      case Endpoint.Succ(_) =>
         false
-      case xx @ Mark.Pred(_) =>
+      case xx @ Endpoint.Pred(_) =>
         sys.error("unexpected value of a normalized interval: " + xx)
 
-  private def isRightInclusive[T](right: Mark[T]): Boolean =
+  private def isRightInclusive[T](right: Endpoint[T]): Boolean =
     right match
-      case Mark.At(y) =>
+      case Endpoint.At(y) =>
         y.isFinite
-      case yy @ Mark.Succ(_) =>
+      case yy @ Endpoint.Succ(_) =>
         sys.error("unexpected value of a normalized interval: " + yy)
-      case Mark.Pred(_) =>
+      case Endpoint.Pred(_) =>
         false
 
   /**

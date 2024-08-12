@@ -8,8 +8,8 @@ final class MarkSpec extends TestSpec:
   "Mark" when {
     "Mark.At" should {
       "construct from T" in {
-        val actual   = Mark.at(1)
-        val expected = Mark.At(Value.Finite(1))
+        val actual   = Endpoint.at(1)
+        val expected = Endpoint.At(Value.Finite(1))
 
         actual.isAt mustBe (true)
         actual.isPred mustBe (false)
@@ -19,42 +19,42 @@ final class MarkSpec extends TestSpec:
       }
 
       "construct from Value.Finite" in {
-        val actual   = Mark.at(Value.Finite(1))
-        val expected = Mark.At(Value.Finite(1))
+        val actual   = Endpoint.at(Value.Finite(1))
+        val expected = Endpoint.At(Value.Finite(1))
 
         actual mustBe expected
       }
 
       "construct from Value.InfNeg" in {
-        val actual   = Mark.at(Value.InfNeg)
-        val expected = Mark.At(Value.InfNeg)
+        val actual   = Endpoint.at(Value.InfNeg)
+        val expected = Endpoint.At(Value.InfNeg)
 
         actual mustBe expected
       }
 
       "construct from Value.InfPos" in {
-        val actual   = Mark.at(Value.InfPos)
-        val expected = Mark.At(Value.InfPos)
+        val actual   = Endpoint.at(Value.InfPos)
+        val expected = Endpoint.At(Value.InfPos)
 
         actual mustBe expected
       }
 
       "x.succ" in {
-        val actual   = Mark.at(Value.InfPos).succ
-        val expected = Mark.Succ(Mark.At(Value.InfPos))
+        val actual   = Endpoint.at(Value.InfPos).succ
+        val expected = Endpoint.Succ(Endpoint.At(Value.InfPos))
 
         actual mustBe expected
       }
 
       "x.pred" in {
-        val actual   = Mark.at(Value.InfPos).pred
-        val expected = Mark.Pred(Mark.At(Value.InfPos))
+        val actual   = Endpoint.at(Value.InfPos).pred
+        val expected = Endpoint.Pred(Endpoint.At(Value.InfPos))
 
         actual mustBe expected
       }
 
       "x.value" in {
-        val x = Mark.at(1)
+        val x = Endpoint.at(1)
 
         val actual   = x.value
         val expected = Value.Finite(1)
@@ -63,7 +63,7 @@ final class MarkSpec extends TestSpec:
       }
 
       "x.eval" in {
-        val x = Mark.at(1)
+        val x = Endpoint.at(1)
 
         val actual   = x.eval
         val expected = Value.Finite(1)
@@ -72,10 +72,10 @@ final class MarkSpec extends TestSpec:
       }
 
       "x.at" in {
-        val x = Mark.at(1)
+        val x = Endpoint.at(1)
 
         val actual   = x.at
-        val expected = Mark.at(1)
+        val expected = Endpoint.at(1)
 
         actual mustBe expected
       }
@@ -83,8 +83,8 @@ final class MarkSpec extends TestSpec:
 
     "Mark.Pred" should {
       "construct from Mark" in {
-        val actual   = Mark.pred(Mark.at(1))
-        val expected = Mark.Pred(Mark.At(Value.Finite(1)))
+        val actual   = Endpoint.pred(Endpoint.at(1))
+        val expected = Endpoint.Pred(Endpoint.At(Value.Finite(1)))
 
         actual.isAt mustBe (false)
         actual.isPred mustBe (true)
@@ -94,35 +94,35 @@ final class MarkSpec extends TestSpec:
       }
 
       "construct from Value" in {
-        val actual   = Mark.pred(Value.Finite(1))
-        val expected = Mark.Pred(Mark.At(Value.Finite(1)))
+        val actual   = Endpoint.pred(Value.Finite(1))
+        val expected = Endpoint.Pred(Endpoint.At(Value.Finite(1)))
 
         actual mustBe expected
       }
 
       "construct from T" in {
-        val actual   = Mark.pred(1)
-        val expected = Mark.Pred(Mark.At(Value.Finite(1)))
+        val actual   = Endpoint.pred(1)
+        val expected = Endpoint.Pred(Endpoint.At(Value.Finite(1)))
 
         actual mustBe expected
       }
 
       "x.succ" in {
-        val actual   = Mark.pred(Value.InfPos).succ
-        val expected = Mark.At(Value.InfPos)
+        val actual   = Endpoint.pred(Value.InfPos).succ
+        val expected = Endpoint.At(Value.InfPos)
 
         actual mustBe expected
       }
 
       "x.pred" in {
-        val actual   = Mark.pred(Value.InfPos).pred
-        val expected = Mark.Pred(Mark.Pred(Mark.At(Value.InfPos)))
+        val actual   = Endpoint.pred(Value.InfPos).pred
+        val expected = Endpoint.Pred(Endpoint.Pred(Endpoint.At(Value.InfPos)))
 
         actual mustBe expected
       }
 
       "x.eval" in {
-        val x = Mark.pred(Mark.at(1))
+        val x = Endpoint.pred(Endpoint.at(1))
 
         val actual   = x.eval
         val expected = Value.Finite(0)
@@ -131,16 +131,16 @@ final class MarkSpec extends TestSpec:
       }
 
       "x.at" in {
-        val x = Mark.pred(1)
+        val x = Endpoint.pred(1)
 
         val actual   = x.at
-        val expected = Mark.at(0)
+        val expected = Endpoint.at(0)
 
         actual mustBe expected
       }
 
       "Pred(At(Finite(-3)) == Finite(-4)" in {
-        val x = Mark.pred(Mark.at(Value.finite(-3)))
+        val x = Endpoint.pred(Endpoint.at(Value.finite(-3)))
 
         val actual   = x.eval
         val expected = Value.finite(-4)
@@ -151,8 +151,8 @@ final class MarkSpec extends TestSpec:
 
     "Mark.Succ" should {
       "construct from Mark" in {
-        val actual   = Mark.succ(Mark.at(1))
-        val expected = Mark.Succ(Mark.At(Value.Finite(1)))
+        val actual   = Endpoint.succ(Endpoint.at(1))
+        val expected = Endpoint.Succ(Endpoint.At(Value.Finite(1)))
 
         actual.isAt mustBe (false)
         actual.isPred mustBe (false)
@@ -162,35 +162,35 @@ final class MarkSpec extends TestSpec:
       }
 
       "construct from Value" in {
-        val actual   = Mark.succ(Value.Finite(1))
-        val expected = Mark.Succ(Mark.At(Value.Finite(1)))
+        val actual   = Endpoint.succ(Value.Finite(1))
+        val expected = Endpoint.Succ(Endpoint.At(Value.Finite(1)))
 
         actual mustBe expected
       }
 
       "construct from T" in {
-        val actual   = Mark.succ(1)
-        val expected = Mark.Succ(Mark.At(Value.Finite(1)))
+        val actual   = Endpoint.succ(1)
+        val expected = Endpoint.Succ(Endpoint.At(Value.Finite(1)))
 
         actual mustBe expected
       }
 
       "x.succ" in {
-        val actual   = Mark.succ(Value.InfPos).succ
-        val expected = Mark.Succ(Mark.Succ(Mark.At(Value.InfPos)))
+        val actual   = Endpoint.succ(Value.InfPos).succ
+        val expected = Endpoint.Succ(Endpoint.Succ(Endpoint.At(Value.InfPos)))
 
         actual mustBe expected
       }
 
       "x.pred" in {
-        val actual   = Mark.succ(Value.InfPos).pred
-        val expected = Mark.At(Value.InfPos)
+        val actual   = Endpoint.succ(Value.InfPos).pred
+        val expected = Endpoint.At(Value.InfPos)
 
         actual mustBe expected
       }
 
       "x.eval" in {
-        val x = Mark.succ(Mark.at(1))
+        val x = Endpoint.succ(Endpoint.at(1))
 
         val actual   = x.eval
         val expected = Value.Finite(2)
@@ -199,10 +199,10 @@ final class MarkSpec extends TestSpec:
       }
 
       "x.at" in {
-        val x = Mark.succ(1)
+        val x = Endpoint.succ(1)
 
         val actual   = x.at
-        val expected = Mark.at(2)
+        val expected = Endpoint.at(2)
 
         actual mustBe expected
       }
@@ -210,7 +210,7 @@ final class MarkSpec extends TestSpec:
 
     "evaluated" should {
       "get a value from Succ(Succ(x))" in {
-        val x = Mark.succ(Mark.succ(1))
+        val x = Endpoint.succ(Endpoint.succ(1))
 
         val actual   = x.eval
         val expected = Value.Finite(3)
@@ -219,7 +219,7 @@ final class MarkSpec extends TestSpec:
       }
 
       "get a value from Pred(Pred(x))" in {
-        val x = Mark.succ(Mark.succ(1))
+        val x = Endpoint.succ(Endpoint.succ(1))
 
         val actual   = x.eval
         val expected = Value.Finite(3)
@@ -228,7 +228,7 @@ final class MarkSpec extends TestSpec:
       }
 
       "get a value from Succ(Succ(Pred(Pred(x))))" in {
-        val x = Mark.succ(Mark.succ(Mark.pred(Mark.pred(1))))
+        val x = Endpoint.succ(Endpoint.succ(Endpoint.pred(Endpoint.pred(1))))
 
         val actual   = x.eval
         val expected = Value.Finite(1)
@@ -237,7 +237,7 @@ final class MarkSpec extends TestSpec:
       }
 
       "get a value from Succ(Pred(Succ(Pred(x))))" in {
-        val x = Mark.succ(Mark.pred(Mark.succ(Mark.pred(1))))
+        val x = Endpoint.succ(Endpoint.pred(Endpoint.succ(Endpoint.pred(1))))
 
         val actual   = x.eval
         val expected = Value.Finite(1)
@@ -248,11 +248,11 @@ final class MarkSpec extends TestSpec:
       "get innerValue" in {
         val t = Table(
           ("input", "expected"),
-          (Mark.succ(Mark.succ(1)), Value.finite(1)),
-          (Mark.pred(Mark.pred(2)), Value.finite(2)),
-          (Mark.succ(3), Value.finite(3)),
-          (Mark.pred(4), Value.finite(4)),
-          (Mark.at(5), Value.finite(5)),
+          (Endpoint.succ(Endpoint.succ(1)), Value.finite(1)),
+          (Endpoint.pred(Endpoint.pred(2)), Value.finite(2)),
+          (Endpoint.succ(3), Value.finite(3)),
+          (Endpoint.pred(4), Value.finite(4)),
+          (Endpoint.at(5), Value.finite(5)),
         )
 
         forAll(t) { (input, expected) =>

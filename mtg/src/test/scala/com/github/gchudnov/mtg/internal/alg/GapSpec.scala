@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg.internal.alg
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
-import com.github.gchudnov.mtg.Mark
+import com.github.gchudnov.mtg.Endpoint
 import com.github.gchudnov.mtg.TestSpec
 import com.github.gchudnov.mtg.Value
 import com.github.gchudnov.mtg.Domain
@@ -316,7 +316,7 @@ final class GapSpec extends TestSpec:
         val b = Interval.rightOpen(0)
 
         val actual   = a.gap(b).canonical
-        val expected = Interval.make(Mark.at(Value.finite(0)), Mark.at(Value.infNeg)) // [0, -inf)
+        val expected = Interval.make(Endpoint.at(Value.finite(0)), Endpoint.at(Value.infNeg)) // [0, -inf)
 
         actual.isEmpty mustBe (true)
         actual mustBe expected

@@ -1,6 +1,6 @@
 package com.github.gchudnov.mtg.internal.alg
 
-import com.github.gchudnov.mtg.Mark
+import com.github.gchudnov.mtg.Endpoint
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 import scala.collection.mutable.ListBuffer
@@ -21,7 +21,7 @@ private[mtg] object Split:
    * @param s
    *   side of the interval
    */
-  private case class SplitPoint[T](pt: Mark[T], i: Int, s: Side)
+  private case class SplitPoint[T](pt: Endpoint[T], i: Int, s: Side)
 
   /**
    * A single split

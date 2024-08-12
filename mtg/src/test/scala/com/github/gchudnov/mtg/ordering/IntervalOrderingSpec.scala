@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg.ordering
 
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
-import com.github.gchudnov.mtg.Mark
+import com.github.gchudnov.mtg.Endpoint
 import com.github.gchudnov.mtg.Value
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.TestSpec
@@ -36,16 +36,16 @@ final class IntervalOrderingSpec extends TestSpec:
     "the same interval represented in different ways" should {
       "be equivalent" in {
         // (3, 5)
-        val a = Interval.make(Mark.succ(3), Mark.pred(5))
+        val a = Interval.make(Endpoint.succ(3), Endpoint.pred(5))
 
         // [4, 4]
-        val b = Interval.make(Mark.at(4), Mark.at(4))
+        val b = Interval.make(Endpoint.at(4), Endpoint.at(4))
 
         // (3, 4]
-        val c = Interval.make(Mark.succ(3), Mark.at(4))
+        val c = Interval.make(Endpoint.succ(3), Endpoint.at(4))
 
         // [4, 5)
-        val d = Interval.make(Mark.at(4), Mark.pred(5))
+        val d = Interval.make(Endpoint.at(4), Endpoint.pred(5))
 
         ordI.equiv(a, a) mustBe (true)
         ordI.equiv(a, b) mustBe (true)

@@ -29,7 +29,7 @@ object Arbitraries:
   /**
    * Arguments to construct an integer interval
    */
-  case class IntArgs(left: Mark[Int], right: Mark[Int])
+  case class IntArgs(left: Endpoint[Int], right: Endpoint[Int])
 
   /**
    * Generate a tuple (a, a) where both values have the same value. | Point
@@ -177,24 +177,24 @@ object Arbitraries:
   private def toSome[T](t: Tuple2[T, T]): Tuple2[Option[T], Option[T]] =
     (Some(t._1), Some(t._2))
 
-  private def toLeft[T](value: Option[T], isInclude: Boolean): Mark[T] =
+  private def toLeft[T](value: Option[T], isInclude: Boolean): Endpoint[T] =
     (value, isInclude) match
       case (Some(x), true) =>
-        Mark.at(Value.finite(x))
+        Endpoint.at(Value.finite(x))
       case (Some(x), false) =>
-        Mark.succ(Value.finite(x))
+        Endpoint.succ(Value.finite(x))
       case (None, true) =>
-        Mark.at(Value.infNeg)
+        Endpoint.at(Value.infNeg)
       case (None, false) =>
-        Mark.succ(Value.infNeg)
+        Endpoint.succ(Value.infNeg)
 
-  private def toRight[T](value: Option[T], isInclude: Boolean): Mark[T] =
+  private def toRight[T](value: Option[T], isInclude: Boolean): Endpoint[T] =
     (value, isInclude) match
       case (Some(x), true) =>
-        Mark.at(Value.finite(x))
+        Endpoint.at(Value.finite(x))
       case (Some(x), false) =>
-        Mark.pred(Value.finite(x))
+        Endpoint.pred(Value.finite(x))
       case (None, true) =>
-        Mark.at(Value.infPos)
+        Endpoint.at(Value.infPos)
       case (None, false) =>
-        Mark.pred(Value.infPos)
+        Endpoint.pred(Value.infPos)
