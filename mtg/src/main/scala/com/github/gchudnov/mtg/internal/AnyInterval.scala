@@ -39,13 +39,13 @@ private[mtg] final case class AnyInterval[T: Domain](override val leftEndpoint: 
     leftEndpoint.isSucc
 
   override def isLeftClosed: Boolean =
-    leftEndpoint.isAt
+    leftEndpoint.isAt && leftEndpoint.eval.isFinite
 
   override def isRightOpen: Boolean =
     rightEndpoint.isPred
 
   override def isRightClosed: Boolean =
-    rightEndpoint.isAt
+    rightEndpoint.isAt && rightEndpoint.eval.isFinite
 
   override def nonEmpty: Boolean =
     !isEmpty

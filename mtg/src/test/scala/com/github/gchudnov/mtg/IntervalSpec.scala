@@ -1,12 +1,11 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.*
+import com.github.gchudnov.mtg.Arbitraries.*
+import com.github.gchudnov.mtg.internal.*
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
-import com.github.gchudnov.mtg.internal.Endpoint
-import com.github.gchudnov.mtg.internal.Value
 
 final class IntervalSpec extends TestSpec:
 
@@ -15,7 +14,7 @@ final class IntervalSpec extends TestSpec:
 
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 100)
 
-  val ordE: Ordering[Endpoint[Int]]     = summon[Domain[Int]].ordEndpoint
+  val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
   val ordI: Ordering[Interval[Int]] = summon[Ordering[Interval[Int]]]
 
   "Interval" when {
@@ -676,5 +675,79 @@ final class IntervalSpec extends TestSpec:
       }
     }
 
-    // TODO: add tests for: left, right, isLeftOpen, isLeftClosed, isRightOpen, isRightClosed
+    "isLeftOpen" should {
+      "return true if the left endpoint is open" in {
+        val t = Table(
+          ("interval", "isLeftOpen"),
+          (Interval.point(1), false),
+          (Interval.closed(1, 2), false),
+          (Interval.open(1, 4), true),
+          (Interval.leftOpen(1), true),
+          (Interval.rightOpen(2), false),
+          (Interval.empty[Int], false),
+          (Interval.unbounded[Int], false),
+        )
+
+        forAll(t) { (interval, isLeftOpen) =>
+          interval.isLeftOpen mustBe (isLeftOpen)
+        }
+      }
+    }
+
+    "isLeftClosed" should {
+      "return true if the left endpoint is closed" in {
+        val t = Table(
+          ("interval", "isLeftClosed"),
+          (Interval.point(1), true),
+          (Interval.closed(1, 2), true),
+          (Interval.open(1, 4), false),
+          (Interval.leftOpen(1), false),
+          (Interval.rightOpen(2), false),
+          (Interval.empty[Int], false),
+          (Interval.unbounded[Int], false),
+        )
+
+        forAll(t) { (interval, isLeftClosed) =>
+          interval.isLeftClosed mustBe (isLeftClosed)
+        }
+      }
+    }
+
+    "isRightOpen" should {
+      "return true if the right endpoint is open" in {
+        val t = Table(
+          ("interval", "isRightOpen"),
+          (Interval.point(1), false),
+          (Interval.closed(1, 2), false),
+          (Interval.open(1, 4), true),
+          (Interval.leftOpen(1), false),
+          (Interval.rightOpen(2), true),
+          (Interval.empty[Int], false),
+          (Interval.unbounded[Int], false),
+        )
+
+        forAll(t) { (interval, isRightOpen) =>
+          interval.isRightOpen mustBe (isRightOpen)
+        }
+      }
+    }
+
+    "isRightClosed" should {
+      "return true if the right endpoint is closed" in {
+        val t = Table(
+          ("interval", "isRightClosed"),
+          (Interval.point(1), true),
+          (Interval.closed(1, 2), true),
+          (Interval.open(1, 4), false),
+          (Interval.leftOpen(1), false),
+          (Interval.rightOpen(2), false),
+          (Interval.empty[Int], false),
+          (Interval.unbounded[Int], false),
+        )
+
+        forAll(t) { (interval, isRightClosed) =>
+          interval.isRightClosed mustBe (isRightClosed)
+        }
+      }
+    }
   }
