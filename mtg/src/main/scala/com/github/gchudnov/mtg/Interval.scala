@@ -11,16 +11,6 @@ export com.github.gchudnov.mtg.internal.ordering.IntervalOrdering
 trait Interval[T] extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
 
   /**
-   * Left endpoint
-   */
-  private[mtg] def leftEndpoint: Endpoint[T]
-
-  /**
-   * Right endpoint
-   */
-  private[mtg] def rightEndpoint: Endpoint[T]
-
-  /**
    * Get the left endpoint value
    */
   def left: Option[T]
@@ -201,6 +191,16 @@ trait Interval[T] extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
    * }}}
    */
   def normalize: Interval[T]
+
+  /**
+   * Left endpoint
+   */
+  private[mtg] def leftEndpoint: Endpoint[T]
+
+  /**
+   * Right endpoint
+   */
+  private[mtg] def rightEndpoint: Endpoint[T]
 
 /**
  * Companion object for the Interval.
