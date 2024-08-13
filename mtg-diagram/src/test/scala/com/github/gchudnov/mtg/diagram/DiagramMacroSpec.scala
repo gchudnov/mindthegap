@@ -1,5 +1,6 @@
 package com.github.gchudnov.mtg.diagram
 
+import com.github.gchudnov.mtg.diagram.internal.DiagramMacro
 import com.github.gchudnov.mtg.Interval
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -13,7 +14,7 @@ final class DiagramMacroSpec extends AnyWordSpec with Matchers:
         val b = 20
         val c = 30
 
-        val actual   = com.github.gchudnov.mtg.diagram.internal.DiagramMacro.varNames(List(a, b, c))
+        val actual   = DiagramMacro.varNames(List(a, b, c))
         val expected = List("a", "b", "c")
 
         actual should contain theSameElementsAs (expected)
@@ -26,7 +27,7 @@ final class DiagramMacroSpec extends AnyWordSpec with Matchers:
         val b = Interval.closed(10, 15)
         val c = Interval.closed(12, 20)
 
-        val actual   = com.github.gchudnov.mtg.diagram.internal.DiagramMacro.varNames(List(a, b, c))
+        val actual   = DiagramMacro.varNames(List(a, b, c))
         val expected = List("a", "b", "c")
 
         actual should contain theSameElementsAs (expected)
@@ -35,7 +36,7 @@ final class DiagramMacroSpec extends AnyWordSpec with Matchers:
 
     "names are extracted from a passed list of constants" should {
       "return an empty list" in {
-        val actual   = com.github.gchudnov.mtg.diagram.internal.DiagramMacro.varNames(List(10, 20, 30))
+        val actual   = DiagramMacro.varNames(List(10, 20, 30))
         val expected = List.empty[String]
 
         actual should contain theSameElementsAs (expected)
@@ -45,7 +46,7 @@ final class DiagramMacroSpec extends AnyWordSpec with Matchers:
     "names are extracted from a passed variable" should {
       "return an empty list" in {
         val xs       = List(10, 20, 30)
-        val actual   = com.github.gchudnov.mtg.diagram.internal.DiagramMacro.varNames(xs)
+        val actual   = DiagramMacro.varNames(xs)
         val expected = List.empty[String]
 
         actual should contain theSameElementsAs (expected)
