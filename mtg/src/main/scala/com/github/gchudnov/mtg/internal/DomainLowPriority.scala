@@ -16,15 +16,8 @@ import com.github.gchudnov.mtg.internal.domain.*
  */
 private[mtg] trait DomainLowPriority:
 
-  given nothingDomain: Domain[Nothing] =
-    new NothingDomain
-
-  given unitDomain: Domain[Unit] =
-    new UnitDomain
-
   given integralDomain[T: Integral]: Domain[T] =
     new IntegralDomain()
-
 
   // TODO: add below with default precision
 
