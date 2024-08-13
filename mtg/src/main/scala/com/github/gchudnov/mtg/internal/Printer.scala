@@ -3,7 +3,7 @@ package com.github.gchudnov.mtg.internal
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
 
-private[mtg] object Show:
+private[mtg] object Printer:
   private val infinite = '∞'
 
   private val empty = '∅'

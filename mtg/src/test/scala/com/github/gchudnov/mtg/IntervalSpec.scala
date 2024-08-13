@@ -773,21 +773,58 @@ final class IntervalSpec extends TestSpec:
     }
 
     "toString" should {
-      "represent an interval" in {
+
+      "represent an Empty interval" in {
+        val i = Interval.empty[Int]
+
+        val actual   = i.toString
+        val expected = "∅"
+
+        actual shouldBe expected
+      }
+
+      "represent a Point interval" in {
+        val i = Interval.point(1)
+
+        val actual   = i.toString
+        val expected = "{1}"
+
+        actual shouldBe expected
+      }
+
+      "represent a Proper interval" in {
+        // NOTE: it is not possible to have closed boundaries for infinity: [-∞,+∞]
         val t = Table(
-          ("interval", "expected"),
-          (Interval.point(1), "{1}"),
-          (Interval.closed(1, 2), "[1, 2]"),
-          (Interval.open(1, 4), "(1, 4)"),
-          (Interval.leftOpen(1), "(1, +∞)"),
-          (Interval.rightOpen(2), "(-∞, 2)"),
-          (Interval.empty[Int], "{}"),
-          (Interval.unbounded[Int], "(-∞, +∞)"),
+          ("x", "expected"),
+          (Interval.proper(Endpoint.at(1), Endpoint.at(2)), "[1,2]"),
+          (Interval.proper(Endpoint.at(1), Endpoint.pred(3)), "[1,3)"),
+          (Interval.proper(Endpoint.succ(1), Endpoint.at(3)), "(1,3]"),
+          (Interval.proper(Endpoint.succ(1), Endpoint.pred(4)), "(1,4)"),
+          (Interval.proper(Endpoint.at(Value.InfNeg), Endpoint.at(2)), "(-∞,2]"),
+          (Interval.proper(Endpoint.succ(Value.InfNeg), Endpoint.pred(2)), "(-∞,2)"),
+          (Interval.proper(Endpoint.at(1), Endpoint.at(Value.InfPos)), "[1,+∞)"),
+          (Interval.proper(Endpoint.succ(1), Endpoint.pred(Value.InfPos)), "(1,+∞)"),
+          (Interval.proper[Int](Endpoint.at(Value.InfNeg), Endpoint.at(Value.InfPos)), "(-∞,+∞)"),
+          (Interval.proper[Int](Endpoint.at(Value.InfNeg), Endpoint.pred(Value.InfPos)), "(-∞,+∞)"),
+          (Interval.proper[Int](Endpoint.succ(Value.InfNeg), Endpoint.at(Value.InfPos)), "(-∞,+∞)"),
+          (Interval.proper[Int](Endpoint.succ(Value.InfNeg), Endpoint.pred(Value.InfPos)), "(-∞,+∞)"),
         )
 
-        forAll(t) { (interval, expected) =>
-          interval.toString shouldBe (expected)
+        forAll(t) { (xx, expected) =>
+          val actual = xx.toString
+          actual shouldBe expected
         }
+      }
+    }
+
+    "toDebugString" should {
+      "represent an interval" in {
+        val i = Interval.closed(1, 2)
+
+        val actual   = i.toDebugString
+        val expected = "AnyInterval(At(Finite(1)), At(Finite(2)))"
+
+        actual shouldBe expected
       }
     }
   }

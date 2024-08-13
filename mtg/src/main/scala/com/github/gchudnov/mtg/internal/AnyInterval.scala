@@ -105,7 +105,7 @@ private[mtg] final case class AnyInterval[T: Domain](override val leftEndpoint: 
         rightEndpoint.at
 
   override def toString: String =
-    s"${leftEndpoint.toString},${rightEndpoint.toString}"
+    Printer.print(this)
 
   private[mtg] override def toDebugString: String =
-    ??? // TODO: implement
+    s"AnyInterval(${leftEndpoint.toString}, ${rightEndpoint.toString})"
