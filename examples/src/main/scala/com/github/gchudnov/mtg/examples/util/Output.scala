@@ -15,12 +15,13 @@ object Output:
    *   width of the canvas
    */
   def printDiagram[T: Domain](xs: List[Interval[T]], canvasWidth: Int): Unit =
-    val canvas: Canvas = Canvas.make(canvasWidth, 2)
-    val view: View[T]  = View.all[T]
-    val diagram        = Diagram.make(xs, view, canvas)
+    // val canvas: Canvas = Canvas.make(canvasWidth, 2)
+    // val view: View[T]  = View.all[T]
+    // val diagram        = Diagram.make(xs, view, canvas)
 
-    val diag = Diagram.render(diagram)
-    diag.foreach(println)
+    // val diag = Diagram.render(diagram)
+    // diag.foreach(println)
+    () // TODO: recover
 
   /**
    * Print Data to Console

@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.diagram.internal
+package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Span
@@ -144,3 +144,7 @@ private[mtg] final class AsciiRenderer() extends Renderer:
   private[mtg] def padWithEmptyLines(n: Int)(xs: List[String]): List[String] =
     if (xs.size < n) && (n > 0) then xs ++ List.fill[String](n - xs.size)("")
     else xs
+
+object AsciiRenderer:
+  def make(): AsciiRenderer = 
+    new AsciiRenderer()
