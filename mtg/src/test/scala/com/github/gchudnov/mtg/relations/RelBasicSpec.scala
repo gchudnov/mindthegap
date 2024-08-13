@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.relations
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.Interval
@@ -15,10 +15,10 @@ final class RelBasicSpec extends TestSpec:
   given config: PropertyCheckConfiguration = PropertyCheckConfiguration(maxDiscardedFactor = 1000.0)
 
   "RelBasic" when {
-    "satisfy one relation only" should {
+    "two intervals" should {
       import IntervalRelAssert.*
 
-      "auto check" in {
+      "satisfy one relation only" in {
         forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
