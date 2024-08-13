@@ -3,7 +3,6 @@ package com.github.gchudnov.mtg.internal
 import com.github.gchudnov.mtg.TestSpec
 import com.github.gchudnov.mtg.Domain
 
-
 final class ValueSpec extends TestSpec:
 
   "Value" when {
@@ -16,6 +15,7 @@ final class ValueSpec extends TestSpec:
         actual.isFinite mustBe (true)
         actual.isInfNeg mustBe (false)
         actual.isInfPos mustBe (false)
+        actual.isInf mustBe (false)
 
         actual mustBe expected
       }
@@ -27,6 +27,7 @@ final class ValueSpec extends TestSpec:
         actual.isFinite mustBe (false)
         actual.isInfNeg mustBe (true)
         actual.isInfPos mustBe (false)
+        actual.isInf mustBe (true)
 
         actual mustBe expected
       }
@@ -38,6 +39,7 @@ final class ValueSpec extends TestSpec:
         actual.isFinite mustBe (false)
         actual.isInfNeg mustBe (false)
         actual.isInfPos mustBe (true)
+        actual.isInf mustBe (true)
 
         actual mustBe expected
       }
@@ -50,6 +52,7 @@ final class ValueSpec extends TestSpec:
         x.isFinite mustBe (true)
         x.isInfNeg mustBe (false)
         x.isInfPos mustBe (false)
+        x.isInf mustBe (false)
 
         x match
           case Value.Finite(y) =>
@@ -76,6 +79,7 @@ final class ValueSpec extends TestSpec:
         x.isFinite mustBe (false)
         x.isInfNeg mustBe (true)
         x.isInfPos mustBe (false)
+        x.isInf mustBe (true)
 
         x match
           case Value.InfNeg =>
@@ -102,6 +106,7 @@ final class ValueSpec extends TestSpec:
         x.isFinite mustBe (false)
         x.isInfNeg mustBe (false)
         x.isInfPos mustBe (true)
+        x.isInf mustBe (true)
 
         x match
           case Value.InfPos =>

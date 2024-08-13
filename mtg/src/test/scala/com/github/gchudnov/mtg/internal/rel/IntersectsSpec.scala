@@ -30,7 +30,8 @@ final class IntersectsSpec extends TestSpec:
 
           whenever(xx.intersects(yy)) {
             yy.intersects(xx) mustBe true
-            
+
+            // inverse relation is the same
             xx.isIntersectedBy(yy) mustBe true
             yy.isIntersectedBy(xx) mustBe true
 
