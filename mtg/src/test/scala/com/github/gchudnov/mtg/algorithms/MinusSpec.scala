@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.internal.alg
+package com.github.gchudnov.mtg.algorithms
 
 import com.github.gchudnov.mtg.Arbitraries.*
 import com.github.gchudnov.mtg.internal.Endpoint

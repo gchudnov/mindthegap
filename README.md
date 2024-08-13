@@ -55,7 +55,7 @@ object Hello extends App {
 sbt clean coverage test coverageReport
 
 # run coverage for the single module
-sbt mtg/coverage mtg/test mtg/coverageReport
+sbt coverage mtg/test mtg/coverageReport
 
 # if run in the sbt cli
 set coverageEnabled := false; clean; coverage; test; coverageReport

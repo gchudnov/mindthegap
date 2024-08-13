@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.internal.rel
+package com.github.gchudnov.mtg.relations
 
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
