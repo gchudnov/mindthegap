@@ -15,9 +15,9 @@ final class ArbitrariesSpec extends TestSpec:
         forAll(genEmptyIntArgs) { case (args) =>
           val actual = Interval.make(args.left, args.right)
 
-          actual.isEmpty mustBe (true)
-          actual.isPoint mustBe (false)
-          actual.isProper mustBe (false)
+          actual.isEmpty shouldBe (true)
+          actual.isPoint shouldBe (false)
+          actual.isProper shouldBe (false)
         }
       }
     }
@@ -27,9 +27,9 @@ final class ArbitrariesSpec extends TestSpec:
         forAll(genPointIntArgs) { case (args) =>
           val actual = Interval.make(args.left, args.right)
 
-          actual.isEmpty mustBe (false)
-          actual.isPoint mustBe (true)
-          actual.isProper mustBe (false)
+          actual.isEmpty shouldBe (false)
+          actual.isPoint shouldBe (true)
+          actual.isProper shouldBe (false)
         }
       }
     }
@@ -39,9 +39,9 @@ final class ArbitrariesSpec extends TestSpec:
         forAll(genProperIntArgs) { case (args) =>
           val actual = Interval.make(args.left, args.right)
 
-          actual.isEmpty mustBe (false)
-          actual.isPoint mustBe (false)
-          actual.isProper mustBe (true)
+          actual.isEmpty shouldBe (false)
+          actual.isPoint shouldBe (false)
+          actual.isProper shouldBe (true)
         }
       }
     }

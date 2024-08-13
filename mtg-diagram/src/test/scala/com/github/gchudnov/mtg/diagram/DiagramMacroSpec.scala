@@ -1,7 +1,7 @@
 package com.github.gchudnov.mtg.diagram
 
 import com.github.gchudnov.mtg.Interval
-import org.scalatest.matchers.must.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 final class DiagramMacroSpec extends AnyWordSpec with Matchers:
@@ -16,7 +16,7 @@ final class DiagramMacroSpec extends AnyWordSpec with Matchers:
         val actual   = com.github.gchudnov.mtg.diagram.internal.DiagramMacro.varNames(List(a, b, c))
         val expected = List("a", "b", "c")
 
-        actual must contain theSameElementsAs (expected)
+        actual should contain theSameElementsAs (expected)
       }
     }
 
@@ -29,7 +29,7 @@ final class DiagramMacroSpec extends AnyWordSpec with Matchers:
         val actual   = com.github.gchudnov.mtg.diagram.internal.DiagramMacro.varNames(List(a, b, c))
         val expected = List("a", "b", "c")
 
-        actual must contain theSameElementsAs (expected)
+        actual should contain theSameElementsAs (expected)
       }
     }
 
@@ -38,7 +38,7 @@ final class DiagramMacroSpec extends AnyWordSpec with Matchers:
         val actual   = com.github.gchudnov.mtg.diagram.internal.DiagramMacro.varNames(List(10, 20, 30))
         val expected = List.empty[String]
 
-        actual must contain theSameElementsAs (expected)
+        actual should contain theSameElementsAs (expected)
       }
     }
 
@@ -48,7 +48,7 @@ final class DiagramMacroSpec extends AnyWordSpec with Matchers:
         val actual   = com.github.gchudnov.mtg.diagram.internal.DiagramMacro.varNames(xs)
         val expected = List.empty[String]
 
-        actual must contain theSameElementsAs (expected)
+        actual should contain theSameElementsAs (expected)
       }
     }
   }

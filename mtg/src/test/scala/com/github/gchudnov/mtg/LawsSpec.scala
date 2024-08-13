@@ -19,7 +19,7 @@ final class LawsSpec extends TestSpec:
     //       val yy = Interval.make(oy1, iy1, oy2, iy2)
 
     //       whenever(xx.intersection(yy).nonEmpty) {
-    //         xx.union(yy).nonEmpty mustBe true
+    //         xx.union(yy).nonEmpty shouldBe true
     //       }
     //     }
     //   }

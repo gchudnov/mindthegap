@@ -26,7 +26,7 @@ final class IsDisjointSpec extends TestSpec:
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.isDisjoint(yy)) {
-            yy.isDisjoint(xx) mustBe true
+            yy.isDisjoint(xx) shouldBe true
 
             assertOneOf(Set(Rel.Before, Rel.After))(xx, yy)
 
@@ -38,9 +38,9 @@ final class IsDisjointSpec extends TestSpec:
             val b2 = argsY.right
 
             val cmpRes = ordE.lt(a2, b1) || ordE.gt(a1, b2)
-            cmpRes mustBe true
+            cmpRes shouldBe true
 
-            (ordE.lt(xx.rightEndpoint, yy.leftEndpoint) || ordE.gt(xx.leftEndpoint, yy.rightEndpoint)) mustBe true
+            (ordE.lt(xx.rightEndpoint, yy.leftEndpoint) || ordE.gt(xx.leftEndpoint, yy.rightEndpoint)) shouldBe true
           }
         }
       }
@@ -55,17 +55,17 @@ final class IsDisjointSpec extends TestSpec:
           val actual   = xx.isDisjoint(yy)
           val expected = yy.isDisjoint(xx)
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
       "valid in special cases" in {
-        Interval.open(1, 4).isDisjoint(Interval.open(3, 6)) mustBe (true)
-        Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) mustBe (true)
+        Interval.open(1, 4).isDisjoint(Interval.open(3, 6)) shouldBe (true)
+        Interval.open(3, 6).isDisjoint(Interval.open(1, 4)) shouldBe (true)
 
         // [doc]
-        Interval.closed(5, 7).isDisjoint(Interval.closed(1, 3)) mustBe (true)
-        Interval.closed(5, 7).isDisjoint(Interval.closed(8, 10)) mustBe (true)
+        Interval.closed(5, 7).isDisjoint(Interval.closed(1, 3)) shouldBe (true)
+        Interval.closed(5, 7).isDisjoint(Interval.closed(8, 10)) shouldBe (true)
       }
     }
   }

@@ -12,36 +12,36 @@ final class ValueSpec extends TestSpec:
         val actual   = Value.finite(1)
         val expected = Value.Finite(1)
 
-        actual.isFinite mustBe (true)
-        actual.isInfNeg mustBe (false)
-        actual.isInfPos mustBe (false)
-        actual.isInf mustBe (false)
+        actual.isFinite shouldBe (true)
+        actual.isInfNeg shouldBe (false)
+        actual.isInfPos shouldBe (false)
+        actual.isInf shouldBe (false)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "construct Value.InfNeg" in {
         val actual   = Value.infNeg
         val expected = Value.InfNeg
 
-        actual.isFinite mustBe (false)
-        actual.isInfNeg mustBe (true)
-        actual.isInfPos mustBe (false)
-        actual.isInf mustBe (true)
+        actual.isFinite shouldBe (false)
+        actual.isInfNeg shouldBe (true)
+        actual.isInfPos shouldBe (false)
+        actual.isInf shouldBe (true)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "construct Value.InfPos" in {
         val actual   = Value.infPos
         val expected = Value.InfPos
 
-        actual.isFinite mustBe (false)
-        actual.isInfNeg mustBe (false)
-        actual.isInfPos mustBe (true)
-        actual.isInf mustBe (true)
+        actual.isFinite shouldBe (false)
+        actual.isInfNeg shouldBe (false)
+        actual.isInfPos shouldBe (true)
+        actual.isInf shouldBe (true)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
 
@@ -49,26 +49,26 @@ final class ValueSpec extends TestSpec:
       "check the properties" in {
         val x = Value.Finite(1)
 
-        x.isFinite mustBe (true)
-        x.isInfNeg mustBe (false)
-        x.isInfPos mustBe (false)
-        x.isInf mustBe (false)
+        x.isFinite shouldBe (true)
+        x.isInfNeg shouldBe (false)
+        x.isInfPos shouldBe (false)
+        x.isInf shouldBe (false)
 
         x match
           case Value.Finite(y) =>
-            y mustBe (1)
+            y shouldBe (1)
           case other =>
             fail(s"expected to match with Value.Finite(y), got ${other}")
       }
 
       "x.succ" in {
         val x = Value.Finite(1)
-        x.succ mustBe Value.Finite(2)
+        x.succ shouldBe Value.Finite(2)
       }
 
       "x.pred" in {
         val x = Value.Finite(1)
-        x.pred mustBe Value.Finite(0)
+        x.pred shouldBe Value.Finite(0)
       }
     }
 
@@ -76,10 +76,10 @@ final class ValueSpec extends TestSpec:
       "check the properties" in {
         val x = Value.InfNeg
 
-        x.isFinite mustBe (false)
-        x.isInfNeg mustBe (true)
-        x.isInfPos mustBe (false)
-        x.isInf mustBe (true)
+        x.isFinite shouldBe (false)
+        x.isInfNeg shouldBe (true)
+        x.isInfPos shouldBe (false)
+        x.isInf shouldBe (true)
 
         x match
           case Value.InfNeg =>
@@ -90,12 +90,12 @@ final class ValueSpec extends TestSpec:
 
       "x.succ" in {
         val x = Value.InfNeg
-        x.succ[Int] mustBe Value.InfNeg
+        x.succ[Int] shouldBe Value.InfNeg
       }
 
       "x.pred" in {
         val x = Value.InfNeg
-        x.pred[Int] mustBe Value.InfNeg
+        x.pred[Int] shouldBe Value.InfNeg
       }
     }
 
@@ -103,10 +103,10 @@ final class ValueSpec extends TestSpec:
       "check the properties" in {
         val x = Value.InfPos
 
-        x.isFinite mustBe (false)
-        x.isInfNeg mustBe (false)
-        x.isInfPos mustBe (true)
-        x.isInf mustBe (true)
+        x.isFinite shouldBe (false)
+        x.isInfNeg shouldBe (false)
+        x.isInfPos shouldBe (true)
+        x.isInf shouldBe (true)
 
         x match
           case Value.InfPos =>
@@ -117,12 +117,33 @@ final class ValueSpec extends TestSpec:
 
       "x.succ" in {
         val x = Value.InfPos
-        x.succ[Int] mustBe Value.InfPos
+        x.succ[Int] shouldBe Value.InfPos
       }
 
       "x.pred" in {
         val x = Value.InfPos
-        x.pred[Int] mustBe Value.InfPos
+        x.pred[Int] shouldBe Value.InfPos
+      }
+    }
+
+    "get" should {
+      "return the value if finite" in {
+        val x = Value.Finite(1)
+        x.get shouldBe (1)
+      }
+
+      "throws an exception if negative infinity" in {
+        val x = Value.InfNeg
+        assertThrows[NoSuchElementException] {
+          x.get
+        }
+      }
+
+      "throws an exception if positive infinity" in {
+        val x = Value.InfPos
+        assertThrows[NoSuchElementException] {
+          x.get
+        }
       }
     }
   }

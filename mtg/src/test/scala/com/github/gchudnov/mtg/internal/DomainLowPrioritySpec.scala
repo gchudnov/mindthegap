@@ -35,14 +35,14 @@ final class DomainLowPrioritySpec extends TestSpec:
           val actualXp = valT.pred(x)
           val actualXn = valT.succ(x)
 
-          actualXp mustEqual (xp)
-          actualXn mustEqual (xn)
+          actualXp shouldEqual (xp)
+          actualXn shouldEqual (xn)
 
           // pred(next(a)) == a
           val actual   = valT.pred(valT.succ(x))
           val expected = x
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -57,7 +57,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: Int, y: Int, expected: Int) =>
           val actual = valT.count(start = x, end = y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -72,7 +72,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: Int, y: Int, expected: Int) =>
           val actual = valT.compare(x, y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
     }
@@ -92,14 +92,14 @@ final class DomainLowPrioritySpec extends TestSpec:
           val actualXp = valT.pred(x)
           val actualXn = valT.succ(x)
 
-          actualXp mustEqual (xp)
-          actualXn mustEqual (xn)
+          actualXp shouldEqual (xp)
+          actualXn shouldEqual (xn)
 
           // pred(next(a)) == a
           val actual   = valT.pred(valT.succ(x))
           val expected = x
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -114,7 +114,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: Long, y: Long, expected: Long) =>
           val actual = valT.count(start = x, end = y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -129,7 +129,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: Long, y: Long, expected: Int) =>
           val actual = valT.compare(x, y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
     }
@@ -172,7 +172,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: Double, y: Double, expected: Int) =>
           val actual = valT.count(start = x, end = y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -187,7 +187,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: Double, y: Double, expected: Int) =>
           val actual = valT.compare(x, y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
     }
@@ -207,14 +207,14 @@ final class DomainLowPrioritySpec extends TestSpec:
           val actualXp = valT.pred(x)
           val actualXn = valT.succ(x)
 
-          actualXp mustEqual (xp)
-          actualXn mustEqual (xn)
+          actualXp shouldEqual (xp)
+          actualXn shouldEqual (xn)
 
           // pred(next(a)) == a
           val actual   = valT.pred(valT.succ(x))
           val expected = x
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -229,7 +229,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: OffsetDateTime, y: OffsetDateTime, expected: Long) =>
           val actual = valT.count(start = x, end = y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -244,7 +244,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: OffsetDateTime, y: OffsetDateTime, expected: Int) =>
           val actual = valT.compare(x, y)
 
-          actual.sign mustEqual expected
+          actual.sign shouldEqual expected
         }
       }
     }
@@ -264,14 +264,14 @@ final class DomainLowPrioritySpec extends TestSpec:
           val actualXp = valT.pred(x)
           val actualXn = valT.succ(x)
 
-          actualXp mustEqual (xp)
-          actualXn mustEqual (xn)
+          actualXp shouldEqual (xp)
+          actualXn shouldEqual (xn)
 
           // pred(next(a)) == a
           val actual   = valT.pred(valT.succ(x))
           val expected = x
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -286,7 +286,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: OffsetTime, y: OffsetTime, expected: Long) =>
           val actual = valT.count(start = x, end = y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -301,7 +301,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: OffsetTime, y: OffsetTime, expected: Int) =>
           val actual = valT.compare(x, y)
 
-          actual.sign mustEqual expected
+          actual.sign shouldEqual expected
         }
       }
     }
@@ -321,14 +321,14 @@ final class DomainLowPrioritySpec extends TestSpec:
           val actualXp = valT.pred(x)
           val actualXn = valT.succ(x)
 
-          actualXp mustEqual (xp)
-          actualXn mustEqual (xn)
+          actualXp shouldEqual (xp)
+          actualXn shouldEqual (xn)
 
           // pred(next(a)) == a
           val actual   = valT.pred(valT.succ(x))
           val expected = x
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -343,7 +343,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: Instant, y: Instant, expected: Long) =>
           val actual = valT.count(start = x, end = y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -358,7 +358,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: Instant, y: Instant, expected: Int) =>
           val actual = valT.compare(x, y)
 
-          actual.sign mustEqual expected
+          actual.sign shouldEqual expected
         }
       }
     }
@@ -386,14 +386,14 @@ final class DomainLowPrioritySpec extends TestSpec:
           val actualXp = valT.pred(x)
           val actualXn = valT.succ(x)
 
-          actualXp mustEqual (xp)
-          actualXn mustEqual (xn)
+          actualXp shouldEqual (xp)
+          actualXn shouldEqual (xn)
 
           // pred(next(a)) == a
           val actual   = valT.pred(valT.succ(x))
           val expected = x
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -408,7 +408,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: LocalDateTime, y: LocalDateTime, expected: Int) =>
           val actual = valT.count(start = x, end = y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -423,7 +423,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: LocalDateTime, y: LocalDateTime, expected: Int) =>
           val actual = valT.compare(x, y)
 
-          actual.sign mustEqual expected
+          actual.sign shouldEqual expected
         }
       }
     }
@@ -443,14 +443,14 @@ final class DomainLowPrioritySpec extends TestSpec:
           val actualXp = valT.pred(x)
           val actualXn = valT.succ(x)
 
-          actualXp mustEqual (xp)
-          actualXn mustEqual (xn)
+          actualXp shouldEqual (xp)
+          actualXn shouldEqual (xn)
 
           // pred(next(a)) == a
           val actual   = valT.pred(valT.succ(x))
           val expected = x
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -465,7 +465,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: LocalDate, y: LocalDate, expected: Long) =>
           val actual = valT.count(start = x, end = y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -480,7 +480,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: LocalDate, y: LocalDate, expected: Int) =>
           val actual = valT.compare(x, y)
 
-          actual.sign mustEqual expected
+          actual.sign shouldEqual expected
         }
       }
     }
@@ -500,14 +500,14 @@ final class DomainLowPrioritySpec extends TestSpec:
           val actualXp = valT.pred(x)
           val actualXn = valT.succ(x)
 
-          actualXp mustEqual (xp)
-          actualXn mustEqual (xn)
+          actualXp shouldEqual (xp)
+          actualXn shouldEqual (xn)
 
           // pred(next(a)) == a
           val actual   = valT.pred(valT.succ(x))
           val expected = x
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -522,7 +522,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: LocalTime, y: LocalTime, expected: Long) =>
           val actual = valT.count(start = x, end = y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -537,7 +537,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: LocalTime, y: LocalTime, expected: Int) =>
           val actual = valT.compare(x, y)
 
-          actual.sign mustEqual expected
+          actual.sign shouldEqual expected
         }
       }
     }
@@ -569,14 +569,14 @@ final class DomainLowPrioritySpec extends TestSpec:
           val actualXp = valT.pred(x)
           val actualXn = valT.succ(x)
 
-          actualXp mustEqual (xp)
-          actualXn mustEqual (xn)
+          actualXp shouldEqual (xp)
+          actualXn shouldEqual (xn)
 
           // pred(next(a)) == a
           val actual   = valT.pred(valT.succ(x))
           val expected = x
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -591,7 +591,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: ZonedDateTime, y: ZonedDateTime, expected: Long) =>
           val actual = valT.count(start = x, end = y)
 
-          actual mustEqual expected
+          actual shouldEqual expected
         }
       }
 
@@ -606,7 +606,7 @@ final class DomainLowPrioritySpec extends TestSpec:
         forAll(t) { (x: ZonedDateTime, y: ZonedDateTime, expected: Int) =>
           val actual = valT.compare(x, y)
 
-          actual.sign mustEqual expected
+          actual.sign shouldEqual expected
         }
       }
     }

@@ -25,7 +25,7 @@ final class SplitSpec extends TestSpec:
 
           val actual = Interval.split(input)
 
-          if actual.size <= 1 then input mustBe actual
+          if actual.size <= 1 then input shouldBe actual
           else
             actual
               .zip(actual.tail)
@@ -33,7 +33,7 @@ final class SplitSpec extends TestSpec:
                 val a = ab.head
                 val b = ab.last
 
-                ordE.equiv(a.rightEndpoint.succ, b.leftEndpoint) mustBe true
+                ordE.equiv(a.rightEndpoint.succ, b.leftEndpoint) shouldBe true
               )
         }
       }
@@ -55,8 +55,8 @@ final class SplitSpec extends TestSpec:
         val actualX   = Interval.splitFind(input)
         val expectedX = List.empty[(Interval[Int], Set[Int])]
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -83,8 +83,8 @@ final class SplitSpec extends TestSpec:
         val actualX   = Interval.splitFind(input)
         val expectedX = List((s0, Set(0)))
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -137,8 +137,8 @@ final class SplitSpec extends TestSpec:
         val actualX = Interval.splitFind(input).map(it => (it._1.canonical, it._2))
         val actual  = Interval.split(input).map(_.canonical)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -162,8 +162,8 @@ final class SplitSpec extends TestSpec:
         val actual  = Interval.split(input)
         val actualX = Interval.splitFind(input)
 
-        actual.size >= 0 mustBe true
-        actualX.size >= 0 mustBe true
+        actual.size >= 0 shouldBe true
+        actualX.size >= 0 shouldBe true
       }
     }
 
@@ -221,8 +221,8 @@ final class SplitSpec extends TestSpec:
         val actualX = Interval.splitFind(input).map(it => (it._1.canonical, it._2))
         val actual  = Interval.split(input).map(_.canonical)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -254,8 +254,8 @@ final class SplitSpec extends TestSpec:
         val actual   = Interval.split(input)
         val expected = expectedX.map(_._1)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
 
       /**
@@ -284,8 +284,8 @@ final class SplitSpec extends TestSpec:
         val actual   = Interval.split(input)
         val expected = expectedX.map(_._1)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -324,8 +324,8 @@ final class SplitSpec extends TestSpec:
         val actualX = Interval.splitFind(input).map(it => (it._1.canonical, it._2))
         val actual  = Interval.split(input).map(_.canonical)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -370,8 +370,8 @@ final class SplitSpec extends TestSpec:
         val actualX = Interval.splitFind(input).map(it => (it._1.canonical, it._2))
         val actual  = Interval.split(input).map(_.canonical)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -408,8 +408,8 @@ final class SplitSpec extends TestSpec:
         val actualX = Interval.splitFind(input).map(it => (it._1.canonical, it._2))
         val actual  = Interval.split(input).map(_.canonical)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
 
       /**
@@ -447,8 +447,8 @@ final class SplitSpec extends TestSpec:
         val actualX = Interval.splitFind(input).map(it => (it._1.canonical, it._2))
         val actual  = Interval.split(input).map(_.canonical)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -509,8 +509,8 @@ final class SplitSpec extends TestSpec:
         val actualX = Interval.splitFind(input).map(it => (it._1.canonical, it._2))
         val actual  = Interval.split(input).map(_.canonical)
 
-        actualX mustBe expectedX
-        actual mustBe expected
+        actualX shouldBe expectedX
+        actual shouldBe expected
       }
     }
 
@@ -554,8 +554,8 @@ final class SplitSpec extends TestSpec:
         val actualX = Interval.splitFind(input).map(it => (it._1.canonical, it._2))
         val actual  = Interval.split(input).map(_.canonical)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -598,8 +598,8 @@ final class SplitSpec extends TestSpec:
         val actualX = Interval.splitFind(List(a, b, c)).map(it => (it._1.canonical, it._2))
         val actual  = Interval.split(List(a, b, c)).map(_.canonical)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -651,11 +651,11 @@ final class SplitSpec extends TestSpec:
         val actualX = Interval.splitFind(input).map(it => (it._1.canonical, it._2))
         val actual  = Interval.split(input).map(_.canonical)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
 
-        ss.map(_.canonical) mustBe expected
-        gs.map(it => (it._1.canonical, it._2)) mustBe expectedX
+        ss.map(_.canonical) shouldBe expected
+        gs.map(it => (it._1.canonical, it._2)) shouldBe expectedX
       }
     }
 

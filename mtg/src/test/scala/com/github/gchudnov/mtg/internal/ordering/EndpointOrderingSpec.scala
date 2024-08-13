@@ -16,15 +16,15 @@ final class EndpointOrderingSpec extends TestSpec:
         val b = Endpoint.succ(a)
         val c = Endpoint.pred(a)
 
-        ordE.compare(a, a) mustBe (0)
-        ordE.compare(a, b) mustBe (-1)
-        ordE.compare(a, c) mustBe (1)
-        ordE.compare(b, a) mustBe (1)
-        ordE.compare(b, b) mustBe (0)
-        ordE.compare(b, c) mustBe (1)
-        ordE.compare(c, a) mustBe (-1)
-        ordE.compare(c, b) mustBe (-1)
-        ordE.compare(c, c) mustBe (0)
+        ordE.compare(a, a) shouldBe (0)
+        ordE.compare(a, b) shouldBe (-1)
+        ordE.compare(a, c) shouldBe (1)
+        ordE.compare(b, a) shouldBe (1)
+        ordE.compare(b, b) shouldBe (0)
+        ordE.compare(b, c) shouldBe (1)
+        ordE.compare(c, a) shouldBe (-1)
+        ordE.compare(c, b) shouldBe (-1)
+        ordE.compare(c, c) shouldBe (0)
       }
 
       "compare value with infinity" in {
@@ -32,15 +32,15 @@ final class EndpointOrderingSpec extends TestSpec:
         val b = Endpoint.at[Int](Value.infNeg)
         val c = Endpoint.at[Int](Value.infPos)
 
-        ordE.compare(a, a) mustBe (0)
-        ordE.compare(a, b) mustBe (1)
-        ordE.compare(a, c) mustBe (-1)
-        ordE.compare(b, a) mustBe (-1)
-        ordE.compare(b, b) mustBe (0)
-        ordE.compare(b, c) mustBe (-1)
-        ordE.compare(c, a) mustBe (1)
-        ordE.compare(c, b) mustBe (1)
-        ordE.compare(c, c) mustBe (0)
+        ordE.compare(a, a) shouldBe (0)
+        ordE.compare(a, b) shouldBe (1)
+        ordE.compare(a, c) shouldBe (-1)
+        ordE.compare(b, a) shouldBe (-1)
+        ordE.compare(b, b) shouldBe (0)
+        ordE.compare(b, c) shouldBe (-1)
+        ordE.compare(c, a) shouldBe (1)
+        ordE.compare(c, b) shouldBe (1)
+        ordE.compare(c, c) shouldBe (0)
       }
 
       "compare (lt) value with infinity" in {
@@ -48,15 +48,15 @@ final class EndpointOrderingSpec extends TestSpec:
         val b = Endpoint.at[Int](Value.infNeg)
         val c = Endpoint.at[Int](Value.infPos)
 
-        ordE.lt(a, a) mustBe (false)
-        ordE.lt(a, b) mustBe (false)
-        ordE.lt(a, c) mustBe (true)
-        ordE.lt(b, a) mustBe (true)
-        ordE.lt(b, b) mustBe (false)
-        ordE.lt(b, c) mustBe (true)
-        ordE.lt(c, a) mustBe (false)
-        ordE.lt(c, b) mustBe (false)
-        ordE.lt(c, c) mustBe (false)
+        ordE.lt(a, a) shouldBe (false)
+        ordE.lt(a, b) shouldBe (false)
+        ordE.lt(a, c) shouldBe (true)
+        ordE.lt(b, a) shouldBe (true)
+        ordE.lt(b, b) shouldBe (false)
+        ordE.lt(b, c) shouldBe (true)
+        ordE.lt(c, a) shouldBe (false)
+        ordE.lt(c, b) shouldBe (false)
+        ordE.lt(c, c) shouldBe (false)
       }
     }
 
@@ -67,7 +67,7 @@ final class EndpointOrderingSpec extends TestSpec:
         val actual   = xs.sorted
         val expected = List[Endpoint[Int]](Endpoint.pred(Endpoint.pred(1)), Endpoint.pred(1), Endpoint.at(1), Endpoint.succ(Endpoint.succ(1)))
 
-        actual must contain theSameElementsAs (expected)
+        actual should contain theSameElementsAs (expected)
       }
     }
   }

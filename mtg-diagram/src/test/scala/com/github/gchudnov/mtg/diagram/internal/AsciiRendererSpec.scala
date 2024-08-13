@@ -5,7 +5,7 @@ import com.github.gchudnov.mtg.diagram.Diagram.Theme
 import com.github.gchudnov.mtg.diagram.Diagram.Tick
 import com.github.gchudnov.mtg.diagram.Diagram.Label
 import com.github.gchudnov.mtg.diagram.internal.AsciiRenderer
-import org.scalatest.matchers.must.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 
@@ -31,7 +31,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           val actual   = r.drawLabels(noneLabelTheme, ls, canvas.width)
           val expected = List("                                        ")
 
-          actual mustBe expected
+          actual shouldBe expected
         }
 
         "draw non-overlapping labels" in {
@@ -42,7 +42,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           val actual   = r.drawLabels(noneLabelTheme, ls, canvas.width)
           val expected = List("  5                                 10  ")
 
-          actual mustBe expected
+          actual shouldBe expected
         }
 
         "draw meeting labels" in {
@@ -53,7 +53,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           val actual   = r.drawLabels(noneLabelTheme, ls, canvas.width)
           val expected = List("-∞1  2      5           10          15+∞")
 
-          actual mustBe expected
+          actual shouldBe expected
         }
 
         "draw overlapping labels" in {
@@ -64,7 +64,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           val actual   = r.drawLabels(noneLabelTheme, ls, canvas.width)
           val expected = List("1003400                                 ")
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -79,7 +79,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           val actual   = r.drawLabels(noOverlapLabelTheme, ls, canvas.width)
           val expected = List("                                        ")
 
-          actual mustBe expected
+          actual shouldBe expected
         }
 
         "draw only non-overlapping labels" in {
@@ -90,7 +90,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           val actual   = r.drawLabels(noOverlapLabelTheme, ls, canvas.width)
           val expected = List("100 400                                 ")
 
-          actual mustBe expected
+          actual shouldBe expected
         }
 
         "draw meeting labels if one of them is non-numeric" in {
@@ -101,7 +101,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           val actual   = r.drawLabels(noOverlapLabelTheme, ls, canvas.width)
           val expected = List("-∞1  2      5           10          15+∞")
 
-          actual mustBe expected
+          actual shouldBe expected
         }
 
         "draw only non-meeting labels" in {
@@ -112,7 +112,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           val actual   = r.drawLabels(noOverlapLabelTheme, ls, canvas.width)
           val expected = List("100                                     ")
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -127,7 +127,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           val actual   = r.drawLabels(stackedLabelTheme, ls, canvas.width)
           val expected = List("                                        ")
 
-          actual mustBe expected
+          actual shouldBe expected
         }
 
         "draw non-overlapping and non-meeting labels on one line" in {
@@ -138,7 +138,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           val actual   = r.drawLabels(stackedLabelTheme, ls, canvas.width)
           val expected = List("  5                                 10  ")
 
-          actual mustBe expected
+          actual shouldBe expected
         }
 
         "draw meeting labels" in {
@@ -152,7 +152,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
             "  1                                   +∞",
           )
 
-          actual mustBe expected
+          actual shouldBe expected
         }
 
         "draw overlapping labels" in {
@@ -166,7 +166,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
             "   300                                  ",
           )
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -178,7 +178,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val actual   = r.drawTicks(themeNoLegend, ts, canvas.width)
         val expected = List("----------------------------------------")
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "draw ticks" in {
@@ -189,7 +189,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val actual   = r.drawTicks(themeNoLegend, ts, canvas.width)
         val expected = List("+-+--+------+------------+-----------+-+")
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "pad with empty lines an empty array and N = 0" in {
@@ -201,7 +201,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List.empty[String]
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "pad with empty lines an empty array and N = 1" in {
@@ -213,7 +213,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List("")
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "pad with empty lines a non-empty array and N > array.size" in {
@@ -225,7 +225,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List("a", "b", "")
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "pad with empty lines a non-empty array and N == array.size" in {
@@ -237,7 +237,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List("a", "b")
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "pad with empty lines a non-empty array and N < array.size" in {
@@ -249,7 +249,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List("a", "b")
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
   }

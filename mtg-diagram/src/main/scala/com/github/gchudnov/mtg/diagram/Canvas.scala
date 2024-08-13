@@ -42,9 +42,9 @@ object Canvas:
    *   canvas
    */
   def make(width: Int, padding: Int = defaultPadding): Canvas =
-    require(width > 0, "width must be positive")
-    require(padding >= 0, "padding must be non-negative")
-    require(padding < width / 2, "padding must be less than half of the width")
+    require(width > 0, "width should be positive")
+    require(padding >= 0, "padding should be non-negative")
+    require(padding < width / 2, "padding should be less than half of the width")
 
     Canvas(width = width, padding = padding)
 

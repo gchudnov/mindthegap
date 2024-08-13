@@ -14,46 +14,46 @@ final class EndpointSpec extends TestSpec:
         val actual   = Endpoint.at(1)
         val expected = Endpoint.At(Value.Finite(1))
 
-        actual.isAt mustBe (true)
-        actual.isPred mustBe (false)
-        actual.isSucc mustBe (false)
+        actual.isAt shouldBe (true)
+        actual.isPred shouldBe (false)
+        actual.isSucc shouldBe (false)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "construct from Value.Finite" in {
         val actual   = Endpoint.at(Value.Finite(1))
         val expected = Endpoint.At(Value.Finite(1))
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "construct from Value.InfNeg" in {
         val actual   = Endpoint.at(Value.InfNeg)
         val expected = Endpoint.At(Value.InfNeg)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "construct from Value.InfPos" in {
         val actual   = Endpoint.at(Value.InfPos)
         val expected = Endpoint.At(Value.InfPos)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.succ" in {
         val actual   = Endpoint.at(Value.InfPos).succ
         val expected = Endpoint.Succ(Endpoint.At(Value.InfPos))
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.pred" in {
         val actual   = Endpoint.at(Value.InfPos).pred
         val expected = Endpoint.Pred(Endpoint.At(Value.InfPos))
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.value" in {
@@ -62,7 +62,7 @@ final class EndpointSpec extends TestSpec:
         val actual   = x.value
         val expected = Value.Finite(1)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.eval" in {
@@ -71,7 +71,7 @@ final class EndpointSpec extends TestSpec:
         val actual   = x.eval
         val expected = Value.Finite(1)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.at" in {
@@ -80,7 +80,7 @@ final class EndpointSpec extends TestSpec:
         val actual   = x.at
         val expected = Endpoint.at(1)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
 
@@ -89,39 +89,39 @@ final class EndpointSpec extends TestSpec:
         val actual   = Endpoint.pred(Endpoint.at(1))
         val expected = Endpoint.Pred(Endpoint.At(Value.Finite(1)))
 
-        actual.isAt mustBe (false)
-        actual.isPred mustBe (true)
-        actual.isSucc mustBe (false)
+        actual.isAt shouldBe (false)
+        actual.isPred shouldBe (true)
+        actual.isSucc shouldBe (false)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "construct from Value" in {
         val actual   = Endpoint.pred(Value.Finite(1))
         val expected = Endpoint.Pred(Endpoint.At(Value.Finite(1)))
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "construct from T" in {
         val actual   = Endpoint.pred(1)
         val expected = Endpoint.Pred(Endpoint.At(Value.Finite(1)))
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.succ" in {
         val actual   = Endpoint.pred(Value.InfPos).succ
         val expected = Endpoint.At(Value.InfPos)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.pred" in {
         val actual   = Endpoint.pred(Value.InfPos).pred
         val expected = Endpoint.Pred(Endpoint.Pred(Endpoint.At(Value.InfPos)))
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.eval" in {
@@ -130,7 +130,7 @@ final class EndpointSpec extends TestSpec:
         val actual   = x.eval
         val expected = Value.Finite(0)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.at" in {
@@ -139,7 +139,7 @@ final class EndpointSpec extends TestSpec:
         val actual   = x.at
         val expected = Endpoint.at(0)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "Pred(At(Finite(-3)) == Finite(-4)" in {
@@ -148,7 +148,7 @@ final class EndpointSpec extends TestSpec:
         val actual   = x.eval
         val expected = Value.finite(-4)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
     }
 
@@ -157,39 +157,39 @@ final class EndpointSpec extends TestSpec:
         val actual   = Endpoint.succ(Endpoint.at(1))
         val expected = Endpoint.Succ(Endpoint.At(Value.Finite(1)))
 
-        actual.isAt mustBe (false)
-        actual.isPred mustBe (false)
-        actual.isSucc mustBe (true)
+        actual.isAt shouldBe (false)
+        actual.isPred shouldBe (false)
+        actual.isSucc shouldBe (true)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "construct from Value" in {
         val actual   = Endpoint.succ(Value.Finite(1))
         val expected = Endpoint.Succ(Endpoint.At(Value.Finite(1)))
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "construct from T" in {
         val actual   = Endpoint.succ(1)
         val expected = Endpoint.Succ(Endpoint.At(Value.Finite(1)))
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.succ" in {
         val actual   = Endpoint.succ(Value.InfPos).succ
         val expected = Endpoint.Succ(Endpoint.Succ(Endpoint.At(Value.InfPos)))
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.pred" in {
         val actual   = Endpoint.succ(Value.InfPos).pred
         val expected = Endpoint.At(Value.InfPos)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.eval" in {
@@ -198,7 +198,7 @@ final class EndpointSpec extends TestSpec:
         val actual   = x.eval
         val expected = Value.Finite(2)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "x.at" in {
@@ -207,7 +207,7 @@ final class EndpointSpec extends TestSpec:
         val actual   = x.at
         val expected = Endpoint.at(2)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
 
@@ -218,7 +218,7 @@ final class EndpointSpec extends TestSpec:
         val actual   = x.eval
         val expected = Value.Finite(3)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "get a value from Pred(Pred(x))" in {
@@ -227,7 +227,7 @@ final class EndpointSpec extends TestSpec:
         val actual   = x.eval
         val expected = Value.Finite(3)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "get a value from Succ(Succ(Pred(Pred(x))))" in {
@@ -236,7 +236,7 @@ final class EndpointSpec extends TestSpec:
         val actual   = x.eval
         val expected = Value.Finite(1)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "get a value from Succ(Pred(Succ(Pred(x))))" in {
@@ -245,7 +245,7 @@ final class EndpointSpec extends TestSpec:
         val actual   = x.eval
         val expected = Value.Finite(1)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "unwrap" in {
@@ -260,7 +260,7 @@ final class EndpointSpec extends TestSpec:
 
         forAll(t) { (input, expected) =>
           val actual = input.unwrap
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
     }

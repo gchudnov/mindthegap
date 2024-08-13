@@ -34,7 +34,7 @@ final class BeforeSpec extends TestSpec:
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.before(yy)) {
-            yy.after(xx) mustBe true
+            yy.after(xx) shouldBe true
 
             assertOne(Rel.Before)(xx, yy)
 
@@ -42,7 +42,7 @@ final class BeforeSpec extends TestSpec:
             val a2 = argsX.right
             val b1 = argsY.left
 
-            ordE.lt(a2, b1) mustBe true
+            ordE.lt(a2, b1) shouldBe true
           }
         }
       }
@@ -55,7 +55,7 @@ final class BeforeSpec extends TestSpec:
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.after(yy)) {
-            yy.before(xx) mustBe true
+            yy.before(xx) shouldBe true
 
             assertOne(Rel.After)(xx, yy)
 
@@ -63,7 +63,7 @@ final class BeforeSpec extends TestSpec:
             val a1 = argsX.left
             val b2 = argsY.right
 
-            ordE.gt(a1, b2) mustBe true
+            ordE.gt(a1, b2) shouldBe true
           }
         }
       }
@@ -79,64 +79,64 @@ final class BeforeSpec extends TestSpec:
           val actual   = xx.before(yy)
           val expected = yy.after(xx)
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
       "valid in special cases" in {
         // Empty
-        Interval.empty[Int].before(Interval.empty[Int]) mustBe (false)
-        Interval.empty[Int].before(Interval.point(1)) mustBe (false)
-        Interval.empty[Int].before(Interval.closed(1, 4)) mustBe (false)
-        Interval.empty[Int].before(Interval.open(1, 4)) mustBe (false)
-        Interval.empty[Int].before(Interval.unbounded[Int]) mustBe (false)
+        Interval.empty[Int].before(Interval.empty[Int]) shouldBe (false)
+        Interval.empty[Int].before(Interval.point(1)) shouldBe (false)
+        Interval.empty[Int].before(Interval.closed(1, 4)) shouldBe (false)
+        Interval.empty[Int].before(Interval.open(1, 4)) shouldBe (false)
+        Interval.empty[Int].before(Interval.unbounded[Int]) shouldBe (false)
 
         // Point
-        Interval.point(5).before(Interval.empty[Int]) mustBe (false)
-        Interval.point(5).before(Interval.point(5)) mustBe (false)
-        Interval.point(5).before(Interval.point(6)) mustBe (true)
-        Interval.point(6).after(Interval.point(5)) mustBe (true)
-        Interval.point(5).before(Interval.point(10)) mustBe (true)
-        Interval.point(5).before(Interval.open(5, 10)) mustBe (true)
-        Interval.point(5).before(Interval.closed(5, 10)) mustBe (false)
-        Interval.point(5).before(Interval.closed(6, 10)) mustBe (true)
-        Interval.point(5).before(Interval.leftClosed(5)) mustBe (false)
-        Interval.point(5).before(Interval.leftClosed(6)) mustBe (true)
-        Interval.point(5).before(Interval.unbounded[Int]) mustBe (false)
+        Interval.point(5).before(Interval.empty[Int]) shouldBe (false)
+        Interval.point(5).before(Interval.point(5)) shouldBe (false)
+        Interval.point(5).before(Interval.point(6)) shouldBe (true)
+        Interval.point(6).after(Interval.point(5)) shouldBe (true)
+        Interval.point(5).before(Interval.point(10)) shouldBe (true)
+        Interval.point(5).before(Interval.open(5, 10)) shouldBe (true)
+        Interval.point(5).before(Interval.closed(5, 10)) shouldBe (false)
+        Interval.point(5).before(Interval.closed(6, 10)) shouldBe (true)
+        Interval.point(5).before(Interval.leftClosed(5)) shouldBe (false)
+        Interval.point(5).before(Interval.leftClosed(6)) shouldBe (true)
+        Interval.point(5).before(Interval.unbounded[Int]) shouldBe (false)
 
         // (-∞,0], {4}
-        Interval.point(4).after(Interval.rightClosed(0)) mustBe (true)
-        Interval.rightClosed(0).before(Interval.point(4)) mustBe (true)
+        Interval.point(4).after(Interval.rightClosed(0)) shouldBe (true)
+        Interval.rightClosed(0).before(Interval.point(4)) shouldBe (true)
 
         // Proper
-        Interval.open(4, 7).before(Interval.open(4, 7)) mustBe (false)
-        Interval.open(1, 4).before(Interval.empty[Int]) mustBe (false)
-        Interval.open(1, 4).before(Interval.open(5, 8)) mustBe (true)
-        Interval.open(5, 8).after(Interval.open(1, 4)) mustBe (true)
-        Interval.open(1, 4).before(Interval.closed(5, 6)) mustBe (true)
+        Interval.open(4, 7).before(Interval.open(4, 7)) shouldBe (false)
+        Interval.open(1, 4).before(Interval.empty[Int]) shouldBe (false)
+        Interval.open(1, 4).before(Interval.open(5, 8)) shouldBe (true)
+        Interval.open(5, 8).after(Interval.open(1, 4)) shouldBe (true)
+        Interval.open(1, 4).before(Interval.closed(5, 6)) shouldBe (true)
 
-        Interval.open(1, 4).before(Interval.open(3, 6)) mustBe (true)
-        Interval.open(3, 6).after(Interval.open(1, 4)) mustBe (true)
+        Interval.open(1, 4).before(Interval.open(3, 6)) shouldBe (true)
+        Interval.open(3, 6).after(Interval.open(1, 4)) shouldBe (true)
 
         // Infinity
         // (1, 4)  (3, +inf)
-        Interval.open(1, 4).before(Interval.leftOpen(3)) mustBe (true)
+        Interval.open(1, 4).before(Interval.leftOpen(3)) shouldBe (true)
 
         // (-inf, 2)  (3, 6)
-        Interval.rightOpen(2).before(Interval.open(3, 6)) mustBe (true)
+        Interval.rightOpen(2).before(Interval.open(3, 6)) shouldBe (true)
 
         // (-inf, 2)  (3, +inf)
-        Interval.rightOpen(2).before(Interval.leftOpen(3)) mustBe (true)
+        Interval.rightOpen(2).before(Interval.leftOpen(3)) shouldBe (true)
 
         // (-inf, 2]  (3, +inf)
-        Interval.rightClosed(2).before(Interval.leftOpen(3)) mustBe (true)
+        Interval.rightClosed(2).before(Interval.leftOpen(3)) shouldBe (true)
 
         // (-inf, 2)  [3, +inf)
-        Interval.rightOpen(2).before(Interval.leftClosed(3)) mustBe (true)
+        Interval.rightOpen(2).before(Interval.leftClosed(3)) shouldBe (true)
 
         // [doc]
-        Interval.closed(1, 4).before(Interval.closed(5, 8)) mustBe (true)
-        Interval.closed(5, 8).after(Interval.closed(1, 4)) mustBe (true)
+        Interval.closed(1, 4).before(Interval.closed(5, 8)) shouldBe (true)
+        Interval.closed(5, 8).after(Interval.closed(1, 4)) shouldBe (true)
       }
     }
   }

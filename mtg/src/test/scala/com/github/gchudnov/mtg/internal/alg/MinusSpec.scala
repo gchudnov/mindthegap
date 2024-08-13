@@ -24,12 +24,12 @@ final class MinusSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.isEmpty mustBe (true)
-          yy.isEmpty mustBe (true)
+          xx.isEmpty shouldBe (true)
+          yy.isEmpty shouldBe (true)
 
           val actual = xx.minus(yy).canonical
 
-          actual.isEmpty mustBe true
+          actual.isEmpty shouldBe true
         }
       }
 
@@ -38,12 +38,12 @@ final class MinusSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.isEmpty mustBe (true)
-          yy.nonEmpty mustBe (true)
+          xx.isEmpty shouldBe (true)
+          yy.nonEmpty shouldBe (true)
 
           val actual = xx.minus(yy).canonical
 
-          actual.isEmpty mustBe true
+          actual.isEmpty shouldBe true
         }
       }
 
@@ -52,14 +52,14 @@ final class MinusSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.nonEmpty mustBe (true)
-          yy.isEmpty mustBe (true)
+          xx.nonEmpty shouldBe (true)
+          yy.isEmpty shouldBe (true)
 
           val actual   = xx.minus(yy).canonical
           val expected = xx.canonical
 
-          actual.isEmpty mustBe false
-          actual mustBe (expected)
+          actual.isEmpty shouldBe false
+          actual shouldBe (expected)
         }
       }
 
@@ -72,8 +72,8 @@ final class MinusSpec extends TestSpec:
             val actual   = xx.minus(yy).canonical
             val expected = xx.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -87,8 +87,8 @@ final class MinusSpec extends TestSpec:
             val actual   = xx.minus(yy).canonical
             val expected = xx.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -102,8 +102,8 @@ final class MinusSpec extends TestSpec:
             val actual   = xx.minus(yy).canonical
             val expected = Interval.empty[Int]
 
-            actual.isEmpty mustBe true
-            actual mustBe (expected)
+            actual.isEmpty shouldBe true
+            actual shouldBe (expected)
           }
         }
       }
@@ -117,8 +117,8 @@ final class MinusSpec extends TestSpec:
             val actual   = xx.minus(yy).canonical
             val expected = Interval.empty[Int]
 
-            actual.isEmpty mustBe true
-            actual mustBe (expected)
+            actual.isEmpty shouldBe true
+            actual shouldBe (expected)
           }
         }
       }
@@ -132,8 +132,8 @@ final class MinusSpec extends TestSpec:
             val actual   = xx.minus(yy).canonical
             val expected = Interval.empty[Int]
 
-            actual.isEmpty mustBe true
-            actual mustBe (expected)
+            actual.isEmpty shouldBe true
+            actual shouldBe (expected)
           }
         }
       }
@@ -147,8 +147,8 @@ final class MinusSpec extends TestSpec:
             val actual   = xx.minus(yy).canonical
             val expected = xx.minus(yy).canonical
 
-            actual.isEmpty mustBe true
-            actual mustBe expected
+            actual.isEmpty shouldBe true
+            actual shouldBe expected
           }
         }
       }
@@ -161,7 +161,7 @@ final class MinusSpec extends TestSpec:
           whenever(xx.isOverlappedBy(yy)) {
             val actual = xx.minus(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -175,8 +175,8 @@ final class MinusSpec extends TestSpec:
             val actual   = xx.minus(yy).canonical
             val expected = xx.deflateLeft.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe expected
+            actual.isEmpty shouldBe false
+            actual shouldBe expected
           }
         }
       }
@@ -189,7 +189,7 @@ final class MinusSpec extends TestSpec:
           whenever(xx.isStartedBy(yy)) {
             val actual = xx.minus(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -203,8 +203,8 @@ final class MinusSpec extends TestSpec:
             val actual   = xx.minus(yy).canonical
             val expected = xx.deflateRight.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -217,7 +217,7 @@ final class MinusSpec extends TestSpec:
           whenever(xx.overlaps(yy)) {
             val actual = xx.minus(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -230,7 +230,7 @@ final class MinusSpec extends TestSpec:
           whenever(xx.isFinishedBy(yy)) {
             val actual = xx.minus(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -256,7 +256,7 @@ final class MinusSpec extends TestSpec:
 
         val expected = Interval.closed(1, 4)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "[,] if minus right [doc]" in {
@@ -267,7 +267,7 @@ final class MinusSpec extends TestSpec:
 
         val expected = Interval.closed(11, 15)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
 
@@ -280,13 +280,13 @@ final class MinusSpec extends TestSpec:
           whenever(xx.contains(yy)) {
             val actual = Interval.minus(xx, yy)
 
-            actual.size mustBe (2)
-            actual.foreach(_.nonEmpty mustBe (true))
+            actual.size shouldBe (2)
+            actual.foreach(_.nonEmpty shouldBe (true))
 
             // [left][intersection][right] = [original]
             val ix = xx.intersection(yy)
             val zz = actual(0).union(ix).union(actual(1)).canonical
-            zz mustBe (xx.canonical)
+            zz shouldBe (xx.canonical)
           }
         }
       }
@@ -302,7 +302,7 @@ final class MinusSpec extends TestSpec:
         val expected = List(Interval.closed(1, 4), Interval.closed(11, 15))
 
         //
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
 
@@ -331,7 +331,7 @@ final class MinusSpec extends TestSpec:
           Interval.leftClosedRightOpen(6.0, 7.0),
         )
 
-        actual.map(_.canonical) mustBe expected.map(_.canonical)
+        actual.map(_.canonical) shouldBe expected.map(_.canonical)
       }
 
       "[[0,5]] - [2,3] = [[0,2],[3,5]]" in {
@@ -351,7 +351,7 @@ final class MinusSpec extends TestSpec:
           Interval.leftClosedRightOpen(3.0, 5.0),
         )
 
-        actual.map(_.canonical) mustBe expected.map(_.canonical)
+        actual.map(_.canonical) shouldBe expected.map(_.canonical)
       }
 
       /**
@@ -398,7 +398,7 @@ final class MinusSpec extends TestSpec:
         // [[-5,-4],[-3,-2],[4,5],[8,9]]
         val expected = List(z1, z2, z3, z4)
 
-        actual.map(_.canonical) mustBe expected.map(_.canonical)
+        actual.map(_.canonical) shouldBe expected.map(_.canonical)
       }
     }
   }

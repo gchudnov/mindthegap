@@ -22,15 +22,15 @@ final class UnionSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.isEmpty mustBe (true)
-          yy.isEmpty mustBe (true)
+          xx.isEmpty shouldBe (true)
+          yy.isEmpty shouldBe (true)
 
           val actual   = xx.union(yy).canonical
           val expected = yy.union(xx).canonical
 
-          (actual.isEmpty, actual.isPoint, actual.isProper) mustBe (expected.isEmpty, expected.isPoint, expected.isProper)
+          (actual.isEmpty, actual.isPoint, actual.isProper) shouldBe (expected.isEmpty, expected.isPoint, expected.isProper)
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -39,16 +39,16 @@ final class UnionSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.isEmpty mustBe (true)
-          yy.nonEmpty mustBe (true)
+          xx.isEmpty shouldBe (true)
+          yy.nonEmpty shouldBe (true)
 
           val actual   = xx.union(yy).canonical
           val expected = yy.union(xx).canonical
 
-          actual.isEmpty mustBe false
-          expected.isEmpty mustBe false
+          actual.isEmpty shouldBe false
+          expected.isEmpty shouldBe false
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -57,17 +57,17 @@ final class UnionSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.nonEmpty mustBe (true)
-          yy.nonEmpty mustBe (true)
+          xx.nonEmpty shouldBe (true)
+          yy.nonEmpty shouldBe (true)
 
           whenever(xx.merges(yy)) {
             val actual   = xx.union(yy).canonical
             val expected = yy.union(xx).canonical
 
-            actual.isEmpty mustBe false
-            expected.isEmpty mustBe false
+            actual.isEmpty shouldBe false
+            expected.isEmpty shouldBe false
 
-            actual mustBe expected
+            actual shouldBe expected
           }
         }
       }
@@ -77,17 +77,17 @@ final class UnionSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.nonEmpty mustBe (true)
-          yy.nonEmpty mustBe (true)
+          xx.nonEmpty shouldBe (true)
+          yy.nonEmpty shouldBe (true)
 
           whenever(!xx.merges(yy)) {
             val actual   = xx.union(yy).canonical
             val expected = yy.union(xx).canonical
 
-            actual.isEmpty mustBe true
-            expected.isEmpty mustBe true
+            actual.isEmpty shouldBe true
+            expected.isEmpty shouldBe true
 
-            actual mustBe expected
+            actual shouldBe expected
           }
         }
       }
@@ -100,7 +100,7 @@ final class UnionSpec extends TestSpec:
           whenever(xx.before(yy) && !xx.isAdjacent(yy)) {
             val actual = xx.union(yy).canonical
 
-            actual.isEmpty mustBe true
+            actual.isEmpty shouldBe true
           }
         }
       }
@@ -113,7 +113,7 @@ final class UnionSpec extends TestSpec:
           whenever(xx.before(yy) && xx.isAdjacent(yy)) {
             val actual = xx.union(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -126,7 +126,7 @@ final class UnionSpec extends TestSpec:
           whenever(xx.after(yy) && !xx.isAdjacent(yy)) {
             val actual = xx.union(yy).canonical
 
-            actual.isEmpty mustBe true
+            actual.isEmpty shouldBe true
           }
         }
       }
@@ -139,7 +139,7 @@ final class UnionSpec extends TestSpec:
           whenever(xx.after(yy) && xx.isAdjacent(yy)) {
             val actual = xx.union(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -153,8 +153,8 @@ final class UnionSpec extends TestSpec:
             val actual   = xx.union(yy).canonical
             val expected = yy.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -168,8 +168,8 @@ final class UnionSpec extends TestSpec:
             val actual   = xx.union(yy).canonical
             val expected = yy.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -183,8 +183,8 @@ final class UnionSpec extends TestSpec:
             val actual   = xx.union(yy).canonical
             val expected = yy.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -198,9 +198,9 @@ final class UnionSpec extends TestSpec:
             val actual   = xx.union(yy).canonical
             val expected = xx.union(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
 
-            actual mustBe expected
+            actual shouldBe expected
           }
         }
       }
@@ -213,7 +213,7 @@ final class UnionSpec extends TestSpec:
           whenever(xx.isOverlappedBy(yy)) {
             val actual = xx.union(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -226,7 +226,7 @@ final class UnionSpec extends TestSpec:
           whenever(xx.isMetBy(yy)) {
             val actual = xx.union(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -240,8 +240,8 @@ final class UnionSpec extends TestSpec:
             val actual   = xx.union(yy).canonical
             val expected = xx.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -254,7 +254,7 @@ final class UnionSpec extends TestSpec:
           whenever(xx.meets(yy)) {
             val actual = xx.union(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -267,7 +267,7 @@ final class UnionSpec extends TestSpec:
           whenever(xx.overlaps(yy)) {
             val actual = xx.union(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -281,8 +281,8 @@ final class UnionSpec extends TestSpec:
             val actual   = xx.union(yy).canonical
             val expected = xx.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -296,8 +296,8 @@ final class UnionSpec extends TestSpec:
             val actual   = xx.union(yy).canonical
             val expected = xx.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -312,7 +312,7 @@ final class UnionSpec extends TestSpec:
           val actual   = xx.union(yy).canonical
           val expected = yy.union(xx).canonical
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -320,13 +320,13 @@ final class UnionSpec extends TestSpec:
         val a = Interval.closed(-5, -2).swap
         val b = Interval.closed(10, 20).swap
 
-        a.isEmpty mustBe (true)
-        b.isEmpty mustBe (true)
+        a.isEmpty shouldBe (true)
+        b.isEmpty shouldBe (true)
 
         val actual   = a.union(b).canonical
         val expected = b.union(a).canonical
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
 
@@ -340,10 +340,10 @@ final class UnionSpec extends TestSpec:
         val c1 = Interval.union(a, b).canonical
         val c2 = Interval.union(b, a).canonical
 
-        c1 mustBe c2
-        c2 mustBe c1
+        c1 shouldBe c2
+        c2 shouldBe c1
 
-        c1 mustBe expected
+        c1 shouldBe expected
       }
     }
   }

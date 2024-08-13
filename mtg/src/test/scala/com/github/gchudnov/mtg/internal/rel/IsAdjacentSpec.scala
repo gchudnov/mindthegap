@@ -26,7 +26,7 @@ final class IsAdjacentSpec extends TestSpec:
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.isAdjacent(yy)) {
-            yy.isAdjacent(xx) mustBe true
+            yy.isAdjacent(xx) shouldBe true
 
             assertOneOf(Set(Rel.Before, Rel.After))(xx, yy)
 
@@ -36,14 +36,14 @@ final class IsAdjacentSpec extends TestSpec:
               val b1 = argsY.left
               val a2 = argsX.right
 
-              ordE.equiv(a2.succ, b1) mustBe (true)
+              ordE.equiv(a2.succ, b1) shouldBe (true)
               ()
             else if xx.after(yy) then
               // succ(b+) = a-
               val a1 = argsX.left
               val b2 = argsY.right
 
-              ordE.equiv(b2.succ, a1) mustBe (true)
+              ordE.equiv(b2.succ, a1) shouldBe (true)
               ()
           }
         }
@@ -60,26 +60,26 @@ final class IsAdjacentSpec extends TestSpec:
           val actual   = xx.isAdjacent(yy)
           val expected = yy.isAdjacent(xx)
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
       "valid in special cases" in {
         // (1, 4)  (3, 6)
-        Interval.open(1, 4).isAdjacent(Interval.open(3, 6)) mustBe (true)
-        Interval.open(3, 6).isAdjacent(Interval.open(1, 4)) mustBe (true)
+        Interval.open(1, 4).isAdjacent(Interval.open(3, 6)) shouldBe (true)
+        Interval.open(3, 6).isAdjacent(Interval.open(1, 4)) shouldBe (true)
 
         // (1, 4)  (4, 6)
-        Interval.open(1, 4).isAdjacent(Interval.open(4, 7)) mustBe (false)
-        Interval.open(4, 7).isAdjacent(Interval.open(1, 4)) mustBe (false)
+        Interval.open(1, 4).isAdjacent(Interval.open(4, 7)) shouldBe (false)
+        Interval.open(4, 7).isAdjacent(Interval.open(1, 4)) shouldBe (false)
 
         // [1, 4]  [5, 6]
-        Interval.closed(1, 4).isAdjacent(Interval.closed(5, 6)) mustBe (true)
-        Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) mustBe (true)
+        Interval.closed(1, 4).isAdjacent(Interval.closed(5, 6)) shouldBe (true)
+        Interval.closed(5, 6).isAdjacent(Interval.closed(1, 4)) shouldBe (true)
 
         // [doc]
-        Interval.closed(5, 7).isAdjacent(Interval.closed(8, 10)) mustBe (true)
-        Interval.closed(1, 4).isAdjacent(Interval.closed(5, 7)) mustBe (true)
+        Interval.closed(5, 7).isAdjacent(Interval.closed(8, 10)) shouldBe (true)
+        Interval.closed(1, 4).isAdjacent(Interval.closed(5, 7)) shouldBe (true)
       }
     }
   }

@@ -26,7 +26,7 @@ final class MergesSpec extends TestSpec:
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.merges(yy) && xx.nonEmpty && yy.nonEmpty) {
-            yy.merges(xx) mustBe true
+            yy.merges(xx) shouldBe true
 
             assertOneOf(
               Set(
@@ -47,7 +47,7 @@ final class MergesSpec extends TestSpec:
             )(xx, yy)
 
             // a.intersects(b) OR a.isAdjacent(b)
-            (xx.intersects(yy) || xx.isAdjacent(yy)) mustBe (true)
+            (xx.intersects(yy) || xx.isAdjacent(yy)) shouldBe (true)
           }
         }
       }
@@ -58,14 +58,14 @@ final class MergesSpec extends TestSpec:
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.merges(yy) && (xx.isEmpty || yy.isEmpty)) {
-            yy.merges(xx) mustBe true
+            yy.merges(xx) shouldBe true
 
             val rs = findRelations(xx, yy)
             val es = if xx.canonical == yy.canonical then Set(Rel.EqualsTo) else Set.empty[Rel]
-            rs must contain theSameElementsAs (es)
+            rs should contain theSameElementsAs (es)
 
-            xx.intersects(yy) mustBe (false)
-            xx.isAdjacent(yy) mustBe (false)
+            xx.intersects(yy) shouldBe (false)
+            xx.isAdjacent(yy) shouldBe (false)
           }
         }
       }
@@ -80,34 +80,34 @@ final class MergesSpec extends TestSpec:
           val actual   = xx.merges(yy)
           val expected = yy.merges(xx)
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
       "valid in special cases" in {
         // Empty
-        Interval.empty[Int].merges(Interval.empty[Int]) mustBe (true)
-        Interval.empty[Int].merges(Interval.point(1)) mustBe (true)
-        Interval.empty[Int].merges(Interval.closed(1, 4)) mustBe (true)
-        Interval.empty[Int].merges(Interval.open(1, 4)) mustBe (true)
-        Interval.empty[Int].merges(Interval.unbounded[Int]) mustBe (true)
+        Interval.empty[Int].merges(Interval.empty[Int]) shouldBe (true)
+        Interval.empty[Int].merges(Interval.point(1)) shouldBe (true)
+        Interval.empty[Int].merges(Interval.closed(1, 4)) shouldBe (true)
+        Interval.empty[Int].merges(Interval.open(1, 4)) shouldBe (true)
+        Interval.empty[Int].merges(Interval.unbounded[Int]) shouldBe (true)
 
         // Point
-        Interval.point(5).merges(Interval.empty[Int]) mustBe (true)
-        Interval.point(5).merges(Interval.point(5)) mustBe (true)
-        Interval.point(5).merges(Interval.point(6)) mustBe (true)
-        Interval.point(5).merges(Interval.open(5, 10)) mustBe (true)
+        Interval.point(5).merges(Interval.empty[Int]) shouldBe (true)
+        Interval.point(5).merges(Interval.point(5)) shouldBe (true)
+        Interval.point(5).merges(Interval.point(6)) shouldBe (true)
+        Interval.point(5).merges(Interval.open(5, 10)) shouldBe (true)
 
         // Proper
-        Interval.closed(4, 10).merges(Interval.empty[Int]) mustBe (true)
-        Interval.closed(4, 10).merges(Interval.point(11)) mustBe (true)
-        Interval.open(4, 10).merges(Interval.open(5, 12)) mustBe (true)
-        Interval.open(5, 12).isMergedBy(Interval.open(4, 10)) mustBe (true)
-        Interval.open(4, 7).merges(Interval.open(5, 8)) mustBe (true)
+        Interval.closed(4, 10).merges(Interval.empty[Int]) shouldBe (true)
+        Interval.closed(4, 10).merges(Interval.point(11)) shouldBe (true)
+        Interval.open(4, 10).merges(Interval.open(5, 12)) shouldBe (true)
+        Interval.open(5, 12).isMergedBy(Interval.open(4, 10)) shouldBe (true)
+        Interval.open(4, 7).merges(Interval.open(5, 8)) shouldBe (true)
 
         // [doc]
-        Interval.point(5).merges(Interval.point(6)) mustBe (true)
-        Interval.closed(4, 10).merges(Interval.closed(5, 12)) mustBe (true)
+        Interval.point(5).merges(Interval.point(6)) shouldBe (true)
+        Interval.closed(4, 10).merges(Interval.closed(5, 12)) shouldBe (true)
       }
     }
   }

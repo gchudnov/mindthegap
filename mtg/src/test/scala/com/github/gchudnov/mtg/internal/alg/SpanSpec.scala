@@ -22,13 +22,13 @@ final class SpanSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.isEmpty mustBe (true)
-          yy.isEmpty mustBe (true)
+          xx.isEmpty shouldBe (true)
+          yy.isEmpty shouldBe (true)
 
           val actual   = xx.span(yy).canonical
           val expected = yy.span(xx).canonical
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -37,16 +37,16 @@ final class SpanSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.isEmpty mustBe (true)
-          yy.nonEmpty mustBe (true)
+          xx.isEmpty shouldBe (true)
+          yy.nonEmpty shouldBe (true)
 
           val actual   = xx.span(yy).canonical
           val expected = yy.span(xx).canonical
 
-          actual.isEmpty mustBe false
-          expected.isEmpty mustBe false
+          actual.isEmpty shouldBe false
+          expected.isEmpty shouldBe false
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -55,16 +55,16 @@ final class SpanSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.nonEmpty mustBe (true)
-          yy.nonEmpty mustBe (true)
+          xx.nonEmpty shouldBe (true)
+          yy.nonEmpty shouldBe (true)
 
           val actual   = xx.span(yy).canonical
           val expected = yy.span(xx).canonical
 
-          actual.isEmpty mustBe false
-          expected.isEmpty mustBe false
+          actual.isEmpty shouldBe false
+          expected.isEmpty shouldBe false
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -76,7 +76,7 @@ final class SpanSpec extends TestSpec:
           whenever(xx.before(yy)) {
             val actual = xx.span(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -89,7 +89,7 @@ final class SpanSpec extends TestSpec:
           whenever(xx.after(yy)) {
             val actual = xx.span(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -103,8 +103,8 @@ final class SpanSpec extends TestSpec:
             val actual   = xx.span(yy).canonical
             val expected = yy.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -118,8 +118,8 @@ final class SpanSpec extends TestSpec:
             val actual   = xx.span(yy).canonical
             val expected = yy.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -133,8 +133,8 @@ final class SpanSpec extends TestSpec:
             val actual   = xx.span(yy).canonical
             val expected = yy.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -148,9 +148,9 @@ final class SpanSpec extends TestSpec:
             val actual   = xx.span(yy).canonical
             val expected = xx.span(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
 
-            actual mustBe expected
+            actual shouldBe expected
           }
         }
       }
@@ -163,7 +163,7 @@ final class SpanSpec extends TestSpec:
           whenever(xx.isOverlappedBy(yy)) {
             val actual = xx.span(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -176,7 +176,7 @@ final class SpanSpec extends TestSpec:
           whenever(xx.isMetBy(yy)) {
             val actual = xx.span(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -190,8 +190,8 @@ final class SpanSpec extends TestSpec:
             val actual   = xx.span(yy).canonical
             val expected = xx.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -204,7 +204,7 @@ final class SpanSpec extends TestSpec:
           whenever(xx.meets(yy)) {
             val actual = xx.span(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -217,7 +217,7 @@ final class SpanSpec extends TestSpec:
           whenever(xx.overlaps(yy)) {
             val actual = xx.span(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -231,8 +231,8 @@ final class SpanSpec extends TestSpec:
             val actual   = xx.span(yy).canonical
             val expected = xx.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -246,8 +246,8 @@ final class SpanSpec extends TestSpec:
             val actual   = xx.span(yy).canonical
             val expected = xx.canonical
 
-            actual.isEmpty mustBe false
-            actual mustBe (expected)
+            actual.isEmpty shouldBe false
+            actual shouldBe (expected)
           }
         }
       }
@@ -262,7 +262,7 @@ final class SpanSpec extends TestSpec:
           val actual   = xx.span(yy).canonical
           val expected = yy.span(xx).canonical
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
     }
@@ -277,7 +277,7 @@ final class SpanSpec extends TestSpec:
           val actual   = ((xx.span(yy)).span(zz)).canonical
           val expected = xx.span(yy.span(zz)).canonical
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
     }
@@ -292,10 +292,10 @@ final class SpanSpec extends TestSpec:
         val c1 = Interval.span(a, b).canonical
         val c2 = Interval.span(b, a).canonical
 
-        c1 mustBe c2
-        c2 mustBe c1
+        c1 shouldBe c2
+        c2 shouldBe c1
 
-        c1 mustBe expected
+        c1 shouldBe expected
       }
     }
   }

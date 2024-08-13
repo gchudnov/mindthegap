@@ -24,16 +24,16 @@ final class IntersectionSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.isEmpty mustBe (true)
-          yy.isEmpty mustBe (true)
+          xx.isEmpty shouldBe (true)
+          yy.isEmpty shouldBe (true)
 
           val actual   = xx.intersection(yy).canonical
           val expected = yy.intersection(xx).canonical
 
-          actual.isEmpty mustBe true
-          expected.isEmpty mustBe true
+          actual.isEmpty shouldBe true
+          expected.isEmpty shouldBe true
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -42,16 +42,16 @@ final class IntersectionSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.isEmpty mustBe (true)
-          yy.nonEmpty mustBe (true)
+          xx.isEmpty shouldBe (true)
+          yy.nonEmpty shouldBe (true)
 
           val actual   = xx.intersection(yy).canonical
           val expected = yy.intersection(xx).canonical
 
-          actual.isEmpty mustBe true
-          expected.isEmpty mustBe true
+          actual.isEmpty shouldBe true
+          expected.isEmpty shouldBe true
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -63,7 +63,7 @@ final class IntersectionSpec extends TestSpec:
           whenever(xx.before(yy)) {
             val actual = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe true
+            actual.isEmpty shouldBe true
           }
         }
       }
@@ -76,7 +76,7 @@ final class IntersectionSpec extends TestSpec:
           whenever(xx.after(yy)) {
             val actual = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe true
+            actual.isEmpty shouldBe true
           }
         }
       }
@@ -89,7 +89,7 @@ final class IntersectionSpec extends TestSpec:
           whenever(xx.starts(yy)) {
             val actual = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -102,7 +102,7 @@ final class IntersectionSpec extends TestSpec:
           whenever(xx.during(yy)) {
             val actual = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -115,7 +115,7 @@ final class IntersectionSpec extends TestSpec:
           whenever(xx.finishes(yy)) {
             val actual = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -129,9 +129,9 @@ final class IntersectionSpec extends TestSpec:
             val actual   = xx.intersection(yy).canonical
             val expected = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
 
-            actual mustBe expected
+            actual shouldBe expected
           }
         }
       }
@@ -144,7 +144,7 @@ final class IntersectionSpec extends TestSpec:
           whenever(xx.isOverlappedBy(yy)) {
             val actual = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -157,7 +157,7 @@ final class IntersectionSpec extends TestSpec:
           whenever(xx.isMetBy(yy)) {
             val actual = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -170,7 +170,7 @@ final class IntersectionSpec extends TestSpec:
           whenever(xx.isStartedBy(yy)) {
             val actual = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -183,7 +183,7 @@ final class IntersectionSpec extends TestSpec:
           whenever(xx.meets(yy)) {
             val actual = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -196,7 +196,7 @@ final class IntersectionSpec extends TestSpec:
           whenever(xx.overlaps(yy)) {
             val actual = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -209,7 +209,7 @@ final class IntersectionSpec extends TestSpec:
           whenever(xx.isFinishedBy(yy)) {
             val actual = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -222,7 +222,7 @@ final class IntersectionSpec extends TestSpec:
           whenever(xx.contains(yy)) {
             val actual = xx.intersection(yy).canonical
 
-            actual.isEmpty mustBe false
+            actual.isEmpty shouldBe false
           }
         }
       }
@@ -234,8 +234,8 @@ final class IntersectionSpec extends TestSpec:
         val actual   = a.intersection(b)
         val expected = Interval.empty[Int]
 
-        actual.isEmpty mustBe (true)
-        actual mustBe expected
+        actual.isEmpty shouldBe (true)
+        actual shouldBe expected
       }
 
       "B if A = unbounded, B = non-empty" in {
@@ -245,7 +245,7 @@ final class IntersectionSpec extends TestSpec:
 
           val actual = xx.intersection(yy).canonical
 
-          actual.isEmpty mustBe false
+          actual.isEmpty shouldBe false
         }
       }
 
@@ -254,17 +254,17 @@ final class IntersectionSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.nonEmpty mustBe (true)
-          yy.nonEmpty mustBe (true)
+          xx.nonEmpty shouldBe (true)
+          yy.nonEmpty shouldBe (true)
 
           whenever(xx.isDisjoint(yy)) {
             val actual   = xx.intersection(yy).canonical
             val expected = yy.intersection(xx).canonical
 
-            actual.isEmpty mustBe true
-            expected.isEmpty mustBe true
+            actual.isEmpty shouldBe true
+            expected.isEmpty shouldBe true
 
-            actual mustBe expected
+            actual shouldBe expected
           }
         }
       }
@@ -274,17 +274,17 @@ final class IntersectionSpec extends TestSpec:
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
-          xx.nonEmpty mustBe (true)
-          yy.nonEmpty mustBe (true)
+          xx.nonEmpty shouldBe (true)
+          yy.nonEmpty shouldBe (true)
 
           whenever(!xx.isDisjoint(yy)) {
             val actual   = xx.intersection(yy).canonical
             val expected = yy.intersection(xx).canonical
 
-            actual.isEmpty mustBe false
-            expected.isEmpty mustBe false
+            actual.isEmpty shouldBe false
+            expected.isEmpty shouldBe false
 
-            actual mustBe expected
+            actual shouldBe expected
           }
         }
       }
@@ -299,10 +299,10 @@ final class IntersectionSpec extends TestSpec:
           val actual   = xx.intersection(yy).canonical
           val expected = yy.intersection(xx).canonical
 
-          actual mustBe expected
+          actual shouldBe expected
 
           // (a & b).swap == (a ∥ b).inflate
-          actual.swap.canonical mustBe xx.gap(yy).inflate.canonical
+          actual.swap.canonical shouldBe xx.gap(yy).inflate.canonical
         }
       }
 
@@ -313,8 +313,8 @@ final class IntersectionSpec extends TestSpec:
         val c1 = a.intersection(b).canonical
         val c2 = b.intersection(a).canonical
 
-        c1 mustBe c2
-        c2 mustBe c1
+        c1 shouldBe c2
+        c2 shouldBe c1
       }
     }
 
@@ -328,7 +328,7 @@ final class IntersectionSpec extends TestSpec:
           val actual   = ((xx.intersection(yy)).intersection(zz)).canonical
           val expected = xx.intersection(yy.intersection(zz)).canonical
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
     }
@@ -343,10 +343,10 @@ final class IntersectionSpec extends TestSpec:
         val c1 = Interval.intersection(a, b).canonical
         val c2 = Interval.intersection(b, a).canonical
 
-        c1 mustBe c2
-        c2 mustBe c1
+        c1 shouldBe c2
+        c2 shouldBe c1
 
-        c1 mustBe expected
+        c1 shouldBe expected
       }
     }
   }

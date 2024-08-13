@@ -34,7 +34,7 @@ final class MeetsSpec extends TestSpec:
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.meets(yy)) {
-            yy.isMetBy(xx) mustBe true
+            yy.isMetBy(xx) shouldBe true
 
             assertOne(Rel.Meets)(xx, yy)
 
@@ -42,7 +42,7 @@ final class MeetsSpec extends TestSpec:
             val a2 = argsX.right
             val b1 = argsY.left
 
-            ordE.equiv(a2, b1) mustBe true
+            ordE.equiv(a2, b1) shouldBe true
           }
         }
       }
@@ -55,7 +55,7 @@ final class MeetsSpec extends TestSpec:
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.isMetBy(yy)) {
-            yy.meets(xx) mustBe true
+            yy.meets(xx) shouldBe true
 
             assertOne(Rel.IsMetBy)(xx, yy)
 
@@ -63,7 +63,7 @@ final class MeetsSpec extends TestSpec:
             val a1 = argsX.left
             val b2 = argsY.right
 
-            ordE.equiv(b2, a1) mustBe true
+            ordE.equiv(b2, a1) shouldBe true
           }
         }
       }
@@ -78,57 +78,57 @@ final class MeetsSpec extends TestSpec:
           val actual   = xx.meets(yy)
           val expected = yy.isMetBy(xx)
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
       "valid in special cases" in {
         // Empty
-        Interval.empty[Int].meets(Interval.empty[Int]) mustBe (false)
-        Interval.empty[Int].meets(Interval.point(0)) mustBe (false)
-        Interval.empty[Int].meets(Interval.closed(5, 10)) mustBe (false)
-        Interval.empty[Int].meets(Interval.unbounded[Int]) mustBe (false)
+        Interval.empty[Int].meets(Interval.empty[Int]) shouldBe (false)
+        Interval.empty[Int].meets(Interval.point(0)) shouldBe (false)
+        Interval.empty[Int].meets(Interval.closed(5, 10)) shouldBe (false)
+        Interval.empty[Int].meets(Interval.unbounded[Int]) shouldBe (false)
 
         // Point
         // 5  {}
-        Interval.point(6).meets(Interval.empty[Int]) mustBe (false)
+        Interval.point(6).meets(Interval.empty[Int]) shouldBe (false)
 
         // 5  5
-        Interval.point(5).meets(Interval.point(5)) mustBe (false)
+        Interval.point(5).meets(Interval.point(5)) shouldBe (false)
 
         // 5  6
-        Interval.point(5).meets(Interval.point(6)) mustBe (false)
+        Interval.point(5).meets(Interval.point(6)) shouldBe (false)
 
         // 6  5
-        Interval.point(6).meets(Interval.point(5)) mustBe (false)
+        Interval.point(6).meets(Interval.point(5)) shouldBe (false)
 
         // Proper
         // [1, 5]  [5, 10]
-        Interval.closed(1, 5).meets(Interval.closed(5, 10)) mustBe (true)
-        Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) mustBe (true)
+        Interval.closed(1, 5).meets(Interval.closed(5, 10)) shouldBe (true)
+        Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) shouldBe (true)
 
         // [1, 5)  (3, 10]
-        Interval.leftClosedRightOpen(1, 5).meets(Interval.leftOpenRightClosed(3, 10)) mustBe (true)
+        Interval.leftClosedRightOpen(1, 5).meets(Interval.leftOpenRightClosed(3, 10)) shouldBe (true)
 
         // Infinity
         // [1, 5]  [5, +inf)
-        Interval.closed(1, 5).meets(Interval.leftClosed(5)) mustBe (true)
+        Interval.closed(1, 5).meets(Interval.leftClosed(5)) shouldBe (true)
 
         // (-inf, 5]  [5, 10]
-        Interval.rightClosed(5).meets(Interval.closed(5, 10)) mustBe (true)
+        Interval.rightClosed(5).meets(Interval.closed(5, 10)) shouldBe (true)
 
         // (-inf, 5]  [5, +inf)
-        Interval.rightClosed(5).meets(Interval.leftClosed(5)) mustBe (true)
+        Interval.rightClosed(5).meets(Interval.leftClosed(5)) shouldBe (true)
 
         // (-inf, 5)  (5, +inf)
-        Interval.rightOpen(5).meets(Interval.leftOpen(5)) mustBe (false)
+        Interval.rightOpen(5).meets(Interval.leftOpen(5)) shouldBe (false)
 
         // (-inf, 6)  [5, +inf)
-        Interval.rightOpen(6).meets(Interval.leftClosed(5)) mustBe (true)
+        Interval.rightOpen(6).meets(Interval.leftClosed(5)) shouldBe (true)
 
         // [doc]
-        Interval.closed(1, 5).meets(Interval.closed(5, 10)) mustBe (true)
-        Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) mustBe (true)
+        Interval.closed(1, 5).meets(Interval.closed(5, 10)) shouldBe (true)
+        Interval.closed(5, 10).isMetBy(Interval.closed(1, 5)) shouldBe (true)
       }
     }
   }

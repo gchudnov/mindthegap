@@ -29,7 +29,7 @@ final class ComplementSpec extends TestSpec:
               val a = ab.head
               val b = ab.last
 
-              a.isDisjoint(b) mustBe (true),
+              a.isDisjoint(b) shouldBe (true),
             )
         }
       }
@@ -41,7 +41,7 @@ final class ComplementSpec extends TestSpec:
           val actual   = Interval.complement(Interval.complement(input)).map(_.canonical)
           val expected = Interval.group(input).map(_.canonical)
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
     }
@@ -59,7 +59,7 @@ final class ComplementSpec extends TestSpec:
         val actual   = Interval.complement(input).map(_.canonical)
         val expected = List(e0, e1)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
 
@@ -77,7 +77,7 @@ final class ComplementSpec extends TestSpec:
         val actual   = Interval.complement(input)
         val expected = List(e0, e1, e2)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
 
@@ -90,7 +90,7 @@ final class ComplementSpec extends TestSpec:
         val actual   = Interval.complement(input)
         val expected = List.empty[Interval[Int]]
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
 
@@ -106,7 +106,7 @@ final class ComplementSpec extends TestSpec:
         val actual   = Interval.complement(input)
         val expected = List(e0)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
 
@@ -141,7 +141,7 @@ final class ComplementSpec extends TestSpec:
         val actual   = Interval.complement(input)
         val expected = List(e0, e1, e2, e3)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
   }

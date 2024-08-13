@@ -37,7 +37,7 @@ final class EqualsToSpec extends TestSpec:
           val actual   = xx.equalsTo(yy)
           val expected = yy.equalsTo(xx)
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -56,8 +56,8 @@ final class EqualsToSpec extends TestSpec:
 
             val eqBoundaries = (ordE.equiv(a1, b1) && ordE.equiv(a2, b2))
 
-            yy.equalsTo(xx) mustBe true
-            eqBoundaries mustBe true
+            yy.equalsTo(xx) shouldBe true
+            eqBoundaries shouldBe true
 
             assertOne(Rel.EqualsTo)(xx, yy)
           }
@@ -66,36 +66,36 @@ final class EqualsToSpec extends TestSpec:
 
       "valid in special cases" in {
         // Empty
-        Interval.empty[Int].equalsTo(Interval.empty[Int]) mustBe (true)
-        Interval.empty[Int].equalsTo(Interval.point(0)) mustBe (false)
-        Interval.empty[Int].equalsTo(Interval.closed(0, 1)) mustBe (false)
+        Interval.empty[Int].equalsTo(Interval.empty[Int]) shouldBe (true)
+        Interval.empty[Int].equalsTo(Interval.point(0)) shouldBe (false)
+        Interval.empty[Int].equalsTo(Interval.closed(0, 1)) shouldBe (false)
 
         // Point
-        Interval.point(5).equalsTo(Interval.point(5)) mustBe (true)
-        Interval.point(5).equalsTo(Interval.empty[Int]) mustBe (false)
+        Interval.point(5).equalsTo(Interval.point(5)) shouldBe (true)
+        Interval.point(5).equalsTo(Interval.empty[Int]) shouldBe (false)
 
         // Proper
-        Interval.open(4, 7).equalsTo(Interval.open(4, 7)) mustBe (true)
-        Interval.open(0, 5).equalsTo(Interval.open(0, 5)) mustBe (true)
-        Interval.closed(0, 5).equalsTo(Interval.closed(0, 5)) mustBe (true)
-        Interval.leftOpenRightClosed(0, 5).equalsTo(Interval.leftOpenRightClosed(0, 5)) mustBe (true)
-        Interval.leftClosedRightOpen(0, 5).equalsTo(Interval.leftClosedRightOpen(0, 5)) mustBe (true)
+        Interval.open(4, 7).equalsTo(Interval.open(4, 7)) shouldBe (true)
+        Interval.open(0, 5).equalsTo(Interval.open(0, 5)) shouldBe (true)
+        Interval.closed(0, 5).equalsTo(Interval.closed(0, 5)) shouldBe (true)
+        Interval.leftOpenRightClosed(0, 5).equalsTo(Interval.leftOpenRightClosed(0, 5)) shouldBe (true)
+        Interval.leftClosedRightOpen(0, 5).equalsTo(Interval.leftClosedRightOpen(0, 5)) shouldBe (true)
 
         // Infinity
         // [5, +inf)  [5, +inf)
-        Interval.leftClosed(5).equalsTo(Interval.leftClosed(5)) mustBe (true)
+        Interval.leftClosed(5).equalsTo(Interval.leftClosed(5)) shouldBe (true)
 
         // (-inf, 5]  (-inf, 5]
-        Interval.rightClosed(5).equalsTo(Interval.rightClosed(5)) mustBe (true)
+        Interval.rightClosed(5).equalsTo(Interval.rightClosed(5)) shouldBe (true)
 
         // (-inf, +inf)  (-inf, +inf)
-        Interval.unbounded[Int].equalsTo(Interval.unbounded[Int]) mustBe (true)
+        Interval.unbounded[Int].equalsTo(Interval.unbounded[Int]) shouldBe (true)
 
         // (-inf, 5)  (-inf, 5)
-        Interval.rightOpen(5).equalsTo(Interval.rightOpen(5)) mustBe (true)
+        Interval.rightOpen(5).equalsTo(Interval.rightOpen(5)) shouldBe (true)
 
         // [doc]
-        Interval.closed(1, 5).equalsTo(Interval.closed(1, 5)) mustBe (true)
+        Interval.closed(1, 5).equalsTo(Interval.closed(1, 5)) shouldBe (true)
       }
     }
   }

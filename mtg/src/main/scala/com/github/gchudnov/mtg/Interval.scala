@@ -255,7 +255,7 @@ object Interval extends AlgStatic with RelStatic:
     proper(Endpoint.at(x), Endpoint.at(y))
 
   private[mtg] def proper[T: Domain](x: Endpoint[T], y: Endpoint[T]): Interval[T] =
-    require(summon[Domain[T]].ordEndpoint.lt(x, y), s"left endpoint '${x}' must be less than the right endpoint '${y}'")
+    require(summon[Domain[T]].ordEndpoint.lt(x, y), s"left endpoint '${x}' should be less than the right endpoint '${y}'")
     AnyInterval(x, y)
 
   /**

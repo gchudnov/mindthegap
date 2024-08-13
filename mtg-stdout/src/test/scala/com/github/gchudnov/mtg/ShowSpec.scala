@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg
 
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.Table
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
-import org.scalatest.matchers.must.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import com.github.gchudnov.mtg.Show.*
 
@@ -17,7 +17,7 @@ final class ShowSpec extends AnyWordSpec with Matchers:
         val actual   = value.asString
         val expected = "∅"
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "represent a Point interval" in {
@@ -26,7 +26,7 @@ final class ShowSpec extends AnyWordSpec with Matchers:
         val actual   = value.asString
         val expected = "{1}"
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "represent a Proper interval" in {
@@ -49,7 +49,7 @@ final class ShowSpec extends AnyWordSpec with Matchers:
 
         forAll(t) { (xx, expected) =>
           val actual = xx.asString
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
     }

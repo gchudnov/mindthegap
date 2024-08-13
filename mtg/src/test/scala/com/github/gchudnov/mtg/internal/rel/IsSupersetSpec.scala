@@ -27,24 +27,24 @@ final class IsSupersetSpec extends TestSpec:
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.isSuperset(yy)) {
-            yy.isSubset(xx) mustBe true
+            yy.isSubset(xx) shouldBe true
 
             assertOneOf(Set(Rel.IsStartedBy, Rel.Contains, Rel.IsFinishedBy, Rel.EqualsTo))(xx, yy)
 
             // a- <= b- && a+ >= b+
-            (ordE.lteq(xx.leftEndpoint, yy.leftEndpoint) && ordE.gteq(xx.rightEndpoint, yy.rightEndpoint)) mustBe true
+            (ordE.lteq(xx.leftEndpoint, yy.leftEndpoint) && ordE.gteq(xx.rightEndpoint, yy.rightEndpoint)) shouldBe true
           }
         }
       }
 
       "valid in special cases" in {
-        Interval.unbounded[Int].isSuperset(Interval.closed(1, 10)) mustBe (true)
+        Interval.unbounded[Int].isSuperset(Interval.closed(1, 10)) shouldBe (true)
 
         // [doc]
-        Interval.closed(4, 10).isSuperset(Interval.closed(4, 7)) mustBe (true)
-        Interval.closed(2, 10).isSuperset(Interval.closed(4, 7)) mustBe (true)
-        Interval.closed(2, 7).isSuperset(Interval.closed(4, 7)) mustBe (true)
-        Interval.closed(4, 7).isSuperset(Interval.closed(4, 7)) mustBe (true)
+        Interval.closed(4, 10).isSuperset(Interval.closed(4, 7)) shouldBe (true)
+        Interval.closed(2, 10).isSuperset(Interval.closed(4, 7)) shouldBe (true)
+        Interval.closed(2, 7).isSuperset(Interval.closed(4, 7)) shouldBe (true)
+        Interval.closed(4, 7).isSuperset(Interval.closed(4, 7)) shouldBe (true)
       }
     }
   }

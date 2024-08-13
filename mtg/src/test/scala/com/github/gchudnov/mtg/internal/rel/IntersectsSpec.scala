@@ -29,11 +29,11 @@ final class IntersectsSpec extends TestSpec:
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.intersects(yy)) {
-            yy.intersects(xx) mustBe true
+            yy.intersects(xx) shouldBe true
 
             // inverse relation is the same
-            xx.isIntersectedBy(yy) mustBe true
-            yy.isIntersectedBy(xx) mustBe true
+            xx.isIntersectedBy(yy) shouldBe true
+            yy.isIntersectedBy(xx) shouldBe true
 
             assertOneOf(
               Set(
@@ -58,7 +58,7 @@ final class IntersectsSpec extends TestSpec:
             val a2 = argsX.right
             val b2 = argsY.right
 
-            (ordE.lteq(a1, b2) && ordE.lteq(b1, a2)) mustBe (true)
+            (ordE.lteq(a1, b2) && ordE.lteq(b1, a2)) shouldBe (true)
           }
         }
       }
@@ -74,37 +74,37 @@ final class IntersectsSpec extends TestSpec:
           val actual   = xx.intersects(yy)
           val expected = yy.intersects(xx)
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
       "valid in special cases" in {
         // Empty
-        Interval.empty[Int].intersects(Interval.empty[Int]) mustBe (false)
-        Interval.empty[Int].intersects(Interval.point(0)) mustBe (false)
-        Interval.empty[Int].intersects(Interval.closed(0, 1)) mustBe (false)
+        Interval.empty[Int].intersects(Interval.empty[Int]) shouldBe (false)
+        Interval.empty[Int].intersects(Interval.point(0)) shouldBe (false)
+        Interval.empty[Int].intersects(Interval.closed(0, 1)) shouldBe (false)
 
         // Point
-        Interval.point(5).intersects(Interval.point(5)) mustBe (true)
-        Interval.point(5).intersects(Interval.point(6)) mustBe (false)
-        Interval.point(5).intersects(Interval.empty[Int]) mustBe (false)
+        Interval.point(5).intersects(Interval.point(5)) shouldBe (true)
+        Interval.point(5).intersects(Interval.point(6)) shouldBe (false)
+        Interval.point(5).intersects(Interval.empty[Int]) shouldBe (false)
 
         // Proper
-        Interval.open(4, 7).intersects(Interval.open(4, 7)) mustBe (true)
-        Interval.open(0, 5).intersects(Interval.open(0, 5)) mustBe (true)
-        Interval.closed(0, 5).intersects(Interval.closed(1, 6)) mustBe (true)
-        Interval.closed(1, 6).intersects(Interval.closed(0, 5)) mustBe (true)
-        Interval.leftOpenRightClosed(0, 5).intersects(Interval.leftOpenRightClosed(1, 15)) mustBe (true)
-        Interval.leftClosedRightOpen(0, 5).intersects(Interval.leftClosedRightOpen(0, 5)) mustBe (true)
+        Interval.open(4, 7).intersects(Interval.open(4, 7)) shouldBe (true)
+        Interval.open(0, 5).intersects(Interval.open(0, 5)) shouldBe (true)
+        Interval.closed(0, 5).intersects(Interval.closed(1, 6)) shouldBe (true)
+        Interval.closed(1, 6).intersects(Interval.closed(0, 5)) shouldBe (true)
+        Interval.leftOpenRightClosed(0, 5).intersects(Interval.leftOpenRightClosed(1, 15)) shouldBe (true)
+        Interval.leftClosedRightOpen(0, 5).intersects(Interval.leftClosedRightOpen(0, 5)) shouldBe (true)
 
         // Infinity
         // [5, +inf)  (-inf, 10)
-        Interval.leftClosed(5).intersects(Interval.rightOpen(10)) mustBe (true)
+        Interval.leftClosed(5).intersects(Interval.rightOpen(10)) shouldBe (true)
 
         // [doc]
-        Interval.empty[Int].intersects(Interval.empty[Int]) mustBe (false)
-        Interval.point(5).intersects(Interval.point(5)) mustBe (true)
-        Interval.closed(0, 5).intersects(Interval.closed(1, 6)) mustBe (true)
+        Interval.empty[Int].intersects(Interval.empty[Int]) shouldBe (false)
+        Interval.point(5).intersects(Interval.point(5)) shouldBe (true)
+        Interval.closed(0, 5).intersects(Interval.closed(1, 6)) shouldBe (true)
       }
     }
   }

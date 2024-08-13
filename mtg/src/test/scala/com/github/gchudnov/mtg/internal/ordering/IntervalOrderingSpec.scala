@@ -27,7 +27,7 @@ final class IntervalOrderingSpec extends TestSpec:
           val zz = Interval.make(argsZ.left, argsZ.right)
 
           whenever(ordI.lt(xx, yy) && ordI.lt(yy, zz)) {
-            ordI.lt(xx, zz) mustBe (true)
+            ordI.lt(xx, zz) shouldBe (true)
           }
         }
       }
@@ -47,25 +47,25 @@ final class IntervalOrderingSpec extends TestSpec:
         // [4, 5)
         val d = Interval.make(Endpoint.at(4), Endpoint.pred(5))
 
-        ordI.equiv(a, a) mustBe (true)
-        ordI.equiv(a, b) mustBe (true)
-        ordI.equiv(a, c) mustBe (true)
-        ordI.equiv(a, d) mustBe (true)
+        ordI.equiv(a, a) shouldBe (true)
+        ordI.equiv(a, b) shouldBe (true)
+        ordI.equiv(a, c) shouldBe (true)
+        ordI.equiv(a, d) shouldBe (true)
 
-        ordI.equiv(b, a) mustBe (true)
-        ordI.equiv(b, b) mustBe (true)
-        ordI.equiv(b, c) mustBe (true)
-        ordI.equiv(b, d) mustBe (true)
+        ordI.equiv(b, a) shouldBe (true)
+        ordI.equiv(b, b) shouldBe (true)
+        ordI.equiv(b, c) shouldBe (true)
+        ordI.equiv(b, d) shouldBe (true)
 
-        ordI.equiv(c, a) mustBe (true)
-        ordI.equiv(c, b) mustBe (true)
-        ordI.equiv(c, c) mustBe (true)
-        ordI.equiv(c, d) mustBe (true)
+        ordI.equiv(c, a) shouldBe (true)
+        ordI.equiv(c, b) shouldBe (true)
+        ordI.equiv(c, c) shouldBe (true)
+        ordI.equiv(c, d) shouldBe (true)
 
-        ordI.equiv(d, a) mustBe (true)
-        ordI.equiv(d, b) mustBe (true)
-        ordI.equiv(d, c) mustBe (true)
-        ordI.equiv(d, d) mustBe (true)
+        ordI.equiv(d, a) shouldBe (true)
+        ordI.equiv(d, b) shouldBe (true)
+        ordI.equiv(d, c) shouldBe (true)
+        ordI.equiv(d, d) shouldBe (true)
       }
     }
 
@@ -94,7 +94,7 @@ final class IntervalOrderingSpec extends TestSpec:
         val actual   = List(a, b, c, d, e, f, g).sorted
         val expected = List(d, g, b, a, f, c, e)
 
-        (actual must contain).theSameElementsInOrderAs(expected)
+        (actual should contain).theSameElementsInOrderAs(expected)
       }
     }
 
@@ -103,7 +103,7 @@ final class IntervalOrderingSpec extends TestSpec:
         val a = Interval.empty[Int]
         val b = Interval.empty[Int]
 
-        ordI.compare(a, b) mustBe 0
+        ordI.compare(a, b) shouldBe 0
       }
     }
 
@@ -112,7 +112,7 @@ final class IntervalOrderingSpec extends TestSpec:
         val a = Interval.empty[Int]
         val b = Interval.closed(0, 10)
 
-        ordI.compare(a, b) mustBe 1
+        ordI.compare(a, b) shouldBe 1
       }
     }
 
@@ -121,7 +121,7 @@ final class IntervalOrderingSpec extends TestSpec:
         val a = Interval.closed(0, 10)
         val b = Interval.empty[Int]
 
-        ordI.compare(a, b) mustBe -1
+        ordI.compare(a, b) shouldBe -1
       }
     }
 
@@ -135,7 +135,7 @@ final class IntervalOrderingSpec extends TestSpec:
         val actual   = input.sorted
         val expected = List(b, a)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "be sorted if we have finite and infinite points" in {
@@ -149,7 +149,7 @@ final class IntervalOrderingSpec extends TestSpec:
         val actual   = input.sorted
         val expected = List(a, c, b, d)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
     }
 
@@ -158,24 +158,24 @@ final class IntervalOrderingSpec extends TestSpec:
         val a = Interval.closed(1, 5)
         val b = Interval.closed(1, 5)
 
-        ordI.compare(a, b) mustBe 0
-        ordI.compare(b, a) mustBe 0
+        ordI.compare(a, b) shouldBe 0
+        ordI.compare(b, a) shouldBe 0
       }
 
       "be defined for intervals with the same left but different right boundary" in {
         val a = Interval.closed(2, 5)
         val b = Interval.closed(2, 3)
 
-        ordI.compare(a, b) mustBe 1
-        ordI.compare(b, a) mustBe -1
+        ordI.compare(a, b) shouldBe 1
+        ordI.compare(b, a) shouldBe -1
       }
 
       "be defined when one interval is included in the other one" in {
         val a = Interval.closed(1, 10)
         val b = Interval.closed(3, 7)
 
-        ordI.compare(a, b) mustBe -1
-        ordI.compare(b, a) mustBe 1
+        ordI.compare(a, b) shouldBe -1
+        ordI.compare(b, a) shouldBe 1
       }
     }
 
@@ -187,7 +187,7 @@ final class IntervalOrderingSpec extends TestSpec:
         val actual   = List(b, a).sorted // List(a, b)  // [0, 10], [20, 30]
         val expected = List(a, b)
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
   }

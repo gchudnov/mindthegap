@@ -29,7 +29,7 @@ final class GroupSpec extends TestSpec:
               val a = ab.head
               val b = ab.last
 
-              a.isDisjoint(b) mustBe (true),
+              a.isDisjoint(b) shouldBe (true),
             )
         }
       }
@@ -50,8 +50,8 @@ final class GroupSpec extends TestSpec:
         val actual   = Interval.group(input)
         val expected = expectedX.map(_._1)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -76,8 +76,8 @@ final class GroupSpec extends TestSpec:
         val actual   = Interval.group(input)
         val expected = expectedX.map(_._1)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -110,8 +110,8 @@ final class GroupSpec extends TestSpec:
         val actual   = Interval.group(input)
         val expected = expectedX.map(_._1)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -140,8 +140,8 @@ final class GroupSpec extends TestSpec:
         val actual   = Interval.group(input)
         val expected = expectedX.map(_._1)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -179,8 +179,8 @@ final class GroupSpec extends TestSpec:
         val actual   = Interval.group(input)
         val expected = expectedX.map(_._1)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
 
       /**
@@ -215,8 +215,8 @@ final class GroupSpec extends TestSpec:
         val actual   = Interval.group(input)
         val expected = expectedX.map(_._1)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -253,8 +253,8 @@ final class GroupSpec extends TestSpec:
         val actual   = Interval.group(input)
         val expected = expectedX.map(_._1)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -288,8 +288,8 @@ final class GroupSpec extends TestSpec:
         val actual   = Interval.group(input)
         val expected = expectedX.map(_._1)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
       }
     }
 
@@ -331,11 +331,11 @@ final class GroupSpec extends TestSpec:
         val actual   = Interval.group(input)
         val expected = expectedX.map(_._1)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
 
-        gs mustBe expected
-        ts mustBe expectedX
+        gs shouldBe expected
+        ts shouldBe expectedX
       }
 
       /**
@@ -374,11 +374,11 @@ final class GroupSpec extends TestSpec:
         val actual   = Interval.group(input, isGroupAdjacent = false)
         val expected = expectedX.map(_._1)
 
-        actual mustBe expected
-        actualX mustBe expectedX
+        actual shouldBe expected
+        actualX shouldBe expectedX
 
-        gs mustBe expected
-        ts mustBe expectedX
+        gs shouldBe expected
+        ts shouldBe expectedX
       }
     }
   }

@@ -14,7 +14,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import com.github.gchudnov.mtg.Interval
-import org.scalatest.matchers.must.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import com.github.gchudnov.mtg.Domain
 
@@ -33,7 +33,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val actual   = Diagram.make(List.empty[Interval[Int]], infView, canvas)
         val expected = Diagram.empty
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram an empty interval" in {
@@ -42,7 +42,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val actual   = Diagram.make(List(a), infView, canvas)
         val expected = Diagram(40, 1, List(Span(1, -1, true, true)), List(), List(), List(Legend("∅")), List(Annotation("a")))
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram a point" in {
@@ -52,7 +52,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val expected =
           Diagram(40, 1, List(Span(20, 20, true, true)), List(Tick(20)), List(Label(20, "5")), List(Legend("{5}")), List(Annotation("a")))
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram two points" in {
@@ -71,7 +71,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
             List(Annotation("a"), Annotation("b")),
           )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram a closed interval" in {
@@ -88,7 +88,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           List(Annotation("a")),
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram a closed interval with a negative boundary" in {
@@ -105,7 +105,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           List(Annotation("a")),
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram an unbounded interval" in {
@@ -123,7 +123,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
             List(Annotation("a")),
           )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram a leftOpen interval" in {
@@ -141,7 +141,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
             List(Annotation("a")),
           )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram a leftClosed interval" in {
@@ -159,7 +159,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
             List(Annotation("a")),
           )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram a rightOpen interval" in {
@@ -176,7 +176,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           List(Annotation("a")),
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram a rightClosed interval" in {
@@ -193,7 +193,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           List(Annotation("a")),
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram left part of a closed interval" in {
@@ -212,7 +212,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           List(Annotation("a")),
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram several intervals" in {
@@ -237,7 +237,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           List(Annotation("a"), Annotation("b"), Annotation("c"), Annotation("d")),
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram several intervals with annotations" in {
@@ -255,7 +255,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           List(Annotation("a"), Annotation("b")),
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram several intervals that include an empty one" in {
@@ -274,7 +274,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           List(Annotation("a"), Annotation("b"), Annotation("c")),
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram overlapping intervals" in {
@@ -314,7 +314,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           List(Annotation("a"), Annotation("b"), Annotation("c"), Annotation("d"), Annotation("e"), Annotation("f")),
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "diagram offset-date-time" in {
@@ -334,7 +334,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           List(Annotation("a")),
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
 
@@ -345,7 +345,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val actual   = Diagram.render(diagram, themeNoLegend)
         val expected = List.empty[String]
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display an empty interval with no legend and no annotations" in {
@@ -359,7 +359,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "                                        ",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display an empty interval with no legend but with annotations" in {
@@ -373,7 +373,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "                                         |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display an empty interval with no legend but with annotations, but the intervals cannot be auto-annotated" in {
@@ -388,7 +388,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "                                        ",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display an empty interval with a legend and annotations" in {
@@ -402,7 +402,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "                                         |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a point" in {
@@ -416,7 +416,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "                    5                    |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display two points" in {
@@ -432,7 +432,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  5                                 10   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a closed interval" in {
@@ -446,7 +446,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  5                                 10   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a closed interval on a custom view" in {
@@ -461,7 +461,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  0        5       10               20   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display left part of a closed interval" in {
@@ -476,7 +476,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  0                        5         7   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display right part of a closed interval" in {
@@ -491,7 +491,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  7           10                    15   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display middle part of a closed interval" in {
@@ -506,7 +506,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  7                                  8   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a closed interval with negative boundary" in {
@@ -520,7 +520,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           " -5                                 10   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display an unbounded interval" in {
@@ -534,7 +534,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "-∞                                    +∞ |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a leftOpen interval" in {
@@ -548,7 +548,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "                    5                 +∞ |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a leftClosed interval" in {
@@ -562,7 +562,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "                    5                 +∞ |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a rightOpen interval" in {
@@ -576,7 +576,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "-∞                  5                    |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a rightClosed interval" in {
@@ -590,7 +590,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "-∞                  5                    |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a leftClosed and rightClosed overlapping intervals" in {
@@ -607,7 +607,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "-∞5                                 10+∞ |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a leftClosed and rightClosed non-overlapping intervals" in {
@@ -624,7 +624,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "-∞5                                 10+∞ |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display several intervals" in {
@@ -645,7 +645,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "-∞1  2      5           10          15+∞ |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display several intervals with a legend" in {
@@ -666,7 +666,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "-∞1  2      5           10          15+∞ |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display several leftClosed intervals" in {
@@ -687,7 +687,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1           2          3           4+∞ |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display several rightClosed intervals" in {
@@ -708,7 +708,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "-∞1           2          3           4   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display overlapping intervals" in {
@@ -733,7 +733,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1   2   3   4   5  6   7   8   9  10   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display with default settings [doc]" in {
@@ -752,7 +752,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  3       7    10   12    15        20   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display with custom view [doc]" in {
@@ -772,7 +772,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  8      10      12         15      17   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display with custom canvas [doc]" in {
@@ -792,7 +792,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  3   7  12 15  20   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display with custom theme [doc]" in {
@@ -815,7 +815,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "       10            |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display overlapping intervals with overlapping labels (Theme.Label.None)" in {
@@ -840,7 +840,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           " 10152025300     500600 700 800 9001000  |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display overlapping intervals with overlapping labels (Theme.Label.NoOverlap)" in {
@@ -865,7 +865,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           " 100 200 300     500    700 800 900      |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display overlapping intervals with overlapping labels (Theme.Label.Stacked)" in {
@@ -891,7 +891,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "   150 250          600            1000  |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display intervals with legend and annotations" in {
@@ -908,7 +908,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1               5                 10   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display intervals with legend and without annotations" in {
@@ -925,7 +925,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1               5                 10   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display intervals without legend and with annotations" in {
@@ -942,7 +942,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1               5                 10   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display intervals without legend and without annotations" in {
@@ -959,7 +959,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1               5                 10  ",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display intervals with OffsetDateTime" in {
@@ -975,7 +975,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "2020-07-02T12:34Z      2021-07-02T12:34Z |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display intervals with Instant" in {
@@ -992,7 +992,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "                    2021-07-02T12:34:00Z |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display several timelines" in {
@@ -1018,7 +1018,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           " 2023-01-03            2023-01-15     +∞ |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
 
@@ -1041,7 +1041,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1               5      7          10   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a.span(b)" in {
@@ -1062,7 +1062,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1               5      7          10   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a.span(b) of two disjoint intervals" in {
@@ -1083,7 +1083,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1               5      7          10   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a.union(b)" in {
@@ -1104,7 +1104,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1               5  6              10   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a.union(b) of two disjoint intervals" in {
@@ -1125,7 +1125,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1           4      6              10   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a.gap(b) of two intersecting intervals" in {
@@ -1146,7 +1146,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  4  5              10              15   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a.gap(b) of two disjoint intervals" in {
@@ -1167,7 +1167,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  5          10       14            20   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a.minus(b) if a.overlaps(b)" in {
@@ -1188,7 +1188,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1       4 5           10          15   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display a.minus(b) if a.isOverlappedBy(b)" in {
@@ -1209,7 +1209,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1         5           10          15   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display Interval.minus(a, b) if a.contains(b)" in {
@@ -1231,7 +1231,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  1       4 5           10          15   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
 
       "display complement" in {
@@ -1252,7 +1252,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val actual   = is
         val expected = List(e0, e1, e2, e3)
 
-        actual mustBe expected
+        actual shouldBe expected
 
         ///
         import com.github.gchudnov.mtg.diagram.Diagram.Canvas
@@ -1265,7 +1265,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diag = Diagram.render(diagram)
 
-        diag.isEmpty mustBe (false)
+        diag.isEmpty shouldBe (false)
       }
 
       "display short intervals" in {
@@ -1305,7 +1305,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           "  0  10   20  30       50  60   70  80   |",
         )
 
-        actual mustBe expected
+        actual shouldBe expected
       }
     }
   }

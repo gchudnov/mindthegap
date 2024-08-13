@@ -34,7 +34,7 @@ final class StartsSpec extends TestSpec:
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.starts(yy)) {
-            yy.isStartedBy(xx) mustBe true
+            yy.isStartedBy(xx) shouldBe true
 
             assertOne(Rel.Starts)(xx, yy)
 
@@ -42,7 +42,7 @@ final class StartsSpec extends TestSpec:
             val a1 = argsX.left
             val b1 = argsY.left
 
-            (ordE.equiv(a1, b1) && yy.isSuperset(xx) && !xx.equalsTo(yy)) mustBe true
+            (ordE.equiv(a1, b1) && yy.isSuperset(xx) && !xx.equalsTo(yy)) shouldBe true
           }
         }
       }
@@ -55,7 +55,7 @@ final class StartsSpec extends TestSpec:
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.isStartedBy(yy)) {
-            yy.starts(xx) mustBe true
+            yy.starts(xx) shouldBe true
 
             assertOne(Rel.IsStartedBy)(xx, yy)
 
@@ -63,7 +63,7 @@ final class StartsSpec extends TestSpec:
             val a1 = argsX.left
             val b1 = argsY.left
 
-            (ordE.equiv(a1, b1) && xx.isSuperset(yy) && !xx.equalsTo(yy)) mustBe true
+            (ordE.equiv(a1, b1) && xx.isSuperset(yy) && !xx.equalsTo(yy)) shouldBe true
           }
         }
       }
@@ -78,55 +78,55 @@ final class StartsSpec extends TestSpec:
           val actual   = xx.starts(yy)
           val expected = yy.isStartedBy(xx)
 
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
       "valid in special cases" in {
         // Empty
-        Interval.empty[Int].starts(Interval.point(0)) mustBe (false)
-        Interval.empty[Int].starts(Interval.closed(0, 1)) mustBe (false)
-        Interval.empty[Int].starts(Interval.unbounded[Int]) mustBe (false)
+        Interval.empty[Int].starts(Interval.point(0)) shouldBe (false)
+        Interval.empty[Int].starts(Interval.closed(0, 1)) shouldBe (false)
+        Interval.empty[Int].starts(Interval.unbounded[Int]) shouldBe (false)
 
         // Point
-        Interval.point(5).starts(Interval.closed(5, 10)) mustBe (true)
-        Interval.point(5).starts(Interval.open(4, 10)) mustBe (true)
-        Interval.point(5).starts(Interval.open(5, 10)) mustBe (false)
-        Interval.point(5).starts(Interval.empty[Int]) mustBe (false)
-        Interval.point(5).starts(Interval.unbounded[Int]) mustBe (false)
+        Interval.point(5).starts(Interval.closed(5, 10)) shouldBe (true)
+        Interval.point(5).starts(Interval.open(4, 10)) shouldBe (true)
+        Interval.point(5).starts(Interval.open(5, 10)) shouldBe (false)
+        Interval.point(5).starts(Interval.empty[Int]) shouldBe (false)
+        Interval.point(5).starts(Interval.unbounded[Int]) shouldBe (false)
 
         // Proper
         // [1, 2]  [1, 10]
-        Interval.closed(1, 2).starts(Interval.closed(1, 10)) mustBe (true)
-        Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) mustBe (true)
+        Interval.closed(1, 2).starts(Interval.closed(1, 10)) shouldBe (true)
+        Interval.closed(1, 10).isStartedBy(Interval.closed(1, 2)) shouldBe (true)
 
         // (1, 3)  (1, 10)
-        Interval.open(1, 4).starts(Interval.open(1, 10)) mustBe (true)
+        Interval.open(1, 4).starts(Interval.open(1, 10)) shouldBe (true)
 
         // Infinity
         // [1, 5] [1, +inf)
-        Interval.closed(1, 5).starts(Interval.leftClosed(1)) mustBe (true)
+        Interval.closed(1, 5).starts(Interval.leftClosed(1)) shouldBe (true)
 
         // (-inf, 5]  (-inf, 10]
-        Interval.rightClosed(5).starts(Interval.rightClosed(10)) mustBe (true)
+        Interval.rightClosed(5).starts(Interval.rightClosed(10)) shouldBe (true)
 
         // (-inf, 5)  (-inf, +inf)
-        Interval.rightClosed(5).starts(Interval.unbounded[Int]) mustBe (true)
+        Interval.rightClosed(5).starts(Interval.unbounded[Int]) shouldBe (true)
 
         //  [5, 10)  [5, +inf)
-        Interval.leftClosedRightOpen(5, 10).starts(Interval.leftClosed(5)) mustBe (true)
-        Interval.leftClosedRightOpen(5, 10).isStartedBy(Interval.leftClosed(5)) mustBe (false)
+        Interval.leftClosedRightOpen(5, 10).starts(Interval.leftClosed(5)) shouldBe (true)
+        Interval.leftClosedRightOpen(5, 10).isStartedBy(Interval.leftClosed(5)) shouldBe (false)
 
         // (-inf, +inf)  (-inf, +inf)
-        Interval.unbounded[Int].starts(Interval.unbounded[Int]) mustBe (false)
-        Interval.unbounded[Int].isStartedBy(Interval.unbounded[Int]) mustBe (false)
+        Interval.unbounded[Int].starts(Interval.unbounded[Int]) shouldBe (false)
+        Interval.unbounded[Int].isStartedBy(Interval.unbounded[Int]) shouldBe (false)
 
         // (0,2]  (0,+∞]
-        Interval.leftOpenRightClosed(0, 2).starts(Interval.leftOpen(0)) mustBe (true)
+        Interval.leftOpenRightClosed(0, 2).starts(Interval.leftOpen(0)) shouldBe (true)
 
         // [doc]
-        Interval.closed(1, 4).starts(Interval.closed(1, 6)) mustBe (true)
-        Interval.closed(1, 6).isStartedBy(Interval.closed(1, 4)) mustBe (true)
+        Interval.closed(1, 4).starts(Interval.closed(1, 6)) shouldBe (true)
+        Interval.closed(1, 6).isStartedBy(Interval.closed(1, 4)) shouldBe (true)
       }
     }
   }

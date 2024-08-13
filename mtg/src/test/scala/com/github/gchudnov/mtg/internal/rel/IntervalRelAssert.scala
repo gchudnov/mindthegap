@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg.internal.rel
 
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
-import org.scalatest.matchers.must.Matchers.*
+import org.scalatest.matchers.should.Matchers.*
 
 trait IntervalRelAssert:
   import IntervalRelAssert.*
@@ -84,8 +84,8 @@ trait IntervalRelAssert:
     val bckFn  = relations(bk)
     val restFn = relations.filterNot { case (k, _) => ks.contains(k) }
 
-    fwdFn(xx, yy) mustBe (true)
-    bckFn(yy, xx) mustBe (true)
+    fwdFn(xx, yy) shouldBe (true)
+    bckFn(yy, xx) shouldBe (true)
 
     restFn.foreach { case (k, fn) =>
       // TODO: recover tests

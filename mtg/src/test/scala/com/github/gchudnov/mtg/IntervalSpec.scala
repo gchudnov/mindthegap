@@ -35,50 +35,50 @@ final class IntervalSpec extends TestSpec:
           val actual = Interval.make(args.left, args.right)
 
           if ordE.gt(args.left, args.right) then
-            actual.isEmpty mustBe (true)
-            actual.nonEmpty mustBe (false)
-            actual.isPoint mustBe (false)
-            actual.nonPoint mustBe (true)
-            actual.isProper mustBe (false)
-            actual.nonProper mustBe (true)
+            actual.isEmpty shouldBe (true)
+            actual.nonEmpty shouldBe (false)
+            actual.isPoint shouldBe (false)
+            actual.nonPoint shouldBe (true)
+            actual.isProper shouldBe (false)
+            actual.nonProper shouldBe (true)
           else if ordE.equiv(args.left, args.right) then
-            actual.isEmpty mustBe (false)
-            actual.nonEmpty mustBe (true)
-            actual.isPoint mustBe (true)
-            actual.nonPoint mustBe (false)
-            actual.isProper mustBe (false)
-            actual.nonProper mustBe (true)
+            actual.isEmpty shouldBe (false)
+            actual.nonEmpty shouldBe (true)
+            actual.isPoint shouldBe (true)
+            actual.nonPoint shouldBe (false)
+            actual.isProper shouldBe (false)
+            actual.nonProper shouldBe (true)
           else
-            actual.isEmpty mustBe (false)
-            actual.nonEmpty mustBe (true)
-            actual.isPoint mustBe (false)
-            actual.nonPoint mustBe (true)
-            actual.isProper mustBe (true)
-            actual.nonProper mustBe (false)
+            actual.isEmpty shouldBe (false)
+            actual.nonEmpty shouldBe (true)
+            actual.isPoint shouldBe (false)
+            actual.nonPoint shouldBe (true)
+            actual.isProper shouldBe (true)
+            actual.nonProper shouldBe (false)
         }
       }
 
       "handle edge cases" in {
         // [0, 0)
-        Interval.make(Endpoint.at(0), Endpoint.pred(0)).isEmpty mustBe true
+        Interval.make(Endpoint.at(0), Endpoint.pred(0)).isEmpty shouldBe true
 
         // [-inf, +inf]
-        Interval.make[Int](Endpoint.at(Value.infNeg), Endpoint.at(Value.infPos)).isProper mustBe true
+        Interval.make[Int](Endpoint.at(Value.infNeg), Endpoint.at(Value.infPos)).isProper shouldBe true
 
         // (-inf, +inf)
-        Interval.make[Int](Endpoint.succ(Value.infNeg), Endpoint.pred(Value.infPos)).isProper mustBe true
+        Interval.make[Int](Endpoint.succ(Value.infNeg), Endpoint.pred(Value.infPos)).isProper shouldBe true
 
         // (3, 5)
-        Interval.make(Endpoint.succ(3), Endpoint.pred(5)).isPoint mustBe true
+        Interval.make(Endpoint.succ(3), Endpoint.pred(5)).isPoint shouldBe true
 
         // [4, 4]
-        Interval.make(Endpoint.at(4), Endpoint.at(4)).isPoint mustBe true
+        Interval.make(Endpoint.at(4), Endpoint.at(4)).isPoint shouldBe true
 
         // (3, 4]
-        Interval.make(Endpoint.succ(3), Endpoint.at(4)).isPoint mustBe true
+        Interval.make(Endpoint.succ(3), Endpoint.at(4)).isPoint shouldBe true
 
         // [4, 5)
-        Interval.make(Endpoint.at(4), Endpoint.pred(5)).isPoint mustBe true
+        Interval.make(Endpoint.at(4), Endpoint.pred(5)).isPoint shouldBe true
       }
 
       "create an open interval from Option[T]" in {
@@ -92,7 +92,7 @@ final class IntervalSpec extends TestSpec:
 
         forAll(table) { case (left, right, expected) =>
           val actual = Interval.open(left, right)
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
 
@@ -107,7 +107,7 @@ final class IntervalSpec extends TestSpec:
 
         forAll(table) { case (left, right, expected) =>
           val actual = Interval.closed(left, right)
-          actual mustBe expected
+          actual shouldBe expected
         }
       }
     }
@@ -117,61 +117,61 @@ final class IntervalSpec extends TestSpec:
       "Interval.empty" in {
         val a = Interval.empty[Int]
 
-        a.isEmpty mustBe (true)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (false)
+        a.isEmpty shouldBe (true)
+        a.isPoint shouldBe (false)
+        a.isProper shouldBe (false)
 
-        a.nonEmpty mustBe (false)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (true)
+        a.nonEmpty shouldBe (false)
+        a.nonPoint shouldBe (true)
+        a.nonProper shouldBe (true)
 
-        a.leftEndpoint mustBe Endpoint.at(Value.infPos)
-        a.rightEndpoint mustBe Endpoint.at(Value.infNeg)
+        a.leftEndpoint shouldBe Endpoint.at(Value.infPos)
+        a.rightEndpoint shouldBe Endpoint.at(Value.infNeg)
       }
 
       "Interval.point(x)" in {
         val a = Interval.point(5)
 
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (true)
-        a.isProper mustBe (false)
+        a.isEmpty shouldBe (false)
+        a.isPoint shouldBe (true)
+        a.isProper shouldBe (false)
 
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (false)
-        a.nonProper mustBe (true)
+        a.nonEmpty shouldBe (true)
+        a.nonPoint shouldBe (false)
+        a.nonProper shouldBe (true)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.at(5)) mustBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.at(5)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(5)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(5)) shouldBe true
       }
 
       "Interval.proper(x, y) if enpoints are provided" in {
         // (1, 5)
         val a = Interval.proper(Endpoint.succ(1), Endpoint.pred(5))
 
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
+        a.isEmpty shouldBe (false)
+        a.isPoint shouldBe (false)
+        a.isProper shouldBe (true)
 
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
+        a.nonEmpty shouldBe (true)
+        a.nonPoint shouldBe (true)
+        a.nonProper shouldBe (false)
 
-        ordI.equiv(a, Interval.closed(2, 4)) mustBe (true)
+        ordI.equiv(a, Interval.closed(2, 4)) shouldBe (true)
       }
 
       "Interval.proper(x, y) if values are provided" in {
         // (1, 5) == [2, 4]
         val a = Interval.proper(2, 4)
 
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
+        a.isEmpty shouldBe (false)
+        a.isPoint shouldBe (false)
+        a.isProper shouldBe (true)
 
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
+        a.nonEmpty shouldBe (true)
+        a.nonPoint shouldBe (true)
+        a.nonProper shouldBe (false)
 
-        ordI.equiv(a, Interval.closed(2, 4)) mustBe (true)
+        ordI.equiv(a, Interval.closed(2, 4)) shouldBe (true)
       }
 
       "Interval.proper(x, y) throws an exception if left endpoint is greater than right endpoint" in {
@@ -183,136 +183,136 @@ final class IntervalSpec extends TestSpec:
       "Interval.unbounded" in {
         val a = Interval.unbounded[Int]
 
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
+        a.isEmpty shouldBe (false)
+        a.isPoint shouldBe (false)
+        a.isProper shouldBe (true)
 
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
+        a.nonEmpty shouldBe (true)
+        a.nonPoint shouldBe (true)
+        a.nonProper shouldBe (false)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) mustBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) shouldBe true
       }
 
       "Interval.open(x, y)" in {
         val a = Interval.open(1, 5)
 
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
+        a.isEmpty shouldBe (false)
+        a.isPoint shouldBe (false)
+        a.isProper shouldBe (true)
 
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
+        a.nonEmpty shouldBe (true)
+        a.nonPoint shouldBe (true)
+        a.nonProper shouldBe (false)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.succ(1)) mustBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.pred(5)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.succ(1)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.pred(5)) shouldBe true
       }
 
       "Interval.closed(x, y)" in {
         val a = Interval.closed(1, 5)
 
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
+        a.isEmpty shouldBe (false)
+        a.isPoint shouldBe (false)
+        a.isProper shouldBe (true)
 
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
+        a.nonEmpty shouldBe (true)
+        a.nonPoint shouldBe (true)
+        a.nonProper shouldBe (false)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.at(1)) mustBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.at(5)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(1)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(5)) shouldBe true
       }
 
       "Interval.leftOpen(x)" in {
         val a = Interval.leftOpen(1)
 
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
+        a.isEmpty shouldBe (false)
+        a.isPoint shouldBe (false)
+        a.isProper shouldBe (true)
 
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
+        a.nonEmpty shouldBe (true)
+        a.nonPoint shouldBe (true)
+        a.nonProper shouldBe (false)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.succ(1)) mustBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.succ(1)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) shouldBe true
       }
 
       "Interval.leftClosed(x)" in {
         val a = Interval.leftClosed(5)
 
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
+        a.isEmpty shouldBe (false)
+        a.isPoint shouldBe (false)
+        a.isProper shouldBe (true)
 
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
+        a.nonEmpty shouldBe (true)
+        a.nonPoint shouldBe (true)
+        a.nonProper shouldBe (false)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.at(5)) mustBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(5)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) shouldBe true
       }
 
       "Interval.rightOpen(x)" in {
         val a = Interval.rightOpen(1)
 
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
+        a.isEmpty shouldBe (false)
+        a.isPoint shouldBe (false)
+        a.isProper shouldBe (true)
 
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
+        a.nonEmpty shouldBe (true)
+        a.nonPoint shouldBe (true)
+        a.nonProper shouldBe (false)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) mustBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.pred(1)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.pred(1)) shouldBe true
       }
 
       "Interval.rightClosed(x)" in {
         val a = Interval.rightClosed(5)
 
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
+        a.isEmpty shouldBe (false)
+        a.isPoint shouldBe (false)
+        a.isProper shouldBe (true)
 
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
+        a.nonEmpty shouldBe (true)
+        a.nonPoint shouldBe (true)
+        a.nonProper shouldBe (false)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) mustBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.at(5)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(5)) shouldBe true
       }
 
       "Interval.leftClosedRightOpen(x, y)" in {
         val a = Interval.leftClosedRightOpen(1, 10)
 
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
+        a.isEmpty shouldBe (false)
+        a.isPoint shouldBe (false)
+        a.isProper shouldBe (true)
 
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
+        a.nonEmpty shouldBe (true)
+        a.nonPoint shouldBe (true)
+        a.nonProper shouldBe (false)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.at(1)) mustBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.pred(10)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(1)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.pred(10)) shouldBe true
       }
 
       "Interval.leftOpenRightClosed(x, y)" in {
         val a = Interval.leftOpenRightClosed(1, 10)
 
-        a.isEmpty mustBe (false)
-        a.isPoint mustBe (false)
-        a.isProper mustBe (true)
+        a.isEmpty shouldBe (false)
+        a.isPoint shouldBe (false)
+        a.isProper shouldBe (true)
 
-        a.nonEmpty mustBe (true)
-        a.nonPoint mustBe (true)
-        a.nonProper mustBe (false)
+        a.nonEmpty shouldBe (true)
+        a.nonPoint shouldBe (true)
+        a.nonProper shouldBe (false)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.succ(1)) mustBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.at(10)) mustBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.succ(1)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(10)) shouldBe true
       }
 
     }
@@ -320,59 +320,59 @@ final class IntervalSpec extends TestSpec:
     "canonical" should {
       "represent an interval" in {
         // (1, 5) = [2, 4]
-        Interval.open(1, 5).canonical mustBe Interval.closed(2, 4)
+        Interval.open(1, 5).canonical shouldBe Interval.closed(2, 4)
 
         // [2, 5) = [2, 4]
-        Interval.leftClosedRightOpen(2, 5).canonical mustBe Interval.closed(2, 4)
+        Interval.leftClosedRightOpen(2, 5).canonical shouldBe Interval.closed(2, 4)
 
         // (1, 4] = [2, 4]
-        Interval.leftOpenRightClosed(1, 4).canonical mustBe Interval.closed(2, 4)
+        Interval.leftOpenRightClosed(1, 4).canonical shouldBe Interval.closed(2, 4)
 
         // [2, 4] = [2, 4]
-        Interval.closed(2, 4).canonical mustBe Interval.closed(2, 4)
+        Interval.closed(2, 4).canonical shouldBe Interval.closed(2, 4)
 
         // {2} = {2}
-        Interval.point(2).canonical mustBe Interval.point(2)
-        Interval.make(Endpoint.at(2), Endpoint.at(2)).canonical mustBe Interval.point(2)
-        Interval.make(Endpoint.succ(1), Endpoint.pred(3)).canonical mustBe Interval.point(2)
+        Interval.point(2).canonical shouldBe Interval.point(2)
+        Interval.make(Endpoint.at(2), Endpoint.at(2)).canonical shouldBe Interval.point(2)
+        Interval.make(Endpoint.succ(1), Endpoint.pred(3)).canonical shouldBe Interval.point(2)
       }
 
       "double canonical is canonical" in {
-        Interval.open(1, 5).canonical.canonical mustBe Interval.closed(2, 4)
+        Interval.open(1, 5).canonical.canonical shouldBe Interval.closed(2, 4)
       }
     }
 
     "normalize" should {
       "provide a normal form of the intervals" in {
         // [1, 5] -> [1, 5]
-        Interval.make(Endpoint.at(1), Endpoint.at(5)).normalize mustBe Interval.closed(1, 5)
+        Interval.make(Endpoint.at(1), Endpoint.at(5)).normalize shouldBe Interval.closed(1, 5)
 
         // )1, 5] -> [0, 5]
-        Interval.make(Endpoint.pred(1), Endpoint.at(5)).normalize mustBe Interval.closed(0, 5)
+        Interval.make(Endpoint.pred(1), Endpoint.at(5)).normalize shouldBe Interval.closed(0, 5)
 
         // ))1, 5] -> [-1, 5]
-        Interval.make(Endpoint.pred(Endpoint.pred(1)), Endpoint.at(5)).normalize mustBe Interval.closed(-1, 5)
+        Interval.make(Endpoint.pred(Endpoint.pred(1)), Endpoint.at(5)).normalize shouldBe Interval.closed(-1, 5)
 
         // (1, 5] -> (1, 5]
-        Interval.make(Endpoint.succ(1), Endpoint.at(5)).normalize mustBe Interval.leftOpenRightClosed(1, 5)
+        Interval.make(Endpoint.succ(1), Endpoint.at(5)).normalize shouldBe Interval.leftOpenRightClosed(1, 5)
 
         // ((1, 5] -> (2, 5]
-        Interval.make(Endpoint.succ(Endpoint.succ(1)), Endpoint.at(5)).normalize mustBe Interval.leftOpenRightClosed(2, 5)
+        Interval.make(Endpoint.succ(Endpoint.succ(1)), Endpoint.at(5)).normalize shouldBe Interval.leftOpenRightClosed(2, 5)
 
         // [1, 5) -> [1, 5)
-        Interval.make(Endpoint.at(1), Endpoint.pred(5)).normalize mustBe Interval.leftClosedRightOpen(1, 5)
+        Interval.make(Endpoint.at(1), Endpoint.pred(5)).normalize shouldBe Interval.leftClosedRightOpen(1, 5)
 
         // [1, 5)) -> [1, 4)
-        Interval.make(Endpoint.at(1), Endpoint.pred(Endpoint.pred(5))).normalize mustBe Interval.leftClosedRightOpen(1, 4)
+        Interval.make(Endpoint.at(1), Endpoint.pred(Endpoint.pred(5))).normalize shouldBe Interval.leftClosedRightOpen(1, 4)
 
         // [1, 5( -> [1, 6]
-        Interval.make(Endpoint.at(1), Endpoint.succ(5)).normalize mustBe Interval.closed(1, 6)
+        Interval.make(Endpoint.at(1), Endpoint.succ(5)).normalize shouldBe Interval.closed(1, 6)
 
         // [1, 5(( -> [1, 7]
-        Interval.make(Endpoint.at(1), Endpoint.succ(Endpoint.succ(5))).normalize mustBe Interval.closed(1, 7)
+        Interval.make(Endpoint.at(1), Endpoint.succ(Endpoint.succ(5))).normalize shouldBe Interval.closed(1, 7)
 
         // ))1, 5((
-        Interval.make(Endpoint.pred(Endpoint.pred(1)), Endpoint.succ(Endpoint.succ(5))).normalize mustBe Interval.closed(-1, 7)
+        Interval.make(Endpoint.pred(Endpoint.pred(1)), Endpoint.succ(Endpoint.succ(5))).normalize shouldBe Interval.closed(-1, 7)
       }
     }
 
@@ -383,10 +383,10 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.swap
         val expected = Interval.make(Endpoint.at(5), Endpoint.at(1))
 
-        a.isEmpty mustBe (false)
-        actual.isEmpty mustBe (true)
+        a.isEmpty shouldBe (false)
+        actual.isEmpty shouldBe (true)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "swap left and right in negative interval" in {
@@ -395,10 +395,10 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.swap
         val expected = Interval.make(Endpoint.at(1), Endpoint.at(5))
 
-        a.isEmpty mustBe (true)
-        actual.isEmpty mustBe (false)
+        a.isEmpty shouldBe (true)
+        actual.isEmpty shouldBe (false)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "double-swap restores the original interval" in {
@@ -407,7 +407,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.swap.swap
         val expected = a
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
     }
 
@@ -418,7 +418,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.inflate.canonical
         val expected = Interval.closed(0, 2)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "expand a real interval" in {
@@ -427,7 +427,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.inflate.canonical
         val expected = Interval.closed(0, 3)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "expand an empty interval" in {
@@ -436,7 +436,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.inflate.canonical
         val expected = Interval.closed(1, 2)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "inflate, deflate produces the original interval" in {
@@ -445,7 +445,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.inflate.deflate.canonical
         val expected = a
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
     }
 
@@ -456,7 +456,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.inflateLeft.canonical
         val expected = Interval.closed(0, 1)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "expand a real interval" in {
@@ -465,7 +465,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.inflateLeft.canonical
         val expected = Interval.closed(0, 2)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "expand an empty interval" in {
@@ -474,7 +474,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.inflateLeft.canonical
         val expected = Interval.point(1)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "inflate, deflate produces the original interval" in {
@@ -483,7 +483,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.inflateLeft.deflateLeft.canonical
         val expected = a.canonical
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
     }
 
@@ -494,7 +494,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.inflateRight.canonical
         val expected = Interval.closed(1, 2)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "expand a real interval" in {
@@ -503,7 +503,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.inflateRight.canonical
         val expected = Interval.closed(1, 3)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "expand an empty interval" in {
@@ -512,7 +512,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.inflateRight.canonical
         val expected = Interval.point(2)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "inflate, deflate produces the original interval" in {
@@ -521,7 +521,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.inflateRight.deflateRight.canonical
         val expected = a.canonical
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
     }
 
@@ -532,7 +532,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.deflate.canonical
         val expected = Interval.closed(0, 2).swap
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "shrink a real interval" in {
@@ -541,7 +541,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.deflate.canonical
         val expected = Interval.closed(1, 2).swap
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "expand an empty interval" in {
@@ -550,7 +550,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.deflate.canonical
         val expected = Interval.closed(0, 3).swap
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "deflate, inflate produces the original interval" in {
@@ -559,7 +559,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.deflate.inflate.canonical
         val expected = a.canonical
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
     }
 
@@ -570,7 +570,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.deflateLeft.canonical
         val expected = Interval.closed(1, 2).swap.canonical
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "shrink a real interval" in {
@@ -579,7 +579,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.deflateLeft.canonical
         val expected = Interval.point(2)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "expand an empty interval" in {
@@ -588,7 +588,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.deflateLeft.canonical
         val expected = Interval.closed(1, 3).swap
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "inflate, deflate produces the original interval" in {
@@ -597,7 +597,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.deflateLeft.inflateLeft.canonical
         val expected = a.canonical
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
     }
 
@@ -608,7 +608,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.deflateRight.canonical
         val expected = Interval.closed(0, 1).swap.canonical
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "shrink a real interval" in {
@@ -617,7 +617,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.deflateRight.canonical
         val expected = Interval.point(1)
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "expand an empty interval" in {
@@ -626,7 +626,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.deflateRight.canonical
         val expected = Interval.closed(0, 2).swap
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
 
       "inflate, deflate produces the original interval" in {
@@ -635,7 +635,7 @@ final class IntervalSpec extends TestSpec:
         val actual   = a.deflateRight.inflateRight.canonical
         val expected = a.canonical
 
-        actual mustBe (expected)
+        actual shouldBe (expected)
       }
     }
 
@@ -653,7 +653,7 @@ final class IntervalSpec extends TestSpec:
         )
 
         forAll(t) { (interval, size) =>
-          interval.size mustBe (size)
+          interval.size shouldBe (size)
         }
       }
     }
@@ -672,7 +672,7 @@ final class IntervalSpec extends TestSpec:
         )
 
         forAll(t) { (interval, left) =>
-          interval.left mustBe (left)
+          interval.left shouldBe (left)
         }
       }
     }
@@ -691,7 +691,7 @@ final class IntervalSpec extends TestSpec:
         )
 
         forAll(t) { (interval, right) =>
-          interval.right mustBe (right)
+          interval.right shouldBe (right)
         }
       }
     }
@@ -710,7 +710,7 @@ final class IntervalSpec extends TestSpec:
         )
 
         forAll(t) { (interval, isLeftOpen) =>
-          interval.isLeftOpen mustBe (isLeftOpen)
+          interval.isLeftOpen shouldBe (isLeftOpen)
         }
       }
     }
@@ -729,7 +729,7 @@ final class IntervalSpec extends TestSpec:
         )
 
         forAll(t) { (interval, isLeftClosed) =>
-          interval.isLeftClosed mustBe (isLeftClosed)
+          interval.isLeftClosed shouldBe (isLeftClosed)
         }
       }
     }
@@ -748,7 +748,7 @@ final class IntervalSpec extends TestSpec:
         )
 
         forAll(t) { (interval, isRightOpen) =>
-          interval.isRightOpen mustBe (isRightOpen)
+          interval.isRightOpen shouldBe (isRightOpen)
         }
       }
     }
@@ -767,7 +767,7 @@ final class IntervalSpec extends TestSpec:
         )
 
         forAll(t) { (interval, isRightClosed) =>
-          interval.isRightClosed mustBe (isRightClosed)
+          interval.isRightClosed shouldBe (isRightClosed)
         }
       }
     }
