@@ -62,11 +62,11 @@ final class IntervalSpec extends TestSpec:
         // [0, 0)
         Interval.make(Endpoint.at(0), Endpoint.pred(0)).isEmpty shouldBe true
 
-        // [-inf, +inf]
-        Interval.make[Int](Endpoint.at(Value.infNeg), Endpoint.at(Value.infPos)).isProper shouldBe true
+        // [-∞, +∞]
+        Interval.make[Int](Endpoint.at(Value.InfNeg), Endpoint.at(Value.InfPos)).isProper shouldBe true
 
-        // (-inf, +inf)
-        Interval.make[Int](Endpoint.succ(Value.infNeg), Endpoint.pred(Value.infPos)).isProper shouldBe true
+        // (-∞, +∞)
+        Interval.make[Int](Endpoint.succ(Value.InfNeg), Endpoint.pred(Value.InfPos)).isProper shouldBe true
 
         // (3, 5)
         Interval.make(Endpoint.succ(3), Endpoint.pred(5)).isPoint shouldBe true
@@ -125,8 +125,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint shouldBe (true)
         a.nonProper shouldBe (true)
 
-        a.leftEndpoint shouldBe Endpoint.at(Value.infPos)
-        a.rightEndpoint shouldBe Endpoint.at(Value.infNeg)
+        a.leftEndpoint shouldBe Endpoint.at(Value.InfPos)
+        a.rightEndpoint shouldBe Endpoint.at(Value.InfNeg)
       }
 
       "Interval.point(x)" in {
@@ -191,8 +191,8 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint shouldBe (true)
         a.nonProper shouldBe (false)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) shouldBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) shouldBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.InfNeg)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.InfPos)) shouldBe true
       }
 
       "Interval.open(x, y)" in {
@@ -237,7 +237,7 @@ final class IntervalSpec extends TestSpec:
         a.nonProper shouldBe (false)
 
         ordE.equiv(a.leftEndpoint, Endpoint.succ(1)) shouldBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.InfPos)) shouldBe true
       }
 
       "Interval.leftClosed(x)" in {
@@ -252,7 +252,7 @@ final class IntervalSpec extends TestSpec:
         a.nonProper shouldBe (false)
 
         ordE.equiv(a.leftEndpoint, Endpoint.at(5)) shouldBe true
-        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.infPos)) shouldBe true
+        ordE.equiv(a.rightEndpoint, Endpoint.at(Value.InfPos)) shouldBe true
       }
 
       "Interval.rightOpen(x)" in {
@@ -266,7 +266,7 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint shouldBe (true)
         a.nonProper shouldBe (false)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) shouldBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.InfNeg)) shouldBe true
         ordE.equiv(a.rightEndpoint, Endpoint.pred(1)) shouldBe true
       }
 
@@ -281,7 +281,7 @@ final class IntervalSpec extends TestSpec:
         a.nonPoint shouldBe (true)
         a.nonProper shouldBe (false)
 
-        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.infNeg)) shouldBe true
+        ordE.equiv(a.leftEndpoint, Endpoint.at(Value.InfNeg)) shouldBe true
         ordE.equiv(a.rightEndpoint, Endpoint.at(5)) shouldBe true
       }
 
@@ -768,6 +768,25 @@ final class IntervalSpec extends TestSpec:
 
         forAll(t) { (interval, isRightClosed) =>
           interval.isRightClosed shouldBe (isRightClosed)
+        }
+      }
+    }
+
+    "toString" should {
+      "represent an interval" in {
+        val t = Table(
+          ("interval", "expected"),
+          (Interval.point(1), "{1}"),
+          (Interval.closed(1, 2), "[1, 2]"),
+          (Interval.open(1, 4), "(1, 4)"),
+          (Interval.leftOpen(1), "(1, +∞)"),
+          (Interval.rightOpen(2), "(-∞, 2)"),
+          (Interval.empty[Int], "{}"),
+          (Interval.unbounded[Int], "(-∞, +∞)"),
+        )
+
+        forAll(t) { (interval, expected) =>
+          interval.toString shouldBe (expected)
         }
       }
     }

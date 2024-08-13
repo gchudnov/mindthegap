@@ -103,3 +103,9 @@ private[mtg] final case class AnyInterval[T: Domain](override val leftEndpoint: 
         Endpoint.Pred(yy.at)
       case Endpoint.Succ(_) =>
         rightEndpoint.at
+
+  override def toString: String =
+    s"${leftEndpoint.toString},${rightEndpoint.toString}"
+
+  private[mtg] override def toDebugString: String =
+    ??? // TODO: implement

@@ -1,8 +1,9 @@
-package com.github.gchudnov.mtg
-import internal.Value
-import internal.Endpoint
+package com.github.gchudnov.mtg.internal
 
-object Show:
+import com.github.gchudnov.mtg.Domain
+import com.github.gchudnov.mtg.Interval
+
+private[mtg] object Show:
   private val infinite = '∞'
 
   private val empty = '∅'
@@ -16,10 +17,6 @@ object Show:
   private val rightPoint = '}'
 
   private val sep = ','
-
-  extension [T: Domain](i: Interval[T])
-    def asString: String =
-      Show.print[T](i)
 
   def print[T: Domain](i: Interval[T]): String =
     if i.isEmpty then empty.toString()
@@ -36,31 +33,31 @@ object Show:
 
   private[mtg] def str[T](x: Value[T]): String =
     x match
-      case internal.Value.InfNeg =>
+      case Value.InfNeg =>
         s"-${infinite}"
-      case internal.Value.InfPos =>
+      case Value.InfPos =>
         s"+${infinite}"
-      case internal.Value.Finite(x) =>
+      case Value.Finite(x) =>
         x.toString()
 
   private def showLeft[T: Domain](left: Endpoint[T]): String =
     val (x, isInclude) = left match
-      case internal.Endpoint.At(x) =>
+      case Endpoint.At(x) =>
         (x, !x.isInf)
-      case internal.Endpoint.Pred(_) =>
+      case Endpoint.Pred(_) =>
         val x = left.eval
         (x, !x.isInf)
-      case internal.Endpoint.Succ(xx) =>
+      case Endpoint.Succ(xx) =>
         (xx.eval, false)
     s"${leftBound(isInclude)}${str(x)}"
 
   private def showRight[T: Domain](right: Endpoint[T]): String =
     val (y, isInclude) = right match
-      case internal.Endpoint.At(y) =>
+      case Endpoint.At(y) =>
         (y, !y.isInf)
-      case internal.Endpoint.Pred(yy) =>
+      case Endpoint.Pred(yy) =>
         (yy.eval, false)
-      case internal.Endpoint.Succ(yy) =>
+      case Endpoint.Succ(yy) =>
         val y = right.eval
         (y, !y.isInf)
     s"${str(y)}${rightBound(isInclude)}"

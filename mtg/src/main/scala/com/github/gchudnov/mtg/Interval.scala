@@ -202,6 +202,13 @@ trait Interval[T] extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
    */
   private[mtg] def rightEndpoint: Endpoint[T]
 
+  /**
+    * Convert the interval to a string for debugging.
+    *
+    * @return 
+    */
+  private[mtg] def toDebugString: String
+
 /**
  * Companion object for the Interval.
  */
