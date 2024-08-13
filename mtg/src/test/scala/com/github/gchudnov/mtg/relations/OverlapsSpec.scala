@@ -36,6 +36,10 @@ final class OverlapsSpec extends TestSpec:
           whenever(xx.overlaps(yy)) {
             yy.isOverlappedBy(xx) shouldBe true
 
+            // aliases
+            Interval.overlaps(xx, yy) shouldBe true
+            Interval.isOverlappedBy(yy, xx) shouldBe true
+
             assertOne(Rel.Overlaps)(xx, yy)
 
             // a- < b+ && b- < a+

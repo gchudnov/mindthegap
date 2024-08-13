@@ -28,6 +28,10 @@ final class IsAdjacentSpec extends TestSpec:
           whenever(xx.isAdjacent(yy)) {
             yy.isAdjacent(xx) shouldBe true
 
+            // aliases
+            Interval.isAdjacent(xx, yy) shouldBe true
+            Interval.isAdjacent(yy, xx) shouldBe true
+
             assertOneOf(Set(Rel.Before, Rel.After))(xx, yy)
 
             // succ(a+) = b- OR succ(b+) = a-

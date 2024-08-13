@@ -31,6 +31,12 @@ final class IntersectsSpec extends TestSpec:
           whenever(xx.intersects(yy)) {
             yy.intersects(xx) shouldBe true
 
+            // aliases
+            Interval.intersects(xx, yy) shouldBe true
+            Interval.intersects(yy, xx) shouldBe true
+            Interval.isIntersectedBy(yy, xx) shouldBe true
+            Interval.isIntersectedBy(xx, yy) shouldBe true
+
             // inverse relation is the same
             xx.isIntersectedBy(yy) shouldBe true
             yy.isIntersectedBy(xx) shouldBe true

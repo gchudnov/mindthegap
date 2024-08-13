@@ -40,6 +40,10 @@ final class IsSubsetSpec extends TestSpec:
           whenever(xx.isSubset(yy)) {
             yy.isSuperset(xx) shouldBe true
 
+            // aliases
+            Interval.isSubset(xx, yy) shouldBe true
+            Interval.isSuperset(yy, xx) shouldBe true
+
             assertOneOf(Set(Rel.Starts, Rel.During, Rel.Finishes, Rel.EqualsTo))(xx, yy)
 
             // b- <= a- && b+ >= a+

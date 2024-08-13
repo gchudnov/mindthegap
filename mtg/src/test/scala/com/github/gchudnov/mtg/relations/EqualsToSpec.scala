@@ -37,6 +37,10 @@ final class EqualsToSpec extends TestSpec:
           val actual   = xx.equalsTo(yy)
           val expected = yy.equalsTo(xx)
 
+          // aliasing
+          Interval.equalsTo(xx, yy) shouldBe expected
+          Interval.equalsTo(yy, xx) shouldBe actual
+
           actual shouldBe expected
         }
       }

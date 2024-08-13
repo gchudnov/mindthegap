@@ -29,6 +29,9 @@ final class IsSupersetSpec extends TestSpec:
           whenever(xx.isSuperset(yy)) {
             yy.isSubset(xx) shouldBe true
 
+            // aliasing
+            Interval.isSuperset(xx, yy) shouldBe yy.isSubset(xx)
+
             assertOneOf(Set(Rel.IsStartedBy, Rel.Contains, Rel.IsFinishedBy, Rel.EqualsTo))(xx, yy)
 
             // a- <= b- && a+ >= b+

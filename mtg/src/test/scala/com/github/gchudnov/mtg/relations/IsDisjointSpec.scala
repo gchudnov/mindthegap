@@ -28,6 +28,10 @@ final class IsDisjointSpec extends TestSpec:
           whenever(xx.isDisjoint(yy)) {
             yy.isDisjoint(xx) shouldBe true
 
+            // aliases
+            Interval.isDisjoint(xx, yy) shouldBe true
+            Interval.isDisjoint(yy, xx) shouldBe true
+
             assertOneOf(Set(Rel.Before, Rel.After))(xx, yy)
 
             // a+ < b- || a- > b+

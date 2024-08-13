@@ -36,6 +36,10 @@ final class StartsSpec extends TestSpec:
           whenever(xx.starts(yy)) {
             yy.isStartedBy(xx) shouldBe true
 
+            // aliases
+            Interval.starts(xx, yy) shouldBe true
+            Interval.isStartedBy(yy, xx) shouldBe true
+
             assertOne(Rel.Starts)(xx, yy)
 
             // a- = b- && b.isSuperset(a) && !a.equalsTo(b)

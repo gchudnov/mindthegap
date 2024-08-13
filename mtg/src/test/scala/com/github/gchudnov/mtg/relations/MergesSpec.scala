@@ -28,6 +28,10 @@ final class MergesSpec extends TestSpec:
           whenever(xx.merges(yy) && xx.nonEmpty && yy.nonEmpty) {
             yy.merges(xx) shouldBe true
 
+            // aliases
+            Interval.merges(xx, yy) shouldBe true
+            Interval.isMergedBy(yy, xx) shouldBe true
+
             assertOneOf(
               Set(
                 Rel.Meets,

@@ -36,6 +36,10 @@ final class MeetsSpec extends TestSpec:
           whenever(xx.meets(yy)) {
             yy.isMetBy(xx) shouldBe true
 
+            // aliases
+            Interval.meets(xx, yy) shouldBe true
+            Interval.isMetBy(yy, xx) shouldBe true
+
             assertOne(Rel.Meets)(xx, yy)
 
             // a+ = b-

@@ -36,6 +36,10 @@ final class BeforeSpec extends TestSpec:
           whenever(xx.before(yy)) {
             yy.after(xx) shouldBe true
 
+            // aliases
+            Interval.before(xx, yy) shouldBe true
+            Interval.after(yy, xx) shouldBe true
+
             assertOne(Rel.Before)(xx, yy)
 
             // a+ < b-

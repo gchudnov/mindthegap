@@ -36,6 +36,10 @@ final class FinishesSpec extends TestSpec:
           whenever(xx.finishes(yy)) {
             yy.isFinishedBy(xx) shouldBe true
 
+            // aliasing
+            Interval.finishes(xx, yy) shouldBe yy.isFinishedBy(xx)
+            Interval.isFinishedBy(yy, xx) shouldBe xx.finishes(yy)
+
             assertOne(Rel.Finishes)(xx, yy)
 
             // a+ = b+ && b.isSuperset(a) && !a.equalsTo(b)

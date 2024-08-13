@@ -36,6 +36,10 @@ final class DuringSpec extends TestSpec:
           whenever(xx.during(yy)) {
             yy.contains(xx) shouldBe true
 
+            // aliases
+            Interval.during(xx, yy) shouldBe true
+            Interval.contains(yy, xx) shouldBe true
+
             assertOne(Rel.During)(xx, yy)
 
             // a- > b- && a+ < b+
