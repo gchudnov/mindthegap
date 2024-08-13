@@ -30,6 +30,9 @@ final class IntersectsSpec extends TestSpec:
 
           whenever(xx.intersects(yy)) {
             yy.intersects(xx) mustBe true
+            
+            xx.isIntersectedBy(yy) mustBe true
+            yy.isIntersectedBy(xx) mustBe true
 
             assertOneOf(
               Set(
