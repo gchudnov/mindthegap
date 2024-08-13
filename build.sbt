@@ -30,17 +30,26 @@ lazy val mtgDiagram = (project in file("mtg-diagram"))
     libraryDependencies ++= Dependencies.Mtg,
   )
 
-lazy val mtgStdout = (project in file("mtg-stdout"))
+lazy val mtgAscii = (project in file("mtg-ascii"))
   .dependsOn(mtg, mtgDiagram)
   .settings(allSettings)
   .settings(Settings.publishGithub)
   .settings(
-    name := "mtg-stdout",
+    name := "mtg-ascii",
+    libraryDependencies ++= Dependencies.Mtg,
+  )
+
+lazy val mtgMermaid = (project in file("mtg-mermaid"))
+  .dependsOn(mtg, mtgDiagram)
+  .settings(allSettings)
+  .settings(Settings.publishGithub)
+  .settings(
+    name := "mtg-mermaid",
     libraryDependencies ++= Dependencies.Mtg,
   )
 
 lazy val examples = (project in file("examples"))
-  .dependsOn(mtg, mtgDiagram, mtgStdout)
+  .dependsOn(mtg, mtgDiagram, mtgAscii, mtgMermaid)
   .settings(Settings.noPublish)
   .settings(
     name := "mtg-examples",
@@ -48,7 +57,7 @@ lazy val examples = (project in file("examples"))
   )
 
 lazy val root = (project in file("."))
-  .aggregate(mtg, mtgDiagram, mtgStdout, examples)
+  .aggregate(mtg, mtgDiagram, mtgAscii, mtgMermaid, examples)
   .settings(Settings.noPublish)
   .settings(
     name := "mtg-root"
