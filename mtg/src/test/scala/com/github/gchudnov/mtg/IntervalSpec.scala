@@ -808,6 +808,8 @@ final class IntervalSpec extends TestSpec:
           (Interval.proper[Int](Endpoint.at(Value.InfNeg), Endpoint.pred(Value.InfPos)), "(-∞,+∞)"),
           (Interval.proper[Int](Endpoint.succ(Value.InfNeg), Endpoint.at(Value.InfPos)), "(-∞,+∞)"),
           (Interval.proper[Int](Endpoint.succ(Value.InfNeg), Endpoint.pred(Value.InfPos)), "(-∞,+∞)"),
+          (Interval.proper(Endpoint.pred(1), Endpoint.at(3)), "[0,3]"),
+          (Interval.proper(Endpoint.at(1), Endpoint.succ(2)), "[1,3]"),
         )
 
         forAll(t) { (xx, expected) =>
