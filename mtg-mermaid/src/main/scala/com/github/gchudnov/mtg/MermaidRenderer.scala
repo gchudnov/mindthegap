@@ -1,9 +1,15 @@
 package com.github.gchudnov.mtg
 
-final class MermaidRenderer {
+import com.github.gchudnov.mtg.diagram.Diagram
+import com.github.gchudnov.mtg.diagram.Renderer
 
-  def render(): Unit = {
-    println("Hello, World!")
-  }
+/**
+  * Mermaid Renderer
+  * 
+  * Renders a diagram as a Mermaid diagram.
+  */
+final class MermaidRenderer extends Renderer {
+  override def render(d: Diagram): Unit =
+    ???
 
 }
