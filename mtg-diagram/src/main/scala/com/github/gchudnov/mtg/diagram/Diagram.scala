@@ -3,7 +3,6 @@ package com.github.gchudnov.mtg.diagram
 import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Translator
 import com.github.gchudnov.mtg.diagram.Span
-import com.github.gchudnov.mtg.diagram.Theme
 import com.github.gchudnov.mtg.diagram.Tick
 import com.github.gchudnov.mtg.diagram.Label
 import com.github.gchudnov.mtg.diagram.Legend
@@ -30,7 +29,6 @@ final case class Diagram(
 object Diagram:
 
   export com.github.gchudnov.mtg.diagram.Span
-  export com.github.gchudnov.mtg.diagram.Theme
   export com.github.gchudnov.mtg.diagram.View
   export com.github.gchudnov.mtg.diagram.Canvas
   export com.github.gchudnov.mtg.diagram.Tick
@@ -104,8 +102,8 @@ object Diagram:
   /**
    * Render the Diagram
    */
-  def render(d: Diagram, theme: Theme = Theme.default)(using r: Renderer): List[String] =
-    r.render(d, theme)
+  def render(d: Diagram)(using r: Renderer): List[String] =
+    r.render(d)
 
   /**
    * Make Labels

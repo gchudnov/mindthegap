@@ -2,19 +2,19 @@ package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Span
-import com.github.gchudnov.mtg.diagram.{Diagram, Label, Tick, Theme}
+import com.github.gchudnov.mtg.diagram.{Diagram, Label, Tick}
 import scala.collection.mutable.ListBuffer
 import scala.annotation.nowarn
 
 /**
  * ASCII Renderer
  */
-private[mtg] final class AsciiRenderer() extends Renderer:
+private[mtg] final class AsciiRenderer(theme: AsciiTheme) extends Renderer:
 
-  override def render(d: Diagram, theme: Theme): List[String] =
-    val spans  = drawSpans(theme, d.spans, d.width)
-    val ticks  = drawTicks(theme, d.ticks, d.width)
-    val labels = drawLabels(theme, d.labels, d.width)
+  override def render(d: Diagram): List[String] =
+    val spans  = drawSpans(d.spans, d.width)
+    val ticks  = drawTicks(d.ticks, d.width)
+    val labels = drawLabels(d.labels, d.width)
 
     val chart = (spans ++ ticks ++ labels)
 
@@ -54,42 +54,42 @@ private[mtg] final class AsciiRenderer() extends Renderer:
 
     annotated.filter(_.nonEmpty)
 
-  private[mtg] def drawSpans(theme: Theme, spans: List[Span], width: Int): List[String] =
+  private[mtg] def drawSpans(spans: List[Span], width: Int): List[String] =
     val views: Array[Array[Char]] = Array.fill[Char](spans.size, width)(theme.space)
-    spans.zipWithIndex.foreach((span, i) => drawSpan(theme, span, views(i)))
+    spans.zipWithIndex.foreach((span, i) => drawSpan(span, views(i)))
     views.map(_.mkString).toList
 
-  private[mtg] def drawTicks(theme: Theme, ts: List[Tick], width: Int): List[String] =
+  private[mtg] def drawTicks(ts: List[Tick], width: Int): List[String] =
     val view = Array.fill[Char](width)(theme.axis)
-    ts.sortBy(_.x).foreach(t => drawTick(theme, t, view))
+    ts.sortBy(_.x).foreach(t => drawTick(t, view))
     List(view.mkString)
 
-  private[mtg] def drawLabels(theme: Theme, ls: List[Label], width: Int): List[String] =
+  private[mtg] def drawLabels(ls: List[Label], width: Int): List[String] =
     theme.label match
-      case Theme.Label.None =>
-        drawLabelsNone(theme, ls, width)
-      case Theme.Label.NoOverlap =>
-        drawLabelsNoOverlap(theme, ls, width)
-      case Theme.Label.Stacked =>
-        drawLabelsStacked(theme, ls, width)
+      case AsciiTheme.Label.None =>
+        drawLabelsNone(ls, width)
+      case AsciiTheme.Label.NoOverlap =>
+        drawLabelsNoOverlap(ls, width)
+      case AsciiTheme.Label.Stacked =>
+        drawLabelsStacked(ls, width)
 
-  private def drawLabelsNone(theme: Theme, ls: List[Label], width: Int): List[String] =
+  private def drawLabelsNone(ls: List[Label], width: Int): List[String] =
     val view = Array.fill[Char](width)(theme.space)
-    ls.sortBy(_.x).foreach(l => drawLabel(theme, l, view))
+    ls.sortBy(_.x).foreach(l => drawLabel(l, view))
     List(view.mkString)
 
-  private def drawLabelsNoOverlap(theme: Theme, ls: List[Label], width: Int): List[String] =
+  private def drawLabelsNoOverlap(ls: List[Label], width: Int): List[String] =
     val view = Array.fill[Char](width)(theme.space)
     ls.sortBy(_.x)
       .foldLeft(-1)((last, l) =>
         if (l.x > last) || (l.x > 0 && l.x == last && (!view(l.x - 1).isDigit || (l.value.nonEmpty && !l.value(0).isDigit))) then
-          drawLabel(theme, l, view)
+          drawLabel(l, view)
           l.x + l.value.size
         else last
       )
     List(view.mkString)
 
-  private def drawLabelsStacked(theme: Theme, ls: List[Label], width: Int): List[String] =
+  private def drawLabelsStacked(ls: List[Label], width: Int): List[String] =
     val emptyState = (Vector(Array.fill[Char](width)(theme.space)), ListBuffer[Int](-1))
     val res = ls
       .sortBy(_.x)
@@ -106,27 +106,27 @@ private[mtg] final class AsciiRenderer() extends Renderer:
         i match
           case None =>
             val view = Array.fill[Char](width)(theme.space)
-            drawLabel(theme, l, view)
+            drawLabel(l, view)
             (views :+ view, last.addOne(q))
           case Some(j) =>
             val view = views(j)
-            drawLabel(theme, l, view)
+            drawLabel(l, view)
             last(j) = q
             (views, last),
       )
 
     res._1.map(_.mkString).toList
 
-  private def drawLabel(@nowarn theme: Theme, l: Label, spot: Array[Char]): Unit =
+  private def drawLabel(l: Label, spot: Array[Char]): Unit =
     l.value.toList.zipWithIndex.foreach { case (ch, i) =>
       val p = l.x + i
       if p >= 0 && p < spot.size then spot(p) = ch
     }
 
-  private def drawTick(theme: Theme, t: Tick, spot: Array[Char]): Unit =
+  private def drawTick(t: Tick, spot: Array[Char]): Unit =
     if (t.x >= 0) && (t.x < spot.size) then spot(t.x) = theme.tick
 
-  private def drawSpan(theme: Theme, span: Span, spot: Array[Char]): Unit =
+  private def drawSpan(span: Span, spot: Array[Char]): Unit =
     if span.nonEmpty then
       val p = math.max(span.x0, 0)
       val q = math.min(span.x1, if spot.nonEmpty then spot.size - 1 else 0)
@@ -146,5 +146,5 @@ private[mtg] final class AsciiRenderer() extends Renderer:
     else xs
 
 object AsciiRenderer:
-  def make(): AsciiRenderer = 
-    new AsciiRenderer()
+  def make(theme: AsciiTheme = AsciiTheme.default): AsciiRenderer = 
+    new AsciiRenderer(theme)

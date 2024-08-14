@@ -1,7 +1,6 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.diagram.Diagram.Canvas
-import com.github.gchudnov.mtg.diagram.Diagram.Theme
 import com.github.gchudnov.mtg.diagram.Diagram.Tick
 import com.github.gchudnov.mtg.diagram.Diagram.Label
 import com.github.gchudnov.mtg.diagram.Diagram
@@ -22,25 +21,23 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
   private val infView: View[Int]  = View.all[Int]
 
-  private val defaultTheme: Theme  = Theme.default
-  private val themeNoLegend: Theme = defaultTheme.copy(legend = false)
-  private val themeNoLegendNoAnnotations: Theme = defaultTheme.copy(legend = false, annotations = false)
-
-  given renderer: AsciiRenderer = AsciiRenderer.make()
+  private val themeDefault: AsciiTheme  = AsciiTheme.default
+  private val themeNoLegend: AsciiTheme = themeDefault.copy(legend = false)
+  private val themeNoLegendNoAnnotations: AsciiTheme = themeDefault.copy(legend = false, annotations = false)
 
   "AsciiRenderer" when {
 
     "renderer" should {
 
       "Theme.Label.None" should {
-        val noneLabelTheme = defaultTheme.copy(label = Theme.Label.None)
+        val noneLabelTheme = themeDefault.copy(label = AsciiTheme.Label.None)
 
         "draw an empty collection of labels" in {
           val ls = List.empty[Label]
 
-          val r = new AsciiRenderer()
+          val r = new AsciiRenderer(noneLabelTheme)
 
-          val actual   = r.drawLabels(noneLabelTheme, ls, canvas.width)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("                                        ")
 
           actual shouldBe expected
@@ -49,9 +46,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         "draw non-overlapping labels" in {
           val ls = List(Label(2, "5"), Label(36, "10"))
 
-          val r = new AsciiRenderer()
+          val r = new AsciiRenderer(noneLabelTheme)
 
-          val actual   = r.drawLabels(noneLabelTheme, ls, canvas.width)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("  5                                 10  ")
 
           actual shouldBe expected
@@ -60,9 +57,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         "draw meeting labels" in {
           val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
 
-          val r = new AsciiRenderer()
+          val r = new AsciiRenderer(noneLabelTheme)
 
-          val actual   = r.drawLabels(noneLabelTheme, ls, canvas.width)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("-∞1  2      5           10          15+∞")
 
           actual shouldBe expected
@@ -71,9 +68,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         "draw overlapping labels" in {
           val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
 
-          val r = new AsciiRenderer()
+          val r = new AsciiRenderer(noneLabelTheme)
 
-          val actual   = r.drawLabels(noneLabelTheme, ls, canvas.width)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("1003400                                 ")
 
           actual shouldBe expected
@@ -81,14 +78,14 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "Theme.Label.NoOverlap" should {
-        val noOverlapLabelTheme = defaultTheme.copy(label = Theme.Label.NoOverlap)
+        val noOverlapLabelTheme = themeDefault.copy(label = AsciiTheme.Label.NoOverlap)
 
         "draw an empty collection of labels" in {
           val ls = List.empty[Label]
 
-          val r = new AsciiRenderer()
+          val r = new AsciiRenderer(noOverlapLabelTheme)
 
-          val actual   = r.drawLabels(noOverlapLabelTheme, ls, canvas.width)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("                                        ")
 
           actual shouldBe expected
@@ -97,9 +94,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         "draw only non-overlapping labels" in {
           val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
 
-          val r = new AsciiRenderer()
+          val r = new AsciiRenderer(noOverlapLabelTheme)
 
-          val actual   = r.drawLabels(noOverlapLabelTheme, ls, canvas.width)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("100 400                                 ")
 
           actual shouldBe expected
@@ -108,9 +105,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         "draw meeting labels if one of them is non-numeric" in {
           val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
 
-          val r = new AsciiRenderer()
+          val r = new AsciiRenderer(noOverlapLabelTheme)
 
-          val actual   = r.drawLabels(noOverlapLabelTheme, ls, canvas.width)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("-∞1  2      5           10          15+∞")
 
           actual shouldBe expected
@@ -119,9 +116,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         "draw only non-meeting labels" in {
           val ls = List(Label(0, "100"), Label(3, "300"))
 
-          val r = new AsciiRenderer()
+          val r = new AsciiRenderer(noOverlapLabelTheme)
 
-          val actual   = r.drawLabels(noOverlapLabelTheme, ls, canvas.width)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("100                                     ")
 
           actual shouldBe expected
@@ -129,14 +126,14 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "Theme.Label.Stacked" should {
-        val stackedLabelTheme = defaultTheme.copy(label = Theme.Label.Stacked)
+        val stackedLabelTheme = themeDefault.copy(label = AsciiTheme.Label.Stacked)
 
         "draw an empty collection of labels" in {
           val ls = List.empty[Label]
 
-          val r = new AsciiRenderer()
+          val r = new AsciiRenderer(stackedLabelTheme)
 
-          val actual   = r.drawLabels(stackedLabelTheme, ls, canvas.width)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("                                        ")
 
           actual shouldBe expected
@@ -145,9 +142,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         "draw non-overlapping and non-meeting labels on one line" in {
           val ls = List(Label(2, "5"), Label(36, "10"))
 
-          val r = new AsciiRenderer()
+          val r = new AsciiRenderer(stackedLabelTheme)
 
-          val actual   = r.drawLabels(stackedLabelTheme, ls, canvas.width)
+          val actual   = r.drawLabels(ls, canvas.width)
           val expected = List("  5                                 10  ")
 
           actual shouldBe expected
@@ -156,9 +153,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         "draw meeting labels" in {
           val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
 
-          val r = new AsciiRenderer()
+          val r = new AsciiRenderer(stackedLabelTheme)
 
-          val actual = r.drawLabels(stackedLabelTheme, ls, canvas.width)
+          val actual = r.drawLabels(ls, canvas.width)
           val expected = List(
             "-∞   2      5           10          15  ",
             "  1                                   +∞",
@@ -170,9 +167,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         "draw overlapping labels" in {
           val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
 
-          val r = new AsciiRenderer()
+          val r = new AsciiRenderer(stackedLabelTheme)
 
-          val actual = r.drawLabels(stackedLabelTheme, ls, canvas.width)
+          val actual = r.drawLabels(ls, canvas.width)
           val expected = List(
             "100 400                                 ",
             "   300                                  ",
@@ -185,9 +182,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       "draw an empty collection of ticks" in {
         val ts = List.empty[Tick]
 
-        val r = new AsciiRenderer()
+        val r = new AsciiRenderer(themeNoLegend)
 
-        val actual   = r.drawTicks(themeNoLegend, ts, canvas.width)
+        val actual   = r.drawTicks(ts, canvas.width)
         val expected = List("----------------------------------------")
 
         actual shouldBe expected
@@ -196,9 +193,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       "draw ticks" in {
         val ts = List(Tick(2), Tick(12), Tick(25), Tick(0), Tick(37), Tick(5), Tick(39))
 
-        val r = new AsciiRenderer()
+        val r = new AsciiRenderer(themeNoLegend)
 
-        val actual   = r.drawTicks(themeNoLegend, ts, canvas.width)
+        val actual   = r.drawTicks(ts, canvas.width)
         val expected = List("+-+--+------+------------+-----------+-+")
 
         actual shouldBe expected
@@ -208,7 +205,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val as = List.empty[String]
         val n  = 0
 
-        val r = new AsciiRenderer()
+        val r = new AsciiRenderer(themeDefault)
 
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List.empty[String]
@@ -220,7 +217,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val as = List.empty[String]
         val n  = 1
 
-        val r = new AsciiRenderer()
+        val r = new AsciiRenderer(themeDefault)
 
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List("")
@@ -232,7 +229,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val as = List("a", "b")
         val n  = 3
 
-        val r = new AsciiRenderer()
+        val r = new AsciiRenderer(themeDefault)
 
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List("a", "b", "")
@@ -244,7 +241,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val as = List("a", "b")
         val n  = 2
 
-        val r = new AsciiRenderer()
+        val r = new AsciiRenderer(themeDefault)
 
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List("a", "b")
@@ -256,7 +253,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val as = List("a", "b")
         val n  = 1
 
-        val r = new AsciiRenderer()
+        val r = new AsciiRenderer(themeDefault)
 
         val actual   = r.padWithEmptyLines(n)(as)
         val expected = List("a", "b")
@@ -267,19 +264,23 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
     "render" should {
       "display no intervals" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val diagram = Diagram.make(List.empty[Interval[Int]], infView, canvas)
 
-        val actual   = Diagram.render(diagram, themeNoLegend)
+        val actual   = Diagram.render(diagram)
         val expected = List.empty[String]
 
         actual shouldBe expected
       }
 
       "display an empty interval with no legend and no annotations" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegendNoAnnotations)
+
         val a       = Interval.empty[Int]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegendNoAnnotations)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "                                        ",
           "----------------------------------------",
@@ -290,10 +291,12 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display an empty interval with no legend but with annotations" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.empty[Int]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "                                         | a",
           "---------------------------------------- |",
@@ -304,11 +307,13 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display an empty interval with no legend but with annotations, but the intervals cannot be auto-annotated" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.empty[Int]
         val as      = List(a)
         val diagram = Diagram.make(as, infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "                                        ",
           "----------------------------------------",
@@ -319,10 +324,12 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display an empty interval with a legend and annotations" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault.copy(legend = true))
+
         val a       = Interval.empty[Int]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram, defaultTheme.copy(legend = true))
+        val actual = Diagram.render(diagram)
         val expected = List(
           "                                         | ∅ : a",
           "---------------------------------------- |",
@@ -333,10 +340,12 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a point" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.point[Int](5) // [5]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "                    *                    | a",
           "--------------------+------------------- |",
@@ -347,11 +356,13 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display two points" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.point[Int](5)  // [5]
         val b       = Interval.point[Int](10) // [10]
         val diagram = Diagram.make(List(a, b), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  *                                      | a",
           "                                     *   | b",
@@ -363,10 +374,12 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a closed interval" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.closed[Int](5, 10)
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [**********************************]   | a",
           "--+----------------------------------+-- |",
@@ -377,11 +390,13 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a closed interval on a custom view" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.closed[Int](5, 10)
         val view    = View.make(Some(0), Some(20))
         val diagram = Diagram.make(List(a), view, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "           [********]                    | a",
           "--+--------+--------+----------------+-- |",
@@ -392,11 +407,13 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display left part of a closed interval" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.closed[Int](5, 10)
         val view    = View.make(Some(0), Some(7))
         val diagram = Diagram.make(List(a), view, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "                           [************ | a",
           "--+------------------------+---------+-- |",
@@ -407,11 +424,13 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display right part of a closed interval" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.closed[Int](5, 10)
         val view    = View.make(Some(7), Some(15))
         val diagram = Diagram.make(List(a), view, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "***************]                         | a",
           "--+------------+---------------------+-- |",
@@ -422,11 +441,13 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display middle part of a closed interval" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.closed[Int](5, 10)
         val view    = View.make(Some(7), Some(8))
         val diagram = Diagram.make(List(a), view, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "**************************************** | a",
           "--+----------------------------------+-- |",
@@ -437,10 +458,12 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a closed interval with negative boundary" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.closed[Int](-5, 10)
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [**********************************]   | a",
           "--+----------------------------------+-- |",
@@ -451,10 +474,12 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display an unbounded interval" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.unbounded[Int]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "(**************************************) | a",
           "+--------------------------------------+ |",
@@ -465,10 +490,12 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a leftOpen interval" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.leftOpen(5) // (5, +∞)
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "                    (******************) | a",
           "--------------------+------------------+ |",
@@ -479,10 +506,12 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a leftClosed interval" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.leftClosed(5) // [5, +∞)
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "                    [******************) | a",
           "--------------------+------------------+ |",
@@ -493,10 +522,12 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a rightOpen interval" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.rightOpen(5) // (-∞, 5)
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "(*******************)                    | a",
           "+-------------------+------------------- |",
@@ -507,10 +538,12 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a rightClosed interval" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a       = Interval.rightClosed(5) // (-∞, 5]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "(*******************]                    | a",
           "+-------------------+------------------- |",
@@ -521,12 +554,14 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a leftClosed and rightClosed overlapping intervals" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a = Interval.leftClosed(5)   // [5, +∞)
         val b = Interval.rightClosed(10) // (-∞, 10]
 
         val diagram = Diagram.make(List(a, b), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [************************************) | a",
           "(************************************]   | b",
@@ -538,12 +573,14 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a leftClosed and rightClosed non-overlapping intervals" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a = Interval.leftClosed(10) // [10, +∞)
         val b = Interval.rightClosed(5) // (-∞, 5]
 
         val diagram = Diagram.make(List(a, b), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "                                     [*) | a",
           "(*]                                      | b",
@@ -555,6 +592,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display several intervals" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
         val c = Interval.rightClosed(15)
@@ -562,7 +601,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [*********]                            | a",
           "            [************]               | b",
@@ -576,6 +615,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display several intervals with a legend" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
         val c = Interval.rightClosed(15)
@@ -583,7 +624,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [*********]                            | [1,5]   : a",
           "            [************]               | [5,10]  : b",
@@ -597,6 +638,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display several leftClosed intervals" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.leftClosed(1)
         val b = Interval.leftClosed(2)
         val c = Interval.leftClosed(3)
@@ -604,7 +647,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [************************************) | [1,+∞) : a",
           "              [************************) | [2,+∞) : b",
@@ -618,6 +661,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display several rightClosed intervals" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.rightClosed(1)
         val b = Interval.rightClosed(2)
         val c = Interval.rightClosed(3)
@@ -625,7 +670,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "(*]                                      | (-∞,1] : a",
           "(*************]                          | (-∞,2] : b",
@@ -639,6 +684,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display overlapping intervals" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(1, 5)
         val b = Interval.closed(2, 6)
         val c = Interval.closed(3, 7)
@@ -648,7 +695,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [***************]                      | [1,5]  : a",
           "      [**************]                   | [2,6]  : b",
@@ -664,6 +711,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display with default settings [doc]" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(3, 7)
         val b = Interval.closed(10, 15)
         val c = Interval.closed(12, 20)
@@ -683,6 +732,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display with custom view [doc]" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(3, 7)
         val b = Interval.closed(10, 15)
         val c = Interval.closed(12, 20)
@@ -703,6 +754,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display with custom canvas [doc]" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(3, 7)
         val b = Interval.closed(10, 15)
         val c = Interval.closed(12, 20)
@@ -723,6 +776,10 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display with custom theme [doc]" in {
+        val theme = AsciiTheme.default.copy(label = AsciiTheme.Label.Stacked)
+
+        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+
         val a = Interval.closed(3, 7)
         val b = Interval.closed(10, 15)
         val c = Interval.closed(12, 20)
@@ -730,9 +787,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val canvas  = Canvas.make(20)
         val diagram = Diagram.make(List(a, b, c), canvas)
 
-        val theme = Theme.default.copy(label = Theme.Label.Stacked)
 
-        val actual = Diagram.render(diagram, theme)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [***]              | [3,7]   : a",
           "        [****]       | [10,15] : b",
@@ -746,6 +802,10 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display overlapping intervals with overlapping labels (Theme.Label.None)" in {
+        val theme = themeNoLegend.copy(label = AsciiTheme.Label.None)
+
+        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+
         val a = Interval.closed(100, 500)
         val b = Interval.closed(150, 600)
         val c = Interval.closed(200, 700)
@@ -755,7 +815,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend.copy(label = Theme.Label.None))
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [***************]                      | a",
           "    [****************]                   | b",
@@ -771,6 +831,10 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display overlapping intervals with overlapping labels (Theme.Label.NoOverlap)" in {
+        val theme = themeNoLegend.copy(label = AsciiTheme.Label.NoOverlap)
+
+        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+
         val a = Interval.closed(100, 500)
         val b = Interval.closed(150, 600)
         val c = Interval.closed(200, 700)
@@ -780,7 +844,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend.copy(label = Theme.Label.NoOverlap))
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [***************]                      | a",
           "    [****************]                   | b",
@@ -796,6 +860,10 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display overlapping intervals with overlapping labels (Theme.Label.Stacked)" in {
+        val theme = themeNoLegend.copy(label = AsciiTheme.Label.Stacked)
+
+        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+
         val a = Interval.closed(100, 500)
         val b = Interval.closed(150, 600)
         val c = Interval.closed(200, 700)
@@ -805,7 +873,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        val actual = Diagram.render(diagram, themeNoLegend.copy(label = Theme.Label.Stacked))
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [***************]                      | a",
           "    [****************]                   | b",
@@ -822,12 +890,16 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display intervals with legend and annotations" in {
+        val theme = themeDefault.copy(legend = true, annotations = true)
+
+        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
 
         val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        val actual = Diagram.render(diagram, defaultTheme.copy(legend = true, annotations = true))
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [***************]                      | [1,5]  : a",
           "                  [******************]   | [5,10] : b",
@@ -839,12 +911,16 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display intervals with legend and without annotations" in {
+        val theme = themeDefault.copy(legend = true, annotations = false)
+
+        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
 
         val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        val actual = Diagram.render(diagram, defaultTheme.copy(legend = true, annotations = false))
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [***************]                      | [1,5]",
           "                  [******************]   | [5,10]",
@@ -856,12 +932,16 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display intervals without legend and with annotations" in {
+        val theme = themeDefault.copy(legend = false, annotations = true)
+
+        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
 
         val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        val actual = Diagram.render(diagram, defaultTheme.copy(legend = false, annotations = true))
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [***************]                      | a",
           "                  [******************]   | b",
@@ -873,12 +953,16 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display intervals without legend and without annotations" in {
+        val theme = themeDefault.copy(legend = false, annotations = false)
+
+        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
 
         val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        val actual = Diagram.render(diagram, defaultTheme.copy(legend = false, annotations = false))
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [***************]                     ",
           "                  [******************]  ",
@@ -890,12 +974,16 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display intervals with OffsetDateTime" in {
+        val theme = themeNoLegend.copy(label = AsciiTheme.Label.Stacked)
+
+        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+
         given offsetDateTimeDomain: Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.DAYS)
         val a                                              = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
 
         val diagram = Diagram.make[OffsetDateTime](List(a))
 
-        val actual = Diagram.render(diagram, themeNoLegend.copy(label = Theme.Label.Stacked))
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [**********************************]   | a",
           "--+----------------------------------+-- |",
@@ -906,12 +994,16 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display intervals with Instant" in {
+        val theme = themeNoLegend.copy(label = AsciiTheme.Label.Stacked)
+
+        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+
         given instantDomain: Domain[Instant] = Domain.makeInstant(ChronoUnit.DAYS)
         val a                                = Interval.closed(Instant.parse("2020-07-02T12:34:00Z"), Instant.parse("2021-07-02T12:34:00Z"))
 
         val diagram = Diagram.make[Instant](List(a))
 
-        val actual = Diagram.render(diagram, themeNoLegend.copy(label = Theme.Label.Stacked))
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [**********************************]   | a",
           "--+----------------------------------+-- |",
@@ -923,6 +1015,10 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display several timelines" in {
+        val theme = themeDefault.copy(label = AsciiTheme.Label.Stacked)
+
+        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+
         given Domain[LocalDate] = Domain.makeLocalDate(ChronoUnit.DAYS)
 
         val a = Interval.leftClosed(LocalDate.parse("2023-01-01"))
@@ -932,9 +1028,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make[LocalDate](List(a, b, c, d))
 
-        val stackedLabelTheme = defaultTheme.copy(label = Theme.Label.Stacked)
-
-        val actual = Diagram.render(diagram, stackedLabelTheme)
+        val actual = Diagram.render(diagram)
         val expected = List(
           "  [************************************) | [2023-01-01,+∞)         : a",
           "      [*********************]            | [2023-01-03,2023-01-15] : b",
@@ -951,6 +1045,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
     "operations" should {
       "display a.intersection(b)" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 7)
 
@@ -958,7 +1054,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
 
         val expected = List(
           "                  [******************]   | [5,10] : a",
@@ -972,6 +1068,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.span(b)" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 7)
 
@@ -979,7 +1077,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
 
         val expected = List(
           "                  [******************]   | [5,10] : a",
@@ -993,6 +1091,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.span(b) of two disjoint intervals" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(1, 5)
         val b = Interval.closed(7, 10)
 
@@ -1000,7 +1100,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
 
         val expected = List(
           "  [***************]                      | [1,5]  : a",
@@ -1014,6 +1114,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.union(b)" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(1, 5)
         val b = Interval.closed(6, 10)
 
@@ -1021,7 +1123,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
 
         val expected = List(
           "  [***************]                      | [1,5]  : a",
@@ -1035,6 +1137,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.union(b) of two disjoint intervals" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(1, 4)
         val b = Interval.closed(6, 10)
 
@@ -1042,7 +1146,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
 
         val expected = List(
           "  [***********]                          | [1,4]  : a",
@@ -1056,6 +1160,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.gap(b) of two intersecting intervals" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(5, 10)
         val b = Interval.closed(4, 15)
 
@@ -1063,7 +1169,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
 
         val expected = List(
           "     [***************]                   | [5,10] : a",
@@ -1077,6 +1183,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.gap(b) of two disjoint intervals" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(5, 10)
         val b = Interval.closed(15, 20)
 
@@ -1084,7 +1192,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
 
         val expected = List(
           "  [***********]                          | [5,10]  : a",
@@ -1098,6 +1206,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.minus(b) if a.overlaps(b)" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(1, 10)
         val b = Interval.closed(5, 15)
 
@@ -1105,7 +1215,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
 
         val expected = List(
           "  [**********************]               | [1,10] : a",
@@ -1119,6 +1229,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.minus(b) if a.isOverlappedBy(b)" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(5, 15)
         val b = Interval.closed(1, 10)
 
@@ -1126,7 +1238,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
 
         val expected = List(
           "            [************************]   | [5,15]  : a",
@@ -1140,6 +1252,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display Interval.minus(a, b) if a.contains(b)" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(1, 15)
         val b = Interval.closed(5, 10)
 
@@ -1147,7 +1261,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b) ++ cs, infView, canvas, List("a", "b", "c1", "c2"))
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
 
         val expected = List(
           "  [**********************************]   | [1,15]  : a",
@@ -1162,6 +1276,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display complement" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(0, 10)  // [0, 10]
         val b = Interval.closed(5, 20)  // [5, 20]
         val c = Interval.closed(25, 30) // [25, 30]
@@ -1196,6 +1312,8 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display short intervals" in {
+        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+
         val a = Interval.closed(0, 10)
         val b = Interval.closed(3, 50)
         val c = Interval.closed(20, 30)
@@ -1212,7 +1330,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           List("a", "b", "c", "d", "e", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"),
         )
 
-        val actual = Diagram.render(diagram, defaultTheme)
+        val actual = Diagram.render(diagram)
 
         val expected = List(
           "  [***]                                  | [0,10]  : a",

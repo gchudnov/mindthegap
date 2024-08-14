@@ -2,7 +2,6 @@ package com.github.gchudnov.mtg.diagram
 
 import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Diagram.Canvas
-import com.github.gchudnov.mtg.diagram.Diagram.Theme
 import com.github.gchudnov.mtg.diagram.Diagram.Span
 import com.github.gchudnov.mtg.diagram.Diagram.Tick
 import com.github.gchudnov.mtg.diagram.Diagram.Label
@@ -22,10 +21,6 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
   private val canvas: Canvas      = Canvas.make(40, 2)
   private val infView: View[Int]  = View.all[Int]
-  private val defaultTheme: Theme = Theme.default
-
-  private val themeNoLegend: Theme              = defaultTheme.copy(legend = false)
-  private val themeNoLegendNoAnnotations: Theme = defaultTheme.copy(legend = false, annotations = false)
 
   "Diagram" when {
     "make" should {

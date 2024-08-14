@@ -1,11 +1,11 @@
-package com.github.gchudnov.mtg.diagram
+package com.github.gchudnov.mtg
 
 /**
- * Theme
+ * AsciiTheme
  *
  * Used to customize the look of the diagram.
  */
-final case class Theme(
+final case class AsciiTheme(
   space: Char,
   fill: Char,
   leftOpen: Char,
@@ -18,7 +18,7 @@ final case class Theme(
   comment: Char,
   legend: Boolean,
   annotations: Boolean,
-  label: Theme.Label,
+  label: AsciiTheme.Label,
 ):
   def leftBound(isInclude: Boolean): Char =
     if isInclude then leftClosed else leftOpen
@@ -26,14 +26,14 @@ final case class Theme(
   def rightBound(isInclude: Boolean): Char =
     if isInclude then rightClosed else rightOpen
 
-object Theme:
+object AsciiTheme:
   enum Label:
     case None      // draw labels as-is on one line
     case NoOverlap // draw sorted labels that are non-overlapping, some of the labels might be skipped
     case Stacked   // draw all labels, but stack them onto multiple lines
 
-  val default: Theme =
-    Theme(
+  val default: AsciiTheme =
+    AsciiTheme(
       space = ' ',
       fill = '*',
       leftOpen = '(',
