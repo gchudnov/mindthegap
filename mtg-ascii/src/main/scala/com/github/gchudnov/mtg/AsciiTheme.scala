@@ -18,7 +18,7 @@ final case class AsciiTheme(
   comment: Char,
   legend: Boolean,
   annotations: Boolean,
-  label: AsciiTheme.Label,
+  labelPosition: AsciiLabelPosition,
 ):
   def leftBound(isInclude: Boolean): Char =
     if isInclude then leftClosed else leftOpen
@@ -27,10 +27,6 @@ final case class AsciiTheme(
     if isInclude then rightClosed else rightOpen
 
 object AsciiTheme:
-  enum Label:
-    case None      // draw labels as-is on one line
-    case NoOverlap // draw sorted labels that are non-overlapping, some of the labels might be skipped
-    case Stacked   // draw all labels, but stack them onto multiple lines
 
   val default: AsciiTheme =
     AsciiTheme(
@@ -46,5 +42,5 @@ object AsciiTheme:
       comment = ':',
       legend = true,
       annotations = true,
-      label = Label.NoOverlap,
+      labelPosition = AsciiLabelPosition.NoOverlap,
     )

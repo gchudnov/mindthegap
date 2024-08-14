@@ -28,7 +28,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
     "renderer" should {
 
       "Theme.Label.None" should {
-        val noneLabelTheme = themeDefault.copy(label = AsciiTheme.Label.None)
+        val noneLabelTheme = themeDefault.copy(labelPosition = AsciiLabelPosition.None)
 
         "draw an empty collection of labels" in {
           val ls = List.empty[Label]
@@ -76,7 +76,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "Theme.Label.NoOverlap" should {
-        val noOverlapLabelTheme = themeDefault.copy(label = AsciiTheme.Label.NoOverlap)
+        val noOverlapLabelTheme = themeDefault.copy(labelPosition = AsciiLabelPosition.NoOverlap)
 
         "draw an empty collection of labels" in {
           val ls = List.empty[Label]
@@ -124,7 +124,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "Theme.Label.Stacked" should {
-        val stackedLabelTheme = themeDefault.copy(label = AsciiTheme.Label.Stacked)
+        val stackedLabelTheme = themeDefault.copy(labelPosition = AsciiLabelPosition.Stacked)
 
         "draw an empty collection of labels" in {
           val ls = List.empty[Label]
@@ -830,7 +830,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display with custom theme [doc]" in {
-        val theme = AsciiTheme.default.copy(label = AsciiTheme.Label.Stacked)
+        val theme = AsciiTheme.default.copy(labelPosition = AsciiLabelPosition.Stacked)
 
         given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
@@ -857,7 +857,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display overlapping intervals with overlapping labels (Theme.Label.None)" in {
-        val theme = themeNoLegend.copy(label = AsciiTheme.Label.None)
+        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.None)
 
         given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
@@ -888,7 +888,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display overlapping intervals with overlapping labels (Theme.Label.NoOverlap)" in {
-        val theme = themeNoLegend.copy(label = AsciiTheme.Label.NoOverlap)
+        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.NoOverlap)
 
         given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
@@ -919,7 +919,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display overlapping intervals with overlapping labels (Theme.Label.Stacked)" in {
-        val theme = themeNoLegend.copy(label = AsciiTheme.Label.Stacked)
+        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.Stacked)
 
         given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
@@ -1043,7 +1043,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display intervals with OffsetDateTime" in {
-        val theme = themeNoLegend.copy(label = AsciiTheme.Label.Stacked)
+        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.Stacked)
 
         given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
@@ -1065,7 +1065,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display intervals with Instant" in {
-        val theme = themeNoLegend.copy(label = AsciiTheme.Label.Stacked)
+        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.Stacked)
 
         given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
@@ -1088,7 +1088,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
       }
 
       "display several timelines" in {
-        val theme = themeDefault.copy(label = AsciiTheme.Label.Stacked)
+        val theme = themeDefault.copy(labelPosition = AsciiLabelPosition.Stacked)
 
         given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 

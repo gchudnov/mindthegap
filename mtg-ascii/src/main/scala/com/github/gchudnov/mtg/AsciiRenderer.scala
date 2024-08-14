@@ -81,12 +81,12 @@ private[mtg] final class AsciiRenderer(theme: AsciiTheme) extends Renderer:
     List(view.mkString)
 
   private[mtg] def drawLabels(ls: List[Label], width: Int): List[String] =
-    theme.label match
-      case AsciiTheme.Label.None =>
+    theme.labelPosition match
+      case AsciiLabelPosition.None =>
         drawLabelsNone(ls, width)
-      case AsciiTheme.Label.NoOverlap =>
+      case AsciiLabelPosition.NoOverlap =>
         drawLabelsNoOverlap(ls, width)
-      case AsciiTheme.Label.Stacked =>
+      case AsciiLabelPosition.Stacked =>
         drawLabelsStacked(ls, width)
 
   private def drawLabelsNone(ls: List[Label], width: Int): List[String] =
