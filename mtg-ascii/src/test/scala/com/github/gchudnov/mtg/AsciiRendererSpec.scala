@@ -13,16 +13,14 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.time.LocalDate
 
-
-
 final class DiagramSpec extends AnyWordSpec with Matchers:
 
   private val canvas: Canvas = Canvas.make(40, 2)
 
-  private val infView: View[Int]  = View.all[Int]
+  private val infView: View[Int] = View.all[Int]
 
-  private val themeDefault: AsciiTheme  = AsciiTheme.default
-  private val themeNoLegend: AsciiTheme = themeDefault.copy(legend = false)
+  private val themeDefault: AsciiTheme               = AsciiTheme.default
+  private val themeNoLegend: AsciiTheme              = themeDefault.copy(legend = false)
   private val themeNoLegendNoAnnotations: AsciiTheme = themeDefault.copy(legend = false, annotations = false)
 
   "AsciiRenderer" when {
@@ -268,7 +266,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List.empty[Interval[Int]], infView, canvas)
 
-        val actual   = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual   = renderer.result
         val expected = List.empty[String]
 
         actual shouldBe expected
@@ -280,7 +280,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val a       = Interval.empty[Int]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "                                        ",
           "----------------------------------------",
@@ -296,7 +298,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val a       = Interval.empty[Int]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "                                         | a",
           "---------------------------------------- |",
@@ -313,7 +317,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val as      = List(a)
         val diagram = Diagram.make(as, infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "                                        ",
           "----------------------------------------",
@@ -329,7 +335,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val a       = Interval.empty[Int]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "                                         | ∅ : a",
           "---------------------------------------- |",
@@ -345,7 +353,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val a       = Interval.point[Int](5) // [5]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "                    *                    | a",
           "--------------------+------------------- |",
@@ -362,7 +372,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val b       = Interval.point[Int](10) // [10]
         val diagram = Diagram.make(List(a, b), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  *                                      | a",
           "                                     *   | b",
@@ -379,7 +391,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val a       = Interval.closed[Int](5, 10)
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [**********************************]   | a",
           "--+----------------------------------+-- |",
@@ -396,7 +410,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val view    = View.make(Some(0), Some(20))
         val diagram = Diagram.make(List(a), view, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "           [********]                    | a",
           "--+--------+--------+----------------+-- |",
@@ -413,7 +429,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val view    = View.make(Some(0), Some(7))
         val diagram = Diagram.make(List(a), view, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "                           [************ | a",
           "--+------------------------+---------+-- |",
@@ -430,7 +448,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val view    = View.make(Some(7), Some(15))
         val diagram = Diagram.make(List(a), view, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "***************]                         | a",
           "--+------------+---------------------+-- |",
@@ -447,7 +467,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val view    = View.make(Some(7), Some(8))
         val diagram = Diagram.make(List(a), view, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "**************************************** | a",
           "--+----------------------------------+-- |",
@@ -463,7 +485,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val a       = Interval.closed[Int](-5, 10)
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [**********************************]   | a",
           "--+----------------------------------+-- |",
@@ -479,7 +503,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val a       = Interval.unbounded[Int]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "(**************************************) | a",
           "+--------------------------------------+ |",
@@ -495,7 +521,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val a       = Interval.leftOpen(5) // (5, +∞)
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "                    (******************) | a",
           "--------------------+------------------+ |",
@@ -511,7 +539,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val a       = Interval.leftClosed(5) // [5, +∞)
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "                    [******************) | a",
           "--------------------+------------------+ |",
@@ -527,7 +557,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val a       = Interval.rightOpen(5) // (-∞, 5)
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "(*******************)                    | a",
           "+-------------------+------------------- |",
@@ -543,7 +575,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val a       = Interval.rightClosed(5) // (-∞, 5]
         val diagram = Diagram.make(List(a), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "(*******************]                    | a",
           "+-------------------+------------------- |",
@@ -561,7 +595,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [************************************) | a",
           "(************************************]   | b",
@@ -580,7 +616,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "                                     [*) | a",
           "(*]                                      | b",
@@ -601,7 +639,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [*********]                            | a",
           "            [************]               | b",
@@ -624,7 +664,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [*********]                            | [1,5]   : a",
           "            [************]               | [5,10]  : b",
@@ -647,7 +689,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [************************************) | [1,+∞) : a",
           "              [************************) | [2,+∞) : b",
@@ -670,7 +714,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "(*]                                      | (-∞,1] : a",
           "(*************]                          | (-∞,2] : b",
@@ -695,7 +741,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [***************]                      | [1,5]  : a",
           "      [**************]                   | [2,6]  : b",
@@ -719,7 +767,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [*******]                              | [3,7]   : a",
           "                [**********]             | [10,15] : b",
@@ -741,7 +791,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val view    = View.make(Some(8), Some(17))
         val diagram = Diagram.make(List(a, b, c), view)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "                                         | [3,7]   : a",
           "          [******************]           | [10,15] : b",
@@ -763,7 +815,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val canvas  = Canvas.make(20)
         val diagram = Diagram.make(List(a, b, c), canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [***]              | [3,7]   : a",
           "        [****]       | [10,15] : b",
@@ -787,8 +841,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val canvas  = Canvas.make(20)
         val diagram = Diagram.make(List(a, b, c), canvas)
 
+        Diagram.render(diagram)
 
-        val actual = Diagram.render(diagram)
+        val actual = renderer.result
         val expected = List(
           "  [***]              | [3,7]   : a",
           "        [****]       | [10,15] : b",
@@ -815,7 +870,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [***************]                      | a",
           "    [****************]                   | b",
@@ -844,7 +901,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [***************]                      | a",
           "    [****************]                   | b",
@@ -873,7 +932,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [***************]                      | a",
           "    [****************]                   | b",
@@ -899,7 +960,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [***************]                      | [1,5]  : a",
           "                  [******************]   | [5,10] : b",
@@ -920,7 +983,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [***************]                      | [1,5]",
           "                  [******************]   | [5,10]",
@@ -941,7 +1006,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [***************]                      | a",
           "                  [******************]   | b",
@@ -962,7 +1029,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [***************]                     ",
           "                  [******************]  ",
@@ -983,7 +1052,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make[OffsetDateTime](List(a))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [**********************************]   | a",
           "--+----------------------------------+-- |",
@@ -1003,7 +1074,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make[Instant](List(a))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [**********************************]   | a",
           "--+----------------------------------+-- |",
@@ -1028,7 +1101,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make[LocalDate](List(a, b, c, d))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
         val expected = List(
           "  [************************************) | [2023-01-01,+∞)         : a",
           "      [*********************]            | [2023-01-03,2023-01-15] : b",
@@ -1054,7 +1129,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
 
         val expected = List(
           "                  [******************]   | [5,10] : a",
@@ -1077,7 +1154,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
 
         val expected = List(
           "                  [******************]   | [5,10] : a",
@@ -1100,7 +1179,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
 
         val expected = List(
           "  [***************]                      | [1,5]  : a",
@@ -1123,7 +1204,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
 
         val expected = List(
           "  [***************]                      | [1,5]  : a",
@@ -1146,7 +1229,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
 
         val expected = List(
           "  [***********]                          | [1,4]  : a",
@@ -1169,7 +1254,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
 
         val expected = List(
           "     [***************]                   | [5,10] : a",
@@ -1192,7 +1279,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
 
         val expected = List(
           "  [***********]                          | [5,10]  : a",
@@ -1215,7 +1304,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
 
         val expected = List(
           "  [**********************]               | [1,10] : a",
@@ -1238,7 +1329,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b, c))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
 
         val expected = List(
           "            [************************]   | [5,15]  : a",
@@ -1261,7 +1354,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram.make(List(a, b) ++ cs, infView, canvas, List("a", "b", "c1", "c2"))
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
 
         val expected = List(
           "  [**********************************]   | [1,15]  : a",
@@ -1306,7 +1401,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
         val view: View[Int] = View.all[Int]
         val diagram         = Diagram.make(List(a, b, c, d, e0, e1, e2, e3), view, canvas)
 
-        val diag = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val diag = renderer.result
 
         diag.isEmpty shouldBe (false)
       }
@@ -1330,7 +1427,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           List("a", "b", "c", "d", "e", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"),
         )
 
-        val actual = Diagram.render(diagram)
+        Diagram.render(diagram)
+
+        val actual = renderer.result
 
         val expected = List(
           "  [***]                                  | [0,10]  : a",

@@ -2,14 +2,27 @@ package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Span
-import com.github.gchudnov.mtg.diagram.{Diagram, Label, Tick}
+import com.github.gchudnov.mtg.diagram.{ Diagram, Label, Tick }
 import scala.collection.mutable.ListBuffer
 import scala.annotation.nowarn
 
 /**
  * ASCII Renderer
+ *
+ * Renders a diagram as ASCII text.
+ *
+ * @param theme
+ *   the theme to use
  */
 private[mtg] final class AsciiRenderer(theme: AsciiTheme) extends Renderer:
+
+  private val resultLines: ListBuffer[String] = ListBuffer.empty[String]
+
+  /**
+   * The result of the rendering.
+   */
+  def result: List[String] =
+    resultLines.toList
 
   override def render(d: Diagram): List[String] =
     val spans  = drawSpans(d.spans, d.width)
@@ -52,7 +65,10 @@ private[mtg] final class AsciiRenderer(theme: AsciiTheme) extends Renderer:
         }
       else withLegend
 
-    annotated.filter(_.nonEmpty)
+    resultLines.clear()
+    resultLines ++= annotated.filter(_.nonEmpty)
+    
+    result
 
   private[mtg] def drawSpans(spans: List[Span], width: Int): List[String] =
     val views: Array[Array[Char]] = Array.fill[Char](spans.size, width)(theme.space)
@@ -112,7 +128,7 @@ private[mtg] final class AsciiRenderer(theme: AsciiTheme) extends Renderer:
             val view = views(j)
             drawLabel(l, view)
             last(j) = q
-            (views, last),
+            (views, last)
       )
 
     res._1.map(_.mkString).toList
@@ -146,5 +162,5 @@ private[mtg] final class AsciiRenderer(theme: AsciiTheme) extends Renderer:
     else xs
 
 object AsciiRenderer:
-  def make(theme: AsciiTheme = AsciiTheme.default): AsciiRenderer = 
+  def make(theme: AsciiTheme = AsciiTheme.default): AsciiRenderer =
     new AsciiRenderer(theme)

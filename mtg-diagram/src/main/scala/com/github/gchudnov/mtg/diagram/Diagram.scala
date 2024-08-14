@@ -99,6 +99,8 @@ object Diagram:
   def make[T: Domain](intervals: List[Interval[T]], annotations: List[String]): Diagram =
     make(intervals, view = View.all[T], canvas = Canvas.default, annotations = annotations)
 
+  // TODO: change the render signature, it should return Unit as it is a side-effect of rendering, and List[String] is relevant only for AsciiRenderer
+
   /**
    * Render the Diagram
    */
