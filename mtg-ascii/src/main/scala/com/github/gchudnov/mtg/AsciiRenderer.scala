@@ -25,7 +25,7 @@ private[mtg] final class AsciiRenderer(theme: AsciiTheme) extends Renderer:
   def result: List[String] =
     resultLines.toList
 
-  override def render(d: Diagram): Unit =
+  override def render[T: Domain](d: Diagram[T]): Unit =
     val spans  = drawSpans(d.spans, d.width)
     val ticks  = drawTicks(d.ticks, d.width)
     val labels = drawLabels(d.labels, d.width)

@@ -9,7 +9,7 @@ import com.github.gchudnov.mtg.diagram.Renderer
  * Renders a diagram as a Mermaid diagram.
  */
 private[mtg] final class MermaidRenderer extends Renderer:
-  override def render(d: Diagram): Unit =
+  override def render[T: Domain](d: Diagram[T]): Unit =
     ???
 
 object MermaidRenderer:

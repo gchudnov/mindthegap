@@ -2,8 +2,8 @@ package com.github.gchudnov.mtg.diagram
 
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.internal.Value
-import com.github.gchudnov.mtg.diagram.internal.RangeTranslator
-import com.github.gchudnov.mtg.diagram.internal.InfiniteTranslator
+import com.github.gchudnov.mtg.internal.translator.RangeTranslator
+import com.github.gchudnov.mtg.internal.Canvas
 
 /**
  * Translator
@@ -14,7 +14,7 @@ trait Translator[T]:
 object Translator:
   def make[T: Domain](view: View[T], canvas: Canvas): Translator[T] =
     view match
-      case View.Range(_, _) =>
-        new RangeTranslator[T](view.asInstanceOf[View.Range[T]], canvas)
+      case View.Finite(_, _) =>
+        new RangeTranslator[T](view.asInstanceOf[View.Finite[T]], canvas)
       case View.Infinite =>
         new InfiniteTranslator[T](canvas)

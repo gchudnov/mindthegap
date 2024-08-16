@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.internal
 
 /**
   * Position of the labels in the diagram.

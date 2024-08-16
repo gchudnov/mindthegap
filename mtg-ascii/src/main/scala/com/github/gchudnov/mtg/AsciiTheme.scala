@@ -1,4 +1,5 @@
 package com.github.gchudnov.mtg
+import internal.AsciiLabelPosition
 
 /**
  * AsciiTheme

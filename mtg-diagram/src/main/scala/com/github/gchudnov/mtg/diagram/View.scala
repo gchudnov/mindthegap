@@ -5,11 +5,15 @@ import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.internal.Value
 import com.github.gchudnov.mtg.internal.Endpoint
 
+/**
+  * View that needs to be rendered
+  * Might be either finite or infinite.
+  */
 sealed trait View[+T]
 
 object View:
 
-  final case class Range[T: Domain](left: T, right: T) extends View[T]:
+  final case class Finite[T: Domain](left: T, right: T) extends View[T]:
     def size: Long =
       summon[Domain[T]].count(left, right)
 
@@ -60,6 +64,6 @@ object View:
 
     (tMin, tMax) match
       case (Some(min), Some(max)) =>
-        Range(min, max)
+        Finite(min, max)
       case _ =>
         Infinite

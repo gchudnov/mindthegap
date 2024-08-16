@@ -155,14 +155,14 @@ private[mtg] object AsciiDiagram:
    */
   private def makeEffectiveView[T: Domain](intervals: List[Interval[T]], view: View[T]): View[T] =
     view match
-      case v @ View.Range(_, _) =>
+      case v @ View.Finite(_, _) =>
         v
       case View.Infinite =>
         View.make(intervals, false)
 
   private def makeTicksLabels[T: Domain](view: View[T], canvas: Canvas, translator: Translator[T]): (List[Tick], List[Label]) =
     view match
-      case View.Range(x, y) =>
+      case View.Finite(x, y) =>
         val vi     = Interval.closed[T](x, y)
         val vs     = toSpan(translator, vi)
         val ticks  = toTicks(vs)
