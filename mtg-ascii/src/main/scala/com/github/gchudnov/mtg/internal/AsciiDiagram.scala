@@ -3,7 +3,6 @@ package com.github.gchudnov.mtg.internal
 
 import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Translator
-import com.github.gchudnov.mtg.diagram.Span
 import com.github.gchudnov.mtg.diagram.Tick
 
 import com.github.gchudnov.mtg.diagram.internal.DiagramMacro
@@ -15,17 +14,15 @@ import com.github.gchudnov.mtg.internal.Endpoint
  * ASCII Diagram
  */
 private[mtg] final case class AsciiDiagram(
+  now: Int,
   width: Int,
   height: Int,
-  spans: List[Diagram.Span],
+  spans: List[AsciiSpan],
   ticks: List[AsciiTick],
   labels: List[AsciiLabel],
   legends: List[AsciiLegend],
   annotations: List[AsciiAnnotation],
 )
-
-// TODO: add `now` sop that we can track the current time
-// TODO: add sub-diagrams, check mermaid for inspiration
 
 private[mtg] object AsciiDiagram:
 

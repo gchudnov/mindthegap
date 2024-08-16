@@ -2,9 +2,6 @@ package com.github.gchudnov.mtg.diagram
 
 import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Translator
-import com.github.gchudnov.mtg.diagram.Span
-import com.github.gchudnov.mtg.internal.Legend
-import com.github.gchudnov.mtg.internal.Annotation
 
 import com.github.gchudnov.mtg.diagram.internal.DiagramMacro
 import com.github.gchudnov.mtg.Domain
@@ -14,28 +11,16 @@ import com.github.gchudnov.mtg.internal.Endpoint
 /**
  * Diagram
  */
-final case class Diagram(
-  width: Int,
-  height: Int,
-  spans: List[Diagram.Span],
-  annotations: List[Diagram.Annotation],
+final case class Diagram[T](
+  name: String,
+  sections: List[Section[T]],
+  now: T,
 )
 
 // TODO: add `now` sop that we can track the current time
 // TODO: add sub-diagrams, check mermaid for inspiration
 
 object Diagram:
-
-  lazy val empty: Diagram =
-    Diagram(
-      width = 0,
-      height = 0,
-      spans = List.empty[Span],
-      ticks = List.empty[Tick],
-      labels = List.empty[Label],
-      legends = List.empty[Legend],
-      annotations = List.empty[Annotation],
-    )
 
   /**
    * Make a Diagram that can be rendered
