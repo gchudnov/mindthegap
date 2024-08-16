@@ -17,3 +17,8 @@ object MermaidRenderer:
     new MermaidRenderer()
 
 // https://mermaid.js.org/syntax/gantt.html
+
+/**
+TODO: add diagrams for mermaid -- start, check what we need generalize with ascii renderer
+      Canvas ???
+*/

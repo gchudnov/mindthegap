@@ -2,7 +2,8 @@ package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Span
-import com.github.gchudnov.mtg.diagram.{ Diagram, Label, Tick }
+import com.github.gchudnov.mtg.diagram.{ Diagram, Tick }
+import com.github.gchudnov.mtg.internal.Label
 import scala.collection.mutable.ListBuffer
 import scala.annotation.nowarn
 
