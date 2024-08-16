@@ -2,6 +2,7 @@ package com.github.gchudnov.mtg.internal.translator
 
 import com.github.gchudnov.mtg.internal.Value
 import com.github.gchudnov.mtg.diagram.Translator
+import com.github.gchudnov.mtg.internal.AsciiCanvas
 
 private[mtg] final class InfiniteTranslator[T](canvas: AsciiCanvas) extends Translator[T]:
 
