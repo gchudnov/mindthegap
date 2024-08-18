@@ -14,7 +14,7 @@ import scala.quoted.*
  */
 object DiagramMacro:
 
-  transparent inline def varNames(inline expr: Iterable[Any]): List[String] =
+  transparent inline def varNames(inline expr: IterableOnce[Any]): List[String] =
     ${ varNamesImpl('expr) }
 
   private def varNamesImpl(expr: Expr[Any])(using Quotes): Expr[List[String]] =
