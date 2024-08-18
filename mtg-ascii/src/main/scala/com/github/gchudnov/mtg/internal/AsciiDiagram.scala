@@ -12,9 +12,8 @@ import com.github.gchudnov.mtg.internal.Endpoint
  * ASCII Diagram
  */
 private[mtg] final case class AsciiDiagram(
-  now: Int,
+  now: Option[Int],
   width: Int,
-  height: Int,
   spans: List[AsciiSpan],
   ticks: List[AsciiTick],
   labels: List[AsciiLabel],
@@ -25,6 +24,8 @@ private[mtg] final case class AsciiDiagram(
 private[mtg] object AsciiDiagram:
 
   def from[T](inputDiagram: Diagram[T]): AsciiDiagram = 
+
+    // AsciiDiagram
     ???
 
   // /**

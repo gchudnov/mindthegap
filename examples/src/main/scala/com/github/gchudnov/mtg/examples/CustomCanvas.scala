@@ -5,7 +5,7 @@ import java.time.temporal.ChronoUnit
 import java.time.OffsetDateTime
 import com.github.gchudnov.mtg.diagram.Diagram
 // import com.github.gchudnov.mtg.internal.Canvas
-import com.github.gchudnov.mtg.diagram.View
+import com.github.gchudnov.mtg.diagram.Viewport
 
 /**
  * Custom Canvas

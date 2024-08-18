@@ -6,23 +6,26 @@ import com.github.gchudnov.mtg.internal.Value
 import com.github.gchudnov.mtg.internal.Endpoint
 
 /**
-  * View that needs to be rendered
+  * Viewport that needs to be rendered
+  * 
   * Might be either finite or infinite.
   */
-sealed trait View[+T]
+sealed trait Viewport[+T]
 
-object View:
+object Viewport:
 
-  final case class Finite[T: Domain](left: T, right: T) extends View[T]:
+  final case class Finite[T: Domain](left: T, right: T) extends Viewport[T]:
     def size: Long =
       summon[Domain[T]].count(left, right)
 
-  case object Infinite extends View[Nothing]
+  case object Infinite extends Viewport[Nothing]
 
-  def all[T: Domain]: View[T] =
+  // TODO: ^^^ convert to enum
+
+  def all[T: Domain]: Viewport[T] =
     make(Interval.unbounded[T])
 
-  def make[T: Domain](left: Option[T], right: Option[T]): View[T] =
+  def make[T: Domain](left: Option[T], right: Option[T]): Viewport[T] =
     (left, right) match
       case (Some(l), Some(r)) =>
         make(Interval.closed(l, r))
@@ -33,13 +36,13 @@ object View:
       case (None, None) =>
         make(Interval.unbounded[T])
 
-  def make[T: Domain](left: T, right: T): View[T] =
+  def make[T: Domain](left: T, right: T): Viewport[T] =
     make(Interval.closed(left, right))
 
-  def make[T: Domain](interval: Interval[T]): View[T] =
+  def make[T: Domain](interval: Interval[T]): Viewport[T] =
     make(intervals = List(interval), hasEmpty = false)
 
-  private[mtg] def make[T: Domain](intervals: List[Interval[T]], hasEmpty: Boolean): View[T] =
+  private[mtg] def make[T: Domain](intervals: List[Interval[T]], hasEmpty: Boolean): Viewport[T] =
     given ordV: Ordering[Value[T]] = summon[Domain[T]].ordValue
 
     val xs: List[Interval[T]] = if hasEmpty then intervals else intervals.filter(_.nonEmpty)

@@ -6,6 +6,10 @@ import com.github.gchudnov.mtg.diagram.{ Diagram }
 import scala.collection.mutable.ListBuffer
 import scala.annotation.nowarn
 
+// TODO: when rendering, there might be:
+// 1) `now` -- the current time
+// 2) `viewport` -- part of the diagram to visualize
+
 /**
  * ASCII Renderer
  *

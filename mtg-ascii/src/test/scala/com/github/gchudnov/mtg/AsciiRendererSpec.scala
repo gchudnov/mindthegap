@@ -1,7 +1,7 @@
 package com.github.gchudnov.mtg
 
 import com.github.gchudnov.mtg.diagram.Diagram
-import com.github.gchudnov.mtg.diagram.View
+import com.github.gchudnov.mtg.diagram.Viewport
 import com.github.gchudnov.mtg.AsciiRenderer
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -10,11 +10,15 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.time.LocalDate
 
-final class DiagramSpec extends AnyWordSpec with Matchers:
+// TODO: when rendering, there might be:
+// 1) `now` -- the current time
+// 2) `viewport` -- part of the diagram to visualize
+
+final class AsciiRendererSpec extends AnyWordSpec with Matchers:
 
   // private val canvas: Canvas = Canvas.make(40, 2)
 
-  private val infView: View[Int] = View.all[Int]
+  private val infView: Viewport[Int] = Viewport.all[Int]
 
   private val themeDefault: AsciiTheme               = AsciiTheme.default
   private val themeNoLegend: AsciiTheme              = themeDefault.copy(legend = false)

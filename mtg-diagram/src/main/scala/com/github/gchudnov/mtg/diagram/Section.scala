@@ -8,4 +8,5 @@ import com.github.gchudnov.mtg.Interval
 final case class Section[T](
   name: String,
   intervals: List[Interval[T]],
+  annotations: List[String],
 )
