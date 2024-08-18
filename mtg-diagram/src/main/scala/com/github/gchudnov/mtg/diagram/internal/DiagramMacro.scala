@@ -12,7 +12,7 @@ import scala.quoted.*
  *   println(other.show(using Printer.TreeStructure))
  * }}}
  */
-object DiagramMacro:
+private[mtg] object DiagramMacro:
 
   transparent inline def varNames(inline expr: IterableOnce[Any]): List[String] =
     ${ varNamesImpl('expr) }
