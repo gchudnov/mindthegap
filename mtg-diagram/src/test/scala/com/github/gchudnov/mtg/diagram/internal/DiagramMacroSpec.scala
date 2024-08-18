@@ -1,7 +1,7 @@
-package com.github.gchudnov.mtg.diagram
+package com.github.gchudnov.mtg.diagram.internal
 
-import com.github.gchudnov.mtg.diagram.internal.DiagramMacro
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.diagram.internal.DiagramMacro
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
