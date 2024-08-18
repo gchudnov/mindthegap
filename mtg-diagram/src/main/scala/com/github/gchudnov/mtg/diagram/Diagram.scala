@@ -22,7 +22,7 @@ final case class Diagram[T](
   */
 object Diagram:
 
-  def make[T: Domain](intervals: IterableOnce[Interval[T]], view: View[T], annotations: List[String]): Diagram[T] =
+  def make[T: Domain](intervals: IterableOnce[IterableOnce[Interval[T]]], view: View[T], annotations: IterableOnce[IterableOnce[Interval[String]]]): Diagram[T] =
     ???
 
   // /**

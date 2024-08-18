@@ -1,13 +1,6 @@
 package com.github.gchudnov.mtg.diagram
 
 import com.github.gchudnov.mtg.diagram.Renderer
-// import com.github.gchudnov.mtg.diagram.Diagram.Canvas
-// import com.github.gchudnov.mtg.diagram.Diagram.Span
-// import com.github.gchudnov.mtg.diagram.Diagram.Tick
-// import com.github.gchudnov.mtg.diagram.Diagram.Label
-// import com.github.gchudnov.mtg.diagram.Diagram.Legend
-// import com.github.gchudnov.mtg.diagram.Diagram.Annotation
-// import com.github.gchudnov.mtg.diagram.Diagram.View
 import java.time.OffsetDateTime
 import java.time.Instant
 import java.time.LocalDate
@@ -17,12 +10,12 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import com.github.gchudnov.mtg.Domain
 
-final class DiagramSpec extends AnyWordSpec with Matchers:
+final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
   // private val canvas: Canvas      = Canvas.make(40, 2)
   // private val infView: View[Int]  = View.all[Int]
 
-  "Diagram" when {
+  "AsciiDiagram" when {
     // "make" should {
     //   "diagram no intervals" in {
     //     val actual   = Diagram.make(List.empty[Interval[Int]], infView, canvas)

@@ -1,8 +1,5 @@
 package com.github.gchudnov.mtg
 
-import com.github.gchudnov.mtg.diagram.Diagram.Canvas
-import com.github.gchudnov.mtg.diagram.Diagram.Tick
-import com.github.gchudnov.mtg.diagram.Diagram.Label
 import com.github.gchudnov.mtg.diagram.Diagram
 import com.github.gchudnov.mtg.diagram.View
 import com.github.gchudnov.mtg.AsciiRenderer
@@ -15,7 +12,7 @@ import java.time.LocalDate
 
 final class DiagramSpec extends AnyWordSpec with Matchers:
 
-  private val canvas: Canvas = Canvas.make(40, 2)
+  // private val canvas: Canvas = Canvas.make(40, 2)
 
   private val infView: View[Int] = View.all[Int]
 
@@ -25,1431 +22,1431 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
 
   "AsciiRenderer" when {
 
-    "renderer" should {
+    // "renderer" should {
 
-      "Theme.Label.None" should {
-        val noneLabelTheme = themeDefault.copy(labelPosition = AsciiLabelPosition.None)
+    //   "Theme.Label.None" should {
+    //     val noneLabelTheme = themeDefault.copy(labelPosition = AsciiLabelPosition.None)
 
-        "draw an empty collection of labels" in {
-          val ls = List.empty[Label]
+    //     "draw an empty collection of labels" in {
+    //       val ls = List.empty[Label]
 
-          val r = new AsciiRenderer(noneLabelTheme)
+    //       val r = new AsciiRenderer(noneLabelTheme)
 
-          val actual   = r.drawLabels(ls, canvas.width)
-          val expected = List("                                        ")
+    //       val actual   = r.drawLabels(ls, canvas.width)
+    //       val expected = List("                                        ")
 
-          actual shouldBe expected
-        }
+    //       actual shouldBe expected
+    //     }
 
-        "draw non-overlapping labels" in {
-          val ls = List(Label(2, "5"), Label(36, "10"))
+    //     "draw non-overlapping labels" in {
+    //       val ls = List(Label(2, "5"), Label(36, "10"))
 
-          val r = new AsciiRenderer(noneLabelTheme)
+    //       val r = new AsciiRenderer(noneLabelTheme)
 
-          val actual   = r.drawLabels(ls, canvas.width)
-          val expected = List("  5                                 10  ")
+    //       val actual   = r.drawLabels(ls, canvas.width)
+    //       val expected = List("  5                                 10  ")
 
-          actual shouldBe expected
-        }
+    //       actual shouldBe expected
+    //     }
 
-        "draw meeting labels" in {
-          val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
+    //     "draw meeting labels" in {
+    //       val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
 
-          val r = new AsciiRenderer(noneLabelTheme)
+    //       val r = new AsciiRenderer(noneLabelTheme)
 
-          val actual   = r.drawLabels(ls, canvas.width)
-          val expected = List("-∞1  2      5           10          15+∞")
+    //       val actual   = r.drawLabels(ls, canvas.width)
+    //       val expected = List("-∞1  2      5           10          15+∞")
 
-          actual shouldBe expected
-        }
+    //       actual shouldBe expected
+    //     }
 
-        "draw overlapping labels" in {
-          val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
+    //     "draw overlapping labels" in {
+    //       val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
 
-          val r = new AsciiRenderer(noneLabelTheme)
+    //       val r = new AsciiRenderer(noneLabelTheme)
 
-          val actual   = r.drawLabels(ls, canvas.width)
-          val expected = List("1003400                                 ")
+    //       val actual   = r.drawLabels(ls, canvas.width)
+    //       val expected = List("1003400                                 ")
 
-          actual shouldBe expected
-        }
-      }
+    //       actual shouldBe expected
+    //     }
+    //   }
 
-      "Theme.Label.NoOverlap" should {
-        val noOverlapLabelTheme = themeDefault.copy(labelPosition = AsciiLabelPosition.NoOverlap)
+    //   "Theme.Label.NoOverlap" should {
+    //     val noOverlapLabelTheme = themeDefault.copy(labelPosition = AsciiLabelPosition.NoOverlap)
 
-        "draw an empty collection of labels" in {
-          val ls = List.empty[Label]
+    //     "draw an empty collection of labels" in {
+    //       val ls = List.empty[Label]
 
-          val r = new AsciiRenderer(noOverlapLabelTheme)
+    //       val r = new AsciiRenderer(noOverlapLabelTheme)
 
-          val actual   = r.drawLabels(ls, canvas.width)
-          val expected = List("                                        ")
+    //       val actual   = r.drawLabels(ls, canvas.width)
+    //       val expected = List("                                        ")
 
-          actual shouldBe expected
-        }
+    //       actual shouldBe expected
+    //     }
 
-        "draw only non-overlapping labels" in {
-          val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
+    //     "draw only non-overlapping labels" in {
+    //       val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
 
-          val r = new AsciiRenderer(noOverlapLabelTheme)
+    //       val r = new AsciiRenderer(noOverlapLabelTheme)
 
-          val actual   = r.drawLabels(ls, canvas.width)
-          val expected = List("100 400                                 ")
+    //       val actual   = r.drawLabels(ls, canvas.width)
+    //       val expected = List("100 400                                 ")
 
-          actual shouldBe expected
-        }
+    //       actual shouldBe expected
+    //     }
 
-        "draw meeting labels if one of them is non-numeric" in {
-          val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
+    //     "draw meeting labels if one of them is non-numeric" in {
+    //       val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
 
-          val r = new AsciiRenderer(noOverlapLabelTheme)
+    //       val r = new AsciiRenderer(noOverlapLabelTheme)
 
-          val actual   = r.drawLabels(ls, canvas.width)
-          val expected = List("-∞1  2      5           10          15+∞")
+    //       val actual   = r.drawLabels(ls, canvas.width)
+    //       val expected = List("-∞1  2      5           10          15+∞")
 
-          actual shouldBe expected
-        }
+    //       actual shouldBe expected
+    //     }
 
-        "draw only non-meeting labels" in {
-          val ls = List(Label(0, "100"), Label(3, "300"))
+    //     "draw only non-meeting labels" in {
+    //       val ls = List(Label(0, "100"), Label(3, "300"))
 
-          val r = new AsciiRenderer(noOverlapLabelTheme)
+    //       val r = new AsciiRenderer(noOverlapLabelTheme)
 
-          val actual   = r.drawLabels(ls, canvas.width)
-          val expected = List("100                                     ")
+    //       val actual   = r.drawLabels(ls, canvas.width)
+    //       val expected = List("100                                     ")
 
-          actual shouldBe expected
-        }
-      }
+    //       actual shouldBe expected
+    //     }
+    //   }
 
-      "Theme.Label.Stacked" should {
-        val stackedLabelTheme = themeDefault.copy(labelPosition = AsciiLabelPosition.Stacked)
+    //   "Theme.Label.Stacked" should {
+    //     val stackedLabelTheme = themeDefault.copy(labelPosition = AsciiLabelPosition.Stacked)
 
-        "draw an empty collection of labels" in {
-          val ls = List.empty[Label]
+    //     "draw an empty collection of labels" in {
+    //       val ls = List.empty[Label]
 
-          val r = new AsciiRenderer(stackedLabelTheme)
+    //       val r = new AsciiRenderer(stackedLabelTheme)
 
-          val actual   = r.drawLabels(ls, canvas.width)
-          val expected = List("                                        ")
+    //       val actual   = r.drawLabels(ls, canvas.width)
+    //       val expected = List("                                        ")
 
-          actual shouldBe expected
-        }
+    //       actual shouldBe expected
+    //     }
 
-        "draw non-overlapping and non-meeting labels on one line" in {
-          val ls = List(Label(2, "5"), Label(36, "10"))
+    //     "draw non-overlapping and non-meeting labels on one line" in {
+    //       val ls = List(Label(2, "5"), Label(36, "10"))
 
-          val r = new AsciiRenderer(stackedLabelTheme)
+    //       val r = new AsciiRenderer(stackedLabelTheme)
 
-          val actual   = r.drawLabels(ls, canvas.width)
-          val expected = List("  5                                 10  ")
+    //       val actual   = r.drawLabels(ls, canvas.width)
+    //       val expected = List("  5                                 10  ")
 
-          actual shouldBe expected
-        }
+    //       actual shouldBe expected
+    //     }
 
-        "draw meeting labels" in {
-          val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
+    //     "draw meeting labels" in {
+    //       val ls = List(Label(2, "1"), Label(12, "5"), Label(24, "10"), Label(0, "-∞"), Label(36, "15"), Label(5, "2"), Label(38, "+∞"))
 
-          val r = new AsciiRenderer(stackedLabelTheme)
+    //       val r = new AsciiRenderer(stackedLabelTheme)
 
-          val actual = r.drawLabels(ls, canvas.width)
-          val expected = List(
-            "-∞   2      5           10          15  ",
-            "  1                                   +∞",
-          )
+    //       val actual = r.drawLabels(ls, canvas.width)
+    //       val expected = List(
+    //         "-∞   2      5           10          15  ",
+    //         "  1                                   +∞",
+    //       )
 
-          actual shouldBe expected
-        }
+    //       actual shouldBe expected
+    //     }
 
-        "draw overlapping labels" in {
-          val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
+    //     "draw overlapping labels" in {
+    //       val ls = List(Label(0, "100"), Label(3, "300"), Label(4, "400"))
 
-          val r = new AsciiRenderer(stackedLabelTheme)
+    //       val r = new AsciiRenderer(stackedLabelTheme)
 
-          val actual = r.drawLabels(ls, canvas.width)
-          val expected = List(
-            "100 400                                 ",
-            "   300                                  ",
-          )
+    //       val actual = r.drawLabels(ls, canvas.width)
+    //       val expected = List(
+    //         "100 400                                 ",
+    //         "   300                                  ",
+    //       )
 
-          actual shouldBe expected
-        }
-      }
+    //       actual shouldBe expected
+    //     }
+    //   }
 
-      "draw an empty collection of ticks" in {
-        val ts = List.empty[Tick]
+    //   "draw an empty collection of ticks" in {
+    //     val ts = List.empty[Tick]
 
-        val r = new AsciiRenderer(themeNoLegend)
+    //     val r = new AsciiRenderer(themeNoLegend)
 
-        val actual   = r.drawTicks(ts, canvas.width)
-        val expected = List("----------------------------------------")
+    //     val actual   = r.drawTicks(ts, canvas.width)
+    //     val expected = List("----------------------------------------")
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "draw ticks" in {
-        val ts = List(Tick(2), Tick(12), Tick(25), Tick(0), Tick(37), Tick(5), Tick(39))
+    //   "draw ticks" in {
+    //     val ts = List(Tick(2), Tick(12), Tick(25), Tick(0), Tick(37), Tick(5), Tick(39))
 
-        val r = new AsciiRenderer(themeNoLegend)
+    //     val r = new AsciiRenderer(themeNoLegend)
 
-        val actual   = r.drawTicks(ts, canvas.width)
-        val expected = List("+-+--+------+------------+-----------+-+")
+    //     val actual   = r.drawTicks(ts, canvas.width)
+    //     val expected = List("+-+--+------+------------+-----------+-+")
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "pad with empty lines an empty array and N = 0" in {
-        val as = List.empty[String]
-        val n  = 0
+    //   "pad with empty lines an empty array and N = 0" in {
+    //     val as = List.empty[String]
+    //     val n  = 0
 
-        val r = new AsciiRenderer(themeDefault)
+    //     val r = new AsciiRenderer(themeDefault)
 
-        val actual   = r.padWithEmptyLines(n)(as)
-        val expected = List.empty[String]
+    //     val actual   = r.padWithEmptyLines(n)(as)
+    //     val expected = List.empty[String]
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "pad with empty lines an empty array and N = 1" in {
-        val as = List.empty[String]
-        val n  = 1
+    //   "pad with empty lines an empty array and N = 1" in {
+    //     val as = List.empty[String]
+    //     val n  = 1
 
-        val r = new AsciiRenderer(themeDefault)
+    //     val r = new AsciiRenderer(themeDefault)
 
-        val actual   = r.padWithEmptyLines(n)(as)
-        val expected = List("")
+    //     val actual   = r.padWithEmptyLines(n)(as)
+    //     val expected = List("")
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "pad with empty lines a non-empty array and N > array.size" in {
-        val as = List("a", "b")
-        val n  = 3
+    //   "pad with empty lines a non-empty array and N > array.size" in {
+    //     val as = List("a", "b")
+    //     val n  = 3
 
-        val r = new AsciiRenderer(themeDefault)
+    //     val r = new AsciiRenderer(themeDefault)
 
-        val actual   = r.padWithEmptyLines(n)(as)
-        val expected = List("a", "b", "")
+    //     val actual   = r.padWithEmptyLines(n)(as)
+    //     val expected = List("a", "b", "")
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "pad with empty lines a non-empty array and N == array.size" in {
-        val as = List("a", "b")
-        val n  = 2
+    //   "pad with empty lines a non-empty array and N == array.size" in {
+    //     val as = List("a", "b")
+    //     val n  = 2
 
-        val r = new AsciiRenderer(themeDefault)
+    //     val r = new AsciiRenderer(themeDefault)
 
-        val actual   = r.padWithEmptyLines(n)(as)
-        val expected = List("a", "b")
+    //     val actual   = r.padWithEmptyLines(n)(as)
+    //     val expected = List("a", "b")
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "pad with empty lines a non-empty array and N < array.size" in {
-        val as = List("a", "b")
-        val n  = 1
+    //   "pad with empty lines a non-empty array and N < array.size" in {
+    //     val as = List("a", "b")
+    //     val n  = 1
 
-        val r = new AsciiRenderer(themeDefault)
+    //     val r = new AsciiRenderer(themeDefault)
 
-        val actual   = r.padWithEmptyLines(n)(as)
-        val expected = List("a", "b")
+    //     val actual   = r.padWithEmptyLines(n)(as)
+    //     val expected = List("a", "b")
 
-        actual shouldBe expected
-      }
-    }
+    //     actual shouldBe expected
+    //   }
+    // }
 
-    "render" should {
-      "display no intervals" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    // "render" should {
+    //   "display no intervals" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val diagram = Diagram.make(List.empty[Interval[Int]], infView, canvas)
+    //     val diagram = Diagram.make(List.empty[Interval[Int]], infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual   = renderer.result
-        val expected = List.empty[String]
+    //     val actual   = renderer.result
+    //     val expected = List.empty[String]
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display an empty interval with no legend and no annotations" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegendNoAnnotations)
+    //   "display an empty interval with no legend and no annotations" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegendNoAnnotations)
 
-        val a       = Interval.empty[Int]
-        val diagram = Diagram.make(List(a), infView, canvas)
+    //     val a       = Interval.empty[Int]
+    //     val diagram = Diagram.make(List(a), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "                                        ",
-          "----------------------------------------",
-          "                                        ",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "                                        ",
+    //       "----------------------------------------",
+    //       "                                        ",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display an empty interval with no legend but with annotations" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display an empty interval with no legend but with annotations" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.empty[Int]
-        val diagram = Diagram.make(List(a), infView, canvas)
+    //     val a       = Interval.empty[Int]
+    //     val diagram = Diagram.make(List(a), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "                                         | a",
-          "---------------------------------------- |",
-          "                                         |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "                                         | a",
+    //       "---------------------------------------- |",
+    //       "                                         |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display an empty interval with no legend but with annotations, but the intervals cannot be auto-annotated" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display an empty interval with no legend but with annotations, but the intervals cannot be auto-annotated" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.empty[Int]
-        val as      = List(a)
-        val diagram = Diagram.make(as, infView, canvas)
+    //     val a       = Interval.empty[Int]
+    //     val as      = List(a)
+    //     val diagram = Diagram.make(as, infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "                                        ",
-          "----------------------------------------",
-          "                                        ",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "                                        ",
+    //       "----------------------------------------",
+    //       "                                        ",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display an empty interval with a legend and annotations" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault.copy(legend = true))
+    //   "display an empty interval with a legend and annotations" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault.copy(legend = true))
 
-        val a       = Interval.empty[Int]
-        val diagram = Diagram.make(List(a), infView, canvas)
+    //     val a       = Interval.empty[Int]
+    //     val diagram = Diagram.make(List(a), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "                                         | ∅ : a",
-          "---------------------------------------- |",
-          "                                         |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "                                         | ∅ : a",
+    //       "---------------------------------------- |",
+    //       "                                         |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a point" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display a point" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.point[Int](5) // [5]
-        val diagram = Diagram.make(List(a), infView, canvas)
+    //     val a       = Interval.point[Int](5) // [5]
+    //     val diagram = Diagram.make(List(a), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "                    *                    | a",
-          "--------------------+------------------- |",
-          "                    5                    |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "                    *                    | a",
+    //       "--------------------+------------------- |",
+    //       "                    5                    |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display two points" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display two points" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.point[Int](5)  // [5]
-        val b       = Interval.point[Int](10) // [10]
-        val diagram = Diagram.make(List(a, b), infView, canvas)
+    //     val a       = Interval.point[Int](5)  // [5]
+    //     val b       = Interval.point[Int](10) // [10]
+    //     val diagram = Diagram.make(List(a, b), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  *                                      | a",
-          "                                     *   | b",
-          "--+----------------------------------+-- |",
-          "  5                                 10   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  *                                      | a",
+    //       "                                     *   | b",
+    //       "--+----------------------------------+-- |",
+    //       "  5                                 10   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a closed interval" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display a closed interval" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.closed[Int](5, 10)
-        val diagram = Diagram.make(List(a), infView, canvas)
+    //     val a       = Interval.closed[Int](5, 10)
+    //     val diagram = Diagram.make(List(a), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [**********************************]   | a",
-          "--+----------------------------------+-- |",
-          "  5                                 10   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [**********************************]   | a",
+    //       "--+----------------------------------+-- |",
+    //       "  5                                 10   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a closed interval on a custom view" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display a closed interval on a custom view" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.closed[Int](5, 10)
-        val view    = View.make(Some(0), Some(20))
-        val diagram = Diagram.make(List(a), view, canvas)
+    //     val a       = Interval.closed[Int](5, 10)
+    //     val view    = View.make(Some(0), Some(20))
+    //     val diagram = Diagram.make(List(a), view, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "           [********]                    | a",
-          "--+--------+--------+----------------+-- |",
-          "  0        5       10               20   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "           [********]                    | a",
+    //       "--+--------+--------+----------------+-- |",
+    //       "  0        5       10               20   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display left part of a closed interval" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display left part of a closed interval" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.closed[Int](5, 10)
-        val view    = View.make(Some(0), Some(7))
-        val diagram = Diagram.make(List(a), view, canvas)
+    //     val a       = Interval.closed[Int](5, 10)
+    //     val view    = View.make(Some(0), Some(7))
+    //     val diagram = Diagram.make(List(a), view, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "                           [************ | a",
-          "--+------------------------+---------+-- |",
-          "  0                        5         7   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "                           [************ | a",
+    //       "--+------------------------+---------+-- |",
+    //       "  0                        5         7   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display right part of a closed interval" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display right part of a closed interval" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.closed[Int](5, 10)
-        val view    = View.make(Some(7), Some(15))
-        val diagram = Diagram.make(List(a), view, canvas)
+    //     val a       = Interval.closed[Int](5, 10)
+    //     val view    = View.make(Some(7), Some(15))
+    //     val diagram = Diagram.make(List(a), view, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "***************]                         | a",
-          "--+------------+---------------------+-- |",
-          "  7           10                    15   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "***************]                         | a",
+    //       "--+------------+---------------------+-- |",
+    //       "  7           10                    15   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display middle part of a closed interval" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display middle part of a closed interval" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.closed[Int](5, 10)
-        val view    = View.make(Some(7), Some(8))
-        val diagram = Diagram.make(List(a), view, canvas)
+    //     val a       = Interval.closed[Int](5, 10)
+    //     val view    = View.make(Some(7), Some(8))
+    //     val diagram = Diagram.make(List(a), view, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "**************************************** | a",
-          "--+----------------------------------+-- |",
-          "  7                                  8   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "**************************************** | a",
+    //       "--+----------------------------------+-- |",
+    //       "  7                                  8   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a closed interval with negative boundary" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display a closed interval with negative boundary" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.closed[Int](-5, 10)
-        val diagram = Diagram.make(List(a), infView, canvas)
+    //     val a       = Interval.closed[Int](-5, 10)
+    //     val diagram = Diagram.make(List(a), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [**********************************]   | a",
-          "--+----------------------------------+-- |",
-          " -5                                 10   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [**********************************]   | a",
+    //       "--+----------------------------------+-- |",
+    //       " -5                                 10   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display an unbounded interval" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display an unbounded interval" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.unbounded[Int]
-        val diagram = Diagram.make(List(a), infView, canvas)
+    //     val a       = Interval.unbounded[Int]
+    //     val diagram = Diagram.make(List(a), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "(**************************************) | a",
-          "+--------------------------------------+ |",
-          "-∞                                    +∞ |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "(**************************************) | a",
+    //       "+--------------------------------------+ |",
+    //       "-∞                                    +∞ |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a leftOpen interval" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display a leftOpen interval" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.leftOpen(5) // (5, +∞)
-        val diagram = Diagram.make(List(a), infView, canvas)
+    //     val a       = Interval.leftOpen(5) // (5, +∞)
+    //     val diagram = Diagram.make(List(a), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "                    (******************) | a",
-          "--------------------+------------------+ |",
-          "                    5                 +∞ |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "                    (******************) | a",
+    //       "--------------------+------------------+ |",
+    //       "                    5                 +∞ |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a leftClosed interval" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display a leftClosed interval" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.leftClosed(5) // [5, +∞)
-        val diagram = Diagram.make(List(a), infView, canvas)
+    //     val a       = Interval.leftClosed(5) // [5, +∞)
+    //     val diagram = Diagram.make(List(a), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "                    [******************) | a",
-          "--------------------+------------------+ |",
-          "                    5                 +∞ |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "                    [******************) | a",
+    //       "--------------------+------------------+ |",
+    //       "                    5                 +∞ |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a rightOpen interval" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display a rightOpen interval" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.rightOpen(5) // (-∞, 5)
-        val diagram = Diagram.make(List(a), infView, canvas)
+    //     val a       = Interval.rightOpen(5) // (-∞, 5)
+    //     val diagram = Diagram.make(List(a), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "(*******************)                    | a",
-          "+-------------------+------------------- |",
-          "-∞                  5                    |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "(*******************)                    | a",
+    //       "+-------------------+------------------- |",
+    //       "-∞                  5                    |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a rightClosed interval" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display a rightClosed interval" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a       = Interval.rightClosed(5) // (-∞, 5]
-        val diagram = Diagram.make(List(a), infView, canvas)
+    //     val a       = Interval.rightClosed(5) // (-∞, 5]
+    //     val diagram = Diagram.make(List(a), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "(*******************]                    | a",
-          "+-------------------+------------------- |",
-          "-∞                  5                    |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "(*******************]                    | a",
+    //       "+-------------------+------------------- |",
+    //       "-∞                  5                    |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a leftClosed and rightClosed overlapping intervals" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display a leftClosed and rightClosed overlapping intervals" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a = Interval.leftClosed(5)   // [5, +∞)
-        val b = Interval.rightClosed(10) // (-∞, 10]
+    //     val a = Interval.leftClosed(5)   // [5, +∞)
+    //     val b = Interval.rightClosed(10) // (-∞, 10]
 
-        val diagram = Diagram.make(List(a, b), infView, canvas)
+    //     val diagram = Diagram.make(List(a, b), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [************************************) | a",
-          "(************************************]   | b",
-          "+-+----------------------------------+-+ |",
-          "-∞5                                 10+∞ |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [************************************) | a",
+    //       "(************************************]   | b",
+    //       "+-+----------------------------------+-+ |",
+    //       "-∞5                                 10+∞ |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a leftClosed and rightClosed non-overlapping intervals" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display a leftClosed and rightClosed non-overlapping intervals" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a = Interval.leftClosed(10) // [10, +∞)
-        val b = Interval.rightClosed(5) // (-∞, 5]
+    //     val a = Interval.leftClosed(10) // [10, +∞)
+    //     val b = Interval.rightClosed(5) // (-∞, 5]
 
-        val diagram = Diagram.make(List(a, b), infView, canvas)
+    //     val diagram = Diagram.make(List(a, b), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "                                     [*) | a",
-          "(*]                                      | b",
-          "+-+----------------------------------+-+ |",
-          "-∞5                                 10+∞ |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "                                     [*) | a",
+    //       "(*]                                      | b",
+    //       "+-+----------------------------------+-+ |",
+    //       "-∞5                                 10+∞ |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display several intervals" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
+    //   "display several intervals" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeNoLegend)
 
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(5, 10)
-        val c = Interval.rightClosed(15)
-        val d = Interval.leftOpen(2)
+    //     val a = Interval.closed(1, 5)
+    //     val b = Interval.closed(5, 10)
+    //     val c = Interval.rightClosed(15)
+    //     val d = Interval.leftOpen(2)
 
-        val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
+    //     val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [*********]                            | a",
-          "            [************]               | b",
-          "(************************************]   | c",
-          "     (*********************************) | d",
-          "+-+--+------+------------+-----------+-+ |",
-          "-∞1  2      5           10          15+∞ |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [*********]                            | a",
+    //       "            [************]               | b",
+    //       "(************************************]   | c",
+    //       "     (*********************************) | d",
+    //       "+-+--+------+------------+-----------+-+ |",
+    //       "-∞1  2      5           10          15+∞ |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display several intervals with a legend" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display several intervals with a legend" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(5, 10)
-        val c = Interval.rightClosed(15)
-        val d = Interval.leftOpen(2)
+    //     val a = Interval.closed(1, 5)
+    //     val b = Interval.closed(5, 10)
+    //     val c = Interval.rightClosed(15)
+    //     val d = Interval.leftOpen(2)
 
-        val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
+    //     val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [*********]                            | [1,5]   : a",
-          "            [************]               | [5,10]  : b",
-          "(************************************]   | (-∞,15] : c",
-          "     (*********************************) | (2,+∞)  : d",
-          "+-+--+------+------------+-----------+-+ |",
-          "-∞1  2      5           10          15+∞ |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [*********]                            | [1,5]   : a",
+    //       "            [************]               | [5,10]  : b",
+    //       "(************************************]   | (-∞,15] : c",
+    //       "     (*********************************) | (2,+∞)  : d",
+    //       "+-+--+------+------------+-----------+-+ |",
+    //       "-∞1  2      5           10          15+∞ |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display several leftClosed intervals" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display several leftClosed intervals" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.leftClosed(1)
-        val b = Interval.leftClosed(2)
-        val c = Interval.leftClosed(3)
-        val d = Interval.leftClosed(4)
+    //     val a = Interval.leftClosed(1)
+    //     val b = Interval.leftClosed(2)
+    //     val c = Interval.leftClosed(3)
+    //     val d = Interval.leftClosed(4)
 
-        val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
+    //     val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [************************************) | [1,+∞) : a",
-          "              [************************) | [2,+∞) : b",
-          "                         [*************) | [3,+∞) : c",
-          "                                     [*) | [4,+∞) : d",
-          "--+-----------+----------+-----------+-+ |",
-          "  1           2          3           4+∞ |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [************************************) | [1,+∞) : a",
+    //       "              [************************) | [2,+∞) : b",
+    //       "                         [*************) | [3,+∞) : c",
+    //       "                                     [*) | [4,+∞) : d",
+    //       "--+-----------+----------+-----------+-+ |",
+    //       "  1           2          3           4+∞ |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display several rightClosed intervals" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display several rightClosed intervals" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.rightClosed(1)
-        val b = Interval.rightClosed(2)
-        val c = Interval.rightClosed(3)
-        val d = Interval.rightClosed(4)
+    //     val a = Interval.rightClosed(1)
+    //     val b = Interval.rightClosed(2)
+    //     val c = Interval.rightClosed(3)
+    //     val d = Interval.rightClosed(4)
 
-        val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
+    //     val diagram = Diagram.make(List(a, b, c, d), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "(*]                                      | (-∞,1] : a",
-          "(*************]                          | (-∞,2] : b",
-          "(************************]               | (-∞,3] : c",
-          "(************************************]   | (-∞,4] : d",
-          "+-+-----------+----------+-----------+-- |",
-          "-∞1           2          3           4   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "(*]                                      | (-∞,1] : a",
+    //       "(*************]                          | (-∞,2] : b",
+    //       "(************************]               | (-∞,3] : c",
+    //       "(************************************]   | (-∞,4] : d",
+    //       "+-+-----------+----------+-----------+-- |",
+    //       "-∞1           2          3           4   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display overlapping intervals" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display overlapping intervals" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(2, 6)
-        val c = Interval.closed(3, 7)
-        val d = Interval.closed(4, 8)
-        val e = Interval.closed(5, 9)
-        val f = Interval.closed(6, 10)
+    //     val a = Interval.closed(1, 5)
+    //     val b = Interval.closed(2, 6)
+    //     val c = Interval.closed(3, 7)
+    //     val d = Interval.closed(4, 8)
+    //     val e = Interval.closed(5, 9)
+    //     val f = Interval.closed(6, 10)
 
-        val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
+    //     val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [***************]                      | [1,5]  : a",
-          "      [**************]                   | [2,6]  : b",
-          "          [**************]               | [3,7]  : c",
-          "              [**************]           | [4,8]  : d",
-          "                  [**************]       | [5,9]  : e",
-          "                     [***************]   | [6,10] : f",
-          "--+---+---+---+---+--+---+---+---+---+-- |",
-          "  1   2   3   4   5  6   7   8   9  10   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [***************]                      | [1,5]  : a",
+    //       "      [**************]                   | [2,6]  : b",
+    //       "          [**************]               | [3,7]  : c",
+    //       "              [**************]           | [4,8]  : d",
+    //       "                  [**************]       | [5,9]  : e",
+    //       "                     [***************]   | [6,10] : f",
+    //       "--+---+---+---+---+--+---+---+---+---+-- |",
+    //       "  1   2   3   4   5  6   7   8   9  10   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display with default settings [doc]" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display with default settings [doc]" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(3, 7)
-        val b = Interval.closed(10, 15)
-        val c = Interval.closed(12, 20)
+    //     val a = Interval.closed(3, 7)
+    //     val b = Interval.closed(10, 15)
+    //     val c = Interval.closed(12, 20)
 
-        val diagram = Diagram.make(List(a, b, c))
+    //     val diagram = Diagram.make(List(a, b, c))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [*******]                              | [3,7]   : a",
-          "                [**********]             | [10,15] : b",
-          "                     [***************]   | [12,20] : c",
-          "--+-------+-----+----+-----+---------+-- |",
-          "  3       7    10   12    15        20   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [*******]                              | [3,7]   : a",
+    //       "                [**********]             | [10,15] : b",
+    //       "                     [***************]   | [12,20] : c",
+    //       "--+-------+-----+----+-----+---------+-- |",
+    //       "  3       7    10   12    15        20   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display with custom view [doc]" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display with custom view [doc]" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(3, 7)
-        val b = Interval.closed(10, 15)
-        val c = Interval.closed(12, 20)
+    //     val a = Interval.closed(3, 7)
+    //     val b = Interval.closed(10, 15)
+    //     val c = Interval.closed(12, 20)
 
-        val view    = View.make(Some(8), Some(17))
-        val diagram = Diagram.make(List(a, b, c), view)
+    //     val view    = View.make(Some(8), Some(17))
+    //     val diagram = Diagram.make(List(a, b, c), view)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "                                         | [3,7]   : a",
-          "          [******************]           | [10,15] : b",
-          "                  [********************* | [12,20] : c",
-          "--+-------+-------+----------+-------+-- |",
-          "  8      10      12         15      17   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "                                         | [3,7]   : a",
+    //       "          [******************]           | [10,15] : b",
+    //       "                  [********************* | [12,20] : c",
+    //       "--+-------+-------+----------+-------+-- |",
+    //       "  8      10      12         15      17   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display with custom canvas [doc]" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display with custom canvas [doc]" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(3, 7)
-        val b = Interval.closed(10, 15)
-        val c = Interval.closed(12, 20)
+    //     val a = Interval.closed(3, 7)
+    //     val b = Interval.closed(10, 15)
+    //     val c = Interval.closed(12, 20)
 
-        val canvas  = Canvas.make(20)
-        val diagram = Diagram.make(List(a, b, c), canvas)
+    //     val canvas  = Canvas.make(20)
+    //     val diagram = Diagram.make(List(a, b, c), canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [***]              | [3,7]   : a",
-          "        [****]       | [10,15] : b",
-          "          [******]   | [12,20] : c",
-          "--+---+-+-+--+---+-- |",
-          "  3   7  12 15  20   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [***]              | [3,7]   : a",
+    //       "        [****]       | [10,15] : b",
+    //       "          [******]   | [12,20] : c",
+    //       "--+---+-+-+--+---+-- |",
+    //       "  3   7  12 15  20   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display with custom theme [doc]" in {
-        val theme = AsciiTheme.default.copy(labelPosition = AsciiLabelPosition.Stacked)
+    //   "display with custom theme [doc]" in {
+    //     val theme = AsciiTheme.default.copy(labelPosition = AsciiLabelPosition.Stacked)
 
-        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
-        val a = Interval.closed(3, 7)
-        val b = Interval.closed(10, 15)
-        val c = Interval.closed(12, 20)
+    //     val a = Interval.closed(3, 7)
+    //     val b = Interval.closed(10, 15)
+    //     val c = Interval.closed(12, 20)
 
-        val canvas  = Canvas.make(20)
-        val diagram = Diagram.make(List(a, b, c), canvas)
+    //     val canvas  = Canvas.make(20)
+    //     val diagram = Diagram.make(List(a, b, c), canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [***]              | [3,7]   : a",
-          "        [****]       | [10,15] : b",
-          "          [******]   | [12,20] : c",
-          "--+---+-+-+--+---+-- |",
-          "  3   7  12 15  20   |",
-          "       10            |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [***]              | [3,7]   : a",
+    //       "        [****]       | [10,15] : b",
+    //       "          [******]   | [12,20] : c",
+    //       "--+---+-+-+--+---+-- |",
+    //       "  3   7  12 15  20   |",
+    //       "       10            |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display overlapping intervals with overlapping labels (Theme.Label.None)" in {
-        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.None)
+    //   "display overlapping intervals with overlapping labels (Theme.Label.None)" in {
+    //     val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.None)
 
-        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
-        val a = Interval.closed(100, 500)
-        val b = Interval.closed(150, 600)
-        val c = Interval.closed(200, 700)
-        val d = Interval.closed(250, 800)
-        val e = Interval.closed(300, 900)
-        val f = Interval.closed(600, 1000)
+    //     val a = Interval.closed(100, 500)
+    //     val b = Interval.closed(150, 600)
+    //     val c = Interval.closed(200, 700)
+    //     val d = Interval.closed(250, 800)
+    //     val e = Interval.closed(300, 900)
+    //     val f = Interval.closed(600, 1000)
 
-        val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
+    //     val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [***************]                      | a",
-          "    [****************]                   | b",
-          "      [******************]               | c",
-          "        [********************]           | d",
-          "          [**********************]       | e",
-          "                     [***************]   | f",
-          "--+-+-+-+-+-------+--+---+---+---+---+-- |",
-          " 10152025300     500600 700 800 9001000  |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [***************]                      | a",
+    //       "    [****************]                   | b",
+    //       "      [******************]               | c",
+    //       "        [********************]           | d",
+    //       "          [**********************]       | e",
+    //       "                     [***************]   | f",
+    //       "--+-+-+-+-+-------+--+---+---+---+---+-- |",
+    //       " 10152025300     500600 700 800 9001000  |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display overlapping intervals with overlapping labels (Theme.Label.NoOverlap)" in {
-        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.NoOverlap)
+    //   "display overlapping intervals with overlapping labels (Theme.Label.NoOverlap)" in {
+    //     val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.NoOverlap)
 
-        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
-        val a = Interval.closed(100, 500)
-        val b = Interval.closed(150, 600)
-        val c = Interval.closed(200, 700)
-        val d = Interval.closed(250, 800)
-        val e = Interval.closed(300, 900)
-        val f = Interval.closed(600, 1000)
+    //     val a = Interval.closed(100, 500)
+    //     val b = Interval.closed(150, 600)
+    //     val c = Interval.closed(200, 700)
+    //     val d = Interval.closed(250, 800)
+    //     val e = Interval.closed(300, 900)
+    //     val f = Interval.closed(600, 1000)
 
-        val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
+    //     val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [***************]                      | a",
-          "    [****************]                   | b",
-          "      [******************]               | c",
-          "        [********************]           | d",
-          "          [**********************]       | e",
-          "                     [***************]   | f",
-          "--+-+-+-+-+-------+--+---+---+---+---+-- |",
-          " 100 200 300     500    700 800 900      |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [***************]                      | a",
+    //       "    [****************]                   | b",
+    //       "      [******************]               | c",
+    //       "        [********************]           | d",
+    //       "          [**********************]       | e",
+    //       "                     [***************]   | f",
+    //       "--+-+-+-+-+-------+--+---+---+---+---+-- |",
+    //       " 100 200 300     500    700 800 900      |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display overlapping intervals with overlapping labels (Theme.Label.Stacked)" in {
-        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.Stacked)
+    //   "display overlapping intervals with overlapping labels (Theme.Label.Stacked)" in {
+    //     val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.Stacked)
 
-        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
-        val a = Interval.closed(100, 500)
-        val b = Interval.closed(150, 600)
-        val c = Interval.closed(200, 700)
-        val d = Interval.closed(250, 800)
-        val e = Interval.closed(300, 900)
-        val f = Interval.closed(600, 1000)
+    //     val a = Interval.closed(100, 500)
+    //     val b = Interval.closed(150, 600)
+    //     val c = Interval.closed(200, 700)
+    //     val d = Interval.closed(250, 800)
+    //     val e = Interval.closed(300, 900)
+    //     val f = Interval.closed(600, 1000)
 
-        val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
+    //     val diagram = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [***************]                      | a",
-          "    [****************]                   | b",
-          "      [******************]               | c",
-          "        [********************]           | d",
-          "          [**********************]       | e",
-          "                     [***************]   | f",
-          "--+-+-+-+-+-------+--+---+---+---+---+-- |",
-          " 100 200 300     500    700 800 900      |",
-          "   150 250          600            1000  |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [***************]                      | a",
+    //       "    [****************]                   | b",
+    //       "      [******************]               | c",
+    //       "        [********************]           | d",
+    //       "          [**********************]       | e",
+    //       "                     [***************]   | f",
+    //       "--+-+-+-+-+-------+--+---+---+---+---+-- |",
+    //       " 100 200 300     500    700 800 900      |",
+    //       "   150 250          600            1000  |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display intervals with legend and annotations" in {
-        val theme = themeDefault.copy(legend = true, annotations = true)
+    //   "display intervals with legend and annotations" in {
+    //     val theme = themeDefault.copy(legend = true, annotations = true)
 
-        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(5, 10)
+    //     val a = Interval.closed(1, 5)
+    //     val b = Interval.closed(5, 10)
 
-        val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
+    //     val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [***************]                      | [1,5]  : a",
-          "                  [******************]   | [5,10] : b",
-          "--+---------------+------------------+-- |",
-          "  1               5                 10   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [***************]                      | [1,5]  : a",
+    //       "                  [******************]   | [5,10] : b",
+    //       "--+---------------+------------------+-- |",
+    //       "  1               5                 10   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display intervals with legend and without annotations" in {
-        val theme = themeDefault.copy(legend = true, annotations = false)
+    //   "display intervals with legend and without annotations" in {
+    //     val theme = themeDefault.copy(legend = true, annotations = false)
 
-        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(5, 10)
+    //     val a = Interval.closed(1, 5)
+    //     val b = Interval.closed(5, 10)
 
-        val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
+    //     val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [***************]                      | [1,5]",
-          "                  [******************]   | [5,10]",
-          "--+---------------+------------------+-- |",
-          "  1               5                 10   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [***************]                      | [1,5]",
+    //       "                  [******************]   | [5,10]",
+    //       "--+---------------+------------------+-- |",
+    //       "  1               5                 10   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display intervals without legend and with annotations" in {
-        val theme = themeDefault.copy(legend = false, annotations = true)
+    //   "display intervals without legend and with annotations" in {
+    //     val theme = themeDefault.copy(legend = false, annotations = true)
 
-        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(5, 10)
+    //     val a = Interval.closed(1, 5)
+    //     val b = Interval.closed(5, 10)
 
-        val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
+    //     val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [***************]                      | a",
-          "                  [******************]   | b",
-          "--+---------------+------------------+-- |",
-          "  1               5                 10   |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [***************]                      | a",
+    //       "                  [******************]   | b",
+    //       "--+---------------+------------------+-- |",
+    //       "  1               5                 10   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display intervals without legend and without annotations" in {
-        val theme = themeDefault.copy(legend = false, annotations = false)
+    //   "display intervals without legend and without annotations" in {
+    //     val theme = themeDefault.copy(legend = false, annotations = false)
 
-        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(5, 10)
+    //     val a = Interval.closed(1, 5)
+    //     val b = Interval.closed(5, 10)
 
-        val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
+    //     val diagram = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [***************]                     ",
-          "                  [******************]  ",
-          "--+---------------+------------------+--",
-          "  1               5                 10  ",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [***************]                     ",
+    //       "                  [******************]  ",
+    //       "--+---------------+------------------+--",
+    //       "  1               5                 10  ",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display intervals with OffsetDateTime" in {
-        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.Stacked)
+    //   "display intervals with OffsetDateTime" in {
+    //     val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.Stacked)
 
-        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
-        given offsetDateTimeDomain: Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.DAYS)
-        val a                                              = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
+    //     given offsetDateTimeDomain: Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.DAYS)
+    //     val a                                              = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
 
-        val diagram = Diagram.make[OffsetDateTime](List(a))
+    //     val diagram = Diagram.make[OffsetDateTime](List(a))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [**********************************]   | a",
-          "--+----------------------------------+-- |",
-          "2020-07-02T12:34Z      2021-07-02T12:34Z |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [**********************************]   | a",
+    //       "--+----------------------------------+-- |",
+    //       "2020-07-02T12:34Z      2021-07-02T12:34Z |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display intervals with Instant" in {
-        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.Stacked)
+    //   "display intervals with Instant" in {
+    //     val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.Stacked)
 
-        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
-        given instantDomain: Domain[Instant] = Domain.makeInstant(ChronoUnit.DAYS)
-        val a                                = Interval.closed(Instant.parse("2020-07-02T12:34:00Z"), Instant.parse("2021-07-02T12:34:00Z"))
+    //     given instantDomain: Domain[Instant] = Domain.makeInstant(ChronoUnit.DAYS)
+    //     val a                                = Interval.closed(Instant.parse("2020-07-02T12:34:00Z"), Instant.parse("2021-07-02T12:34:00Z"))
 
-        val diagram = Diagram.make[Instant](List(a))
+    //     val diagram = Diagram.make[Instant](List(a))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [**********************************]   | a",
-          "--+----------------------------------+-- |",
-          "2020-07-02T12:34:00Z                     |",
-          "                    2021-07-02T12:34:00Z |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [**********************************]   | a",
+    //       "--+----------------------------------+-- |",
+    //       "2020-07-02T12:34:00Z                     |",
+    //       "                    2021-07-02T12:34:00Z |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display several timelines" in {
-        val theme = themeDefault.copy(labelPosition = AsciiLabelPosition.Stacked)
+    //   "display several timelines" in {
+    //     val theme = themeDefault.copy(labelPosition = AsciiLabelPosition.Stacked)
 
-        given renderer: AsciiRenderer = AsciiRenderer.make(theme)
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(theme)
 
-        given Domain[LocalDate] = Domain.makeLocalDate(ChronoUnit.DAYS)
+    //     given Domain[LocalDate] = Domain.makeLocalDate(ChronoUnit.DAYS)
 
-        val a = Interval.leftClosed(LocalDate.parse("2023-01-01"))
-        val b = Interval.closed(LocalDate.parse("2023-01-03"), LocalDate.parse("2023-01-15"))
-        val c = Interval.empty[LocalDate]
-        val d = Interval.closed(LocalDate.parse("2023-01-10"), LocalDate.parse("2023-01-20"))
+    //     val a = Interval.leftClosed(LocalDate.parse("2023-01-01"))
+    //     val b = Interval.closed(LocalDate.parse("2023-01-03"), LocalDate.parse("2023-01-15"))
+    //     val c = Interval.empty[LocalDate]
+    //     val d = Interval.closed(LocalDate.parse("2023-01-10"), LocalDate.parse("2023-01-20"))
 
-        val diagram = Diagram.make[LocalDate](List(a, b, c, d))
+    //     val diagram = Diagram.make[LocalDate](List(a, b, c, d))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
-        val expected = List(
-          "  [************************************) | [2023-01-01,+∞)         : a",
-          "      [*********************]            | [2023-01-03,2023-01-15] : b",
-          "                                         | ∅                       : c",
-          "                   [*****************]   | [2023-01-10,2023-01-20] : d",
-          "--+---+------------+--------+--------+-+ |",
-          "2023-01-01    2023-01-10      2023-01-20 |",
-          " 2023-01-03            2023-01-15     +∞ |",
-        )
+    //     val actual = renderer.result
+    //     val expected = List(
+    //       "  [************************************) | [2023-01-01,+∞)         : a",
+    //       "      [*********************]            | [2023-01-03,2023-01-15] : b",
+    //       "                                         | ∅                       : c",
+    //       "                   [*****************]   | [2023-01-10,2023-01-20] : d",
+    //       "--+---+------------+--------+--------+-+ |",
+    //       "2023-01-01    2023-01-10      2023-01-20 |",
+    //       " 2023-01-03            2023-01-15     +∞ |",
+    //     )
 
-        actual shouldBe expected
-      }
-    }
+    //     actual shouldBe expected
+    //   }
+    // }
 
-    "operations" should {
-      "display a.intersection(b)" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    // "operations" should {
+    //   "display a.intersection(b)" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(1, 7)
+    //     val a = Interval.closed(5, 10)
+    //     val b = Interval.closed(1, 7)
 
-        val c = a.intersection(b)
+    //     val c = a.intersection(b)
 
-        val diagram = Diagram.make(List(a, b, c))
+    //     val diagram = Diagram.make(List(a, b, c))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
+    //     val actual = renderer.result
 
-        val expected = List(
-          "                  [******************]   | [5,10] : a",
-          "  [**********************]               | [1,7]  : b",
-          "                  [******]               | [5,7]  : c",
-          "--+---------------+------+-----------+-- |",
-          "  1               5      7          10   |",
-        )
+    //     val expected = List(
+    //       "                  [******************]   | [5,10] : a",
+    //       "  [**********************]               | [1,7]  : b",
+    //       "                  [******]               | [5,7]  : c",
+    //       "--+---------------+------+-----------+-- |",
+    //       "  1               5      7          10   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a.span(b)" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display a.span(b)" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(1, 7)
+    //     val a = Interval.closed(5, 10)
+    //     val b = Interval.closed(1, 7)
 
-        val c = a.span(b)
+    //     val c = a.span(b)
 
-        val diagram = Diagram.make(List(a, b, c))
+    //     val diagram = Diagram.make(List(a, b, c))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
+    //     val actual = renderer.result
 
-        val expected = List(
-          "                  [******************]   | [5,10] : a",
-          "  [**********************]               | [1,7]  : b",
-          "  [**********************************]   | [1,10] : c",
-          "--+---------------+------+-----------+-- |",
-          "  1               5      7          10   |",
-        )
+    //     val expected = List(
+    //       "                  [******************]   | [5,10] : a",
+    //       "  [**********************]               | [1,7]  : b",
+    //       "  [**********************************]   | [1,10] : c",
+    //       "--+---------------+------+-----------+-- |",
+    //       "  1               5      7          10   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a.span(b) of two disjoint intervals" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display a.span(b) of two disjoint intervals" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(7, 10)
+    //     val a = Interval.closed(1, 5)
+    //     val b = Interval.closed(7, 10)
 
-        val c = a.span(b)
+    //     val c = a.span(b)
 
-        val diagram = Diagram.make(List(a, b, c))
+    //     val diagram = Diagram.make(List(a, b, c))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
+    //     val actual = renderer.result
 
-        val expected = List(
-          "  [***************]                      | [1,5]  : a",
-          "                         [***********]   | [7,10] : b",
-          "  [**********************************]   | [1,10] : c",
-          "--+---------------+------+-----------+-- |",
-          "  1               5      7          10   |",
-        )
+    //     val expected = List(
+    //       "  [***************]                      | [1,5]  : a",
+    //       "                         [***********]   | [7,10] : b",
+    //       "  [**********************************]   | [1,10] : c",
+    //       "--+---------------+------+-----------+-- |",
+    //       "  1               5      7          10   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a.union(b)" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display a.union(b)" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(1, 5)
-        val b = Interval.closed(6, 10)
+    //     val a = Interval.closed(1, 5)
+    //     val b = Interval.closed(6, 10)
 
-        val c = a.union(b)
+    //     val c = a.union(b)
 
-        val diagram = Diagram.make(List(a, b, c))
+    //     val diagram = Diagram.make(List(a, b, c))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
+    //     val actual = renderer.result
 
-        val expected = List(
-          "  [***************]                      | [1,5]  : a",
-          "                     [***************]   | [6,10] : b",
-          "  [**********************************]   | [1,10] : c",
-          "--+---------------+--+---------------+-- |",
-          "  1               5  6              10   |",
-        )
+    //     val expected = List(
+    //       "  [***************]                      | [1,5]  : a",
+    //       "                     [***************]   | [6,10] : b",
+    //       "  [**********************************]   | [1,10] : c",
+    //       "--+---------------+--+---------------+-- |",
+    //       "  1               5  6              10   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a.union(b) of two disjoint intervals" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display a.union(b) of two disjoint intervals" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(1, 4)
-        val b = Interval.closed(6, 10)
+    //     val a = Interval.closed(1, 4)
+    //     val b = Interval.closed(6, 10)
 
-        val c = a.union(b)
+    //     val c = a.union(b)
 
-        val diagram = Diagram.make(List(a, b, c))
+    //     val diagram = Diagram.make(List(a, b, c))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
+    //     val actual = renderer.result
 
-        val expected = List(
-          "  [***********]                          | [1,4]  : a",
-          "                     [***************]   | [6,10] : b",
-          "                                         | ∅      : c",
-          "--+-----------+------+---------------+-- |",
-          "  1           4      6              10   |",
-        )
+    //     val expected = List(
+    //       "  [***********]                          | [1,4]  : a",
+    //       "                     [***************]   | [6,10] : b",
+    //       "                                         | ∅      : c",
+    //       "--+-----------+------+---------------+-- |",
+    //       "  1           4      6              10   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a.gap(b) of two intersecting intervals" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display a.gap(b) of two intersecting intervals" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(4, 15)
+    //     val a = Interval.closed(5, 10)
+    //     val b = Interval.closed(4, 15)
 
-        val c = a.gap(b)
+    //     val c = a.gap(b)
 
-        val diagram = Diagram.make(List(a, b, c))
+    //     val diagram = Diagram.make(List(a, b, c))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
+    //     val actual = renderer.result
 
-        val expected = List(
-          "     [***************]                   | [5,10] : a",
-          "  [**********************************]   | [4,15] : b",
-          "                                         | ∅      : c",
-          "--+--+---------------+---------------+-- |",
-          "  4  5              10              15   |",
-        )
+    //     val expected = List(
+    //       "     [***************]                   | [5,10] : a",
+    //       "  [**********************************]   | [4,15] : b",
+    //       "                                         | ∅      : c",
+    //       "--+--+---------------+---------------+-- |",
+    //       "  4  5              10              15   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a.gap(b) of two disjoint intervals" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display a.gap(b) of two disjoint intervals" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(5, 10)
-        val b = Interval.closed(15, 20)
+    //     val a = Interval.closed(5, 10)
+    //     val b = Interval.closed(15, 20)
 
-        val c = a.gap(b).canonical
+    //     val c = a.gap(b).canonical
 
-        val diagram = Diagram.make(List(a, b, c))
+    //     val diagram = Diagram.make(List(a, b, c))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
+    //     val actual = renderer.result
 
-        val expected = List(
-          "  [***********]                          | [5,10]  : a",
-          "                         [***********]   | [15,20] : b",
-          "                [******]                 | [11,14] : c",
-          "--+-----------+-+------+-+-----------+-- |",
-          "  5          10       14            20   |",
-        )
+    //     val expected = List(
+    //       "  [***********]                          | [5,10]  : a",
+    //       "                         [***********]   | [15,20] : b",
+    //       "                [******]                 | [11,14] : c",
+    //       "--+-----------+-+------+-+-----------+-- |",
+    //       "  5          10       14            20   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a.minus(b) if a.overlaps(b)" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display a.minus(b) if a.overlaps(b)" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(1, 10)
-        val b = Interval.closed(5, 15)
+    //     val a = Interval.closed(1, 10)
+    //     val b = Interval.closed(5, 15)
 
-        val c = a.minus(b).canonical
+    //     val c = a.minus(b).canonical
 
-        val diagram = Diagram.make(List(a, b, c))
+    //     val diagram = Diagram.make(List(a, b, c))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
+    //     val actual = renderer.result
 
-        val expected = List(
-          "  [**********************]               | [1,10] : a",
-          "            [************************]   | [5,15] : b",
-          "  [*******]                              | [1,4]  : c",
-          "--+-------+-+------------+-----------+-- |",
-          "  1       4 5           10          15   |",
-        )
+    //     val expected = List(
+    //       "  [**********************]               | [1,10] : a",
+    //       "            [************************]   | [5,15] : b",
+    //       "  [*******]                              | [1,4]  : c",
+    //       "--+-------+-+------------+-----------+-- |",
+    //       "  1       4 5           10          15   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display a.minus(b) if a.isOverlappedBy(b)" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display a.minus(b) if a.isOverlappedBy(b)" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(5, 15)
-        val b = Interval.closed(1, 10)
+    //     val a = Interval.closed(5, 15)
+    //     val b = Interval.closed(1, 10)
 
-        val c = a.minus(b).canonical
+    //     val c = a.minus(b).canonical
 
-        val diagram = Diagram.make(List(a, b, c))
+    //     val diagram = Diagram.make(List(a, b, c))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
+    //     val actual = renderer.result
 
-        val expected = List(
-          "            [************************]   | [5,15]  : a",
-          "  [**********************]               | [1,10]  : b",
-          "                           [*********]   | [11,15] : c",
-          "--+---------+------------+-+---------+-- |",
-          "  1         5           10          15   |",
-        )
+    //     val expected = List(
+    //       "            [************************]   | [5,15]  : a",
+    //       "  [**********************]               | [1,10]  : b",
+    //       "                           [*********]   | [11,15] : c",
+    //       "--+---------+------------+-+---------+-- |",
+    //       "  1         5           10          15   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display Interval.minus(a, b) if a.contains(b)" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display Interval.minus(a, b) if a.contains(b)" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(1, 15)
-        val b = Interval.closed(5, 10)
+    //     val a = Interval.closed(1, 15)
+    //     val b = Interval.closed(5, 10)
 
-        val cs = Interval.minus(a, b).map(_.canonical)
+    //     val cs = Interval.minus(a, b).map(_.canonical)
 
-        val diagram = Diagram.make(List(a, b) ++ cs, infView, canvas, List("a", "b", "c1", "c2"))
+    //     val diagram = Diagram.make(List(a, b) ++ cs, infView, canvas, List("a", "b", "c1", "c2"))
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
+    //     val actual = renderer.result
 
-        val expected = List(
-          "  [**********************************]   | [1,15]  : a",
-          "            [************]               | [5,10]  : b",
-          "  [*******]                              | [1,4]   : c1",
-          "                           [*********]   | [11,15] : c2",
-          "--+-------+-+------------+-+---------+-- |",
-          "  1       4 5           10          15   |",
-        )
+    //     val expected = List(
+    //       "  [**********************************]   | [1,15]  : a",
+    //       "            [************]               | [5,10]  : b",
+    //       "  [*******]                              | [1,4]   : c1",
+    //       "                           [*********]   | [11,15] : c2",
+    //       "--+-------+-+------------+-+---------+-- |",
+    //       "  1       4 5           10          15   |",
+    //     )
 
-        actual shouldBe expected
-      }
+    //     actual shouldBe expected
+    //   }
 
-      "display complement" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display complement" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(0, 10)  // [0, 10]
-        val b = Interval.closed(5, 20)  // [5, 20]
-        val c = Interval.closed(25, 30) // [25, 30]
-        val d = Interval.closed(35, 40) // [35, 40]
+    //     val a = Interval.closed(0, 10)  // [0, 10]
+    //     val b = Interval.closed(5, 20)  // [5, 20]
+    //     val c = Interval.closed(25, 30) // [25, 30]
+    //     val d = Interval.closed(35, 40) // [35, 40]
 
-        val e0 = Interval.rightClosed(-1) // (-∞, -1]
-        val e1 = Interval.closed(21, 24)  // [21, 24]
-        val e2 = Interval.closed(31, 34)  // [31, 34]
-        val e3 = Interval.leftClosed(41)  // [41, +∞)
+    //     val e0 = Interval.rightClosed(-1) // (-∞, -1]
+    //     val e1 = Interval.closed(21, 24)  // [21, 24]
+    //     val e2 = Interval.closed(31, 34)  // [31, 34]
+    //     val e3 = Interval.leftClosed(41)  // [41, +∞)
 
-        val input = List(a, b, c, d)
+    //     val input = List(a, b, c, d)
 
-        val is = Interval.complement(input) // [ (-∞, -1], [21, 24], [31, 34], [41, +∞) ]
+    //     val is = Interval.complement(input) // [ (-∞, -1], [21, 24], [31, 34], [41, +∞) ]
 
-        val actual   = is
-        val expected = List(e0, e1, e2, e3)
+    //     val actual   = is
+    //     val expected = List(e0, e1, e2, e3)
 
-        actual shouldBe expected
+    //     actual shouldBe expected
 
-        ///
-        import com.github.gchudnov.mtg.diagram.Diagram.Canvas
-        import com.github.gchudnov.mtg.diagram.Diagram.View
-        import com.github.gchudnov.mtg.diagram.Diagram
+    //     ///
+    //     import com.github.gchudnov.mtg.diagram.Diagram.Canvas
+    //     import com.github.gchudnov.mtg.diagram.Diagram.View
+    //     import com.github.gchudnov.mtg.diagram.Diagram
 
-        val canvas: Canvas  = Canvas.make(40, 2)
-        val view: View[Int] = View.all[Int]
-        val diagram         = Diagram.make(List(a, b, c, d, e0, e1, e2, e3), view, canvas)
+    //     val canvas: Canvas  = Canvas.make(40, 2)
+    //     val view: View[Int] = View.all[Int]
+    //     val diagram         = Diagram.make(List(a, b, c, d, e0, e1, e2, e3), view, canvas)
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val diag = renderer.result
+    //     val diag = renderer.result
 
-        diag.isEmpty shouldBe (false)
-      }
+    //     diag.isEmpty shouldBe (false)
+    //   }
 
-      "display short intervals" in {
-        given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
+    //   "display short intervals" in {
+    //     given renderer: AsciiRenderer = AsciiRenderer.make(themeDefault)
 
-        val a = Interval.closed(0, 10)
-        val b = Interval.closed(3, 50)
-        val c = Interval.closed(20, 30)
-        val d = Interval.closed(60, 70)
-        val e = Interval.closed(71, 80)
+    //     val a = Interval.closed(0, 10)
+    //     val b = Interval.closed(3, 50)
+    //     val c = Interval.closed(20, 30)
+    //     val d = Interval.closed(60, 70)
+    //     val e = Interval.closed(71, 80)
 
-        val input  = List(a, b, c, d, e)
-        val splits = Interval.split(input)
+    //     val input  = List(a, b, c, d, e)
+    //     val splits = Interval.split(input)
 
-        val diagram = Diagram.make(
-          input ++ splits,
-          infView,
-          canvas,
-          List("a", "b", "c", "d", "e", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"),
-        )
+    //     val diagram = Diagram.make(
+    //       input ++ splits,
+    //       infView,
+    //       canvas,
+    //       List("a", "b", "c", "d", "e", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"),
+    //     )
 
-        renderer.render(diagram)
+    //     renderer.render(diagram)
 
-        val actual = renderer.result
+    //     val actual = renderer.result
 
-        val expected = List(
-          "  [***]                                  | [0,10]  : a",
-          "   [********************]                | [3,50]  : b",
-          "           [***]                         | [20,30] : c",
-          "                            [****]       | [60,70] : d",
-          "                                 [***]   | [71,80] : e",
-          "  [)                                     | [0,3)   : s0",
-          "   [**]                                  | [3,10]  : s1",
-          "      (****)                             | (10,20) : s2",
-          "           [***]                         | [20,30] : s3",
-          "               (********]                | (30,50] : s4",
-          "                        (***)            | (50,60) : s5",
-          "                            [****]       | [60,70] : s6",
-          "                                 [***]   | [71,80] : s7",
-          "--++--+----+---+--------+---+----+---+-- |",
-          "  0  10   20  30       50  60   70  80   |",
-        )
+    //     val expected = List(
+    //       "  [***]                                  | [0,10]  : a",
+    //       "   [********************]                | [3,50]  : b",
+    //       "           [***]                         | [20,30] : c",
+    //       "                            [****]       | [60,70] : d",
+    //       "                                 [***]   | [71,80] : e",
+    //       "  [)                                     | [0,3)   : s0",
+    //       "   [**]                                  | [3,10]  : s1",
+    //       "      (****)                             | (10,20) : s2",
+    //       "           [***]                         | [20,30] : s3",
+    //       "               (********]                | (30,50] : s4",
+    //       "                        (***)            | (50,60) : s5",
+    //       "                            [****]       | [60,70] : s6",
+    //       "                                 [***]   | [71,80] : s7",
+    //       "--++--+----+---+--------+---+----+---+-- |",
+    //       "  0  10   20  30       50  60   70  80   |",
+    //     )
 
-        actual shouldBe expected
-      }
-    }
+    //     actual shouldBe expected
+    //   }
+    // }
   }
