@@ -24,5 +24,23 @@ class InputDateSpec extends AnyWordSpec with Matchers {
         actual shouldEqual expected
       }
     }
+
+    "Instant" should {
+      "pattern" in {
+        val actual = InputDate.instantInputDate.pattern
+        val expected = "YYYY-MM-DD HH:mm:ss.SSS"
+
+        actual shouldEqual expected
+      }
+      
+      "format" in {
+        val value = Instant.parse("2024-08-19T12:34:56.000Z")
+        
+        val actual = InputDate.instantInputDate.format(value)
+        val expected = "2024-08-19 12:34:56.000"
+
+        actual shouldEqual expected
+      }
+    }
   }
 }

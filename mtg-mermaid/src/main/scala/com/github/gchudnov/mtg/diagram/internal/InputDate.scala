@@ -41,3 +41,6 @@ private[mtg] trait InputDateLowPriority:
 
   given offsetDateTimeInputDate: InputDate[OffsetDateTime] =
     new OffsetDateTimeInputDate
+
+  given instantInputDate: InputDate[Instant] =
+    new InstantInputDate
