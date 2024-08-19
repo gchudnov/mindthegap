@@ -47,3 +47,6 @@ private[mtg] trait InputDateLowPriority:
 
   given localDateTimeInputDate: InputDate[LocalDateTime] =
     new LocalDateTimeInputDate
+
+  given localDateInputDate: InputDate[LocalDate] =
+    new LocalDateInputDate
