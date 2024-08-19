@@ -24,6 +24,14 @@ private[mtg] final class MermaidRenderer extends Renderer:
     sb.append("gantt\n")
     sb.append(s"  title       ${d.title}\n")
     sb.append(s"  dateFormat  ${d.inFormat}\n")
+    sb.append(s"  axisFormat  ${d.axisFormat}\n")
+
+    d.sections.foreach { s =>
+      sb.append(s"  section ${s.title}\n")
+      s.tasks.foreach { t =>
+        sb.append(s"  ${t.name}  :${t.start}, ${t.end}\n")
+      }
+    }
   }
 
 object MermaidRenderer:
@@ -41,9 +49,4 @@ gantt
 
     section Section
     Task 1           :a1, 2024-08-19T09:00:00.000, 2024-08-20T10:00:00.000
-*/
-
-/**
-TODO: add diagrams for mermaid -- start, check what we need generalize with ascii renderer
-      Canvas ???
 */
