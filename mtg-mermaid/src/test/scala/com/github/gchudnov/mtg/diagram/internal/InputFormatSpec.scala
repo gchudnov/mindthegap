@@ -5,11 +5,11 @@ import org.scalatest.wordspec.AnyWordSpec
 import java.time.temporal.*
 import java.time.*
 
-class InputDateSpec extends AnyWordSpec with Matchers {
-  "InputDate" when {
+class InputFormatSpec extends AnyWordSpec with Matchers {
+  "InputFormat" when {
     "OffsetDateTime" should {
       "pattern" in {
-        val actual = InputDate.offsetDateTimeInputDate.pattern
+        val actual = InputFormat.offsetDateTimeInputDate.pattern
         val expected = "YYYY-MM-DD HH:mm:ss.SSS"
 
         actual shouldEqual expected
@@ -18,7 +18,7 @@ class InputDateSpec extends AnyWordSpec with Matchers {
       "format" in {
         val value = OffsetDateTime.ofInstant(Instant.parse("2024-08-19T12:34:56.000Z"), ZoneOffset.UTC)
         
-        val actual = InputDate.offsetDateTimeInputDate.format(value)
+        val actual = InputFormat.offsetDateTimeInputDate.format(value)
         val expected = "2024-08-19 12:34:56.000"
 
         actual shouldEqual expected
@@ -27,7 +27,7 @@ class InputDateSpec extends AnyWordSpec with Matchers {
 
     "Instant" should {
       "pattern" in {
-        val actual = InputDate.instantInputDate.pattern
+        val actual = InputFormat.instantInputDate.pattern
         val expected = "YYYY-MM-DD HH:mm:ss.SSS"
 
         actual shouldEqual expected
@@ -36,7 +36,7 @@ class InputDateSpec extends AnyWordSpec with Matchers {
       "format" in {
         val value = Instant.parse("2024-08-19T12:34:56.000Z")
         
-        val actual = InputDate.instantInputDate.format(value)
+        val actual = InputFormat.instantInputDate.format(value)
         val expected = "2024-08-19 12:34:56.000"
 
         actual shouldEqual expected
@@ -45,7 +45,7 @@ class InputDateSpec extends AnyWordSpec with Matchers {
 
     "LocalDateTime" should {
       "pattern" in {
-        val actual = InputDate.localDateTimeInputDate.pattern
+        val actual = InputFormat.localDateTimeInputDate.pattern
         val expected = "YYYY-MM-DD HH:mm:ss.SSS"
 
         actual shouldEqual expected
@@ -54,7 +54,7 @@ class InputDateSpec extends AnyWordSpec with Matchers {
       "format" in {
         val value = LocalDateTime.parse("2024-08-19T12:34:56.000")
         
-        val actual = InputDate.localDateTimeInputDate.format(value)
+        val actual = InputFormat.localDateTimeInputDate.format(value)
         val expected = "2024-08-19 12:34:56.000"
 
         actual shouldEqual expected
@@ -63,7 +63,7 @@ class InputDateSpec extends AnyWordSpec with Matchers {
 
     "LocalDate" should {
       "pattern" in {
-        val actual = InputDate.localDateInputDate.pattern
+        val actual = InputFormat.localDateInputDate.pattern
         val expected = "YYYY-MM-DD"
 
         actual shouldEqual expected
@@ -72,7 +72,7 @@ class InputDateSpec extends AnyWordSpec with Matchers {
       "format" in {
         val value = LocalDate.parse("2024-08-19")
         
-        val actual = InputDate.localDateInputDate.format(value)
+        val actual = InputFormat.localDateInputDate.format(value)
         val expected = "2024-08-19"
 
         actual shouldEqual expected

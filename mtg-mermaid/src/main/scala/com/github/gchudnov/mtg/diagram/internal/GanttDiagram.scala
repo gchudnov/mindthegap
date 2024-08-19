@@ -12,7 +12,7 @@ private[mtg] final case class GanttDiagram(
 )
 
 private[mtg] object GanttDiagram {
-  def make[T: Domain: InputDate](inputDiagram: Diagram[T]): GanttDiagram = {
+  def make[T: Domain: InputFormat](inputDiagram: Diagram[T]): GanttDiagram = {
     ???
   }
 }

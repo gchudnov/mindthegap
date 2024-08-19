@@ -1,14 +1,14 @@
 package com.github.gchudnov.mtg.diagram.internal.formatters
 
-import com.github.gchudnov.mtg.diagram.internal.InputDate
+import com.github.gchudnov.mtg.diagram.internal.InputFormat
 
 import java.time.*
 import java.time.format.DateTimeFormatter
 
 /**
- * InputDate for LocalDateTime
+ * InputFormat for LocalDateTime
  */
-private[internal] final class LocalDateTimeInputDate extends InputDate[LocalDateTime]:
+private[internal] final class LocalDateTimeInputFormat extends InputFormat[LocalDateTime]:
   private val formatter: DateTimeFormatter =
     DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss.SSS")
 

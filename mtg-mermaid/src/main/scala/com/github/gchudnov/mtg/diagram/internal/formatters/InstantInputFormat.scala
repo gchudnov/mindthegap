@@ -1,20 +1,20 @@
 package com.github.gchudnov.mtg.diagram.internal.formatters
 
-import com.github.gchudnov.mtg.diagram.internal.InputDate
+import com.github.gchudnov.mtg.diagram.internal.InputFormat
 
 import java.time.*
 import java.time.format.DateTimeFormatter
 
 /**
- * InputDate for OffsetDateTime
+ * InputFormat for Instant
  */
-private[internal] final class OffsetDateTimeInputDate extends InputDate[OffsetDateTime]:
+private[internal] final class InstantInputFormat extends InputFormat[Instant]:
   private val formatter: DateTimeFormatter =
     DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss.SSS")
 
   override def pattern: String =
     "YYYY-MM-DD HH:mm:ss.SSS"
 
-  override def format(value: OffsetDateTime): String =
-    val utcValue = value.withOffsetSameInstant(ZoneOffset.UTC)
+  override def format(value: Instant): String =
+    val utcValue = value.atOffset(ZoneOffset.UTC)
     utcValue.format(formatter)
