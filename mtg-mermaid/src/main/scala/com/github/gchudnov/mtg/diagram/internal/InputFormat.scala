@@ -39,17 +39,23 @@ private[mtg] object InputFormat extends InputDateLowPriority
  */
 private[mtg] trait InputDateLowPriority:
 
-  given offsetDateTimeInputDate: InputFormat[OffsetDateTime] =
+  given offsetDateTimeInputFormat: InputFormat[OffsetDateTime] =
     new OffsetDateTimeInputFormat
 
-  given instantInputDate: InputFormat[Instant] =
+  given offsetTimeInputFormat: InputFormat[OffsetTime] =
+    new OffsetTimeInputFormat
+
+  given instantInputFormat: InputFormat[Instant] =
     new InstantInputFormat
 
-  given localDateTimeInputDate: InputFormat[LocalDateTime] =
+  given localDateTimeInputFormat: InputFormat[LocalDateTime] =
     new LocalDateTimeInputFormat
 
-  given localDateInputDate: InputFormat[LocalDate] =
+  given localDateInputFormat: InputFormat[LocalDate] =
     new LocalDateInputFormat
 
-  given localTimeInputDate: InputFormat[LocalTime] =
+  given localTimeInputFormat: InputFormat[LocalTime] =
     new LocalTimeInputFormat
+
+  given zonedDateTimeInputFormat: InputFormat[ZonedDateTime] =
+    new ZonedDateTimeInputFormat
