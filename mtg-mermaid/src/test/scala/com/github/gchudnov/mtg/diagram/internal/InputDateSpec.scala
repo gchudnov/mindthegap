@@ -42,5 +42,23 @@ class InputDateSpec extends AnyWordSpec with Matchers {
         actual shouldEqual expected
       }
     }
+
+    "LocalDateTime" should {
+      "pattern" in {
+        val actual = InputDate.localDateTimeInputDate.pattern
+        val expected = "YYYY-MM-DD HH:mm:ss.SSS"
+
+        actual shouldEqual expected
+      }
+      
+      "format" in {
+        val value = LocalDateTime.parse("2024-08-19T12:34:56.000")
+        
+        val actual = InputDate.localDateTimeInputDate.format(value)
+        val expected = "2024-08-19 12:34:56.000"
+
+        actual shouldEqual expected
+      }
+    }
   }
 }
