@@ -7,7 +7,7 @@ import com.jsuereth.sbtpgp.PgpKeys
 import com.jsuereth.sbtpgp.SbtPgp.autoImport.usePgpKeyHex
 
 object Settings {
-  private val scalaV = "3.4.2"
+  private val scalaV = "3.5.0"
 
   private val sharedScalacOptions = Seq(
     "-encoding",
@@ -29,7 +29,7 @@ object Settings {
     // "-Ycheck-mods",
     // "-Ydebug-type-error",
     // "-Yshow-print-errors",
-    "-Ykind-projector",              // allow `*` as wildcard to be compatible with kind projector
+    "-Xkind-projector",              // allow `*` as wildcard to be compatible with kind projector
     // "-Ykind-projector:underscores",
     "-language:existentials",        // Existential types (besides wildcard types) can be written and inferred
     "-language:experimental.macros", // Allow macro definition (besides implementation and application)
