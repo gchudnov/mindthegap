@@ -1,10 +1,10 @@
-package com.github.gchudnov.mtg.internal.translator
+package com.github.gchudnov.mtg.diagram.internal.translator
 
 import com.github.gchudnov.mtg.internal.Value
 import com.github.gchudnov.mtg.diagram.Translator
-import com.github.gchudnov.mtg.internal.AsciiCanvas
+import com.github.gchudnov.mtg.diagram.internal.AsciiCanvas
 
-private[mtg] final class InfiniteTranslator[T](canvas: AsciiCanvas) extends Translator[T]:
+private[diagram] final class InfiniteTranslator[T](canvas: AsciiCanvas) extends Translator[T]:
 
   override def translate(value: Value[T]): Int =
     value match

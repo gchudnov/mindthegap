@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.internal
+package com.github.gchudnov.mtg.diagram.internal
 
 import com.github.gchudnov.mtg.diagram.Diagram
 import com.github.gchudnov.mtg.diagram.Renderer
@@ -7,11 +7,12 @@ import com.github.gchudnov.mtg.diagram.Translator
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.internal.Endpoint
+import com.github.gchudnov.mtg.diagram.Viewport
 
 /**
  * ASCII Diagram
  */
-private[mtg] final case class AsciiDiagram(
+private[diagram] final case class AsciiDiagram(
   now: Option[Int],
   width: Int,
   spans: List[AsciiSpan],
@@ -21,9 +22,30 @@ private[mtg] final case class AsciiDiagram(
   annotations: List[AsciiAnnotation],
 )
 
-private[mtg] object AsciiDiagram:
+private[diagram] object AsciiDiagram:
 
-  def from[T](inputDiagram: Diagram[T]): AsciiDiagram = 
+  /**
+    * Make an AsciiDiagram from the given Diagram
+    *
+    * @param inputDiagram the input diagram
+    * @return the AsciiDiagram
+    */
+  def from[T: Domain](inputDiagram: Diagram[T]): AsciiDiagram = 
+    val intervals = inputDiagram.sections.flatMap(_.intervals)
+    val viewport = Viewport.make(intervals, false)
+    
+    from(inputDiagram, viewport)
+
+  /**
+   * Make an AsciiDiagram from the given Diagram and Viewport
+   * 
+   * @param inputDiagram the input diagram
+   * @param viewport the viewport
+   * @return the AsciiDiagram
+   */
+  def from[T: Domain](inputDiagram: Diagram[T], viewport: Viewport[T]): AsciiDiagram = 
+    // TODO: now?
+    // TODO: width?
 
     // AsciiDiagram
     ???

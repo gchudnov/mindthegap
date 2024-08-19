@@ -1,14 +1,14 @@
-package com.github.gchudnov.mtg.internal
+package com.github.gchudnov.mtg.diagram.internal
 
 /**
  * ASCII Label
  */
-private[mtg] final case class AsciiLabel(x: Int, value: String):
+private[diagram] final case class AsciiLabel(x: Int, value: String):
 
   def size: Int =
     value.size
 
-private[mtg] object AsciiLabel:
+private[diagram] object AsciiLabel:
 
   lazy val empty: AsciiLabel =
     AsciiLabel(0, "")

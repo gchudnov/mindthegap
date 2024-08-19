@@ -1,8 +1,6 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.diagram
 
-import com.github.gchudnov.mtg.diagram.Diagram
-import com.github.gchudnov.mtg.diagram.Viewport
-import com.github.gchudnov.mtg.AsciiRenderer
+import com.github.gchudnov.mtg.diagram.internal.*
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import java.time.OffsetDateTime

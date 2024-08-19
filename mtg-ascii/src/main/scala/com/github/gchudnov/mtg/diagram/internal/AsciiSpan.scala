@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.internal
+package com.github.gchudnov.mtg.diagram.internal
 
 /**
  * ASCII Span
@@ -9,7 +9,7 @@ package com.github.gchudnov.mtg.internal
  *   - NOTE: The span is inclusive on both ends: [x0, x1].
  *   - NOTE: includeX0 and includeX1 are used to draw begin and end of the span and do not affect the size of the span.
  */
-private[mtg] final case class AsciiSpan(x0: Int, x1: Int, includeX0: Boolean, includeX1: Boolean):
+private[diagram] final case class AsciiSpan(x0: Int, x1: Int, includeX0: Boolean, includeX1: Boolean):
 
   def isEmpty: Boolean =
     x1 < x0
@@ -20,7 +20,7 @@ private[mtg] final case class AsciiSpan(x0: Int, x1: Int, includeX0: Boolean, in
   def size: Int =
     x1 - x0 + 1
 
-private[mtg] object SpAsciiSpanan:
+private[diagram] object SpAsciiSpanan:
   lazy val empty: AsciiSpan =
     make(1, -1, true, true)
 

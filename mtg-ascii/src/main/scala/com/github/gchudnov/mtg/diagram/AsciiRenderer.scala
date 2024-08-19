@@ -1,8 +1,8 @@
-package com.github.gchudnov.mtg
+package com.github.gchudnov.mtg.diagram
 
-import com.github.gchudnov.mtg.diagram.Renderer
-import com.github.gchudnov.mtg.internal.*
-import com.github.gchudnov.mtg.diagram.{ Diagram }
+import com.github.gchudnov.mtg.Domain
+import com.github.gchudnov.mtg.diagram.internal.*
+import com.github.gchudnov.mtg.diagram.*
 import scala.collection.mutable.ListBuffer
 import scala.annotation.nowarn
 
@@ -18,7 +18,7 @@ import scala.annotation.nowarn
  * @param theme
  *   the theme to use
  */
-private[mtg] final class AsciiRenderer(theme: AsciiTheme) extends Renderer:
+private[diagram] final class AsciiRenderer(theme: AsciiTheme) extends Renderer:
 
   private val resultLines: ListBuffer[String] = ListBuffer.empty[String]
 

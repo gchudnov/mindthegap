@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.diagram
+package com.github.gchudnov.mtg.diagram.internal
 
 import com.github.gchudnov.mtg.diagram.Renderer
 import java.time.OffsetDateTime

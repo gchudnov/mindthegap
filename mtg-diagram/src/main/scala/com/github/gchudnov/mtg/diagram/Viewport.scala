@@ -20,8 +20,6 @@ object Viewport:
 
   case object Infinite extends Viewport[Nothing]
 
-  // TODO: ^^^ convert to enum
-
   def all[T: Domain]: Viewport[T] =
     make(Interval.unbounded[T])
 
@@ -40,12 +38,19 @@ object Viewport:
     make(Interval.closed(left, right))
 
   def make[T: Domain](interval: Interval[T]): Viewport[T] =
-    make(intervals = List(interval), hasEmpty = false)
+    make(intervals = List(interval), includeEmpty = false)
 
-  private[mtg] def make[T: Domain](intervals: List[Interval[T]], hasEmpty: Boolean): Viewport[T] =
+  /**
+    * Make a viewport from the given intervals.
+    *
+    * @param intervals the intervals
+    * @param includeEmpty whether to include empty intervals
+    * @return the viewport
+    */
+  private[mtg] def make[T: Domain](intervals: List[Interval[T]], includeEmpty: Boolean): Viewport[T] =
     given ordV: Ordering[Value[T]] = summon[Domain[T]].ordValue
 
-    val xs: List[Interval[T]] = if hasEmpty then intervals else intervals.filter(_.nonEmpty)
+    val xs: List[Interval[T]] = if includeEmpty then intervals else intervals.filter(_.nonEmpty)
 
     val ms = xs.map(_.normalize).flatMap(i => List(i.leftEndpoint, i.rightEndpoint))
     val vs = ms.map(_.unwrap)
