@@ -1,47 +1,37 @@
 package com.github.gchudnov.mtg.internal
 
-import java.time.Instant
-import java.time.OffsetDateTime
-import java.time.temporal.TemporalUnit
-import java.time.LocalDateTime
-import java.time.ZonedDateTime
-import java.time.OffsetTime
-import java.time.LocalTime
-import java.time.LocalDate
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.internal.domain.*
+
+import java.time.*
+import java.time.temporal.ChronoUnit
+import java.time.temporal.TemporalUnit
 
 /**
  * Default Domains
  */
-private[mtg] trait DomainLowPriority:
+private[mtg] trait DomainLowPriority extends DomainFactory:
 
   given integralDomain[T: Integral]: Domain[T] =
-    new IntegralDomain()
+    makeIntergral
 
-  // TODO: add below with default precision
+  given offsetDateTimeDomain: Domain[OffsetDateTime] =
+    makeOffsetDateTime(ChronoUnit.SECONDS)
 
-  def makeFractional[T: Fractional](unit: T): Domain[T] =
-    new FractionalDomain(unit)
+  given offsetTimeDomain: Domain[OffsetTime] =
+    makeOffsetTime(ChronoUnit.SECONDS)
 
-  def makeOffsetDateTime(unit: TemporalUnit): Domain[OffsetDateTime] =
-    new OffsetDateTimeDomain(unit)
+  given localDateTimeDomain: Domain[LocalDateTime] =
+    makeLocalDateTime(ChronoUnit.SECONDS)
 
-  def makeOffsetTime(unit: TemporalUnit): Domain[OffsetTime] =
-    new OffsetTimeDomain(unit)
+  given localDateDomain: Domain[LocalDate] =
+    makeLocalDate(ChronoUnit.DAYS)
 
-  def makeLocalDateTime(unit: TemporalUnit): Domain[LocalDateTime] =
-    new LocalDateTimeDomain(unit)
+  given localTimeDomain: Domain[LocalTime] =
+    makeLocalTime(ChronoUnit.SECONDS)
 
-  def makeLocalDate(unit: TemporalUnit): Domain[LocalDate] =
-    new LocalDateDomain(unit)
+  given zonedDateTimeDomain: Domain[ZonedDateTime] =
+    makeZonedDateTime(ChronoUnit.SECONDS)
 
-  def makeLocalTime(unit: TemporalUnit): Domain[LocalTime] =
-    new LocalTimeDomain(unit)
-
-  def makeZonedDateTime(unit: TemporalUnit): Domain[ZonedDateTime] =
-    new ZonedDateTimeDomain(unit)
-
-  def makeInstant(unit: TemporalUnit): Domain[Instant] =
-    new InstantDomain(unit)
-
+  given instantDomain: Domain[Instant] =
+    makeInstant(ChronoUnit.SECONDS)

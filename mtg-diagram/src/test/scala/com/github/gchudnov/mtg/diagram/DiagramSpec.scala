@@ -8,6 +8,14 @@ import org.scalatest.wordspec.AnyWordSpec
 final class DiagramSpec extends AnyWordSpec with Matchers:
 
   "Diagram" when {
+    "empty" should {
+      "create an empty diagram" in {
+        val actual = Diagram.empty[Int]
+        actual.title shouldBe ""
+        actual.sections shouldBe List.empty[Section[Int]]
+      }
+    }
+
     "make" should {
       "no intervals" in {
 

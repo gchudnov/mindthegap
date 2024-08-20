@@ -20,6 +20,12 @@ final case class Diagram[T](
 object Diagram:
 
   /**
+   * An empty diagram.
+   */
+  def empty[T: Domain]: Diagram[T] =
+    Diagram("", List.empty[Section[T]])
+
+  /**
    * Make a Diagram with the given intervals and annotations.
    *
    * @param name
