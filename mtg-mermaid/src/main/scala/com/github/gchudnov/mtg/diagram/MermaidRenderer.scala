@@ -10,7 +10,7 @@ import com.github.gchudnov.mtg.diagram.internal.*
  * 
  * https://mermaid.js.org/syntax/gantt.html
  */
-private[mtg] final class MermaidRenderer[T](using I: InputFormat[T]) extends Renderer[T]:
+private[mtg] final class MermaidRenderer[T](using I: InputFormat[T], O: OutputFormat[T]) extends Renderer[T]:
 
   private val sb = new StringBuilder()
 
@@ -40,7 +40,7 @@ private[mtg] final class MermaidRenderer[T](using I: InputFormat[T]) extends Ren
   }
 
 object MermaidRenderer:
-  def make[T: InputFormat]: MermaidRenderer[T] =
+  def make[T: InputFormat: OutputFormat]: MermaidRenderer[T] =
     new MermaidRenderer[T]
 
 // 
