@@ -6,7 +6,7 @@ import com.github.gchudnov.mtg.Interval
  * Section
  */
 final case class Section[T](
-  name: String,
+  title: String,
   intervals: List[Interval[T]],
   annotations: List[String],
 )

@@ -8,7 +8,7 @@ import com.github.gchudnov.mtg.Interval
  * Diagram
  */
 final case class Diagram[T](
-  name: String,
+  title: String,
   sections: List[Section[T]],
 )
 

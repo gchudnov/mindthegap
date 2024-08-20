@@ -18,7 +18,7 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           sectionNames = List.empty[String],
         )
 
-        actual.name shouldBe "no-intervals"
+        actual.title shouldBe "no-intervals"
         actual.sections shouldBe List.empty
       }
 
@@ -33,9 +33,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           sectionNames = List("section-1"),
         )
 
-        actual.name shouldBe "one-section"
+        actual.title shouldBe "one-section"
         actual.sections.size shouldBe 1
-        actual.sections.head.name shouldBe "section-1"
+        actual.sections.head.title shouldBe "section-1"
         actual.sections.head.intervals shouldBe List(a, b)
         actual.sections.head.annotations shouldBe List("a", "b")
       }
@@ -49,9 +49,9 @@ final class DiagramSpec extends AnyWordSpec with Matchers:
           intervals = List(a, b),
         )
 
-        actual.name shouldBe "one-section"
+        actual.title shouldBe "one-section"
         actual.sections.size shouldBe 1
-        actual.sections.head.name shouldBe ""
+        actual.sections.head.title shouldBe ""
         actual.sections.head.intervals shouldBe List(a, b)
         actual.sections.head.annotations shouldBe List("a", "b")
       }

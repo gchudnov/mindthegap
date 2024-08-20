@@ -39,12 +39,37 @@ private[mtg] final class MermaidRenderer[T](using I: InputFormat[T], O: OutputFo
     }
   }
 
+  private def toGanttDiagram(d: Diagram[T]): GanttDiagram = {
+    val sections = d.sections.map { s =>
+      val tasks = s.intervals.zipWithIndex.map { (i, j) =>
+        val name = if j < s.annotations.size then s.annotations(j) else ""
+        val left = i.left.map(x => I.format(x)).getOrElse("")
+        val right = i.right.map(x => I.format(x)).getOrElse("")
+
+        GanttTask(
+          name = name,
+          start = left,
+          end = right
+        )
+      }
+      GanttSection(
+        title = s.title,
+        tasks = tasks
+      )
+    }
+
+    GanttDiagram(
+      title = d.title,
+      now = None,
+      inFormat = I.pattern,
+      axisFormat = O.pattern,
+      sections = Nil
+    )
+  }
+
 object MermaidRenderer:
   def make[T: InputFormat: OutputFormat]: MermaidRenderer[T] =
     new MermaidRenderer[T]
-
-// 
-
 
 /* 
 gantt
