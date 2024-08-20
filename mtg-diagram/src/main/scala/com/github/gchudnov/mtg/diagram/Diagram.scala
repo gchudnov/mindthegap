@@ -12,6 +12,8 @@ final case class Diagram[T](
   sections: List[Section[T]],
 )
 
+// TODO: add functions to adjust name, sections, etc.
+
 /**
  * Diagram Companion Object
  */

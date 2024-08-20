@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.diagram.internal.formatters
+package com.github.gchudnov.mtg.diagram.internal.input
 
 import com.github.gchudnov.mtg.diagram.internal.InputFormat
 

@@ -5,5 +5,5 @@ import com.github.gchudnov.mtg.Domain
 /**
  * Renderer
  */
-trait Renderer:
-  def render[T: Domain](d: Diagram[T]): Unit
+trait Renderer[T]:
+  def render(d: Diagram[T]): Unit

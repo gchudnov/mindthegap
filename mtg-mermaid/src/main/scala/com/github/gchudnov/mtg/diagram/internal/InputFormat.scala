@@ -1,7 +1,7 @@
 package com.github.gchudnov.mtg.diagram.internal
 
 import java.time.*
-import com.github.gchudnov.mtg.diagram.internal.formatters.*
+import com.github.gchudnov.mtg.diagram.internal.input.*
 
 /**
  * InputFormat

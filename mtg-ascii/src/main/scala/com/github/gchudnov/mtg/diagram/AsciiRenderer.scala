@@ -18,7 +18,7 @@ import scala.annotation.nowarn
  * @param theme
  *   the theme to use
  */
-private[diagram] final class AsciiRenderer(theme: AsciiTheme) extends Renderer:
+private[diagram] final class AsciiRenderer[T](theme: AsciiTheme) extends Renderer[T]:
 
   private val resultLines: ListBuffer[String] = ListBuffer.empty[String]
 
@@ -28,7 +28,7 @@ private[diagram] final class AsciiRenderer(theme: AsciiTheme) extends Renderer:
   def result: List[String] =
     resultLines.toList
 
-  override def render[T: Domain](d: Diagram[T]): Unit =
+  override def render(d: Diagram[T]): Unit =
     ???
 
 
@@ -170,5 +170,5 @@ private[diagram] final class AsciiRenderer(theme: AsciiTheme) extends Renderer:
 //     else xs
 
 object AsciiRenderer:
-  def make(theme: AsciiTheme = AsciiTheme.default): AsciiRenderer =
-    new AsciiRenderer(theme)
+  def make[T](theme: AsciiTheme = AsciiTheme.default): AsciiRenderer[T] =
+    new AsciiRenderer[T](theme)
