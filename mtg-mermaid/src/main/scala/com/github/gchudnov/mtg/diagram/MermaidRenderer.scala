@@ -63,7 +63,7 @@ private[mtg] final class MermaidRenderer[T](using I: InputFormat[T], O: OutputFo
       now = None,
       inFormat = I.pattern,
       axisFormat = O.pattern,
-      sections = Nil,
+      sections = sections,
     )
 
 object MermaidRenderer:

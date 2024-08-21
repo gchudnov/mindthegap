@@ -32,22 +32,27 @@ class MermaidRendererSpec extends AnyWordSpec with Matchers:
       "render a single interval" in {
         val r = MermaidRenderer.make[OffsetDateTime]
 
-        val d = Diagram.empty[OffsetDateTime]
-          .addInterval(OffsetDateTime.parse("2021-01-01T00:00:00Z"), OffsetDateTime.parse("2021-01-02T00:00:00Z"))
-        r.render(d)
+        val d = Diagram
+          .empty[OffsetDateTime]
+          .withTitle("title")
+          .withSection { s =>
+            s
+              .withTitle("section")
+              .addInterval(OffsetDateTime.parse("2021-01-01T00:00:00Z"), OffsetDateTime.parse("2021-01-02T00:00:00Z"), "task")
+          }
 
-        
+        r.render(d)
 
         val actual = r.result.trim
 
         val expected = """
                          |gantt
-                         |  title       
+                         |  title       title
                          |  dateFormat  YYYY-MM-DD HH:mm:ss.SSS
                          |  axisFormat  %d.%m.%Y %H:%M:%S
                          |
-                         |  section 
-                         |  task  :2021-01-01T00:00:00Z, 2021-01-02T00:00:00Z
+                         |  section section
+                         |  task  :2021-01-01 00:00:00.000, 2021-01-02 00:00:00.000
                          |""".stripMargin.trim
 
         actual shouldEqual expected

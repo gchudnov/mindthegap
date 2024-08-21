@@ -10,9 +10,15 @@ import com.github.gchudnov.mtg.Interval
 final case class Diagram[T](
   title: String,
   sections: List[Section[T]],
-)
+):
+  def withTitle(newTitle: String): Diagram[T] =
+    this.copy(title = newTitle)
 
-// TODO: add functions to adjust name, sections, etc.
+  def withSection(f: Section[T] => Section[T]): Diagram[T] =
+    this.copy(sections = sections :+ f(Section.empty[T]))
+
+// TODO: add functions to adjust name, sections, etc. ^^^
+// TODO: do it
 
 /**
  * Diagram Companion Object
