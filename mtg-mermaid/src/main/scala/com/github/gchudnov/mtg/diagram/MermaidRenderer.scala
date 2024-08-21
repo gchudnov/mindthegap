@@ -31,10 +31,13 @@ private[mtg] final class MermaidRenderer[T](using I: InputFormat[T], O: OutputFo
 
     sb.append("\n")
 
+    val maxTaskNameLen = d.sections.flatMap(_.tasks).map(_.name.length).maxOption.getOrElse(0)
+
     d.sections.foreach { s =>
       sb.append(s"  section ${s.title}\n")
       s.tasks.foreach { t =>
-        sb.append(s"  ${t.name}  :${t.start}, ${t.end}\n")
+        val padding = " " * (maxTaskNameLen - t.name.length)
+        sb.append(s"  ${t.name}${padding}  :${t.start}, ${t.end}\n")
       }
       sb.append("\n")
     }
