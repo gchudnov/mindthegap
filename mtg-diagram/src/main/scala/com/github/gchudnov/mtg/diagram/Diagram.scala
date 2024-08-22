@@ -17,9 +17,6 @@ final case class Diagram[T](
   def withSection(f: Section[T] => Section[T]): Diagram[T] =
     this.copy(sections = sections :+ f(Section.empty[T]))
 
-// TODO: add functions to adjust name, sections, etc. ^^^
-// TODO: do it
-
 /**
  * Diagram Companion Object
  */
