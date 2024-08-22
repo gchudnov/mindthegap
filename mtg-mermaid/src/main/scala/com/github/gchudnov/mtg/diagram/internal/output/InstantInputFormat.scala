@@ -1,6 +1,6 @@
 package com.github.gchudnov.mtg.diagram.internal.output
 
-import com.github.gchudnov.mtg.diagram.internal.OutputFormat
+import com.github.gchudnov.mtg.diagram.OutputFormat
 
 import java.time.*
 

@@ -49,7 +49,7 @@ lazy val mtgMermaid = (project in file("mtg-mermaid"))
   )
 
 lazy val examples = (project in file("examples"))
-  .dependsOn(mtg, mtgDiagram, mtgAscii, mtgMermaid)
+  .dependsOn(mtg, mtgAscii, mtgMermaid)
   .settings(Settings.noPublish)
   .settings(
     name := "mtg-examples",

@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.diagram.internal
+package com.github.gchudnov.mtg.diagram
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -9,7 +9,7 @@ final class OutputFormatSpec extends AnyWordSpec with Matchers {
   "OutputFormatFormat" when {
     "OffsetDateTime" should {
       "pattern" in {
-        val actual = OutputFormat.offsetDateTimeOutputFormat.pattern
+        val actual = com.github.gchudnov.mtg.diagram.OutputFormat.offsetDateTimeOutputFormat.pattern
         val expected = "%d.%m.%Y %H:%M:%S"
 
         actual shouldEqual expected
@@ -18,7 +18,7 @@ final class OutputFormatSpec extends AnyWordSpec with Matchers {
 
     "OffsetTime" should {
       "pattern" in {
-        val actual = OutputFormat.offsetTimeOutputFormat.pattern
+        val actual = com.github.gchudnov.mtg.diagram.OutputFormat.offsetTimeOutputFormat.pattern
         val expected = "%H:%M:%S"
 
         actual shouldEqual expected
@@ -27,7 +27,7 @@ final class OutputFormatSpec extends AnyWordSpec with Matchers {
 
     "Instant" should {
       "pattern" in {
-        val actual = OutputFormat.instantOutputFormat.pattern
+        val actual = com.github.gchudnov.mtg.diagram.OutputFormat.instantOutputFormat.pattern
         val expected = "%d.%m.%Y %H:%M:%S"
 
         actual shouldEqual expected
@@ -36,7 +36,7 @@ final class OutputFormatSpec extends AnyWordSpec with Matchers {
 
     "LocalDateTime" should {
       "pattern" in {
-        val actual = OutputFormat.localDateTimeOutputFormat.pattern
+        val actual = com.github.gchudnov.mtg.diagram.OutputFormat.localDateTimeOutputFormat.pattern
         val expected = "%d.%m.%Y %H:%M:%S"
 
         actual shouldEqual expected
@@ -45,7 +45,7 @@ final class OutputFormatSpec extends AnyWordSpec with Matchers {
 
     "LocalDate" should {
       "pattern" in {
-        val actual = OutputFormat.localDateOutputFormat.pattern
+        val actual = com.github.gchudnov.mtg.diagram.OutputFormat.localDateOutputFormat.pattern
         val expected = "%d.%m.%Y"
 
         actual shouldEqual expected
@@ -54,7 +54,7 @@ final class OutputFormatSpec extends AnyWordSpec with Matchers {
 
     "LocalTime" should {
       "pattern" in {
-        val actual = OutputFormat.localTimeOutputFormat.pattern
+        val actual = com.github.gchudnov.mtg.diagram.OutputFormat.localTimeOutputFormat.pattern
         val expected = "%H:%M:%S"
 
         actual shouldEqual expected
@@ -63,7 +63,7 @@ final class OutputFormatSpec extends AnyWordSpec with Matchers {
 
     "ZonedDateTime" should {
       "pattern" in {
-        val actual = OutputFormat.zonedDateTimeOutputFormat.pattern
+        val actual = com.github.gchudnov.mtg.diagram.OutputFormat.zonedDateTimeOutputFormat.pattern
         val expected = "%d.%m.%Y %H:%M:%S"
 
         actual shouldEqual expected

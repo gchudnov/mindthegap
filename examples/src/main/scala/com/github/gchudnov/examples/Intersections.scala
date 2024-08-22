@@ -1,8 +1,7 @@
-package com.github.gchudnov.mtg.examples
+package com.github.gchudnov.examples
 
 import com.github.gchudnov.mtg.*
 import com.github.gchudnov.mtg.diagram.*
-import com.github.gchudnov.mtg.examples.util.Output
 
 /**
  * Intersections
@@ -81,12 +80,13 @@ object Intersections extends App:
    * Run an example
    */
   private def runExample[T: Domain](n: Int, xs: List[Interval[T]], ys: List[Interval[T]], canvasWidth: Int = 40): Unit =
-    val zs = intersections(xs, ys)
-    println(s"Intervals Intersections -- Example #${n}")
-    Output.printInOut(xs, ys)
-    println()
-    Output.printDiagram(xs ++ ys ++ zs, canvasWidth)
-    println()
+    // val zs = intersections(xs, ys)
+    // println(s"Intervals Intersections -- Example #${n}")
+    // Output.printInOut(xs, ys)
+    // println()
+    // Output.printDiagram(xs ++ ys ++ zs, canvasWidth)
+    // println()
+    ???
 
   /**
    * Calculate intersections

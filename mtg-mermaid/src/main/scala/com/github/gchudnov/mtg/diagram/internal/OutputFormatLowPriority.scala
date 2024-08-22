@@ -1,18 +1,13 @@
 package com.github.gchudnov.mtg.diagram.internal
 
 import java.time.*
+import com.github.gchudnov.mtg.diagram.OutputFormat
 import com.github.gchudnov.mtg.diagram.internal.output.*
-
-trait OutputFormat[T] {
-  def pattern: String
-}
-
-object OutputFormat extends OutputFormatLowPriority
 
 /**
  * Formatters for OutputFormat
  */
-private[mtg] trait OutputFormatLowPriority:
+private[diagram] trait OutputFormatLowPriority:
 
   given offsetDateTimeOutputFormat: OutputFormat[OffsetDateTime] =
     new OffsetDateTimeOutputFormat

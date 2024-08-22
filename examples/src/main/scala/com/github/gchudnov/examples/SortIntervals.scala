@@ -1,4 +1,4 @@
-package com.github.gchudnov.mtg.examples
+package com.github.gchudnov.examples
 
 import com.github.gchudnov.mtg.*
 

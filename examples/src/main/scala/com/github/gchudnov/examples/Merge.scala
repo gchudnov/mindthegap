@@ -1,8 +1,7 @@
-package com.github.gchudnov.mtg.examples
+package com.github.gchudnov.examples
 
 import com.github.gchudnov.mtg.*
 import com.github.gchudnov.mtg.diagram.*
-import com.github.gchudnov.mtg.examples.util.Output
 
 /**
  * Merge Intervals
@@ -69,12 +68,13 @@ object Merge extends App:
    * Run an example
    */
   private def runExample[T: Domain](n: Int, input: List[Interval[T]], canvasWidth: Int = 40): Unit =
-    val output = mergeIntervals(input)
-    println(s"Merge Intervals -- Example #${n}")
-    Output.printInOut(input, output)
-    println()
-    Output.printDiagram(input ++ output, canvasWidth)
-    println()
+    // val output = mergeIntervals(input)
+    // println(s"Merge Intervals -- Example #${n}")
+    // Output.printInOut(input, output)
+    // println()
+    // Output.printDiagram(input ++ output, canvasWidth)
+    // println()
+    ???
 
   /**
    * Merge Intervals

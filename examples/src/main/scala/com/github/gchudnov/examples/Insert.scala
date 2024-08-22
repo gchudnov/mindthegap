@@ -1,8 +1,7 @@
-package com.github.gchudnov.mtg.examples
+package com.github.gchudnov.examples
 
 import com.github.gchudnov.mtg.*
 import com.github.gchudnov.mtg.diagram.*
-import com.github.gchudnov.mtg.examples.util.Output
 
 /**
  * Insert Interval
@@ -17,28 +16,6 @@ import com.github.gchudnov.mtg.examples.util.Output
  * }}}
  */
 object Insert extends App:
-
-  /**
-   * Example #1
-   *
-   * {{{
-   *   input:    [[1,4],[7,9]]
-   *   interval: [2,6]
-   *   output:   [[1,6],[7,9]]
-   *
-   *     [************]                         | [1,4]
-   *                               [********]   | [7,9]
-   *         [*****************]                | [2,6]
-   *     [*********************]                | [1,6]
-   *                               [********]   | [7,9]
-   *   --+---+--------+--------+---+--------+-- |
-   *     1   2        4        6   7        9   |
-   * }}}
-   */
-  val input1    = List(Interval.closed(1, 4), Interval.closed(7, 9))
-  val toInsert1 = Interval.closed(2, 6)
-
-  runExample(1, input1, toInsert1)
 
   /**
    * Example #2
@@ -76,12 +53,13 @@ object Insert extends App:
    * Run an example
    */
   private def runExample[T: Domain](n: Int, input: List[Interval[T]], toInsert: Interval[T], canvasWidth: Int = 40): Unit =
-    val output = insertInterval(input, toInsert)
-    println(s"Insert Interval -- Example #${n}")
-    Output.printInOut(input, toInsert, output)
-    println()
-    Output.printDiagram((input :+ toInsert) ++ output, canvasWidth)
-    println()
+    // val output = insertInterval(input, toInsert)
+    // println(s"Insert Interval -- Example #${n}")
+    // Output.printInOut(input, toInsert, output)
+    // println()
+    // Output.printDiagram((input :+ toInsert) ++ output, canvasWidth)
+    // println()
+    ???
 
   /**
    * Insert an interval into the collection of intervals.

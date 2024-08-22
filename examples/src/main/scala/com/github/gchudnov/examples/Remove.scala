@@ -1,8 +1,7 @@
-package com.github.gchudnov.mtg.examples
+package com.github.gchudnov.examples
 
 import com.github.gchudnov.mtg.*
 import com.github.gchudnov.mtg.diagram.*
-import com.github.gchudnov.mtg.examples.util.Output
 
 /**
  * Remove Interval
@@ -107,12 +106,13 @@ object Remove extends App:
    * Run an example
    */
   private def runExample[T: Domain](n: Int, input: List[Interval[T]], toRemove: Interval[T], canvasWidth: Int = 40): Unit =
-    val output = removeInterval(input, toRemove)
-    println(s"Remove Interval -- Example #${n}")
-    Output.printInOut(input, toRemove, output)
-    println()
-    Output.printDiagram((input :+ toRemove) ++ output, canvasWidth)
-    println()
+    // val output = removeInterval(input, toRemove)
+    // println(s"Remove Interval -- Example #${n}")
+    // Output.printInOut(input, toRemove, output)
+    // println()
+    // Output.printDiagram((input :+ toRemove) ++ output, canvasWidth)
+    // println()
+    ???
 
   /**
    * Remove the Interval from the collection
