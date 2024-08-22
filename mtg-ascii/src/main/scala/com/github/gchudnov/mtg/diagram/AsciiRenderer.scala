@@ -6,10 +6,6 @@ import com.github.gchudnov.mtg.diagram.*
 import scala.collection.mutable.ListBuffer
 import scala.annotation.nowarn
 
-// TODO: when rendering, there might be:
-// 1) `now` -- the current time
-// 2) `viewport` -- part of the diagram to visualize
-
 /**
  * ASCII Renderer
  *
@@ -18,21 +14,33 @@ import scala.annotation.nowarn
  * @param theme
  *   the theme to use
  */
-private[diagram] final class AsciiRenderer[T](theme: AsciiTheme) extends Renderer[T]:
+private[diagram] final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas)(using D: Domain[T]) extends Renderer[T]:
 
   private val resultLines: ListBuffer[String] = ListBuffer.empty[String]
 
   /**
    * The result of the rendering.
    */
-  def result: List[String] =
-    resultLines.toList
+  def result: String =
+    resultLines.toList.mkString("\n")
 
   override def render(d: Diagram[T]): Unit =
+    val ad = toAsciiDiagram(d)
     ???
 
+  private def write(): Unit =
+    ???
 
+  private def toAsciiDiagram(d: Diagram[T]): AsciiDiagram =
+    AsciiDiagram.from(d, canvas)
   
+
+
+
+
+///////
+
+
 //     val spans  = drawSpans(d.spans, d.width)
 //     val ticks  = drawTicks(d.ticks, d.width)
 //     val labels = drawLabels(d.labels, d.width)
@@ -170,5 +178,5 @@ private[diagram] final class AsciiRenderer[T](theme: AsciiTheme) extends Rendere
 //     else xs
 
 object AsciiRenderer:
-  def make[T](theme: AsciiTheme = AsciiTheme.default): AsciiRenderer[T] =
-    new AsciiRenderer[T](theme)
+  def make[T: Domain](theme: AsciiTheme = AsciiTheme.default, canvas: AsciiCanvas = AsciiCanvas.default): AsciiRenderer[T] =
+    new AsciiRenderer[T](theme, canvas)

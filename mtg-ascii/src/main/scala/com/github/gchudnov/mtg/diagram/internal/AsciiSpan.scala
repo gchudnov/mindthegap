@@ -20,9 +20,10 @@ private[diagram] final case class AsciiSpan(x0: Int, x1: Int, includeX0: Boolean
   def size: Int =
     x1 - x0 + 1
 
-private[diagram] object SpAsciiSpanan:
-  lazy val empty: AsciiSpan =
-    make(1, -1, true, true)
+/**
+ * ASCII Span Companion Object
+ */
+private[diagram] object AsciiSpan:
 
-  def make(x0: Int, x1: Int, includeX0: Boolean, includeX1: Boolean): AsciiSpan =
-    AsciiSpan(x0, x1, includeX0, includeX1)
+  lazy val empty: AsciiSpan =
+    AsciiSpan(1, -1, true, true)

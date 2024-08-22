@@ -13,17 +13,46 @@ private[mtg] object Printer:
   private val rightOpen   = ')'
   private val rightClosed = ']'
 
-  private val leftPoint  = '{'
-  private val rightPoint = '}'
+  private val leftBrace  = '{'
+  private val rightBrace = '}'
 
   private val sep = ','
 
   def print[T: Domain](i: Interval[T]): String =
     if i.isEmpty then empty.toString()
-    else if i.isPoint then
-      val p = str(i.leftEndpoint.eval)
-      s"${leftPoint}${p}${rightPoint}"
-    else s"${showLeft(i.leftEndpoint)}${sep}${showRight(i.rightEndpoint)}"
+    else if i.isPoint then printPoint(i.leftEndpoint)
+    else printInterval(i.leftEndpoint, i.rightEndpoint)
+
+  private[mtg] def printLeft[T: Domain](left: Endpoint[T]): String =
+    val (x, isInclude) = left match
+      case Endpoint.At(x) =>
+        (x, !x.isInf)
+      case Endpoint.Pred(_) =>
+        val x = left.eval
+        (x, !x.isInf)
+      case Endpoint.Succ(xx) =>
+        (xx.eval, false)
+    s"${leftBound(isInclude)}${str(x)}"
+
+  private[mtg] def printRight[T: Domain](right: Endpoint[T]): String =
+    val (y, isInclude) = right match
+      case Endpoint.At(y) =>
+        (y, !y.isInf)
+      case Endpoint.Pred(yy) =>
+        (yy.eval, false)
+      case Endpoint.Succ(yy) =>
+        val y = right.eval
+        (y, !y.isInf)
+    s"${str(y)}${rightBound(isInclude)}"
+
+  private[mtg] def printInterval[T: Domain](le: Endpoint[T], re: Endpoint[T]): String =
+    val lhs = printLeft(le)
+    val rhs = printRight(re)
+    s"${lhs}${sep}${rhs}"
+
+  private[mtg] def printPoint[T: Domain](x: Endpoint[T]): String =
+    val p = str(x.eval)
+    s"${leftBrace}${p}${rightBrace}"
 
   private[mtg] def leftBound(isInclude: Boolean): Char =
     if isInclude then leftClosed else leftOpen
@@ -39,25 +68,3 @@ private[mtg] object Printer:
         s"+${infinite}"
       case Value.Finite(x) =>
         x.toString()
-
-  private def showLeft[T: Domain](left: Endpoint[T]): String =
-    val (x, isInclude) = left match
-      case Endpoint.At(x) =>
-        (x, !x.isInf)
-      case Endpoint.Pred(_) =>
-        val x = left.eval
-        (x, !x.isInf)
-      case Endpoint.Succ(xx) =>
-        (xx.eval, false)
-    s"${leftBound(isInclude)}${str(x)}"
-
-  private def showRight[T: Domain](right: Endpoint[T]): String =
-    val (y, isInclude) = right match
-      case Endpoint.At(y) =>
-        (y, !y.isInf)
-      case Endpoint.Pred(yy) =>
-        (yy.eval, false)
-      case Endpoint.Succ(yy) =>
-        val y = right.eval
-        (y, !y.isInf)
-    s"${str(y)}${rightBound(isInclude)}"

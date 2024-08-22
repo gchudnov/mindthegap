@@ -20,10 +20,10 @@ final case class AsciiTheme(
   annotations: Boolean,
   labelPosition: AsciiLabelPosition,
 ):
-  def leftBound(isInclude: Boolean): Char =
+  def leftBoundary(isInclude: Boolean): Char =
     if isInclude then leftClosed else leftOpen
 
-  def rightBound(isInclude: Boolean): Char =
+  def rightBoundary(isInclude: Boolean): Char =
     if isInclude then rightClosed else rightOpen
 
 object AsciiTheme:

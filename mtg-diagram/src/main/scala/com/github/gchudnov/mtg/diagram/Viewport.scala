@@ -75,3 +75,16 @@ object Viewport:
         Finite(min, max)
       case _ =>
         Infinite
+
+/* 
+  // /**
+  //  * Make an effective view from the given view and intervals
+  //  */
+  // private def makeEffectiveView[T: Domain](intervals: List[Interval[T]], view: View[T]): View[T] =
+  //   view match
+  //     case v @ View.Finite(_, _) =>
+  //       v
+  //     case View.Infinite =>
+  //       View.make(intervals, false)
+
+*/

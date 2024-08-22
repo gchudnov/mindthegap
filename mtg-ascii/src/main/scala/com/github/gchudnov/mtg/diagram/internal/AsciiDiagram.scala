@@ -2,7 +2,7 @@ package com.github.gchudnov.mtg.diagram.internal
 
 import com.github.gchudnov.mtg.diagram.Diagram
 import com.github.gchudnov.mtg.diagram.Renderer
-import com.github.gchudnov.mtg.diagram.Translator
+import com.github.gchudnov.mtg.internal.Printer
 
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
@@ -13,6 +13,7 @@ import com.github.gchudnov.mtg.diagram.Viewport
  * ASCII Diagram
  */
 private[diagram] final case class AsciiDiagram(
+  title: String,
   now: Option[Int],
   width: Int,
   spans: List[AsciiSpan],
@@ -25,35 +26,40 @@ private[diagram] final case class AsciiDiagram(
 private[diagram] object AsciiDiagram:
 
   /**
-    * Make an AsciiDiagram from the given Diagram
-    *
-    * @param inputDiagram the input diagram
-    * @return the AsciiDiagram
-    */
-  def from[T: Domain](inputDiagram: Diagram[T]): AsciiDiagram = 
-    val intervals = inputDiagram.sections.flatMap(_.intervals)
-    val viewport = Viewport.make(intervals, false)
-    
-    from(inputDiagram, viewport)
+   * Make an AsciiDiagram from the given Diagram
+   *
+   * @param d
+   *   the input diagram
+   * @return
+   *   the AsciiDiagram
+   */
+  def from[T: Domain](d: Diagram[T], canvas: AsciiCanvas): AsciiDiagram =
+    val intervals = d.sections.flatMap(_.intervals)
+    val viewport  = Viewport.make(intervals, false)
+    from(d, viewport, canvas)
 
   /**
    * Make an AsciiDiagram from the given Diagram and Viewport
-   * 
-   * @param inputDiagram the input diagram
-   * @param viewport the viewport
-   * @return the AsciiDiagram
+   *
+   * @param d
+   *   the input diagram
+   * @param viewport
+   *   the viewport
+   * @return
+   *   the AsciiDiagram
    */
-  def from[T: Domain](inputDiagram: Diagram[T], viewport: Viewport[T]): AsciiDiagram = 
-    // TODO: now?
-    // TODO: width?
+  def from[T: Domain](d: Diagram[T], viewport: Viewport[T], canvas: AsciiCanvas): AsciiDiagram =
+    val translator              = AsciiTranslator.make(viewport, canvas)
+    val (viewTicks, viewLabels) = makeTicksLabels(viewport, canvas, translator)
 
     // AsciiDiagram
     ???
 
+  /*
   // /**
   //  * Make a Diagram that can be rendered
   //  */
-  // def make[T: Domain](intervals: List[Interval[T]], view: View[T], canvas: Canvas, annotations: List[String]): Diagram =
+  // def make[T: Domain](intervals: List[Interval[T]], view: View[T], canvas: AsciiCanvas, annotations: List[String]): Diagram =
   //   val effectiveView           = makeEffectiveView(intervals, view)
   //   val translator              = Translator.make(effectiveView, canvas)
   //   val (viewTicks, viewLabels) = makeTicksLabels(view, canvas, translator)
@@ -83,7 +89,7 @@ private[diagram] object AsciiDiagram:
   //     labels = (d.labels ++ viewLabels).distinct.sortBy(_.x),
   //   )
 
-  // inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T], canvas: Canvas): Diagram =
+  // inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T], canvas: AsciiCanvas): Diagram =
   //   val annotations = DiagramMacro.varNames(intervals)
   //   make(intervals, view = view, canvas = canvas, annotations = annotations)
 
@@ -93,104 +99,105 @@ private[diagram] object AsciiDiagram:
 
   // inline def make[T: Domain](inline intervals: List[Interval[T]]): Diagram =
   //   val annotations = DiagramMacro.varNames(intervals)
-  //   make(intervals, view = View.all[T], canvas = Canvas.default, annotations = annotations)
+  //   make(intervals, view = Viewport.all[T], canvas = Canvas.default, annotations = annotations)
 
-  // inline def make[T: Domain](inline intervals: List[Interval[T]], canvas: Canvas): Diagram =
+  // inline def make[T: Domain](inline intervals: List[Interval[T]], canvas: AsciiCanvas): Diagram =
   //   val annotations = DiagramMacro.varNames(intervals)
-  //   make(intervals, view = View.all[T], canvas = canvas, annotations = annotations)
+  //   make(intervals, view = Viewport.all[T], canvas = canvas, annotations = annotations)
 
   // def make[T: Domain](intervals: List[Interval[T]], annotations: List[String]): Diagram =
-  //   make(intervals, view = View.all[T], canvas = Canvas.default, annotations = annotations)
+  //   make(intervals, view = Viewport.all[T], canvas = Canvas.default, annotations = annotations)
 
-  // /**
-  //  * Make Labels
-  //  */
-  // private def toLabels[T: Domain](c: Canvas, i: Interval[T], span: Span): List[Label] =
-  //   val xs =
-  //     if i.isEmpty then List.empty[Label]
-  //     else if i.isPoint then List(Label.make(span.x0, i.leftEndpoint.eval.toString())) // TODO: Show.str
-  //     else
-  //       val i1 = i.normalize
-  //       List(
-  //         Label.make(span.x0, i1.leftEndpoint.unwrap.toString()), // TODO: Show.str
-  //         Label.make(span.x1, i1.rightEndpoint.unwrap.toString()), // TODO: Show.str
-  //       )
+   */
 
-  //   val ys = xs.map(x => positionLabelOnCanvas(x, c))
-  //   ys
+  private def makeTicksLabels[T: Domain](view: Viewport[T], canvas: AsciiCanvas, translator: AsciiTranslator[T]): (List[AsciiTick], List[AsciiLabel]) =
+    view match
+      case Viewport.Finite(x, y) =>
+        val vi     = Interval.closed[T](x, y)
+        val vs     = toSpan(translator, vi)
+        val ticks  = toTicks(vs)
+        val labels = toLabels(canvas, vi, vs)
+        (ticks, labels)
+      case Viewport.Infinite =>
+        (List.empty[AsciiTick], List.empty[AsciiLabel])
 
-  // private def positionLabelOnCanvas(l: Label, c: Canvas): Label =
-  //   val p = Canvas.align(l.x.toDouble - (l.value.size.toDouble / 2.0))
-  //   val q = p + l.value.size
+  private def toSpan[T: Domain](t: AsciiTranslator[T], i: Interval[T]): AsciiSpan =
+    if i.isEmpty then AsciiSpan.empty
+    else if i.isPoint then
+      val x = t.translate(i.normalize.leftEndpoint.eval)
+      AsciiSpan(
+        x0 = x,
+        x1 = x,
+        includeX0 = true,
+        includeX1 = true,
+      )
+    else
+      val i1        = i.normalize
+      val x0        = t.translate(i1.leftEndpoint.unwrap)
+      val x1        = t.translate(i1.rightEndpoint.unwrap)
+      val includeX0 = isLeftInclusive(i1.leftEndpoint)
+      val includeX1 = isRightInclusive(i1.rightEndpoint)
+      AsciiSpan(
+        x0 = x0,
+        x1 = x1,
+        includeX0 = includeX0,
+        includeX1 = includeX1,
+      )
 
-  //   val x1 =
-  //     if p < 0 && c.contains(l.x) then 0
-  //     else if q >= c.width && c.contains(l.x) then c.width - l.value.size
-  //     else p
+  private def isLeftInclusive[T](left: Endpoint[T]): Boolean =
+    left match
+      case Endpoint.At(x) =>
+        x.isFinite
+      case Endpoint.Succ(_) =>
+        false
+      case xx @ Endpoint.Pred(_) =>
+        sys.error("unexpected value of a normalized interval: " + xx)
 
-  //   l.copy(x = x1)
+  private def isRightInclusive[T](right: Endpoint[T]): Boolean =
+    right match
+      case Endpoint.At(y) =>
+        y.isFinite
+      case yy @ Endpoint.Succ(_) =>
+        sys.error("unexpected value of a normalized interval: " + yy)
+      case Endpoint.Pred(_) =>
+        false
 
-  // /**
-  //  * Convert the given span to a list of ticks.
-  //  */
-  // private def toTicks(s: Span): List[Tick] =
-  //   if s.isEmpty then List.empty[Tick]
-  //   else List(Tick(s.x0), Tick(s.x1))
+  /**
+   * Convert the given span to a list of ticks.
+   */
+  private def toTicks(s: AsciiSpan): List[AsciiTick] =
+    if s.isEmpty then List.empty[AsciiTick]
+    else List(AsciiTick(s.x0), AsciiTick(s.x1))
 
-  // private def toSpan[T: Domain](t: Translator[T], i: Interval[T]): Span =
-  //   if i.isEmpty then Span.empty
-  //   else if i.isPoint then
-  //     val p = t.translate(i.normalize.leftEndpoint.eval)
-  //     Span(
-  //       x0 = p,
-  //       x1 = p,
-  //       includeX0 = true,
-  //       includeX1 = true,
-  //     )
-  //   else
-  //     val i1 = i.normalize
-  //     Span.make(
-  //       x0 = t.translate(i1.leftEndpoint.unwrap),
-  //       x1 = t.translate(i1.rightEndpoint.unwrap),
-  //       includeX0 = isLeftInclusive(i1.leftEndpoint),
-  //       includeX1 = isRightInclusive(i1.rightEndpoint),
-  //     )
+  /**
+   * Make Labels
+   */
+  private def toLabels[T: Domain](c: AsciiCanvas, i: Interval[T], span: AsciiSpan): List[AsciiLabel] =
+    val xs =
+      if i.isEmpty then List.empty[AsciiLabel]
+      else if i.isPoint then List(AsciiLabel.make(span.x0, Printer.printPoint(i.leftEndpoint)))
+      else
+        val i1 = i.normalize
+        List(
+          AsciiLabel.make(span.x0, Printer.printLeft(i1.leftEndpoint)),
+          AsciiLabel.make(span.x1, Printer.printRight(i1.rightEndpoint)),
+        )
 
-  // private def isLeftInclusive[T](left: Endpoint[T]): Boolean =
-  //   left match
-  //     case Endpoint.At(x) =>
-  //       x.isFinite
-  //     case Endpoint.Succ(_) =>
-  //       false
-  //     case xx @ Endpoint.Pred(_) =>
-  //       sys.error("unexpected value of a normalized interval: " + xx)
+    val ys = xs.map(x => positionLabelOnCanvas(x, c))
+    ys
 
-  // private def isRightInclusive[T](right: Endpoint[T]): Boolean =
-  //   right match
-  //     case Endpoint.At(y) =>
-  //       y.isFinite
-  //     case yy @ Endpoint.Succ(_) =>
-  //       sys.error("unexpected value of a normalized interval: " + yy)
-  //     case Endpoint.Pred(_) =>
-  //       false
+  /**
+   * Position the label on the canvas
+   *
+   * Centers label relative to the given x position.
+   */
+  private def positionLabelOnCanvas(l: AsciiLabel, c: AsciiCanvas): AsciiLabel =
+    val p = AsciiCanvas.align(l.x.toDouble - (l.value.size.toDouble / 2.0))
+    val q = p + l.value.size
 
-  // /**
-  //  * Make an effective view from the given view and intervals
-  //  */
-  // private def makeEffectiveView[T: Domain](intervals: List[Interval[T]], view: View[T]): View[T] =
-  //   view match
-  //     case v @ View.Finite(_, _) =>
-  //       v
-  //     case View.Infinite =>
-  //       View.make(intervals, false)
+    val x1 =
+      if p < 0 && c.contains(l.x) then 0
+      else if q >= c.width && c.contains(l.x) then c.width - l.value.size
+      else p
 
-  // private def makeTicksLabels[T: Domain](view: View[T], canvas: Canvas, translator: Translator[T]): (List[Tick], List[Label]) =
-  //   view match
-  //     case View.Finite(x, y) =>
-  //       val vi     = Interval.closed[T](x, y)
-  //       val vs     = toSpan(translator, vi)
-  //       val ticks  = toTicks(vs)
-  //       val labels = toLabels(canvas, vi, vs)
-  //       (ticks, labels)
-  //     case View.Infinite =>
-  //       (List.empty[Tick], List.empty[Label])
+    l.copy(x = x1)
