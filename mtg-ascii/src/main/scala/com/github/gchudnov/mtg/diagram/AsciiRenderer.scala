@@ -14,7 +14,7 @@ import scala.annotation.nowarn
  * @param theme
  *   the theme to use
  */
-private[diagram] final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas)(using D: Domain[T]) extends Renderer[T]:
+final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas)(using D: Domain[T]) extends Renderer[T]:
 
   private val resultLines: ListBuffer[String] = ListBuffer.empty[String]
 
@@ -75,9 +75,9 @@ private[diagram] final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCa
     result
 
   private def toAsciiDiagram(d: Diagram[T]): AsciiDiagram =
-    AsciiDiagram.from(d, canvas)
+    AsciiDiagram.make(d, canvas)
 
-  private[mtg] def drawSpans(spans: List[AsciiSpan], width: Int): List[String] =
+  private def drawSpans(spans: List[AsciiSpan], width: Int): List[String] =
     val views: Array[Array[Char]] = Array.fill[Char](spans.size, width)(theme.space)
     spans.zipWithIndex.foreach((span, i) => drawSpanInPlace(span, views(i)))
     views.map(_.mkString).toList
@@ -93,7 +93,7 @@ private[diagram] final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCa
         if span.x0 >= 0 && span.x0 < spot.size then spot(span.x0) = theme.leftBoundary(span.includeX0)
         if span.x1 >= 0 && span.x1 < spot.size then spot(span.x1) = theme.rightBoundary(span.includeX1)
 
-  private[mtg] def drawTicks(ts: List[AsciiTick], width: Int): List[String] =
+  private def drawTicks(ts: List[AsciiTick], width: Int): List[String] =
     val view = Array.fill[Char](width)(theme.axis)
     ts.sortBy(_.x).foreach(t => drawTickInPlace(t, view))
     List(view.mkString)
@@ -101,7 +101,7 @@ private[diagram] final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCa
   private def drawTickInPlace(t: AsciiTick, spot: Array[Char]): Unit =
     if (t.x >= 0) && (t.x < spot.size) then spot(t.x) = theme.tick
 
-  private[mtg] def drawLabels(ls: List[AsciiLabel], width: Int): List[String] =
+  private def drawLabels(ls: List[AsciiLabel], width: Int): List[String] =
     theme.labelPosition match
       case AsciiLabelPosition.None =>
         drawLabelsNone(ls, width)
@@ -170,7 +170,7 @@ private[diagram] final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCa
    * @return
    *   the list of lines padded with empty lines
    */
-  private[mtg] def padWithEmptyLines(n: Int)(xs: List[String]): List[String] =
+  private def padWithEmptyLines(n: Int)(xs: List[String]): List[String] =
     if (xs.size < n) && (n > 0) then xs ++ List.fill[String](n - xs.size)("")
     else xs
 
@@ -185,7 +185,7 @@ private[diagram] final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCa
    * @return
    *   the padded value
    */
-  private[mtg] def padRight(n: Int, pad: Char)(value: String): String =
+  private def padRight(n: Int, pad: Char)(value: String): String =
     if n > 0 then value + (pad.toString * n)
     else value
 

@@ -1,328 +1,407 @@
 package com.github.gchudnov.mtg.diagram.internal
 
-import com.github.gchudnov.mtg.diagram.Renderer
-import java.time.OffsetDateTime
-import java.time.Instant
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
+import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.diagram.Diagram
+import com.github.gchudnov.mtg.diagram.Renderer
+import com.github.gchudnov.mtg.diagram.Viewport
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import com.github.gchudnov.mtg.Domain
+
+import java.time.Instant
+import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.time.temporal.ChronoUnit
 
 final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
-  // private val canvas: Canvas      = Canvas.make(40, 2)
-  // private val infView: View[Int]  = View.all[Int]
+  private val canvas: AsciiCanvas    = AsciiCanvas.make(40, 2)
+  private val infView: Viewport[Int] = Viewport.all[Int]
 
   "AsciiDiagram" when {
-    // "make" should {
-    //   "diagram no intervals" in {
-    //     val actual   = Diagram.make(List.empty[Interval[Int]], infView, canvas)
-    //     val expected = Diagram.empty
+    "make" should {
+      "diagram no intervals" in {
+        val input = Diagram.empty[Int]
 
-    //     actual shouldBe expected
-    //   }
+        val expected = AsciiDiagram.empty
+        val actual   = AsciiDiagram.make(input, canvas)
 
-    //   "diagram an empty interval" in {
-    //     val a = Interval.empty[Int]
+        actual shouldBe expected
+      }
 
-    //     val actual   = Diagram.make(List(a), infView, canvas)
-    //     val expected = Diagram(40, 1, List(Span(1, -1, true, true)), List(), List(), List(Legend("∅")), List(Annotation("a")))
+      "diagram an empty interval" in {
+        val a = Interval.empty[Int]
 
-    //     actual shouldBe expected
-    //   }
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
 
-    //   "diagram a point" in {
-    //     val a = Interval.point[Int](5) // [5]
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 1,
+          List(AsciiSpan(1, -1, true, true)),
+          ticks = List.empty[AsciiTick],
+          labels = List.empty[AsciiLabel],
+          legends = List(AsciiLegend("∅")),
+          annotations = List(AsciiAnnotation("a")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
 
-    //     val actual = Diagram.make(List(a), infView, canvas)
-    //     val expected =
-    //       Diagram(40, 1, List(Span(20, 20, true, true)), List(Tick(20)), List(Label(20, "5")), List(Legend("{5}")), List(Annotation("a")))
+        actual shouldBe expected
+      }
 
-    //     actual shouldBe expected
-    //   }
+      "diagram a point" in {
+        val a = Interval.point[Int](5) // [5]
 
-    //   "diagram two points" in {
-    //     val a = Interval.point[Int](5)  // [5]
-    //     val b = Interval.point[Int](10) // [10]
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
 
-    //     val actual = Diagram.make(List(a, b), infView, canvas)
-    //     val expected =
-    //       Diagram(
-    //         40,
-    //         2,
-    //         List(Span(2, 2, true, true), Span(37, 37, true, true)),
-    //         List(Tick(2), Tick(37)),
-    //         List(Label(2, "5"), Label(36, "10")),
-    //         List(Legend("{5}"), Legend("{10}")),
-    //         List(Annotation("a"), Annotation("b")),
-    //       )
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 1,
+          List(AsciiSpan(20, 20, true, true)),
+          ticks = List(AsciiTick(2), AsciiTick(20), AsciiTick(37)),
+          labels = List(AsciiLabel(2, "4"), AsciiLabel(20, "5"), AsciiLabel(37, "6")),
+          legends = List(AsciiLegend("{5}")),
+          annotations = List(AsciiAnnotation("a")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
 
-    //     actual shouldBe expected
-    //   }
+        actual shouldBe expected
+      }
 
-    //   "diagram a closed interval" in {
-    //     val a = Interval.closed[Int](5, 10) // [5, 10]
+      "diagram two points" in {
+        val a = Interval.point[Int](5)  // [5]
+        val b = Interval.point[Int](10) // [10]
 
-    //     val actual = Diagram.make(List(a), infView, canvas)
-    //     val expected = Diagram(
-    //       40,
-    //       1,
-    //       List(Span(2, 37, true, true)),
-    //       List(Tick(2), Tick(37)),
-    //       List(Label(2, "5"), Label(36, "10")),
-    //       List(Legend("[5,10]")),
-    //       List(Annotation("a")),
-    //     )
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a").addInterval(b, "b"))
 
-    //     actual shouldBe expected
-    //   }
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 2,
+          List(AsciiSpan(2, 2, true, true), AsciiSpan(37, 37, true, true)),
+          ticks = List(AsciiTick(2), AsciiTick(37)),
+          labels = List(AsciiLabel(2, "5"), AsciiLabel(36, "10")),
+          legends = List(AsciiLegend("{5}"), AsciiLegend("{10}")),
+          annotations = List(AsciiAnnotation("a"), AsciiAnnotation("b")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
 
-    //   "diagram a closed interval with a negative boundary" in {
-    //     val a = Interval.closed[Int](-5, 10) // [-5, 10]
+        actual shouldBe expected
+      }
 
-    //     val actual = Diagram.make(List(a), infView, canvas)
-    //     val expected = Diagram(
-    //       40,
-    //       1,
-    //       List(Span(2, 37, true, true)),
-    //       List(Tick(2), Tick(37)),
-    //       List(Label(1, "-5"), Label(36, "10")),
-    //       List(Legend("[-5,10]")),
-    //       List(Annotation("a")),
-    //     )
+      "diagram a closed interval" in {
+        val a = Interval.closed[Int](5, 10) // [5, 10]
 
-    //     actual shouldBe expected
-    //   }
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
 
-    //   "diagram an unbounded interval" in {
-    //     val a = Interval.unbounded[Int] // (-∞, +∞)
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 1,
+          List(AsciiSpan(2, 37, true, true)),
+          ticks = List(AsciiTick(2), AsciiTick(37)),
+          labels = List(AsciiLabel(2, "5"), AsciiLabel(36, "10")),
+          legends = List(AsciiLegend("[5,10]")),
+          annotations = List(AsciiAnnotation("a")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
 
-    //     val actual = Diagram.make(List(a), infView, canvas)
-    //     val expected =
-    //       Diagram(
-    //         40,
-    //         1,
-    //         List(Span(0, 39, false, false)),
-    //         List(Tick(0), Tick(39)),
-    //         List(Label(0, "-∞"), Label(38, "+∞")),
-    //         List(Legend("(-∞,+∞)")),
-    //         List(Annotation("a")),
-    //       )
+        actual shouldBe expected
+      }
 
-    //     actual shouldBe expected
-    //   }
+      "diagram a closed interval with a negative boundary" in {
+        val a = Interval.closed[Int](-5, 10) // [-5, 10]
 
-    //   "diagram a leftOpen interval" in {
-    //     val a = Interval.leftOpen(5) // (5, +∞)
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
 
-    //     val actual = Diagram.make(List(a), infView, canvas)
-    //     val expected =
-    //       Diagram(
-    //         40,
-    //         1,
-    //         List(Span(20, 39, false, false)),
-    //         List(Tick(20), Tick(39)),
-    //         List(Label(20, "5"), Label(38, "+∞")),
-    //         List(Legend("(5,+∞)")),
-    //         List(Annotation("a")),
-    //       )
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 1,
+          List(AsciiSpan(2, 37, true, true)),
+          ticks = List(AsciiTick(2), AsciiTick(37)),
+          labels = List(AsciiLabel(1, "-5"), AsciiLabel(36, "10")),
+          legends = List(AsciiLegend("[-5,10]")),
+          annotations = List(AsciiAnnotation("a")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
 
-    //     actual shouldBe expected
-    //   }
+        actual shouldBe expected
+      }
 
-    //   "diagram a leftClosed interval" in {
-    //     val a = Interval.leftClosed(5) // [5, +∞)
+      "diagram an unbounded interval" in {
+        val a = Interval.unbounded[Int] // (-∞, +∞)
 
-    //     val actual = Diagram.make(List(a), infView, canvas)
-    //     val expected =
-    //       Diagram(
-    //         40,
-    //         1,
-    //         List(Span(20, 39, true, false)),
-    //         List(Tick(20), Tick(39)),
-    //         List(Label(20, "5"), Label(38, "+∞")),
-    //         List(Legend("[5,+∞)")),
-    //         List(Annotation("a")),
-    //       )
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
 
-    //     actual shouldBe expected
-    //   }
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 1,
+          List(AsciiSpan(0, 39, false, false)),
+          ticks = List(AsciiTick(0), AsciiTick(39)),
+          labels = List(AsciiLabel(0, "-∞"), AsciiLabel(38, "+∞")),
+          legends = List(AsciiLegend("(-∞,+∞)")),
+          annotations = List(AsciiAnnotation("a")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
 
-    //   "diagram a rightOpen interval" in {
-    //     val a = Interval.rightOpen(5) // (-∞, 5)
+        actual shouldBe expected
+      }
 
-    //     val actual = Diagram.make(List(a), infView, canvas)
-    //     val expected = Diagram(
-    //       40,
-    //       1,
-    //       List(Span(0, 20, false, false)),
-    //       List(Tick(0), Tick(20)),
-    //       List(Label(0, "-∞"), Label(20, "5")),
-    //       List(Legend("(-∞,5)")),
-    //       List(Annotation("a")),
-    //     )
+      "diagram a leftOpen interval" in {
+        val a = Interval.leftOpen(5) // (5, +∞)
 
-    //     actual shouldBe expected
-    //   }
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
 
-    //   "diagram a rightClosed interval" in {
-    //     val a = Interval.rightClosed(5) // (-∞, 5]
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 1,
+          List(AsciiSpan(20, 39, false, false)),
+          ticks = List(AsciiTick(2), AsciiTick(20), AsciiTick(37), AsciiTick(39)),
+          labels = List(AsciiLabel(2, "4"), AsciiLabel(20, "5"), AsciiLabel(37, "6"), AsciiLabel(38, "+∞")),
+          legends = List(AsciiLegend("(5,+∞)")),
+          annotations = List(AsciiAnnotation("a")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
 
-    //     val actual = Diagram.make(List(a), infView, canvas)
-    //     val expected = Diagram(
-    //       40,
-    //       1,
-    //       List(Span(0, 20, false, true)),
-    //       List(Tick(0), Tick(20)),
-    //       List(Label(0, "-∞"), Label(20, "5")),
-    //       List(Legend("(-∞,5]")),
-    //       List(Annotation("a")),
-    //     )
+        actual shouldBe expected
+      }
 
-    //     actual shouldBe expected
-    //   }
+      "diagram a leftClosed interval" in {
+        val a = Interval.leftClosed(5) // [5, +∞)
 
-    //   "diagram left part of a closed interval" in {
-    //     val a = Interval.closed[Int](5, 10) // [5, 10]
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
 
-    //     val view = View.make(Some(0), Some(7)) // [0, 7]
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 1,
+          List(AsciiSpan(20, 39, true, false)),
+          ticks = List(AsciiTick(2), AsciiTick(20), AsciiTick(37), AsciiTick(39)),
+          labels = List(AsciiLabel(2, "4"), AsciiLabel(20, "5"), AsciiLabel(37, "6"), AsciiLabel(38, "+∞")),
+          legends = List(AsciiLegend("[5,+∞)")),
+          annotations = List(AsciiAnnotation("a")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
 
-    //     val actual = Diagram.make(List(a), view, canvas)
-    //     val expected = Diagram(
-    //       40,
-    //       1,
-    //       List(Span(27, 52, true, true)),
-    //       List(Tick(2), Tick(27), Tick(37), Tick(52)),
-    //       List(Label(2, "0"), Label(27, "5"), Label(37, "7"), Label(51, "10")),
-    //       List(Legend("[5,10]")),
-    //       List(Annotation("a")),
-    //     )
+        actual shouldBe expected
+      }
 
-    //     actual shouldBe expected
-    //   }
+      "diagram a rightOpen interval" in {
+        val a = Interval.rightOpen(5) // (-∞, 5)
 
-    //   "diagram several intervals" in {
-    //     val a = Interval.closed(1, 5)
-    //     val b = Interval.closed(5, 10)
-    //     val c = Interval.rightClosed(15)
-    //     val d = Interval.leftOpen(2)
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
 
-    //     val actual = Diagram.make(List(a, b, c, d), infView, canvas)
-    //     val expected = Diagram(
-    //       40,
-    //       4,
-    //       List(
-    //         Span(2, 12, true, true),
-    //         Span(12, 25, true, true),
-    //         Span(0, 37, false, true),
-    //         Span(5, 39, false, false),
-    //       ),
-    //       List(Tick(0), Tick(2), Tick(5), Tick(12), Tick(25), Tick(37), Tick(39)),
-    //       List(Label(0, "-∞"), Label(2, "1"), Label(5, "2"), Label(12, "5"), Label(24, "10"), Label(36, "15"), Label(38, "+∞")),
-    //       List(Legend("[1,5]"), Legend("[5,10]"), Legend("(-∞,15]"), Legend("(2,+∞)")),
-    //       List(Annotation("a"), Annotation("b"), Annotation("c"), Annotation("d")),
-    //     )
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 1,
+          List(AsciiSpan(0, 20, false, false)),
+          ticks = List(AsciiTick(0), AsciiTick(2), AsciiTick(20), AsciiTick(37)),
+          labels = List(AsciiLabel(0, "-∞"), AsciiLabel(2, "4"), AsciiLabel(20, "5"), AsciiLabel(37, "6")),
+          legends = List(AsciiLegend("(-∞,5)")),
+          annotations = List(AsciiAnnotation("a")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
 
-    //     actual shouldBe expected
-    //   }
+        actual shouldBe expected
+      }
 
-    //   "diagram several intervals with annotations" in {
-    //     val a = Interval.closed(1, 5)
-    //     val b = Interval.closed(5, 10)
+      "diagram a rightClosed interval" in {
+        val a = Interval.rightClosed(5) // (-∞, 5]
 
-    //     val actual = Diagram.make(List(a, b), infView, canvas, List("a", "b"))
-    //     val expected = Diagram(
-    //       40,
-    //       2,
-    //       List(Span(2, 18, true, true), Span(18, 37, true, true)),
-    //       List(Tick(2), Tick(18), Tick(37)),
-    //       List(Label(2, "1"), Label(18, "5"), Label(36, "10")),
-    //       List(Legend("[1,5]"), Legend("[5,10]")),
-    //       List(Annotation("a"), Annotation("b")),
-    //     )
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
 
-    //     actual shouldBe expected
-    //   }
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 1,
+          List(AsciiSpan(0, 20, false, true)),
+          ticks = List(AsciiTick(0), AsciiTick(2), AsciiTick(20), AsciiTick(37)),
+          labels = List(AsciiLabel(0, "-∞"), AsciiLabel(2, "4"), AsciiLabel(20, "5"), AsciiLabel(37, "6")),
+          legends = List(AsciiLegend("(-∞,5]")),
+          annotations = List(AsciiAnnotation("a")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
 
-    //   "diagram several intervals that include an empty one" in {
-    //     val a = Interval.closed(1, 5)
-    //     val b = Interval.closed(2, 6)
-    //     val c = Interval.empty[Int]
+        actual shouldBe expected
+      }
 
-    //     val actual = Diagram.make(List(a, b, c), infView, canvas)
-    //     val expected = Diagram(
-    //       40,
-    //       3,
-    //       List(Span(2, 30, true, true), Span(9, 37, true, true), Span(1, -1, true, true)),
-    //       List(Tick(2), Tick(9), Tick(30), Tick(37)),
-    //       List(Label(2, "1"), Label(9, "2"), Label(30, "5"), Label(37, "6")),
-    //       List(Legend("[1,5]"), Legend("[2,6]"), Legend("∅")),
-    //       List(Annotation("a"), Annotation("b"), Annotation("c")),
-    //     )
+      "diagram left part of a closed interval" in {
+        val a = Interval.closed[Int](5, 10) // [5, 10]
 
-    //     actual shouldBe expected
-    //   }
+        val view = Viewport.make(Some(0), Some(7)) // [0, 7]
 
-    //   "diagram overlapping intervals" in {
-    //     val a = Interval.closed(1, 5)
-    //     val b = Interval.closed(2, 6)
-    //     val c = Interval.closed(3, 7)
-    //     val d = Interval.closed(4, 8)
-    //     val e = Interval.closed(5, 9)
-    //     val f = Interval.closed(6, 10)
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
 
-    //     val actual = Diagram.make(List(a, b, c, d, e, f), infView, canvas)
-    //     val expected = Diagram(
-    //       40,
-    //       6,
-    //       List(
-    //         Span(2, 18, true, true),
-    //         Span(6, 21, true, true),
-    //         Span(10, 25, true, true),
-    //         Span(14, 29, true, true),
-    //         Span(18, 33, true, true),
-    //         Span(21, 37, true, true),
-    //       ),
-    //       List(Tick(2), Tick(6), Tick(10), Tick(14), Tick(18), Tick(21), Tick(25), Tick(29), Tick(33), Tick(37)),
-    //       List(
-    //         Label(2, "1"),
-    //         Label(6, "2"),
-    //         Label(10, "3"),
-    //         Label(14, "4"),
-    //         Label(18, "5"),
-    //         Label(21, "6"),
-    //         Label(25, "7"),
-    //         Label(29, "8"),
-    //         Label(33, "9"),
-    //         Label(36, "10"),
-    //       ),
-    //       List(Legend("[1,5]"), Legend("[2,6]"), Legend("[3,7]"), Legend("[4,8]"), Legend("[5,9]"), Legend("[6,10]")),
-    //       List(Annotation("a"), Annotation("b"), Annotation("c"), Annotation("d"), Annotation("e"), Annotation("f")),
-    //     )
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 1,
+          List(AsciiSpan(27, 52, true, true)),
+          ticks = List(AsciiTick(2), AsciiTick(27), AsciiTick(37), AsciiTick(52)),
+          labels = List(AsciiLabel(2, "0"), AsciiLabel(27, "5"), AsciiLabel(37, "7"), AsciiLabel(51, "10")),
+          legends = List(AsciiLegend("[5,10]")),
+          annotations = List(AsciiAnnotation("a")),
+        )
+        val actual = AsciiDiagram.make(input, view, canvas)
 
-    //     actual shouldBe expected
-    //   }
+        actual shouldBe expected
+      }
 
-    //   "diagram offset-date-time" in {
-    //     given offsetDateTimeDomain: Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.DAYS)
-    //     val a                                              = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
+      "diagram several intervals" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(5, 10)
+        val c = Interval.rightClosed(15)
+        val d = Interval.leftOpen(2)
 
-    //     val odtView: View[OffsetDateTime] = View.all[OffsetDateTime]
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d"))
 
-    //     val actual = Diagram.make[OffsetDateTime](List(a), odtView, canvas)
-    //     val expected = Diagram(
-    //       40,
-    //       1,
-    //       List(Span(2, 37, true, true)),
-    //       List(Tick(2), Tick(37)),
-    //       List(Label(0, "2020-07-02T12:34Z"), Label(23, "2021-07-02T12:34Z")),
-    //       List(Legend("[2020-07-02T12:34Z,2021-07-02T12:34Z]")),
-    //       List(Annotation("a")),
-    //     )
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 4,
+          List(AsciiSpan(2, 12, true, true), AsciiSpan(12, 25, true, true), AsciiSpan(0, 37, false, true), AsciiSpan(5, 39, false, false)),
+          ticks = List(AsciiTick(0), AsciiTick(2), AsciiTick(5), AsciiTick(12), AsciiTick(25), AsciiTick(37), AsciiTick(39)),
+          labels = List(
+            AsciiLabel(0, "-∞"),
+            AsciiLabel(2, "1"),
+            AsciiLabel(5, "2"),
+            AsciiLabel(12, "5"),
+            AsciiLabel(24, "10"),
+            AsciiLabel(36, "15"),
+            AsciiLabel(38, "+∞"),
+          ),
+          legends = List(AsciiLegend("[1,5]"), AsciiLegend("[5,10]"), AsciiLegend("(-∞,15]"), AsciiLegend("(2,+∞)")),
+          annotations = List(AsciiAnnotation("a"), AsciiAnnotation("b"), AsciiAnnotation("c"), AsciiAnnotation("d")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
 
-    //     actual shouldBe expected
-    //   }
-    // }
+        actual shouldBe expected
+      }
+
+      "diagram several intervals with annotations" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(5, 10)
+
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a").addInterval(b, "b"))
+
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 2,
+          List(AsciiSpan(2, 18, true, true), AsciiSpan(18, 37, true, true)),
+          ticks = List(AsciiTick(2), AsciiTick(18), AsciiTick(37)),
+          labels = List(AsciiLabel(2, "1"), AsciiLabel(18, "5"), AsciiLabel(36, "10")),
+          legends = List(AsciiLegend("[1,5]"), AsciiLegend("[5,10]")),
+          annotations = List(AsciiAnnotation("a"), AsciiAnnotation("b")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
+
+        actual shouldBe expected
+      }
+
+      "diagram several intervals that include an empty one" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(2, 6)
+        val c = Interval.empty[Int]
+
+        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c"))
+
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 3,
+          List(AsciiSpan(2, 30, true, true), AsciiSpan(9, 37, true, true), AsciiSpan(1, -1, true, true)),
+          ticks = List(AsciiTick(2), AsciiTick(9), AsciiTick(30), AsciiTick(37)),
+          labels = List(AsciiLabel(2, "1"), AsciiLabel(9, "2"), AsciiLabel(30, "5"), AsciiLabel(37, "6")),
+          legends = List(AsciiLegend("[1,5]"), AsciiLegend("[2,6]"), AsciiLegend("∅")),
+          annotations = List(AsciiAnnotation("a"), AsciiAnnotation("b"), AsciiAnnotation("c")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
+
+        actual shouldBe expected
+      }
+
+      "diagram overlapping intervals" in {
+        val a = Interval.closed(1, 5)
+        val b = Interval.closed(2, 6)
+        val c = Interval.closed(3, 7)
+        val d = Interval.closed(4, 8)
+        val e = Interval.closed(5, 9)
+        val f = Interval.closed(6, 10)
+
+        val input = Diagram
+          .empty[Int]
+          .withSection(
+            _.addInterval(a, "a")
+              .addInterval(b, "b")
+              .addInterval(c, "c")
+              .addInterval(d, "d")
+              .addInterval(e, "e")
+              .addInterval(f, "f")
+          )
+
+        val expected = AsciiDiagram(
+          title = "",
+          now = None,
+          width = 40,
+          height = 6,
+          List(
+            AsciiSpan(2, 18, true, true),
+            AsciiSpan(6, 21, true, true),
+            AsciiSpan(10, 25, true, true),
+            AsciiSpan(14, 29, true, true),
+            AsciiSpan(18, 33, true, true),
+            AsciiSpan(21, 37, true, true),
+          ),
+          ticks = List(
+            AsciiTick(2),
+            AsciiTick(6),
+            AsciiTick(10),
+            AsciiTick(14),
+            AsciiTick(18),
+            AsciiTick(21),
+            AsciiTick(25),
+            AsciiTick(29),
+            AsciiTick(33),
+            AsciiTick(37),
+          ),
+          labels = List(
+            AsciiLabel(2, "1"),
+            AsciiLabel(6, "2"),
+            AsciiLabel(10, "3"),
+            AsciiLabel(14, "4"),
+            AsciiLabel(18, "5"),
+            AsciiLabel(21, "6"),
+            AsciiLabel(25, "7"),
+            AsciiLabel(29, "8"),
+            AsciiLabel(33, "9"),
+            AsciiLabel(36, "10"),
+          ),
+          legends = List(AsciiLegend("[1,5]"), AsciiLegend("[2,6]"), AsciiLegend("[3,7]"), AsciiLegend("[4,8]"), AsciiLegend("[5,9]"), AsciiLegend("[6,10]")),
+          annotations = List(AsciiAnnotation("a"), AsciiAnnotation("b"), AsciiAnnotation("c"), AsciiAnnotation("d"), AsciiAnnotation("e"), AsciiAnnotation("f")),
+        )
+        val actual = AsciiDiagram.make(input, canvas)
+
+        actual shouldBe expected
+      }
+    }
   }

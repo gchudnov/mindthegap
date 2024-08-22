@@ -10,7 +10,7 @@ import com.github.gchudnov.mtg.diagram.internal.*
  *
  * https://mermaid.js.org/syntax/gantt.html
  */
-private[mtg] final class MermaidRenderer[T](using I: InputFormat[T], O: OutputFormat[T]) extends Renderer[T]:
+final class MermaidRenderer[T](using I: InputFormat[T], O: OutputFormat[T]) extends Renderer[T]:
 
   private val sb = new StringBuilder()
 
@@ -72,13 +72,3 @@ private[mtg] final class MermaidRenderer[T](using I: InputFormat[T], O: OutputFo
 object MermaidRenderer:
   def make[T: InputFormat: OutputFormat]: MermaidRenderer[T] =
     new MermaidRenderer[T]
-
-/*
-gantt
-    title A Gantt Diagram
-    dateFormat  YYYY-MM-DDTHH:mm:ss.SSS
-    axisFormat  %d-%m-%Y %H:%M
-
-    section Section
-    Task 1           :a1, 2024-08-19T09:00:00.000, 2024-08-20T10:00:00.000
- */

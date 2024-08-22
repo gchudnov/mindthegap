@@ -46,10 +46,10 @@ private[diagram] object AsciiDiagram:
    * @return
    *   the AsciiDiagram
    */
-  def from[T: Domain](d: Diagram[T], canvas: AsciiCanvas): AsciiDiagram =
+  def make[T: Domain](d: Diagram[T], canvas: AsciiCanvas): AsciiDiagram =
     val intervals = d.sections.flatMap(_.intervals)
     val viewport  = Viewport.make(intervals, false)
-    from(d, viewport, canvas)
+    make(d, viewport, canvas)
 
   /**
    * Make an AsciiDiagram from the given Diagram and Viewport
@@ -61,7 +61,7 @@ private[diagram] object AsciiDiagram:
    * @return
    *   the AsciiDiagram
    */
-  def from[T: Domain](d: Diagram[T], viewport: Viewport[T], canvas: AsciiCanvas): AsciiDiagram =
+  def make[T: Domain](d: Diagram[T], viewport: Viewport[T], canvas: AsciiCanvas): AsciiDiagram =
     val intervals               = d.sections.flatMap(_.intervals) // TODO: sections are not supported at the moment
     val annotations             = d.sections.flatMap(_.annotations)
     val translator              = AsciiTranslator.make(viewport, canvas)
@@ -157,12 +157,12 @@ private[diagram] object AsciiDiagram:
   private def toLabels[T: Domain](c: AsciiCanvas, i: Interval[T], span: AsciiSpan): List[AsciiLabel] =
     val xs =
       if i.isEmpty then List.empty[AsciiLabel]
-      else if i.isPoint then List(AsciiLabel.make(span.x0, Printer.printPoint(i.leftEndpoint)))
+      else if i.isPoint then List(AsciiLabel.make(span.x0, Printer.str(i.leftEndpoint.unwrap)))
       else
         val i1 = i.normalize
         List(
-          AsciiLabel.make(span.x0, Printer.printLeft(i1.leftEndpoint)),
-          AsciiLabel.make(span.x1, Printer.printRight(i1.rightEndpoint)),
+          AsciiLabel.make(span.x0, Printer.str(i1.leftEndpoint.unwrap)),
+          AsciiLabel.make(span.x1, Printer.str(i1.rightEndpoint.unwrap)),
         )
 
     val ys = xs.map(x => positionLabelOnCanvas(x, c))
