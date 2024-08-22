@@ -1,13 +1,12 @@
 package com.github.gchudnov.mtg.diagram.internal
 
-import com.github.gchudnov.mtg.diagram.Diagram
-import com.github.gchudnov.mtg.diagram.Renderer
-import com.github.gchudnov.mtg.internal.Printer
-
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
-import com.github.gchudnov.mtg.internal.Endpoint
+import com.github.gchudnov.mtg.diagram.Diagram
+import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Viewport
+import com.github.gchudnov.mtg.internal.Endpoint
+import com.github.gchudnov.mtg.internal.Printer
 
 /**
  * ASCII Diagram
@@ -16,6 +15,7 @@ private[diagram] final case class AsciiDiagram(
   title: String,
   now: Option[Int],
   width: Int,
+  height: Int,
   spans: List[AsciiSpan],
   ticks: List[AsciiTick],
   labels: List[AsciiLabel],
@@ -24,6 +24,19 @@ private[diagram] final case class AsciiDiagram(
 )
 
 private[diagram] object AsciiDiagram:
+
+  lazy val empty: AsciiDiagram =
+    AsciiDiagram(
+      title = "",
+      now = None,
+      width = 0,
+      height = 0,
+      spans = List.empty[AsciiSpan],
+      ticks = List.empty[AsciiTick],
+      labels = List.empty[AsciiLabel],
+      legends = List.empty[AsciiLegend],
+      annotations = List.empty[AsciiAnnotation],
+    )
 
   /**
    * Make an AsciiDiagram from the given Diagram
@@ -49,66 +62,35 @@ private[diagram] object AsciiDiagram:
    *   the AsciiDiagram
    */
   def from[T: Domain](d: Diagram[T], viewport: Viewport[T], canvas: AsciiCanvas): AsciiDiagram =
+    val intervals               = d.sections.flatMap(_.intervals) // TODO: sections are not supported at the moment
+    val annotations             = d.sections.flatMap(_.annotations)
     val translator              = AsciiTranslator.make(viewport, canvas)
     val (viewTicks, viewLabels) = makeTicksLabels(viewport, canvas, translator)
 
-    // AsciiDiagram
-    ???
+    val ad = intervals.zipWithIndex.foldLeft(AsciiDiagram.empty) { case (acc, (i, j)) =>
+      val y = acc.height
 
-  /*
-  // /**
-  //  * Make a Diagram that can be rendered
-  //  */
-  // def make[T: Domain](intervals: List[Interval[T]], view: View[T], canvas: AsciiCanvas, annotations: List[String]): Diagram =
-  //   val effectiveView           = makeEffectiveView(intervals, view)
-  //   val translator              = Translator.make(effectiveView, canvas)
-  //   val (viewTicks, viewLabels) = makeTicksLabels(view, canvas, translator)
+      val span   = toSpan(translator, i)
+      val ticks  = toTicks(span)
+      val labels = toLabels(canvas, i, span)
+      val legend = AsciiLegend.make(i)
+      val ann    = if j < annotations.size then AsciiAnnotation(annotations(j)) else AsciiAnnotation.empty
 
-  //   val d = intervals.zipWithIndex.foldLeft(Diagram.empty) { case (acc, (i, j)) =>
-  //     val y = acc.height
+      acc.copy(
+        width = canvas.width,
+        height = y + 1,
+        spans = acc.spans :+ span,
+        ticks = acc.ticks ++ ticks,
+        labels = acc.labels ++ labels,
+        legends = acc.legends :+ legend,
+        annotations = acc.annotations :+ ann,
+      )
+    }
 
-  //     val span   = toSpan(translator, i)
-  //     val ticks  = toTicks(span)
-  //     val labels = toLabels(canvas, i, span)
-  //     val legend = Legend.make(i)
-  //     val ann    = if j < annotations.size then Annotation(annotations(j)) else Annotation.empty
-
-  //     acc.copy(
-  //       width = canvas.width,
-  //       height = y + 1,
-  //       spans = acc.spans :+ span,
-  //       ticks = acc.ticks ++ ticks,
-  //       labels = acc.labels ++ labels,
-  //       legends = acc.legends :+ legend,
-  //       annotations = acc.annotations :+ ann,
-  //     )
-  //   }
-
-  //   d.copy(
-  //     ticks = (d.ticks ++ viewTicks).distinct.sortBy(_.x),
-  //     labels = (d.labels ++ viewLabels).distinct.sortBy(_.x),
-  //   )
-
-  // inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T], canvas: AsciiCanvas): Diagram =
-  //   val annotations = DiagramMacro.varNames(intervals)
-  //   make(intervals, view = view, canvas = canvas, annotations = annotations)
-
-  // inline def make[T: Domain](inline intervals: List[Interval[T]], view: View[T]): Diagram =
-  //   val annotations = DiagramMacro.varNames(intervals)
-  //   make(intervals, view = view, canvas = Canvas.default, annotations = annotations)
-
-  // inline def make[T: Domain](inline intervals: List[Interval[T]]): Diagram =
-  //   val annotations = DiagramMacro.varNames(intervals)
-  //   make(intervals, view = Viewport.all[T], canvas = Canvas.default, annotations = annotations)
-
-  // inline def make[T: Domain](inline intervals: List[Interval[T]], canvas: AsciiCanvas): Diagram =
-  //   val annotations = DiagramMacro.varNames(intervals)
-  //   make(intervals, view = Viewport.all[T], canvas = canvas, annotations = annotations)
-
-  // def make[T: Domain](intervals: List[Interval[T]], annotations: List[String]): Diagram =
-  //   make(intervals, view = Viewport.all[T], canvas = Canvas.default, annotations = annotations)
-
-   */
+    ad.copy(
+      ticks = (ad.ticks ++ viewTicks).distinct.sortBy(_.x),
+      labels = (ad.labels ++ viewLabels).distinct.sortBy(_.x),
+    )
 
   private def makeTicksLabels[T: Domain](view: Viewport[T], canvas: AsciiCanvas, translator: AsciiTranslator[T]): (List[AsciiTick], List[AsciiLabel]) =
     view match
