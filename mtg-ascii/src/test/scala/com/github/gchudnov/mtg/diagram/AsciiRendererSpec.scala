@@ -19,8 +19,8 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
   private val infView: Viewport[Int] = Viewport.all[Int]
 
   private val themeDefault: AsciiTheme               = AsciiTheme.default
-  private val themeNoLegend: AsciiTheme              = themeDefault.copy(legend = false)
-  private val themeNoLegendNoAnnotations: AsciiTheme = themeDefault.copy(legend = false, annotations = false)
+  private val themeNoLegend: AsciiTheme              = themeDefault.copy(hasLegend = false)
+  private val themeNoLegendNoAnnotations: AsciiTheme = themeDefault.copy(hasLegend = false, hasAnnotations = false)
 
   "AsciiRenderer" when {
 

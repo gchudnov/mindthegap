@@ -16,8 +16,8 @@ final case class AsciiTheme(
   tick: Char,
   border: Char,
   comment: Char,
-  legend: Boolean,
-  annotations: Boolean,
+  hasLegend: Boolean,
+  hasAnnotations: Boolean,
   labelPosition: AsciiLabelPosition,
 ):
   def leftBoundary(isInclude: Boolean): Char =
@@ -40,7 +40,7 @@ object AsciiTheme:
       tick = '+',
       border = '|',
       comment = ':',
-      legend = true,
-      annotations = true,
+      hasLegend = true,
+      hasAnnotations = true,
       labelPosition = AsciiLabelPosition.NoOverlap,
     )
