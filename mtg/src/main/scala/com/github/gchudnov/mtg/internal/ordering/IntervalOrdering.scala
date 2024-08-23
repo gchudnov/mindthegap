@@ -5,7 +5,7 @@ import com.github.gchudnov.mtg.Interval
 
 /**
  * Ordering of the intervals.
- * 
+ *
  * Intervals are ordered:
  *
  * {{{

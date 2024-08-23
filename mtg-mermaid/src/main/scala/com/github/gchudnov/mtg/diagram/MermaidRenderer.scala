@@ -48,9 +48,11 @@ final class MermaidRenderer[T](using I: InputFormat[T], O: OutputFormat[T]) exte
   private def toGanttDiagram(d: Diagram[T]): GanttDiagram =
     val sections = d.sections.map { s =>
       val tasks = s.intervals.zipWithIndex.map { (i, j) =>
-        val name  = if j < s.annotations.size then s.annotations(j) else ""
-        val left  = i.left.map(x => I.format(x)).getOrElse(throw new UnsupportedOperationException(s"Left endpoint of an interval is missing"))
-        val right = i.right.map(x => I.format(x)).getOrElse(throw new UnsupportedOperationException(s"Right endpoint of an interval is missing"))
+        val name = if j < s.annotations.size then s.annotations(j) else ""
+        val left =
+          i.left.map(x => I.format(x)).getOrElse(throw new UnsupportedOperationException(s"Left endpoint of an interval is missing"))
+        val right =
+          i.right.map(x => I.format(x)).getOrElse(throw new UnsupportedOperationException(s"Right endpoint of an interval is missing"))
 
         GanttTask(
           name = name,

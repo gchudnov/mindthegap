@@ -7,7 +7,7 @@ import com.github.gchudnov.mtg.diagram.*
  * Group Intervals #2 (non-adjacent)
  *
  * {{{
- * Given 
+ * Given
  *     [***]                                  | [1,3]   : a
  *            [***]                           | [4,6]   : b
  *                  [*]                       | [7,8]   : c

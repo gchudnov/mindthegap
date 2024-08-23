@@ -13,7 +13,8 @@ lazy val testSettings = Seq(
 
 lazy val allSettings = Settings.shared ++ testSettings
 
-lazy val mtg = (project in file("mtg"))
+lazy val mtg = (project
+  .in(file("mtg")))
   .settings(allSettings)
   .settings(Settings.publishGithub)
   .settings(
@@ -21,7 +22,8 @@ lazy val mtg = (project in file("mtg"))
     libraryDependencies ++= Dependencies.Mtg,
   )
 
-lazy val mtgDiagram = (project in file("mtg-diagram"))
+lazy val mtgDiagram = (project
+  .in(file("mtg-diagram")))
   .dependsOn(mtg)
   .settings(allSettings)
   .settings(Settings.publishGithub)
@@ -30,7 +32,8 @@ lazy val mtgDiagram = (project in file("mtg-diagram"))
     libraryDependencies ++= Dependencies.Mtg,
   )
 
-lazy val mtgAscii = (project in file("mtg-ascii"))
+lazy val mtgAscii = (project
+  .in(file("mtg-ascii")))
   .dependsOn(mtg, mtgDiagram)
   .settings(allSettings)
   .settings(Settings.publishGithub)
@@ -39,7 +42,8 @@ lazy val mtgAscii = (project in file("mtg-ascii"))
     libraryDependencies ++= Dependencies.Mtg,
   )
 
-lazy val mtgMermaid = (project in file("mtg-mermaid"))
+lazy val mtgMermaid = (project
+  .in(file("mtg-mermaid")))
   .dependsOn(mtg, mtgDiagram)
   .settings(allSettings)
   .settings(Settings.publishGithub)
@@ -48,7 +52,8 @@ lazy val mtgMermaid = (project in file("mtg-mermaid"))
     libraryDependencies ++= Dependencies.Mtg,
   )
 
-lazy val examples = (project in file("examples"))
+lazy val examples = (project
+  .in(file("examples")))
   .dependsOn(mtg, mtgAscii, mtgMermaid)
   .settings(Settings.noPublish)
   .settings(
@@ -56,7 +61,8 @@ lazy val examples = (project in file("examples"))
     libraryDependencies ++= Dependencies.Examples,
   )
 
-lazy val root = (project in file("."))
+lazy val root = (project
+  .in(file(".")))
   .aggregate(mtg, mtgDiagram, mtgAscii, mtgMermaid, examples)
   .settings(Settings.noPublish)
   .settings(

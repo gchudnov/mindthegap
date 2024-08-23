@@ -13,7 +13,7 @@ import java.time.*
  *     title       <no title>
  *     dateFormat  HH:mm:ss.SSS
  *     axisFormat  %H:%M:%S
- *   
+ *
  *     section <no title>
  *     a  :04:00:00.000, 10:00:00.000
  *     b  :08:00:00.000, 20:00:00.000

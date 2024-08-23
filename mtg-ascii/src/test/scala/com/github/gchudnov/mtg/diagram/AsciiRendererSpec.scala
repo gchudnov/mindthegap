@@ -403,7 +403,9 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram
           .empty[Int]
-          .withSection(_.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d").addInterval(e, "e").addInterval(f, "f"))
+          .withSection(
+            _.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d").addInterval(e, "e").addInterval(f, "f")
+          )
 
         renderer.render(diagram)
 
@@ -459,7 +461,9 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram
           .empty[Int]
-          .withSection(_.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d").addInterval(e, "e").addInterval(f, "f"))
+          .withSection(
+            _.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d").addInterval(e, "e").addInterval(f, "f")
+          )
 
         renderer.render(diagram)
 
@@ -492,7 +496,9 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram
           .empty[Int]
-          .withSection(_.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d").addInterval(e, "e").addInterval(f, "f"))
+          .withSection(
+            _.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d").addInterval(e, "e").addInterval(f, "f")
+          )
 
         renderer.render(diagram)
 
@@ -525,7 +531,9 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
 
         val diagram = Diagram
           .empty[Int]
-          .withSection(_.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d").addInterval(e, "e").addInterval(f, "f"))
+          .withSection(
+            _.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d").addInterval(e, "e").addInterval(f, "f")
+          )
 
         renderer.render(diagram)
 
@@ -686,11 +694,12 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
         val theme    = themeDefault.copy(labelPosition = AsciiLabelPosition.Stacked)
         val renderer = AsciiRenderer.make[LocalDate](theme)
 
-        val a       = Interval.leftClosed(LocalDate.parse("2023-01-01"))
-        val b       = Interval.closed(LocalDate.parse("2023-01-03"), LocalDate.parse("2023-01-15"))
-        val c       = Interval.empty[LocalDate]
-        val d       = Interval.closed(LocalDate.parse("2023-01-10"), LocalDate.parse("2023-01-20"))
-        val diagram = Diagram.empty[LocalDate].withSection(_.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d"))
+        val a = Interval.leftClosed(LocalDate.parse("2023-01-01"))
+        val b = Interval.closed(LocalDate.parse("2023-01-03"), LocalDate.parse("2023-01-15"))
+        val c = Interval.empty[LocalDate]
+        val d = Interval.closed(LocalDate.parse("2023-01-10"), LocalDate.parse("2023-01-20"))
+        val diagram =
+          Diagram.empty[LocalDate].withSection(_.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d"))
 
         renderer.render(diagram)
 

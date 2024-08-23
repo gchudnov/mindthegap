@@ -6,10 +6,10 @@ import com.github.gchudnov.mtg.internal.Value
 import com.github.gchudnov.mtg.internal.Endpoint
 
 /**
-  * Viewport that needs to be rendered
-  * 
-  * Might be either finite or infinite.
-  */
+ * Viewport that needs to be rendered
+ *
+ * Might be either finite or infinite.
+ */
 sealed trait Viewport[+T]
 
 object Viewport:
@@ -41,12 +41,15 @@ object Viewport:
     make(intervals = List(interval), includeEmpty = false)
 
   /**
-    * Make a viewport from the given intervals.
-    *
-    * @param intervals the intervals
-    * @param includeEmpty whether to include empty intervals
-    * @return the viewport
-    */
+   * Make a viewport from the given intervals.
+   *
+   * @param intervals
+   *   the intervals
+   * @param includeEmpty
+   *   whether to include empty intervals
+   * @return
+   *   the viewport
+   */
   private[mtg] def make[T: Domain](intervals: List[Interval[T]], includeEmpty: Boolean): Viewport[T] =
     given ordV: Ordering[Value[T]] = summon[Domain[T]].ordValue
 
@@ -76,7 +79,7 @@ object Viewport:
       case _ =>
         Infinite
 
-/* 
+/*
   // /**
   //  * Make an effective view from the given view and intervals
   //  */
@@ -87,4 +90,4 @@ object Viewport:
   //     case View.Infinite =>
   //       View.make(intervals, false)
 
-*/
+ */

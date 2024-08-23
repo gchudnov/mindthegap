@@ -29,7 +29,7 @@ final class GroupSpec extends TestSpec:
               val a = ab.head
               val b = ab.last
 
-              a.isDisjoint(b) shouldBe (true),
+              a.isDisjoint(b) shouldBe (true)
             )
         }
       }

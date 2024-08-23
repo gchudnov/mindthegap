@@ -93,7 +93,11 @@ private[diagram] object AsciiDiagram:
       labels = (ad.labels ++ viewLabels).distinct.sortBy(_.x),
     )
 
-  private def makeTicksLabels[T: Domain](view: Viewport[T], canvas: AsciiCanvas, translator: AsciiTranslator[T]): (List[AsciiTick], List[AsciiLabel]) =
+  private def makeTicksLabels[T: Domain](
+    view: Viewport[T],
+    canvas: AsciiCanvas,
+    translator: AsciiTranslator[T],
+  ): (List[AsciiTick], List[AsciiLabel]) =
     view match
       case Viewport.Finite(x, y) =>
         val vi     = Interval.closed[T](x, y)

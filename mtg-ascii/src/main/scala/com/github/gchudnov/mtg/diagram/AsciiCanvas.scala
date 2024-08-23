@@ -47,8 +47,8 @@ object AsciiCanvas:
     require(padding < width / 2, "padding should be less than half of the width")
 
     AsciiCanvas(
-      width = width, 
-      padding = padding
+      width = width,
+      padding = padding,
     )
 
   /**

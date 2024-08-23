@@ -64,8 +64,9 @@ final class EndpointOrderingSpec extends TestSpec:
       "order them" in {
         val xs = List[Endpoint[Int]](Endpoint.at(1), Endpoint.succ(Endpoint.succ(1)), Endpoint.pred(1), Endpoint.pred(Endpoint.pred(1)))
 
-        val actual   = xs.sorted
-        val expected = List[Endpoint[Int]](Endpoint.pred(Endpoint.pred(1)), Endpoint.pred(1), Endpoint.at(1), Endpoint.succ(Endpoint.succ(1)))
+        val actual = xs.sorted
+        val expected =
+          List[Endpoint[Int]](Endpoint.pred(Endpoint.pred(1)), Endpoint.pred(1), Endpoint.at(1), Endpoint.succ(Endpoint.succ(1)))
 
         actual should contain theSameElementsAs (expected)
       }

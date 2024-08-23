@@ -5,7 +5,6 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 import com.github.gchudnov.mtg.TestSpec
 import com.github.gchudnov.mtg.Domain
 
-
 final class EndpointSpec extends TestSpec:
 
   "Endpoint" when {

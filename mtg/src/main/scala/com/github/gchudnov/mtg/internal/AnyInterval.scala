@@ -11,7 +11,8 @@ import com.github.gchudnov.mtg.Interval
  * @param rightEndpoint
  *   Right endpoint
  */
-private[mtg] final case class AnyInterval[T: Domain](override val leftEndpoint: Endpoint[T], override val rightEndpoint: Endpoint[T]) extends Interval[T]:
+private[mtg] final case class AnyInterval[T: Domain](override val leftEndpoint: Endpoint[T], override val rightEndpoint: Endpoint[T])
+    extends Interval[T]:
 
   override def left: Option[T] =
     leftEndpoint.unwrap.opt

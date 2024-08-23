@@ -3,8 +3,8 @@ package com.github.gchudnov.mtg.internal.ordering
 import com.github.gchudnov.mtg.internal.Value
 
 /**
-  * Ordering of the values.
-  */
+ * Ordering of the values.
+ */
 private[mtg] final class ValueOrdering[T: Ordering] extends Ordering[Value[T]]:
 
   override def compare(x: Value[T], y: Value[T]): Int =

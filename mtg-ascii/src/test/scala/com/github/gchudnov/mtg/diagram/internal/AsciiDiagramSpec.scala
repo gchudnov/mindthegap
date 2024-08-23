@@ -397,8 +397,22 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
             AsciiLabel(33, "9"),
             AsciiLabel(36, "10"),
           ),
-          legends = List(AsciiLegend("[1,5]"), AsciiLegend("[2,6]"), AsciiLegend("[3,7]"), AsciiLegend("[4,8]"), AsciiLegend("[5,9]"), AsciiLegend("[6,10]")),
-          annotations = List(AsciiAnnotation("a"), AsciiAnnotation("b"), AsciiAnnotation("c"), AsciiAnnotation("d"), AsciiAnnotation("e"), AsciiAnnotation("f")),
+          legends = List(
+            AsciiLegend("[1,5]"),
+            AsciiLegend("[2,6]"),
+            AsciiLegend("[3,7]"),
+            AsciiLegend("[4,8]"),
+            AsciiLegend("[5,9]"),
+            AsciiLegend("[6,10]"),
+          ),
+          annotations = List(
+            AsciiAnnotation("a"),
+            AsciiAnnotation("b"),
+            AsciiAnnotation("c"),
+            AsciiAnnotation("d"),
+            AsciiAnnotation("e"),
+            AsciiAnnotation("f"),
+          ),
         )
         val actual = AsciiDiagram.make(input, canvas)
 
