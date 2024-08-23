@@ -21,7 +21,7 @@ class MermaidRendererSpec extends AnyWordSpec with Matchers:
 
         val expected = """
                          |gantt
-                         |  title       
+                         |  title       <no title>
                          |  dateFormat  YYYY-MM-DD HH:mm:ss.SSS
                          |  axisFormat  %d.%m.%Y %H:%M:%S
                          |""".stripMargin.trim
