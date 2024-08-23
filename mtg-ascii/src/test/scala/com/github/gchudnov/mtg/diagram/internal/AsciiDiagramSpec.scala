@@ -12,10 +12,11 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
+import com.github.gchudnov.mtg.diagram.AsciiCanvas
 
 final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
-  private val canvas: AsciiCanvas    = AsciiCanvas.make(40, 2)
+  private val canvas: AsciiCanvas    = com.github.gchudnov.mtg.diagram.AsciiCanvas.make(40, 2)
   private val infView: Viewport[Int] = Viewport.all[Int]
 
   "AsciiDiagram" when {

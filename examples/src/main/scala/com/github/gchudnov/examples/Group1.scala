@@ -4,19 +4,17 @@ import com.github.gchudnov.mtg.*
 import com.github.gchudnov.mtg.diagram.*
 
 /**
- * Group Intervals
+ * Group Intervals #1 (non-adjacent)
  *
  * {{{
- * Given:
+ * Given
  *     [************]                         | [1,4] : a
  *                               [********]   | [7,9] : b
- *                                            |
- * And:                                       |
  *         [*****************]                | [2,6] : c
  *                                            |
  * When Grouped                               |
  *                                            |
- * Then:                                      |
+ * Then                                       |
  *     [*********************]                | [1,6] : d
  *                               [********]   | [7,9] : e
  *   --+---+--------+--------+---+--------+-- |

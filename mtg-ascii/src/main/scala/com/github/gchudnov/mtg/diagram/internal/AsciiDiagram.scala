@@ -7,6 +7,7 @@ import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Viewport
 import com.github.gchudnov.mtg.internal.Endpoint
 import com.github.gchudnov.mtg.internal.Printer
+import com.github.gchudnov.mtg.diagram.AsciiCanvas
 
 /**
  * ASCII Diagram
@@ -174,7 +175,7 @@ private[diagram] object AsciiDiagram:
    * Centers label relative to the given x position.
    */
   private def positionLabelOnCanvas(l: AsciiLabel, c: AsciiCanvas): AsciiLabel =
-    val p = AsciiCanvas.align(l.x.toDouble - (l.value.size.toDouble / 2.0))
+    val p = com.github.gchudnov.mtg.diagram.AsciiCanvas.align(l.x.toDouble - (l.value.size.toDouble / 2.0))
     val q = p + l.value.size
 
     val x1 =

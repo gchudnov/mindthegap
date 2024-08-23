@@ -3,7 +3,7 @@ package com.github.gchudnov.mtg.diagram.internal.translator
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.internal.Value
 import com.github.gchudnov.mtg.diagram.internal.AsciiTranslator
-import com.github.gchudnov.mtg.diagram.internal.AsciiCanvas
+import com.github.gchudnov.mtg.diagram.AsciiCanvas
 import com.github.gchudnov.mtg.diagram.Viewport
 
 /**

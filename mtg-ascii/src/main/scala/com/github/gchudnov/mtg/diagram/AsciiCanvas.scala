@@ -1,11 +1,11 @@
-package com.github.gchudnov.mtg.diagram.internal
+package com.github.gchudnov.mtg.diagram
 
 /**
  * ASCII Canvas
  *
  * Specifies the width of the text buffer to draw a diagram on.
  */
-private[diagram] final case class AsciiCanvas(
+final case class AsciiCanvas(
   width: Int,
   padding: Int,
 ):
@@ -20,7 +20,7 @@ private[diagram] final case class AsciiCanvas(
   def contains(x: Int): Boolean =
     (x >= 0 && x < width)
 
-private[diagram] object AsciiCanvas:
+object AsciiCanvas:
 
   private val defaultWidth: Int   = 40
   private val defaultPadding: Int = 2
