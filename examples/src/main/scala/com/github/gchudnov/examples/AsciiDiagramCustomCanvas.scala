@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit
 import java.time.*
 
 /**
- * ASCII Rendering Custom Canvas
+ * ASCII Diagram Custom Canvas
  *
  * {{{
  *     [********************]                                                                             | [2022-07-02T04:00Z,2022-07-04T10:00Z] : a
@@ -17,7 +17,7 @@ import java.time.*
  *   2022-07-02T04:00Z                       2022-07-07T03:00Z 2022-07-09T01:00Z        2022-07-12T08:00Z |
  * }}}
  */
-object AsciiRenderCustomCanvas extends App:
+object AsciiDiagramCustomCanvas extends App:
   val t1 = OffsetDateTime.parse("2022-07-02T04:00Z")
   val t2 = OffsetDateTime.parse("2022-07-04T10:00Z")
   val t3 = OffsetDateTime.parse("2022-07-04T08:00Z")

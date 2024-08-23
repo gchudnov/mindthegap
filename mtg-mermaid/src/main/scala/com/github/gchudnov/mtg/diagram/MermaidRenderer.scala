@@ -24,8 +24,10 @@ final class MermaidRenderer[T](using I: InputFormat[T], O: OutputFormat[T]) exte
   private def write(d: GanttDiagram): Unit =
     sb.clear()
 
+    val title = if d.title.isEmpty then "<no title>" else d.title
+
     sb.append("gantt\n")
-    sb.append(s"  title       ${d.title}\n")
+    sb.append(s"  title       ${title}\n")
     sb.append(s"  dateFormat  ${d.inFormat}\n")
     sb.append(s"  axisFormat  ${d.axisFormat}\n")
 
@@ -34,7 +36,8 @@ final class MermaidRenderer[T](using I: InputFormat[T], O: OutputFormat[T]) exte
     val maxTaskNameLen = d.sections.flatMap(_.tasks).map(_.name.length).maxOption.getOrElse(0)
 
     d.sections.foreach { s =>
-      sb.append(s"  section ${s.title}\n")
+      val title = if s.title.isEmpty then "<no title>" else s.title
+      sb.append(s"  section ${title}\n")
       s.tasks.foreach { t =>
         val padding = " " * (maxTaskNameLen - t.name.length)
         sb.append(s"  ${t.name}${padding}  :${t.start}, ${t.end}\n")
