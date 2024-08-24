@@ -13,3 +13,4 @@ jobs:
       - uses: scalacenter/sbt-dependency-submission@v2
         with:
           configs-ignore: test
+          modules-ignore: examples_3, root_3
