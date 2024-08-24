@@ -992,4 +992,86 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
         actual shouldBe expected
       }
     }
+
+    "viewport" should {
+      "display a closed interval on a custom viewport" in {
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
+
+        val a = Interval.closed[Int](5, 10)
+
+        val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+
+        val viewport = Viewport.make(Some(0), Some(20))
+        renderer.render(diagram, viewport)
+
+        val actual = renderer.result
+        val expected = List(
+          "           [********]                    | a",
+          "--+--------+--------+----------------+-- |",
+          "  0        5       10               20   |",
+        ).mkString("\n")
+
+        actual shouldBe expected
+      }
+
+      "display the left part of a closed interval" in {
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
+
+        val a = Interval.closed[Int](5, 10)
+
+        val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+
+        val viewport = Viewport.make(Some(0), Some(7))
+        renderer.render(diagram, viewport)
+
+        val actual = renderer.result
+        val expected = List(
+          "                           [************ | a",
+          "--+------------------------+---------+-- |",
+          "  0                        5         7   |",
+        ).mkString("\n")
+
+        actual shouldBe expected
+      }
+
+      "display the right part of a closed interval" in {
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
+
+        val a = Interval.closed[Int](5, 10)
+
+        val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+
+        val viewport = Viewport.make(Some(7), Some(15))
+        renderer.render(diagram, viewport)
+
+        val actual = renderer.result
+        val expected = List(
+          "***************]                         | a",
+          "--+------------+---------------------+-- |",
+          "  7           10                    15   |",
+        ).mkString("\n")
+
+        actual shouldBe expected
+      }
+
+      "display the middle part of a closed interval" in {
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
+
+        val a = Interval.closed[Int](5, 10)
+
+        val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+
+        val viewport = Viewport.make(Some(7), Some(8))
+        renderer.render(diagram, viewport)
+
+        val actual = renderer.result
+        val expected = List(
+          "**************************************** | a",
+          "--+----------------------------------+-- |",
+          "  7                                  8   |",
+        ).mkString("\n")
+
+        actual shouldBe expected
+      }
+    }
   }
