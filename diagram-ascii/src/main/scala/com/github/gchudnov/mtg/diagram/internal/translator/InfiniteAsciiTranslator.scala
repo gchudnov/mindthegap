@@ -4,7 +4,6 @@ import com.github.gchudnov.mtg.internal.Value
 import com.github.gchudnov.mtg.diagram.internal.AsciiTranslator
 import com.github.gchudnov.mtg.diagram.AsciiCanvas
 
-// TODO: AsciiTranslator
 private[internal] final class InfiniteAsciiTranslator[T](canvas: AsciiCanvas) extends AsciiTranslator[T]:
 
   override def translate(value: Value[T]): Int =

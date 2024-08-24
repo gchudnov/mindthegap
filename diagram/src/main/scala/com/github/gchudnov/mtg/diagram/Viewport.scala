@@ -2,11 +2,11 @@ package com.github.gchudnov.mtg.diagram
 
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
-import com.github.gchudnov.mtg.internal.Value
 import com.github.gchudnov.mtg.internal.Endpoint
+import com.github.gchudnov.mtg.internal.Value
 
 /**
- * Viewport that needs to be rendered
+ * Viewport of the diagram.
  *
  * Might be either finite or infinite.
  */
@@ -40,6 +40,9 @@ object Viewport:
   def make[T: Domain](interval: Interval[T]): Viewport[T] =
     make(intervals = List(interval), includeEmpty = false)
 
+  def make[T: Domain](intervals: Iterable[Interval[T]]): Viewport[T] =
+    make(intervals, includeEmpty = false)
+
   /**
    * Make a viewport from the given intervals.
    *
@@ -50,10 +53,10 @@ object Viewport:
    * @return
    *   the viewport
    */
-  private[mtg] def make[T: Domain](intervals: List[Interval[T]], includeEmpty: Boolean): Viewport[T] =
+  private[mtg] def make[T: Domain](intervals: Iterable[Interval[T]], includeEmpty: Boolean): Viewport[T] =
     given ordV: Ordering[Value[T]] = summon[Domain[T]].ordValue
 
-    val xs: List[Interval[T]] = if includeEmpty then intervals else intervals.filter(_.nonEmpty)
+    val xs: Iterable[Interval[T]] = if includeEmpty then intervals else intervals.filter(_.nonEmpty)
 
     val ms = xs.map(_.normalize).flatMap(i => List(i.leftEndpoint, i.rightEndpoint))
     val vs = ms.map(_.unwrap)
@@ -78,16 +81,3 @@ object Viewport:
         Finite(min, max)
       case _ =>
         Infinite
-
-/*
-  // /**
-  //  * Make an effective view from the given view and intervals
-  //  */
-  // private def makeEffectiveView[T: Domain](intervals: List[Interval[T]], view: View[T]): View[T] =
-  //   view match
-  //     case v @ View.Finite(_, _) =>
-  //       v
-  //     case View.Infinite =>
-  //       View.make(intervals, false)
-
- */

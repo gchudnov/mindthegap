@@ -17,7 +17,8 @@ final class MermaidRenderer[T](using I: InputFormat[T], O: OutputFormat[T]) exte
   def result: String =
     sb.toString()
 
-  override def render(d: Diagram[T]): Unit =
+  override def render(d: Diagram[T], v: Viewport[T]): Unit =
+    // TODO: viewport is not supported at the moment
     val gantt = toGanttDiagram(d)
     write(gantt)
 

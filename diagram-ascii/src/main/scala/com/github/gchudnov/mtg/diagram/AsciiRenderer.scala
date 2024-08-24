@@ -1,10 +1,11 @@
 package com.github.gchudnov.mtg.diagram
 
-import com.github.gchudnov.mtg.Domain
-import com.github.gchudnov.mtg.diagram.internal.*
+import com.github.gchudnov.mtg.*
 import com.github.gchudnov.mtg.diagram.*
-import scala.collection.mutable.ListBuffer
+import com.github.gchudnov.mtg.diagram.internal.*
+
 import scala.annotation.nowarn
+import scala.collection.mutable.ListBuffer
 
 /**
  * ASCII Renderer
@@ -26,8 +27,8 @@ final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas, legendMode:
   def result: String =
     resultLines.toList.mkString("\n")
 
-  override def render(d: Diagram[T]): Unit =
-    val ad = toAsciiDiagram(d)
+  override def render(d: Diagram[T], v: Viewport[T]): Unit =
+    val ad = toAsciiDiagram(d, v)
     draw(ad)
 
   private def draw(ad: AsciiDiagram): Unit =
@@ -37,7 +38,7 @@ final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas, legendMode:
 
     val chart = (spans ++ ticks ++ labels)
 
-    // format: "span | legend : annotation"
+    // represented as: "span | legend : annotation"
     val legends     = padWithEmptyLines(chart.size)(ad.legends.map(_.value))
     val annotations = padWithEmptyLines(chart.size)(ad.annotations.map(_.value))
 
@@ -76,8 +77,9 @@ final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas, legendMode:
 
     result
 
-  private def toAsciiDiagram(d: Diagram[T]): AsciiDiagram =
-    AsciiDiagram.make(d, canvas)
+  private def toAsciiDiagram(d: Diagram[T], v: Viewport[T]): AsciiDiagram =
+    val v1 = toEffectiveViewport(v, d.sections.flatMap(_.intervals))
+    AsciiDiagram.make(d, v1, canvas)
 
   private def drawSpans(spans: List[AsciiSpan], width: Int): List[String] =
     val views: Array[Array[Char]] = Array.fill[Char](spans.size, width)(theme.space)
@@ -190,6 +192,24 @@ final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas, legendMode:
   private def padRight(n: Int, pad: Char)(value: String): String =
     if n > 0 then value + (pad.toString * n)
     else value
+
+  /**
+   * Make a viewport from the given intervals.
+   *
+   * The resulting viewport is bounded by the given intervals if the provided viewport is infinite.
+   *
+   * @param v
+   *   the viewport
+   * @param intervals
+   *   the intervals
+   * @return
+   */
+  private def toEffectiveViewport(v: Viewport[T], intervals: List[Interval[T]]): Viewport[T] =
+    v match
+      case Viewport.Finite(_, _) =>
+        v
+      case Viewport.Infinite =>
+        Viewport.make(intervals, false)
 
 object AsciiRenderer:
   def make[T: Domain](

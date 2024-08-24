@@ -2,12 +2,12 @@ package com.github.gchudnov.mtg.diagram.internal
 
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.diagram.AsciiCanvas
 import com.github.gchudnov.mtg.diagram.Diagram
 import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Viewport
 import com.github.gchudnov.mtg.internal.Endpoint
 import com.github.gchudnov.mtg.internal.Printer
-import com.github.gchudnov.mtg.diagram.AsciiCanvas
 
 /**
  * ASCII Diagram
@@ -38,19 +38,6 @@ private[diagram] object AsciiDiagram:
       legends = List.empty[AsciiLegend],
       annotations = List.empty[AsciiAnnotation],
     )
-
-  /**
-   * Make an AsciiDiagram from the given Diagram
-   *
-   * @param d
-   *   the input diagram
-   * @return
-   *   the AsciiDiagram
-   */
-  def make[T: Domain](d: Diagram[T], canvas: AsciiCanvas): AsciiDiagram =
-    val intervals = d.sections.flatMap(_.intervals)
-    val viewport  = Viewport.make(intervals, false)
-    make(d, viewport, canvas)
 
   /**
    * Make an AsciiDiagram from the given Diagram and Viewport

@@ -2,6 +2,7 @@ package com.github.gchudnov.mtg.diagram.internal
 
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.Interval
+import com.github.gchudnov.mtg.diagram.AsciiCanvas
 import com.github.gchudnov.mtg.diagram.Diagram
 import com.github.gchudnov.mtg.diagram.Renderer
 import com.github.gchudnov.mtg.diagram.Viewport
@@ -12,20 +13,19 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
-import com.github.gchudnov.mtg.diagram.AsciiCanvas
 
 final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
-  private val canvas: AsciiCanvas    = com.github.gchudnov.mtg.diagram.AsciiCanvas.make(40, 2)
-  private val infView: Viewport[Int] = Viewport.all[Int]
+  private val canvas: AsciiCanvas = AsciiCanvas.make(40, 2)
 
   "AsciiDiagram" when {
     "make" should {
       "diagram no intervals" in {
-        val input = Diagram.empty[Int]
+        val input                   = Diagram.empty[Int]
+        val viewport: Viewport[Int] = Viewport.all[Int]
 
         val expected = AsciiDiagram.empty
-        val actual   = AsciiDiagram.make(input, canvas)
+        val actual   = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -33,7 +33,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
       "diagram an empty interval" in {
         val a = Interval.empty[Int]
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val viewport: Viewport[Int] = Viewport.all[Int]
 
         val expected = AsciiDiagram(
           title = "",
@@ -46,7 +47,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("∅")),
           annotations = List(AsciiAnnotation("a")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -54,7 +55,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
       "diagram a point" in {
         val a = Interval.point[Int](5) // [5]
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val viewport: Viewport[Int] = Viewport.make(List(a))
 
         val expected = AsciiDiagram(
           title = "",
@@ -67,7 +69,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("{5}")),
           annotations = List(AsciiAnnotation("a")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -76,7 +78,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
         val a = Interval.point[Int](5)  // [5]
         val b = Interval.point[Int](10) // [10]
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a").addInterval(b, "b"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a").addInterval(b, "b"))
+        val viewport: Viewport[Int] = Viewport.make(List(a, b))
 
         val expected = AsciiDiagram(
           title = "",
@@ -89,7 +92,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("{5}"), AsciiLegend("{10}")),
           annotations = List(AsciiAnnotation("a"), AsciiAnnotation("b")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -97,7 +100,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
       "diagram a closed interval" in {
         val a = Interval.closed[Int](5, 10) // [5, 10]
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val viewport: Viewport[Int] = Viewport.make(List(a))
 
         val expected = AsciiDiagram(
           title = "",
@@ -110,7 +114,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("[5,10]")),
           annotations = List(AsciiAnnotation("a")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -118,7 +122,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
       "diagram a closed interval with a negative boundary" in {
         val a = Interval.closed[Int](-5, 10) // [-5, 10]
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val viewport: Viewport[Int] = Viewport.make(List(a))
 
         val expected = AsciiDiagram(
           title = "",
@@ -131,7 +136,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("[-5,10]")),
           annotations = List(AsciiAnnotation("a")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -139,7 +144,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
       "diagram an unbounded interval" in {
         val a = Interval.unbounded[Int] // (-∞, +∞)
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val viewport: Viewport[Int] = Viewport.make(List(a))
 
         val expected = AsciiDiagram(
           title = "",
@@ -152,7 +158,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("(-∞,+∞)")),
           annotations = List(AsciiAnnotation("a")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -160,7 +166,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
       "diagram a leftOpen interval" in {
         val a = Interval.leftOpen(5) // (5, +∞)
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val viewport: Viewport[Int] = Viewport.make(List(a))
 
         val expected = AsciiDiagram(
           title = "",
@@ -173,7 +180,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("(5,+∞)")),
           annotations = List(AsciiAnnotation("a")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -181,7 +188,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
       "diagram a leftClosed interval" in {
         val a = Interval.leftClosed(5) // [5, +∞)
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val viewport: Viewport[Int] = Viewport.make(List(a))
 
         val expected = AsciiDiagram(
           title = "",
@@ -194,7 +202,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("[5,+∞)")),
           annotations = List(AsciiAnnotation("a")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -202,7 +210,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
       "diagram a rightOpen interval" in {
         val a = Interval.rightOpen(5) // (-∞, 5)
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val viewport: Viewport[Int] = Viewport.make(List(a))
 
         val expected = AsciiDiagram(
           title = "",
@@ -215,7 +224,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("(-∞,5)")),
           annotations = List(AsciiAnnotation("a")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -223,7 +232,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
       "diagram a rightClosed interval" in {
         val a = Interval.rightClosed(5) // (-∞, 5]
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
+        val viewport: Viewport[Int] = Viewport.make(List(a))
 
         val expected = AsciiDiagram(
           title = "",
@@ -236,7 +246,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("(-∞,5]")),
           annotations = List(AsciiAnnotation("a")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -244,7 +254,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
       "diagram left part of a closed interval" in {
         val a = Interval.closed[Int](5, 10) // [5, 10]
 
-        val view = Viewport.make(Some(0), Some(7)) // [0, 7]
+        val view                    = Viewport.make(Some(0), Some(7)) // [0, 7]
+        val viewport: Viewport[Int] = Viewport.make(List(a))
 
         val input = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
 
@@ -270,7 +281,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
         val c = Interval.rightClosed(15)
         val d = Interval.leftOpen(2)
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c").addInterval(d, "d"))
+        val viewport: Viewport[Int] = Viewport.make(List(a, b, c, d))
 
         val expected = AsciiDiagram(
           title = "",
@@ -291,7 +303,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("[1,5]"), AsciiLegend("[5,10]"), AsciiLegend("(-∞,15]"), AsciiLegend("(2,+∞)")),
           annotations = List(AsciiAnnotation("a"), AsciiAnnotation("b"), AsciiAnnotation("c"), AsciiAnnotation("d")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -300,7 +312,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a").addInterval(b, "b"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a").addInterval(b, "b"))
+        val viewport: Viewport[Int] = Viewport.make(List(a, b))
 
         val expected = AsciiDiagram(
           title = "",
@@ -313,7 +326,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("[1,5]"), AsciiLegend("[5,10]")),
           annotations = List(AsciiAnnotation("a"), AsciiAnnotation("b")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -323,7 +336,8 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
         val b = Interval.closed(2, 6)
         val c = Interval.empty[Int]
 
-        val input = Diagram.empty[Int].withSection(_.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c"))
+        val input                   = Diagram.empty[Int].withSection(_.addInterval(a, "a").addInterval(b, "b").addInterval(c, "c"))
+        val viewport: Viewport[Int] = Viewport.make(List(a, b, c))
 
         val expected = AsciiDiagram(
           title = "",
@@ -336,7 +350,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
           legends = List(AsciiLegend("[1,5]"), AsciiLegend("[2,6]"), AsciiLegend("∅")),
           annotations = List(AsciiAnnotation("a"), AsciiAnnotation("b"), AsciiAnnotation("c")),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
@@ -359,6 +373,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
               .addInterval(e, "e")
               .addInterval(f, "f")
           )
+        val viewport: Viewport[Int] = Viewport.make(List(a, b, c, d, e, f))
 
         val expected = AsciiDiagram(
           title = "",
@@ -414,7 +429,7 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
             AsciiAnnotation("f"),
           ),
         )
-        val actual = AsciiDiagram.make(input, canvas)
+        val actual = AsciiDiagram.make(input, viewport, canvas)
 
         actual shouldBe expected
       }
