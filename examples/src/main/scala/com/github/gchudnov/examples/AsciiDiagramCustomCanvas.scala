@@ -35,6 +35,7 @@ object AsciiDiagramCustomCanvas extends App:
   val intervals = List(a, b, c, d)
   val result    = intervals
 
+  // custom canvas with a width of 100 characters
   val canvas = AsciiCanvas.make(100)
 
   val renderer = AsciiRenderer.make[OffsetDateTime](theme = AsciiTheme.default, canvas = canvas)

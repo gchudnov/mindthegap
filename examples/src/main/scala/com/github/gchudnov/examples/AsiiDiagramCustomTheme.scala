@@ -26,8 +26,9 @@ object AsciiDiagramCustomTheme extends App:
   val intervals = List(a, b, c, d)
   val result    = intervals
 
+  // custom theme
   val theme = AsciiTheme.default.copy(
-    interval = AsciiTheme.IntervalTheme.default.copy(fill = '█', leftClosed = '▐', rightClosed = '▌'),
+    interval = AsciiTheme.IntervalTheme.default.copy(fill = '█', leftClosed = '▐', rightClosed = '▌')
   )
 
   val renderer = AsciiRenderer.make[Int](theme = theme)
