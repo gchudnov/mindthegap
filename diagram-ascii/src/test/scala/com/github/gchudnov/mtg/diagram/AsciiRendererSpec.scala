@@ -15,14 +15,10 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
 
   private val infView: Viewport[Int] = Viewport.all[Int]
 
-  private val themeDefault: AsciiTheme               = AsciiTheme.default
-  private val themeNoLegend: AsciiTheme              = themeDefault.copy(hasLegend = false)
-  private val themeNoLegendNoAnnotations: AsciiTheme = themeDefault.copy(hasLegend = false, hasAnnotations = false)
-
   "AsciiRenderer" when {
     "render" should {
       "display no intervals" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val diagram = Diagram.empty[Int]
         renderer.render(diagram)
@@ -34,7 +30,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display an empty interval with no legend and no annotations" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegendNoAnnotations)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.None)
 
         val a       = Interval.empty[Int]
         val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
@@ -51,7 +47,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display an empty interval with no legend but with annotations" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a       = Interval.empty[Int]
         val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
@@ -68,7 +64,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display an empty interval with a legend and annotations" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault.copy(hasLegend = true))
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Both)
 
         val a       = Interval.empty[Int]
         val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
@@ -86,7 +82,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a point" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a       = Interval.point[Int](5) // [5]
         val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
@@ -104,7 +100,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display two points" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a       = Interval.point[Int](5)  // [5]
         val b       = Interval.point[Int](10) // [10]
@@ -124,7 +120,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a closed interval" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a       = Interval.closed[Int](5, 10)
         val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
@@ -142,7 +138,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a closed interval with negative boundary" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a       = Interval.closed[Int](-5, 10)
         val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
@@ -160,7 +156,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display an unbounded interval" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a       = Interval.unbounded[Int]
         val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
@@ -178,7 +174,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a leftOpen interval" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a       = Interval.leftOpen(5) // (5, +∞)
         val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
@@ -196,7 +192,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a leftClosed interval" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a       = Interval.leftClosed(5) // [5, +∞)
         val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
@@ -214,7 +210,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a rightOpen interval" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a       = Interval.rightOpen(5) // (-∞, 5)
         val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
@@ -232,7 +228,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a rightClosed interval" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a       = Interval.rightClosed(5) // (-∞, 5]
         val diagram = Diagram.empty[Int].withSection(_.addInterval(a, "a"))
@@ -250,7 +246,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a leftClosed and rightClosed overlapping intervals" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a = Interval.leftClosed(5)   // [5, +∞)
         val b = Interval.rightClosed(10) // (-∞, 10]
@@ -271,7 +267,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a leftClosed and rightClosed non-overlapping intervals" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a = Interval.leftClosed(10) // [10, +∞)
         val b = Interval.rightClosed(5) // (-∞, 5]
@@ -292,7 +288,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display several intervals" in {
-        val renderer = AsciiRenderer.make[Int](themeNoLegend)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
@@ -317,7 +313,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display several intervals with a legend" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
@@ -342,7 +338,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display several leftClosed intervals" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.leftClosed(1)
         val b = Interval.leftClosed(2)
@@ -367,7 +363,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display several rightClosed intervals" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.rightClosed(1)
         val b = Interval.rightClosed(2)
@@ -392,7 +388,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display overlapping intervals" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(1, 5)
         val b = Interval.closed(2, 6)
@@ -425,7 +421,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display with default settings [doc]" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(3, 7)
         val b = Interval.closed(10, 15)
@@ -447,10 +443,8 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
         actual shouldBe expected
       }
 
-      "display overlapping intervals with overlapping labels (Theme.Label.None)" in {
-        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.None)
-
-        val renderer = AsciiRenderer.make[Int](theme)
+      "display overlapping intervals with as-is labels" in {
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations, labelPosition = AsciiLabelPosition.None)
 
         val a = Interval.closed(100, 500)
         val b = Interval.closed(150, 600)
@@ -482,10 +476,8 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
         actual shouldBe expected
       }
 
-      "display overlapping intervals with overlapping labels (Theme.Label.NoOverlap)" in {
-        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.NoOverlap)
-
-        val renderer = AsciiRenderer.make[Int](theme)
+      "display overlapping intervals with non-overlapping labels" in {
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations, labelPosition = AsciiLabelPosition.NoOverlap)
 
         val a = Interval.closed(100, 500)
         val b = Interval.closed(150, 600)
@@ -517,10 +509,8 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
         actual shouldBe expected
       }
 
-      "display overlapping intervals with overlapping labels (Theme.Label.Stacked)" in {
-        val theme = themeNoLegend.copy(labelPosition = AsciiLabelPosition.Stacked)
-
-        val renderer = AsciiRenderer.make[Int](theme)
+      "display overlapping intervals with stacked labels" in {
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations, labelPosition = AsciiLabelPosition.Stacked)
 
         val a = Interval.closed(100, 500)
         val b = Interval.closed(150, 600)
@@ -554,9 +544,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display intervals with legend and annotations" in {
-        val theme = themeDefault.copy(hasLegend = true, hasAnnotations = true)
-
-        val renderer = AsciiRenderer.make[Int](theme)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
@@ -577,9 +565,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display intervals with legend and without annotations" in {
-        val theme = themeDefault.copy(hasLegend = true, hasAnnotations = false)
-
-        val renderer = AsciiRenderer.make[Int](theme)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Legend)
 
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
@@ -600,9 +586,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display intervals without legend and with annotations" in {
-        val theme = themeDefault.copy(hasLegend = false, hasAnnotations = true)
-
-        val renderer = AsciiRenderer.make[Int](theme)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.Annotations)
 
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
@@ -623,9 +607,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display intervals without legend and without annotations" in {
-        val theme = themeDefault.copy(hasLegend = false, hasAnnotations = false)
-
-        val renderer = AsciiRenderer.make[Int](theme)
+        val renderer = AsciiRenderer.make[Int](legendMode = AsciiLegendMode.None)
 
         val a = Interval.closed(1, 5)
         val b = Interval.closed(5, 10)
@@ -648,8 +630,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       "display intervals with OffsetDateTime" in {
         given Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.DAYS)
 
-        val theme    = themeNoLegend.copy(labelPosition = AsciiLabelPosition.Stacked)
-        val renderer = AsciiRenderer.make[OffsetDateTime](theme)
+        val renderer = AsciiRenderer.make[OffsetDateTime](legendMode = AsciiLegendMode.Annotations)
 
         val a       = Interval.closed(OffsetDateTime.parse("2020-07-02T12:34Z"), OffsetDateTime.parse("2021-07-02T12:34Z"))
         val diagram = Diagram.empty[OffsetDateTime].withSection(_.addInterval(a, "a"))
@@ -669,8 +650,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       "display intervals with Instant" in {
         given instantDomain: Domain[Instant] = Domain.makeInstant(ChronoUnit.DAYS)
 
-        val theme    = themeNoLegend.copy(labelPosition = AsciiLabelPosition.Stacked)
-        val renderer = AsciiRenderer.make[Instant](theme)
+        val renderer = AsciiRenderer.make[Instant](legendMode = AsciiLegendMode.Annotations, labelPosition = AsciiLabelPosition.Stacked)
 
         val a       = Interval.closed(Instant.parse("2020-07-02T12:34:00Z"), Instant.parse("2021-07-02T12:34:00Z"))
         val diagram = Diagram.empty[Instant].withSection(_.addInterval(a, "a"))
@@ -691,8 +671,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       "display several timelines" in {
         given Domain[LocalDate] = Domain.makeLocalDate(ChronoUnit.DAYS)
 
-        val theme    = themeDefault.copy(labelPosition = AsciiLabelPosition.Stacked)
-        val renderer = AsciiRenderer.make[LocalDate](theme)
+        val renderer = AsciiRenderer.make[LocalDate](labelPosition = AsciiLabelPosition.Stacked)
 
         val a = Interval.leftClosed(LocalDate.parse("2023-01-01"))
         val b = Interval.closed(LocalDate.parse("2023-01-03"), LocalDate.parse("2023-01-15"))
@@ -718,7 +697,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.intersection(b)" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 7)
@@ -743,7 +722,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.span(b)" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(5, 10)
         val b = Interval.closed(1, 7)
@@ -768,7 +747,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.span(b) of two disjoint intervals" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(1, 5)
         val b = Interval.closed(7, 10)
@@ -793,7 +772,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.union(b)" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(1, 5)
         val b = Interval.closed(6, 10)
@@ -818,7 +797,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.union(b) of two disjoint intervals" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(1, 4)
         val b = Interval.closed(6, 10)
@@ -843,7 +822,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.gap(b) of two intersecting intervals" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(5, 10)
         val b = Interval.closed(4, 15)
@@ -868,7 +847,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.gap(b) of two disjoint intervals" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(5, 10)
         val b = Interval.closed(15, 20)
@@ -893,7 +872,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.minus(b) if a.overlaps(b)" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(1, 10)
         val b = Interval.closed(5, 15)
@@ -918,7 +897,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display a.minus(b) if a.isOverlappedBy(b)" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(5, 15)
         val b = Interval.closed(1, 10)
@@ -943,7 +922,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display Interval.minus(a, b) if a.contains(b)" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(1, 15)
         val b = Interval.closed(5, 10)
@@ -972,7 +951,7 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
       }
 
       "display short intervals" in {
-        val renderer = AsciiRenderer.make[Int](themeDefault)
+        val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(0, 10)
         val b = Interval.closed(3, 50)

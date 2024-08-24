@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit
 import java.time.*
 
 /**
- * ASCII Diagram Custom Canvas
+ * ASCII Diagram with a custom canvas.
  *
  * {{{
  *     [********************]                                                                             | [2022-07-02T04:00Z,2022-07-04T10:00Z] : a

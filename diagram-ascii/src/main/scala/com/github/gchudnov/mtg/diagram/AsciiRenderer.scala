@@ -14,7 +14,9 @@ import scala.annotation.nowarn
  * @param theme
  *   the theme to use
  */
-final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas)(using D: Domain[T]) extends Renderer[T]:
+final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas, legendMode: AsciiLegendMode, labelPosition: AsciiLabelPosition)(using
+  D: Domain[T]
+) extends Renderer[T]:
 
   private val resultLines: ListBuffer[String] = ListBuffer.empty[String]
 
@@ -39,12 +41,12 @@ final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas)(using D: Do
     val legends     = padWithEmptyLines(chart.size)(ad.legends.map(_.value))
     val annotations = padWithEmptyLines(chart.size)(ad.annotations.map(_.value))
 
-    val addLegends     = theme.hasLegend && legends.exists(_.nonEmpty)
-    val addAnnotations = theme.hasAnnotations && annotations.exists(_.nonEmpty)
+    val addLegends     = legendMode.hasLegend && legends.exists(_.nonEmpty)
+    val addAnnotations = legendMode.hasAnnotations && annotations.exists(_.nonEmpty)
 
     // with borders
     val withBorder =
-      if addLegends || addAnnotations then chart.map(line => if line.nonEmpty then s"${line}${theme.space}${theme.border}" else line)
+      if addLegends || addAnnotations then chart.map(line => if line.nonEmpty then s"${line}${theme.space}${theme.legend.border}" else line)
       else chart
 
     // with legend
@@ -56,21 +58,21 @@ final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas)(using D: Do
       else withBorder
 
     // with annotations
-    val annotated =
+    val withAnnotations =
       if addAnnotations then
         val maxLineSize = withLegend.map(_.size).maxOption.getOrElse(0)
         withLegend.zip(annotations).map { case (line, annotation) =>
           if line.nonEmpty && annotation.nonEmpty then
             val padSize    = maxLineSize - line.size
             val paddedLine = padRight(padSize, theme.space)(line)
-            val separator  = if addLegends then s"${theme.space}${theme.comment}" else ""
+            val separator  = if addLegends then s"${theme.space}${theme.legend.separator}" else ""
             s"${paddedLine}${separator}${theme.space}${annotation}"
           else line
         }
       else withLegend
 
     resultLines.clear()
-    resultLines ++= annotated.filter(_.nonEmpty)
+    resultLines ++= withAnnotations.filter(_.nonEmpty)
 
     result
 
@@ -87,22 +89,22 @@ final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas)(using D: Do
       val p = math.max(span.x0, 0)
       val q = math.min(span.x1, if spot.nonEmpty then spot.size - 1 else 0)
 
-      Range.inclusive(p, q).foreach(i => spot(i) = theme.fill)
+      Range.inclusive(p, q).foreach(i => spot(i) = theme.interval.fill)
 
       if span.size > 1 then
-        if span.x0 >= 0 && span.x0 < spot.size then spot(span.x0) = theme.leftBoundary(span.includeX0)
-        if span.x1 >= 0 && span.x1 < spot.size then spot(span.x1) = theme.rightBoundary(span.includeX1)
+        if span.x0 >= 0 && span.x0 < spot.size then spot(span.x0) = theme.interval.leftBoundary(span.includeX0)
+        if span.x1 >= 0 && span.x1 < spot.size then spot(span.x1) = theme.interval.rightBoundary(span.includeX1)
 
   private def drawTicks(ts: List[AsciiTick], width: Int): List[String] =
-    val view = Array.fill[Char](width)(theme.axis)
+    val view = Array.fill[Char](width)(theme.axis.line)
     ts.sortBy(_.x).foreach(t => drawTickInPlace(t, view))
     List(view.mkString)
 
   private def drawTickInPlace(t: AsciiTick, spot: Array[Char]): Unit =
-    if (t.x >= 0) && (t.x < spot.size) then spot(t.x) = theme.tick
+    if (t.x >= 0) && (t.x < spot.size) then spot(t.x) = theme.axis.tick
 
   private def drawLabels(ls: List[AsciiLabel], width: Int): List[String] =
-    theme.labelPosition match
+    labelPosition match
       case AsciiLabelPosition.None =>
         drawLabelsNone(ls, width)
       case AsciiLabelPosition.NoOverlap =>
@@ -190,5 +192,10 @@ final class AsciiRenderer[T](theme: AsciiTheme, canvas: AsciiCanvas)(using D: Do
     else value
 
 object AsciiRenderer:
-  def make[T: Domain](theme: AsciiTheme = AsciiTheme.default, canvas: AsciiCanvas = AsciiCanvas.default): AsciiRenderer[T] =
-    new AsciiRenderer[T](theme, canvas)
+  def make[T: Domain](
+    theme: AsciiTheme = AsciiTheme.default,
+    canvas: AsciiCanvas = AsciiCanvas.default,
+    legendMode: AsciiLegendMode = AsciiLegendMode.Both,
+    labelPosition: AsciiLabelPosition = AsciiLabelPosition.NoOverlap,
+  ): AsciiRenderer[T] =
+    new AsciiRenderer[T](theme, canvas, legendMode, labelPosition)
