@@ -1,12 +1,13 @@
 package com.github.gchudnov.mtg.diagram
 
+import com.github.gchudnov.mtg.diagram.Diagram
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import java.time.OffsetDateTime
+
 import java.time.Instant
-import java.time.temporal.ChronoUnit
 import java.time.LocalDate
-import com.github.gchudnov.mtg.diagram.Diagram
+import java.time.OffsetDateTime
+import java.time.temporal.ChronoUnit
 
 class MermaidRendererSpec extends AnyWordSpec with Matchers:
   "MermaidRenderer" when {

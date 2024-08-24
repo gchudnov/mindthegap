@@ -22,51 +22,51 @@ lazy val mtg = (project
     libraryDependencies ++= Dependencies.Mtg,
   )
 
-lazy val mtgDiagram = (project
-  .in(file("mtg-diagram")))
+lazy val diagram = (project
+  .in(file("diagram")))
   .dependsOn(mtg)
   .settings(allSettings)
   .settings(Settings.publishGithub)
   .settings(
-    name := "mtg-diagram",
+    name := "diagram",
     libraryDependencies ++= Dependencies.Mtg,
   )
 
-lazy val mtgAscii = (project
-  .in(file("mtg-ascii")))
-  .dependsOn(mtg, mtgDiagram)
+lazy val diagramAscii = (project
+  .in(file("diagram-ascii")))
+  .dependsOn(mtg, diagram)
   .settings(allSettings)
   .settings(Settings.publishGithub)
   .settings(
-    name := "mtg-ascii",
+    name := "diagram-ascii",
     libraryDependencies ++= Dependencies.Mtg,
   )
 
-lazy val mtgMermaid = (project
-  .in(file("mtg-mermaid")))
-  .dependsOn(mtg, mtgDiagram)
+lazy val diagramMermaid = (project
+  .in(file("diagram-mermaid")))
+  .dependsOn(mtg, diagram)
   .settings(allSettings)
   .settings(Settings.publishGithub)
   .settings(
-    name := "mtg-mermaid",
+    name := "diagram-mermaid",
     libraryDependencies ++= Dependencies.Mtg,
   )
 
 lazy val examples = (project
   .in(file("examples")))
-  .dependsOn(mtg, mtgAscii, mtgMermaid)
+  .dependsOn(mtg, diagramAscii, diagramMermaid)
   .settings(Settings.noPublish)
   .settings(
-    name := "mtg-examples",
+    name := "examples",
     libraryDependencies ++= Dependencies.Examples,
   )
 
 lazy val root = (project
   .in(file(".")))
-  .aggregate(mtg, mtgDiagram, mtgAscii, mtgMermaid, examples)
+  .aggregate(mtg, diagram, diagramAscii, diagramMermaid, examples)
   .settings(Settings.noPublish)
   .settings(
-    name := "mtg-root"
+    name := "root"
   )
 
 addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
