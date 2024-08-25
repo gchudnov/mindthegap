@@ -10,11 +10,11 @@ import java.time.*
  *
  * {{{
  *   gantt
- *     title       <no title>
+ *     title       Mermaid Diagram
  *     dateFormat  HH:mm:ss.SSS
  *     axisFormat  %H:%M:%S
- *
- *     section <no title>
+ *   
+ *     section My Section
  *     a  :04:00:00.000, 10:00:00.000
  *     b  :08:00:00.000, 20:00:00.000
  * }}}
@@ -34,8 +34,10 @@ object MermaidDiagram extends App:
   val renderer = MermaidRenderer.make[LocalTime]
   val diagram = Diagram
     .empty[LocalTime]
+    .withTitle("Mermaid Diagram")
     .withSection { s =>
-      result.zipWithIndex.foldLeft(s) { case (s, (i, k)) =>
+      val s0 = s.withTitle("My Section")
+      result.zipWithIndex.foldLeft(s0) { case (s, (i, k)) =>
         s.addInterval(i, s"${('a' + k).toChar}")
       }
     }
