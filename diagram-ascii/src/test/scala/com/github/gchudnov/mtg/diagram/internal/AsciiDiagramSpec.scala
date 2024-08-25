@@ -38,7 +38,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 1,
           List(AsciiSpan(1, -1, true, true)),
@@ -60,7 +59,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 1,
           List(AsciiSpan(20, 20, true, true)),
@@ -83,7 +81,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 2,
           List(AsciiSpan(2, 2, true, true), AsciiSpan(37, 37, true, true)),
@@ -105,7 +102,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 1,
           List(AsciiSpan(2, 37, true, true)),
@@ -127,7 +123,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 1,
           List(AsciiSpan(2, 37, true, true)),
@@ -149,7 +144,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 1,
           List(AsciiSpan(0, 39, false, false)),
@@ -171,7 +165,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 1,
           List(AsciiSpan(20, 39, false, false)),
@@ -193,7 +186,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 1,
           List(AsciiSpan(20, 39, true, false)),
@@ -215,7 +207,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 1,
           List(AsciiSpan(0, 20, false, false)),
@@ -237,7 +228,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 1,
           List(AsciiSpan(0, 20, false, true)),
@@ -261,7 +251,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 1,
           List(AsciiSpan(27, 52, true, true)),
@@ -286,7 +275,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 4,
           List(AsciiSpan(2, 12, true, true), AsciiSpan(12, 25, true, true), AsciiSpan(0, 37, false, true), AsciiSpan(5, 39, false, false)),
@@ -317,7 +305,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 2,
           List(AsciiSpan(2, 18, true, true), AsciiSpan(18, 37, true, true)),
@@ -341,7 +328,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 3,
           List(AsciiSpan(2, 30, true, true), AsciiSpan(9, 37, true, true), AsciiSpan(1, -1, true, true)),
@@ -377,7 +363,6 @@ final class AsciiDiagramSpec extends AnyWordSpec with Matchers:
 
         val expected = AsciiDiagram(
           title = "",
-          now = None,
           width = 40,
           height = 6,
           List(

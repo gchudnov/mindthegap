@@ -69,7 +69,6 @@ final class MermaidRenderer[T](using I: InputFormat[T], O: OutputFormat[T]) exte
 
     GanttDiagram(
       title = d.title,
-      now = None,
       inFormat = I.pattern,
       axisFormat = O.pattern,
       sections = sections,

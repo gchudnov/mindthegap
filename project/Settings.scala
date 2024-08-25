@@ -50,16 +50,17 @@ object Settings {
   ).toVector
 
   val shared: Seq[Setting[?]] = Seq(
-    scalacOptions      := sharedScalacOptions,
-    crossScalaVersions := supportedScalaVersions,
-    scalaVersion       := scalaV,
-    ThisBuild / turbo  := true,
-    resolvers          := Resolver.combineDefaultResolvers(sharedResolvers),
-    compileOrder       := CompileOrder.JavaThenScala,
-    organization       := "com.github.gchudnov",
-    homepage           := Some(url("https://github.com/gchudnov/mindthegap")),
-    description        := "Intervals, Relations and Algorithms",
-    licenses           := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
+    ThisBuild / turbo         := true,
+    ThisBuild / usePipelining := true,
+    scalacOptions             := sharedScalacOptions,
+    crossScalaVersions        := supportedScalaVersions,
+    scalaVersion              := scalaV,
+    resolvers                 := Resolver.combineDefaultResolvers(sharedResolvers),
+    compileOrder              := CompileOrder.JavaThenScala,
+    organization              := "com.github.gchudnov",
+    homepage                  := Some(url("https://github.com/gchudnov/mindthegap")),
+    description               := "Intervals, Relations and Algorithms",
+    licenses                  := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
     scmInfo := Some(
       ScmInfo(
         url("https://github.com/gchudnov/mindthegap"),

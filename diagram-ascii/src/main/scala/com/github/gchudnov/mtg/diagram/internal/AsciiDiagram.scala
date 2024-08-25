@@ -14,7 +14,6 @@ import com.github.gchudnov.mtg.internal.Printer
  */
 private[diagram] final case class AsciiDiagram(
   title: String,
-  now: Option[Int],
   width: Int,
   height: Int,
   spans: List[AsciiSpan],
@@ -29,7 +28,6 @@ private[diagram] object AsciiDiagram:
   lazy val empty: AsciiDiagram =
     AsciiDiagram(
       title = "",
-      now = None,
       width = 0,
       height = 0,
       spans = List.empty[AsciiSpan],
