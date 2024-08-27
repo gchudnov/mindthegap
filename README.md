@@ -20,8 +20,8 @@ Add the following dependency to your `build.sbt`:
 libraryDependencies += "com.github.gchudnov" %% "mtg" % "2.0.0"
 
 // optional dependencies to draw diagrams
-libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-ascii" % "2.0.0"
-libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-mermaid" % "2.0.0"
+libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-ascii" % "2.0.0"   // ascii
+libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-mermaid" % "2.0.0" // mermaid
 ```
 
 Import the package:
