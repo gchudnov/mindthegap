@@ -10,14 +10,18 @@
 
 ## Documentation
 
-You can find _mindthegap_ documentation [on the website](https://gchudnov.github.io/mindthegap/).  
+You can find _mindthegap_ documentation [on the website](https://gchudnov.github.io/mindthegap/).
 
 ## Usage
 
 Add the following dependency to your `build.sbt`:
 
 ```scala
-libraryDependencies += "com.github.gchudnov" %% "mindthegap" % "2.0.0"
+libraryDependencies += "com.github.gchudnov" %% "mtg" % "2.0.0"
+
+// optional dependencies to draw diagrams
+libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-ascii" % "2.0.0"
+libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-mermaid" % "2.0.0"
 ```
 
 Import the package:
@@ -34,15 +38,12 @@ package com.example
 import com.github.gchudnov.mtg.*
 
 object Hello extends App {
-  val a = Interval.closed(0, 5)
-  val b = Interval.closed(1, 6)
+  val a = Interval.closed(0, 5) // [0,5]
+  val b = Interval.closed(1, 6) // [1,6]
 
-  val c = a.intersection(b)
+  val c = a.intersection(b) // [1,5]
 
   println(c)
-  // Interval(At(Finite(1)),At(Finite(5)))
-
-  println(Show.asString(c))
   // [1,5]
 }
 ```

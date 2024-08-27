@@ -28,7 +28,7 @@ lazy val diagram = (project
   .settings(allSettings)
   .settings(Settings.publishGithub)
   .settings(
-    name := "diagram",
+    name := "mtg-diagram",
     libraryDependencies ++= Dependencies.Mtg,
   )
 
@@ -38,7 +38,7 @@ lazy val diagramAscii = (project
   .settings(allSettings)
   .settings(Settings.publishGithub)
   .settings(
-    name := "diagram-ascii",
+    name := "mtg-diagram-ascii",
     libraryDependencies ++= Dependencies.Mtg,
   )
 
@@ -48,7 +48,7 @@ lazy val diagramMermaid = (project
   .settings(allSettings)
   .settings(Settings.publishGithub)
   .settings(
-    name := "diagram-mermaid",
+    name := "mtg-diagram-mermaid",
     libraryDependencies ++= Dependencies.Mtg,
   )
 
