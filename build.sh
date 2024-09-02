@@ -35,8 +35,11 @@ npm run roboto
 # stub on first build to avoid `Error: Reason: `get_url`: Could not find or open file xdoc-bundle.min.js`
 touch "${XDOC_STATIC_DIR}/xdoc-bundle.min.js"
 
+# replace application version placeholder with actual version
+export XDOC_APP_VERSION_PATH="${DIR_SELF}/version.sbt"
+
 # build zola project (1)
-zola build
+npm run build
 
 # bundle search
 npm run search
@@ -45,4 +48,4 @@ npm run search
 npm run bundle
 
 # build zola project (2)
-zola build
+npm run build

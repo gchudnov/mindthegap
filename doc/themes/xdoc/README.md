@@ -8,9 +8,9 @@ For the example of usage of the given instructions, see: `${PROJECT_ROOT}/build.
 
 ### 1. Install Dependencies
 
-- zola
+- zola v. >= 0.19.2
 - node.js v. >= 20.0.0
-- inkscape
+- inkscape v. >= 1.3-dev-74adff3496-2022-05-26
 
 ```bash
 # go to the theme directory
@@ -18,6 +18,8 @@ cd doc/themes/xdoc
 
 # zola
 snap install --edge zola
+
+# zola 0.19.2
 
 # inkscape
 sudo add-apt-repository ppa:inkscape.dev/stable
@@ -56,7 +58,7 @@ export XDOC_BUILD_DIR=$(realpath "${XDOC_PROJECT_DIR}/public")
 
 where:
 
-- `XDOC_ROOT_DIR` - is the root directory of the theme`.
+- `XDOC_ROOT_DIR` - is the root directory of the theme.
 - `XDOC_STATIC_DIR` - static directory of the theme.
 - `XDOC_CONFIG_DIR` - path to the configuration directory of the theme.
 - `XDOC_PROJECT_DIR` - root directory of the project documentation.
@@ -129,7 +131,7 @@ Bundle roboto font
 npm run roboto
 ```
 
-The command downloads roboto font from [onts.googleapis.com](https://fonts.googleapis.com), extracts regular, bold and italic fonts and produces:
+The command downloads roboto font from [fonts.googleapis.com](https://fonts.googleapis.com), extracts regular, bold and italic fonts and produces:
 
 ```
 /static/fonts/Roboto-*.woff2
@@ -138,11 +140,15 @@ The command downloads roboto font from [onts.googleapis.com](https://fonts.googl
 ### 8. Build Zola Project
 
 ```bash
-# stub on first build to avoid `Error: Reason: `get_url`: Could not find or open file xdoc-bundle.min.js`
+# make a stub to avoid `Error: Reason: `get_url`: Could not find or open file xdoc-bundle.min.js`
+# the proper file will be created on the second build
 touch "${XDOC_STATIC_DIR}/xdoc-bundle.min.js"
 
+# set the version of the application
+export XDOC_APP_VERSION_PATH=/path/to/version/file.sbt
+
 # build (1)
-zola build
+npm run build
 ```
 
 It will build and copy to `/public` resources, including JavaScript required for search.
@@ -171,13 +177,13 @@ Next, it calculates sha-256 and sha-384 hashes for `search-bundle.min.js` and em
 npm run bundle
 ```
 
-The command takes `search-facade.js` (created with `npm run search`), `theme-switcher.js`, `code-copy.js`, `aside-highlighter.js` and `scroll-to-top.js` and bundles them into:
+The command takes `search-facade.js` that was just created, `theme-switcher.js`, `code-copy.js`, `aside-highlighter.js` and `scroll-to-top.js` and bundles them into:
 
 ```text
 /static/xdoc-bundle.min.js
 ```
 
-This bundle is loaded in the every page.
+This bundle is loaded on the every page.
 
 ### 11. Rebuild
 
@@ -185,7 +191,7 @@ The second build will include generated `xdoc-bundle.min.js` that was previously
 
 ```bash
 # build (2)
-zola build
+npm run build
 ```
 
 ### 12. Serve

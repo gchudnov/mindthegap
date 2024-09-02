@@ -12,8 +12,8 @@ output_dir = "public"
 compile_sass = true
 minify_html = false
 
-generate_feed = false
-feed_filename = "atom.xml"
+generate_feeds = false
+feed_filenames = [ "atom.xml" ]
 
 taxonomies = []
 

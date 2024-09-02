@@ -11,12 +11,13 @@
     "theme": "scripts/theme.sh",
     "katex": "scripts/katex.sh",
     "roboto": "scripts/roboto.sh",
+    "version": "scripts/version.sh",
     "search": "scripts/search.sh",
     "bundle": "scripts/bundle.sh",
-    "xdoc": "npm run theme && npm run katex && npm run roboto && npm run search && npm run bundle"
+    "build": "scripts/build.sh"
   },
   "dependencies": {
-    "svgo": "^3.0.2",
-    "terser": "^5.17.1"
+    "svgo": "^3.3.2",
+    "terser": "^5.31.6"
   }
 }
