@@ -8,11 +8,11 @@ A library of [intervals](/intervals/), [relations](/relations/) and [algorithms]
 Add the following dependency to your `build.sbt`:
 
 ```scala
-libraryDependencies += "com.github.gchudnov" %% "mtg" % "{{app_version}}"
+libraryDependencies += "com.github.gchudnov" %% "mtg" % "{{APP_VERSION}}"
 
 // optional dependencies to draw diagrams
-libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-ascii" % "{{app_version}}"   // ascii
-libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-mermaid" % "{{app_version}}" // mermaid
+libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-ascii" % "{{APP_VERSION}}"   // ascii
+libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-mermaid" % "{{APP_VERSION}}" // mermaid
 ```
 
 Import the package:

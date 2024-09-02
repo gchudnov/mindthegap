@@ -7,4 +7,4 @@ set -exu
 
 APP_VERSION=$(grep -oP 'ThisBuild / version\s+:= "\K[^"]+' "${XDOC_APP_VERSION_PATH}")
 
-find "${XDOC_BUILD_DIR}" -type f -exec sed -i "s|{{app_version}}|${APP_VERSION}|g" {} +
+find "${XDOC_BUILD_DIR}" -type f -exec sed -i "s|{{APP_VERSION}}|${APP_VERSION}|g" {} +
