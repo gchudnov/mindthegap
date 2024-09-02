@@ -2,9 +2,9 @@
 (() => {
   const docEl = document.querySelector("body > main > section > div[role='document']");
   const asideEl = document.querySelector("body > main > section > aside");
-  const navEl = asideEl.querySelector("nav");
 
   const asideTop = asideEl ? getClientRect(asideEl).top + window.scrollY : 0;
+  const navEl = asideEl ? asideEl.querySelector("nav") : null;
 
   let prevY = null;
 
@@ -24,7 +24,7 @@
       asideY = docBottom - navHeight - asideTop;
     }
 
-    if (prevY != asideY) {
+    if (navEl && prevY != asideY) {
       navEl.style.top = asideY ? `${asideY}px` : null;
       navEl.style.position = asideY ? "relative" : null;
 
