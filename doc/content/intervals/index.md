@@ -202,6 +202,10 @@ Canvas size and theme can be customized. See [examples directory](https://github
 Only Date/Time intervals are supported for Mermaid diagrams.
 
 ```scala
+import com.github.gchudnov.mtg.*
+import com.github.gchudnov.mtg.diagram.*
+import java.time.*
+
 val t1 = LocalTime.parse("04:00")
 val t2 = LocalTime.parse("10:00")
 val t3 = LocalTime.parse("08:00")
@@ -243,7 +247,7 @@ It can be rendered using the [Mermaid Live Editor](https://mermaid.live/).
 
 ## Domain
 
-To work with intervals, a `given` instance of `Domain[T]` is needed. It is provided by default for _integral_ and date-type types.
+To work with intervals, a `given` instance of `Domain[T]` is needed. It is provided by default for _integral_ and _date-type_ types.
 
 A custom domain can be defined ([example](https://github.com/gchudnov/mindthegap/blob/main/examples/src/main/scala/com/github/gchudnov/examples/CustomCharDomain.scala)) for a specific type or constructed using family of make functions ([example](https://github.com/gchudnov/mindthegap/blob/main/examples/src/main/scala/com/github/gchudnov/examples/CustomOffsetDateTimeDomain.scala)).
 

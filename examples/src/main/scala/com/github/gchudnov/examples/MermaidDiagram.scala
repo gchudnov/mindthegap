@@ -2,7 +2,6 @@ package com.github.gchudnov.examples
 
 import com.github.gchudnov.mtg.*
 import com.github.gchudnov.mtg.diagram.*
-import java.time.temporal.ChronoUnit
 import java.time.*
 
 /**
