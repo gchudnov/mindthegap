@@ -54,6 +54,10 @@ export XDOC_STATIC_DIR=$(realpath "${XDOC_ROOT_DIR}/static")
 export XDOC_CONFIG_DIR=$(realpath "${XDOC_STATIC_DIR}/../config")
 export XDOC_PROJECT_DIR=$(realpath "${XDOC_ROOT_DIR}/../..")
 export XDOC_BUILD_DIR=$(realpath "${XDOC_PROJECT_DIR}/public")
+
+# to reassign
+export XDOC_ICON_SVG_PATH=/path/to/original/icon.svg
+export XDOC_APP_VERSION_PATH=/path/to/version/file.sbt
 ```
 
 where:
@@ -63,11 +67,12 @@ where:
 - `XDOC_CONFIG_DIR` - path to the configuration directory of the theme.
 - `XDOC_PROJECT_DIR` - root directory of the project documentation.
 - `XDOC_BUILD_DIR` - build directory of the project (not the theme). Usually it is `${XDOC_PROJECT_DIR}/public` directory.
+- `XDOC_ICON_SVG_PATH` - path to the original SVG icon.
+- `XDOC_APP_VERSION_PATH` - path to the file with the application version.
 
 ### 3. Bundle Icons
 
 ```bash
-export XDOC_ICON_SVG_PATH=/path/to/original/icon.svg
 npm run icons
 ```
 
@@ -143,9 +148,6 @@ The command downloads roboto font from [fonts.googleapis.com](https://fonts.goog
 # make a stub to avoid `Error: Reason: `get_url`: Could not find or open file xdoc-bundle.min.js`
 # the proper file will be created on the second build
 touch "${XDOC_STATIC_DIR}/xdoc-bundle.min.js"
-
-# set the version of the application
-export XDOC_APP_VERSION_PATH=/path/to/version/file.sbt
 
 # build (1)
 npm run build

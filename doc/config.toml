@@ -73,11 +73,14 @@ feed = false
 github = "gchudnov/mindthegap"
 
 [extra.copyright]
-year_start=2022
-license_type="MIT License"
-license_url="https://github.com/gchudnov/mindthegap/blob/main/LICENSE"
+year_start = 2022
+license_type = "MIT License"
+license_url = "https://github.com/gchudnov/mindthegap/blob/main/LICENSE"
 
 [extra.math]
 show = false
 code = "katex-bundle.min.js"
 style = "katex.min.css"
+
+[extra.bundle]
+home_path = "/mindthegap"
