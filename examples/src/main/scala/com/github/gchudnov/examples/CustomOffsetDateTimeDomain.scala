@@ -17,7 +17,7 @@ import java.time.*
  */
 object CustomOffsetDateTimeDomain extends App:
   // custom domain with a resolution of 1 minute
-  given offsetDateTimeDomain: Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.MINUTES)
+  given customDomain: Domain[OffsetDateTime] = Domain.makeOffsetDateTime(ChronoUnit.MINUTES)
 
   val t1 = OffsetDateTime.parse("2022-07-02T04:00Z")
   val t2 = OffsetDateTime.parse("2022-07-04T10:00Z")

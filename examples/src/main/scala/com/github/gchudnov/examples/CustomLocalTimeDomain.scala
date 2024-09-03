@@ -17,7 +17,7 @@ import java.time.*
  */
 object CustomLocalTimeDomain extends App:
   // custom domain with a resolution of 1 minute
-  given offsetDateTimeDomain: Domain[LocalTime] = Domain.makeLocalTime(ChronoUnit.MINUTES)
+  given customDomain: Domain[LocalTime] = Domain.makeLocalTime(ChronoUnit.MINUTES)
 
   val t1 = LocalTime.parse("04:00")
   val t2 = LocalTime.parse("10:00")

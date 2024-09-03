@@ -195,6 +195,8 @@ Produces the following output:
   3       7    10   12    15        20   |
 ```
 
+Canvas size and theme can be customized. See [examples directory](https://github.com/gchudnov/mindthegap/tree/main/examples/src/main/scala/com/github/gchudnov/examples) for more details.
+
 ### Mermaid
 
 Only Date/Time intervals are supported for Mermaid diagrams.
@@ -239,98 +241,11 @@ gantt
 
 It can be rendered using the [Mermaid Live Editor](https://mermaid.live/).
 
-### View
-
-`View` is used to specify a range `[from, to]` to display. When not explicitly provided, a view that includes all of the intervals is used.
-
-For the example above, when view `[8, 17]` is specified:
-
-```scala
-val view    = View(Some(8), Some(17))
-val diagram = Diagram.make(List(a, b, c), view)
-```
-
-it will produce the following diagram when rendering:
-
-```text
-                                         | [3,7]   : a
-          [******************]           | [10,15] : b
-                  [********************* | [12,20] : c
---+-------+-------+----------+-------+-- |
-  8      10      12         15      17   |
-```
-
-Here we can see that the interval `[3,7]` is not in the view and only part of the interval `[12,20]` is displayed.
-
-### Canvas
-
-`Canvas` specifies the _width_ of the text buffer to draw a diagram on. When not provided, a default canvas of width `40` is used.
-
-For example, when a custom canvas of width `20` is used:
-
-```scala
-val canvas = Canvas.make(20)
-val diagram = Diagram.make(List(a, b, c), canvas)
-```
-
-will produce:
-
-```text
-  [***]              | [3,7]   : a
-        [****]       | [10,15] : b
-          [******]   | [12,20] : c
---+---+-+-+--+---+-- |
-  3   7  12 15  20   |
-```
-
-### Theme
-
-A custom theme could be specified when rendering a diagram and used to set the interval styles, specify whether to show legend, annotations and how to display labels.
-
-For example, on the diagram above, not all labels are visible, since it is not enough place on one line to display them non-overlapping.
-To display all labels, a custom theme can be applied:
-
-```scala
-val theme = Theme.default.copy(label = Theme.Label.Stacked)
-Diagram.render(diagram, theme)
-```
-
-that produces the following output:
-
-```text
-  [***]              | [3,7]   : a
-        [****]       | [10,15] : b
-          [******]   | [12,20] : c
---+---+-+-+--+---+-- |
-  3   7  12 15  20   |
-       10            |
-```
-
-Here we can see that labels are displayed on several lines, including the missing label, `10`.
-
 ## Domain
 
-To work with intervals, a `given` instance of `Domain[T]` is needed. It is provided by default for _integral_ types. For other types, a set of factory methods is provided to create a `Domain[T]` instance:
+To work with intervals, a `given` instance of `Domain[T]` is needed. It is provided by default for _integral_ and date-type types.
 
-- `Domain.makeFractional[T: Fractional](unit: T): Domain[T]`
-- `Domain.makeOffsetDateTime(unit: TemporalUnit): Domain[OffsetDateTime]`
-- `Domain.makeOffsetTime(unit: TemporalUnit): Domain[OffsetTime]`
-- `Domain.makeLocalDateTime(unit: TemporalUnit): Domain[LocalDateTime]`
-- `Domain.makeLocalDate(unit: TemporalUnit): Domain[LocalDate]`
-- `Domain.makeLocalTime(unit: TemporalUnit): Domain[LocalTime]`
-- `Domain.makeZonedDateTime(unit: TemporalUnit): Domain[ZonedDateTime]`
-- `Domain.makeInstant(unit: TemporalUnit): Domain[Instant]`
-
-`Domain[T]` is defined as:
-
-```scala
-trait Domain[T] extends Ordering[T]:
-  def succ(x: T): T
-  def pred(x: T): T
-  def count(start: T, end: T): Long
-```
-
-where `succ(x)` and `pred(x)` are used to get the next and previous value of `x`; `count` - to return the length (duration) of an interval, where _start_ and _end_ points are inclusive: `[start, end]`.
+A custom domain can be defined ([example](https://github.com/gchudnov/mindthegap/blob/main/examples/src/main/scala/com/github/gchudnov/examples/CustomCharDomain.scala)) for a specific type or constructed using family of make functions ([example](https://github.com/gchudnov/mindthegap/blob/main/examples/src/main/scala/com/github/gchudnov/examples/CustomOffsetDateTimeDomain.scala)).
 
 ## Ordering
 
