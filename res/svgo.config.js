@@ -255,7 +255,7 @@ function themeColors(ast, params, info) {
   );
 
   if (Object.keys(colors).length !== Object.keys(values).length) {
-    console.log("ERROR: Colors.length is not matching Values.length, there are repeating values. Update the code to fix it.")
+    console.log("ERROR: Colors.length is not matching Values.length. update the 'svgo.config.js' to fix it.")
   }
 
   const inversions = [
