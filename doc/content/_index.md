@@ -19,24 +19,19 @@ Import the package:
 
 ```scala
 import com.github.gchudnov.mtg.*
+import com.github.gchudnov.mtg.diagram.*
 ```
 
-An example application:
+Explore various algorithms for interval operations, including intersection:
 
 ```scala
-package com.example
+val a = Interval.closed(0, 5) // [0,5]
+val b = Interval.closed(1, 6) // [1,6]
 
-import com.github.gchudnov.mtg.*
+val c = a.intersection(b) // [1,5]
 
-object Hello extends App {
-  val a = Interval.closed(0, 5) // [0,5]
-  val b = Interval.closed(1, 6) // [1,6]
-
-  val c = a.intersection(b) // [1,5]
-
-  println(c)
-  // [1,5]
-}
+println(c)
+// [1,5]
 ```
 
-Check the [examples](https://github.com/gchudnov/mindthegap/tree/main/examples/src/main/scala/com/github/gchudnov/mtg/examples) directory for the list of use-cases.
+For a list of use-cases, check out the [examples directory](https://github.com/gchudnov/mindthegap/tree/main/examples/src/main/scala/com/github/gchudnov/examples).

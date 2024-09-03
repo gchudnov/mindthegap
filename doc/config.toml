@@ -54,7 +54,6 @@ theme_init = "theme-init.min.js"
 code = "xdoc-bundle.min.js"
 home_path = "/mindthegap"
 
-
 [extra.logo]
 embed = "icon.svg"
 title = "Mind The Gap"
