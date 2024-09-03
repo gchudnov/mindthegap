@@ -1,7 +1,7 @@
 +++
 title = "Intervals"
 description = "Intervals"
-date = 2022-11-19
+date = 2024-09-03
 draft = false
 
 [extra]
@@ -82,13 +82,6 @@ Interval.closed(Some(1), Some(5))   // [1, 5]
 Interval.closed(Some(1), None)      // [1, +∞)
 Interval.closed(None, Some(5))      // (-∞, 5]
 Interval.closed(None, None)         // (-∞, +∞)
-```
-
-A special factory low-level method, `Interval.make` can be used to create an interval by providing boundaries.
-
-```scala
-Interval.make(Mark.at(0), Mark.pred(0))   // [0, 0)
-Interval.make(Mark.succ(3), Mark.pred(5)) // (3, 5)
 ```
 
 ## Operations
