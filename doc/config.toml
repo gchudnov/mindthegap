@@ -52,6 +52,8 @@ nav = [
 [extra.bundle]
 theme_init = "theme-init.min.js"
 code = "xdoc-bundle.min.js"
+home_path = "/mindthegap"
+
 
 [extra.logo]
 embed = "icon.svg"
@@ -81,6 +83,3 @@ license_url = "https://github.com/gchudnov/mindthegap/blob/main/LICENSE"
 show = false
 code = "katex-bundle.min.js"
 style = "katex.min.css"
-
-[extra.bundle]
-home_path = "/mindthegap"
