@@ -57,7 +57,6 @@ export XDOC_BUILD_DIR=$(realpath "${XDOC_PROJECT_DIR}/public")
 
 # to reassign
 export XDOC_ICON_SVG_PATH=/path/to/original/icon.svg
-export XDOC_APP_VERSION_PATH=/path/to/version/file.sbt
 ```
 
 where:
@@ -68,7 +67,6 @@ where:
 - `XDOC_PROJECT_DIR` - root directory of the project documentation.
 - `XDOC_BUILD_DIR` - build directory of the project (not the theme). Usually it is `${XDOC_PROJECT_DIR}/public` directory.
 - `XDOC_ICON_SVG_PATH` - path to the original SVG icon.
-- `XDOC_APP_VERSION_PATH` - path to the file with the application version.
 
 ### 3. Bundle Icons
 
