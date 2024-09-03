@@ -16,13 +16,13 @@ object Settings {
     // NOTE: it most of the cases explain provides too many details, making errors unreadable
     // "-explain",                      // explain errors in more detail
     // "-explain-types",                // explain type errors in more detail
-    "-feature",     // emit warning and location for usages of features that should be imported explicitly
-    "-indent",      // allow significant indentation.
-    "-new-syntax",  // require scala 3.0 new syntax.
-    "-print-lines", // show source code line numbers.
-    "-unchecked",   // enable additional warnings where generated code depends on assumptions
-    // "-Xfatal-warnings",              // fail the compilation if there are any warnings
-    "-Xmigration", // warn about constructs whose behavior may have changed since version
+    "-feature",         // emit warning and location for usages of features that should be imported explicitly
+    "-indent",          // allow significant indentation.
+    "-new-syntax",      // require scala 3.0 new syntax.
+    "-print-lines",     // show source code line numbers.
+    "-unchecked",       // enable additional warnings where generated code depends on assumptions
+    "-Xfatal-warnings", // fail the compilation if there are any warnings
+    "-Xmigration",      // warn about constructs whose behavior may have changed since version
     // "-Xcheck-macros",
     // "-Xprint-types", // Without this flag, we will not see error messages for exceptions during given-macro expansion!
     // "-Ycheck:all", // also for checking macros
