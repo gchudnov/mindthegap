@@ -344,35 +344,46 @@ final class IntervalSpec extends TestSpec:
 
     "normalize" should {
       "provide a normal form of the intervals" in {
+        val a = Interval.make(Endpoint.at(1), Endpoint.at(5))
+        val b = Interval.make(Endpoint.pred(1), Endpoint.at(5))
+        val c = Interval.make(Endpoint.pred(Endpoint.pred(1)), Endpoint.at(5))
+        val d = Interval.make(Endpoint.succ(1), Endpoint.at(5))
+        val e = Interval.make(Endpoint.succ(Endpoint.succ(1)), Endpoint.at(5))
+        val f = Interval.make(Endpoint.at(1), Endpoint.pred(5))
+        val g = Interval.make(Endpoint.at(1), Endpoint.pred(Endpoint.pred(5)))
+        val h = Interval.make(Endpoint.at(1), Endpoint.succ(5))
+        val i = Interval.make(Endpoint.at(1), Endpoint.succ(Endpoint.succ(5)))
+        val j = Interval.make(Endpoint.pred(Endpoint.pred(1)), Endpoint.succ(Endpoint.succ(5)))
+
         // [1, 5] -> [1, 5]
-        Interval.make(Endpoint.at(1), Endpoint.at(5)).normalize shouldBe Interval.closed(1, 5)
+        a.normalize shouldBe Interval.closed(1, 5)
 
         // )1, 5] -> [0, 5]
-        Interval.make(Endpoint.pred(1), Endpoint.at(5)).normalize shouldBe Interval.closed(0, 5)
+        b.normalize shouldBe Interval.closed(0, 5)
 
         // ))1, 5] -> [-1, 5]
-        Interval.make(Endpoint.pred(Endpoint.pred(1)), Endpoint.at(5)).normalize shouldBe Interval.closed(-1, 5)
+        c.normalize shouldBe Interval.closed(-1, 5)
 
         // (1, 5] -> (1, 5]
-        Interval.make(Endpoint.succ(1), Endpoint.at(5)).normalize shouldBe Interval.leftOpenRightClosed(1, 5)
+        d.normalize shouldBe Interval.leftOpenRightClosed(1, 5)
 
         // ((1, 5] -> (2, 5]
-        Interval.make(Endpoint.succ(Endpoint.succ(1)), Endpoint.at(5)).normalize shouldBe Interval.leftOpenRightClosed(2, 5)
+        e.normalize shouldBe Interval.leftOpenRightClosed(2, 5)
 
         // [1, 5) -> [1, 5)
-        Interval.make(Endpoint.at(1), Endpoint.pred(5)).normalize shouldBe Interval.leftClosedRightOpen(1, 5)
+        f.normalize shouldBe Interval.leftClosedRightOpen(1, 5)
 
         // [1, 5)) -> [1, 4)
-        Interval.make(Endpoint.at(1), Endpoint.pred(Endpoint.pred(5))).normalize shouldBe Interval.leftClosedRightOpen(1, 4)
+        g.normalize shouldBe Interval.leftClosedRightOpen(1, 4)
 
         // [1, 5( -> [1, 6]
-        Interval.make(Endpoint.at(1), Endpoint.succ(5)).normalize shouldBe Interval.closed(1, 6)
+        h.normalize shouldBe Interval.closed(1, 6)
 
         // [1, 5(( -> [1, 7]
-        Interval.make(Endpoint.at(1), Endpoint.succ(Endpoint.succ(5))).normalize shouldBe Interval.closed(1, 7)
+        i.normalize shouldBe Interval.closed(1, 7)
 
         // ))1, 5((
-        Interval.make(Endpoint.pred(Endpoint.pred(1)), Endpoint.succ(Endpoint.succ(5))).normalize shouldBe Interval.closed(-1, 7)
+        j.normalize shouldBe Interval.closed(-1, 7)
       }
     }
 

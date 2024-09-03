@@ -107,18 +107,6 @@ Interval.open(1, 5).canonical   // (1, 5) -> [2, 4]
 Interval.closed(1, 5).canonical // [1, 5] -> [1, 5]
 ```
 
-### Normalize
-
-`a.normalize` optimizes the internal representation of an interval, reducing the amount of consecutive _succ()_ and _pred()_ operations.
-
-```scala
-Interval.make(Mark.pred(Mark.pred(1)), Mark.at(5)).normalize
-// [pred(pred(1)), 5] -> [-1, 5]
-
-Interval.make(Mark.succ(Mark.succ(1)), Mark.at(5)).normalize
-// [succ(succ(1)), 5] -> [succ(2), 5] = (2, 5]
-```
-
 ### Swap
 
 `a.swap` swaps left and right boundary, to convert a _non-empty_ interval to an _empty_ interval or vice versa.
@@ -157,34 +145,47 @@ In addition, `a.deflateLeft` and `a.deflateRight` methods shrink left and right 
 
 ## Show
 
-Use `.asString` to represent an interval in a human-readable form:
+Use `.toString` to represent an interval in a human-readable form:
 
 ```scala
 val a = Interval.empty[Int]
 val b = Interval.point(5)
 val c = Interval.proper(None, true, Some(2), false)
 
-a.asString // ∅
-b.asString // {5}
-c.asString // [-∞,2)
+a.toString // ∅
+b.toString // {5}
+c.toString // [-∞,2)
 ```
 
 ## Display
 
-A collection of intervals can be displayed:
+A collection of intervals can be displayed, using ASCII or [Mermaid](https://mermaid.js.org/) diagrams.
+
+### ASCII
 
 ```scala
+import com.github.gchudnov.mtg.*
+import com.github.gchudnov.mtg.diagram.*
+
 val a = Interval.closed(3, 7)
 val b = Interval.closed(10, 15)
 val c = Interval.closed(12, 20)
 
-val diagram = Diagram.make(List(a, b, c))
+val renderer = AsciiRenderer.make[Int]()
+val diagram = Diagram
+  .empty[Int]
+  .withSection { s =>
+    List(a, b, c).zipWithIndex.foldLeft(s) { case (s, (i, k)) =>
+      s.addInterval(i, s"${('a' + k).toChar}")
+    }
+  }
 
-Diagram.render(diagram)
-// List[String]
+renderer.render(diagram)
+
+println(renderer.result)
 ```
 
-When printed, it produces the following output:
+Produces the following output:
 
 ```text
   [*******]                              | [3,7]   : a
@@ -194,30 +195,49 @@ When printed, it produces the following output:
   3       7    10   12    15        20   |
 ```
 
-Note, that the annotations `a`, `b`, `c` are deduced automatically here, since a list of intervals, `List(a, b, c)` is provided to `make`-method.
-In addition, _annotations_ can be set explicitly via a parameter:
+### Mermaid
+
+Only Date/Time intervals are supported for Mermaid diagrams.
 
 ```scala
-Diagram.make(intervals = List(a, b, c), annotations = List("A", "B", "C"))
+val t1 = LocalTime.parse("04:00")
+val t2 = LocalTime.parse("10:00")
+val t3 = LocalTime.parse("08:00")
+val t4 = LocalTime.parse("20:00")
+
+val a = Interval.closed(t1, t2)
+val b = Interval.closed(t3, t4)
+
+val renderer = MermaidRenderer.make[LocalTime]
+val diagram = Diagram
+  .empty[LocalTime]
+  .withTitle("My Mermaid Diagram")
+  .withSection { s =>
+    val s0 = s.withTitle("My Section")
+    List(a, b).zipWithIndex.foldLeft(s0) { case (s, (i, k)) =>
+      s.addInterval(i, s"${('a' + k).toChar}")
+    }
+  }
+
+renderer.render(diagram)
+
+println(renderer.result)
 ```
 
-Annotations are not displayed if no explicit parameter to set them is provided and they cannot be deduced from the intervals.
+That produces the mermaid diagram:
 
-Adjust the output by specifying custom `View`, `Canvas` and `annotations` during diagram creation and `Theme` when rendering:
+```mermaid
+gantt
+  title       My Mermaid Diagram
+  dateFormat  HH:mm:ss.SSS
+  axisFormat  %H:%M:%S
 
-```scala
-Diagram.make(
-  intervals: List[Interval[T]],
-  view: View[T],            // View.default[T]
-  canvas: Canvas,           // Canvas.default
-  annotations: List[String] // List.empty[String]
-): Diagram
-
-Diagram.render(
-  d: Diagram,
-  theme: Theme // Theme.default
-): List[String]
+  section My Section
+  a  :04:00:00.000, 10:00:00.000
+  b  :08:00:00.000, 20:00:00.000
 ```
+
+It can be rendered using the [Mermaid Live Editor](https://mermaid.live/).
 
 ### View
 

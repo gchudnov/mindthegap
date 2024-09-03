@@ -190,7 +190,7 @@ trait Interval[T] extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
    *   (a-, a+]
    * }}}
    */
-  def normalize: Interval[T]
+  private[mtg] def normalize: Interval[T]
 
   /**
    * Left endpoint

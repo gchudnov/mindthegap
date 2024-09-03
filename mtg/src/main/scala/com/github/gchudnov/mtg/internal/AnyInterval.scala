@@ -81,7 +81,7 @@ private[mtg] final case class AnyInterval[T: Domain](override val leftEndpoint: 
   override def canonical: Interval[T] =
     AnyInterval(leftEndpoint.at, rightEndpoint.at)
 
-  override def normalize: Interval[T] =
+  private[mtg] override def normalize: Interval[T] =
     val l = normalizeLeft
     val r = normalizeRight
     if l != leftEndpoint || r != rightEndpoint then AnyInterval(l, r)
