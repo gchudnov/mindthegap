@@ -3,7 +3,7 @@ draft = false
 insert_anchor_links = "right"
 +++
 
-A library of [intervals](/intervals/), [relations](/relations/) and [algorithms](/algorithms/).
+A library of [intervals](intervals/), [relations](relations/) and [algorithms](algorithms/).
 
 Add the following dependency to your `build.sbt`:
 
