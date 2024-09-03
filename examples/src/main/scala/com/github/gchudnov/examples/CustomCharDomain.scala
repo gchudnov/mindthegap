@@ -7,23 +7,23 @@ import java.time.temporal.ChronoUnit
 import java.time.*
 
 /**
-  * Char Domain
-  * 
-  * Can be used to use characters as values in the interval.
-  * 
-  * NOTE: the example is 'unsafe', prone to overflows and should not be used in production.
-  */
+ * Char Domain
+ *
+ * Can be used to use characters as values in the interval.
+ *
+ * NOTE: the example is 'unsafe', prone to overflows and should not be used in production.
+ */
 final class CharDomain extends AnyDomain[Char] with Ordering[Char]:
-  override def compare(x: Char, y: Char): Int = 
+  override def compare(x: Char, y: Char): Int =
     x.compareTo(y)
-  
-  override def succ(x: Char): Char = 
+
+  override def succ(x: Char): Char =
     (x.toInt + 1).toChar
-  
-  override def pred(x: Char): Char = 
+
+  override def pred(x: Char): Char =
     (x.toInt - 1).toChar
 
-  override def count(start: Char, end: Char): Long = 
+  override def count(start: Char, end: Char): Long =
     end.toInt - start.toInt
 
 /**
@@ -55,4 +55,3 @@ object CustomCharDomain extends App:
   renderer.render(diagram)
 
   println(renderer.result)
- 
