@@ -5,7 +5,7 @@ insert_anchor_links = "right"
 
 A library of [intervals](intervals/), [relations](relations/) and [algorithms](algorithms/).
 
-Add the following dependency to your `build.sbt`:
+To include this library in your project, add the following dependency to your `build.sbt`:
 
 ```scala
 libraryDependencies += "com.github.gchudnov" %% "mtg" % "{{APP_VERSION}}"
