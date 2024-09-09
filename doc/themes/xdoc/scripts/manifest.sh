@@ -2,14 +2,14 @@
 set -exu
 : "${XDOC_STATIC_DIR}"
 : "${XDOC_CONFIG_DIR}"
-: "${XDOC_PROJECT_DIR}"
+: "${DOC_ROOT_DIR}"
 
 # Creates a Progressive Web Application, PWA manifest: `site.webmanifest`
 
 DIR_SELF="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${DIR_SELF}/_shared.sh"
 
-TOML_PATH="${XDOC_PROJECT_DIR}/config.toml"
+TOML_PATH="${DOC_ROOT_DIR}/config.toml"
 
 VALUE_TITLE=$(toml_value ".title" "${TOML_PATH}" | str_quotes_remove)
 VALUE_SHORT_NAME=$(toml_value "extra.short_name" "${TOML_PATH}" | str_quotes_remove)

@@ -51,22 +51,31 @@ Set environment variables:
 ```bash
 export XDOC_ROOT_DIR=$(readlink -f .)
 export XDOC_STATIC_DIR=$(realpath "${XDOC_ROOT_DIR}/static")
-export XDOC_CONFIG_DIR=$(realpath "${XDOC_STATIC_DIR}/../config")
-export XDOC_PROJECT_DIR=$(realpath "${XDOC_ROOT_DIR}/../..")
-export XDOC_BUILD_DIR=$(realpath "${XDOC_PROJECT_DIR}/public")
+export XDOC_CONFIG_DIR=$(realpath "${XDOC_ROOT_DIR}/config")
 
-# to reassign
-export XDOC_ICON_SVG_PATH=/path/to/original/icon.svg
+export DOC_ROOT_DIR=$(realpath "${XDOC_ROOT_DIR}/../..")
+export DOC_BUILD_DIR=$(realpath "${DOC_ROOT_DIR}/public")
+
+export RES_DIR=$(realpath "${DOC_ROOT_DIR}/../res")
+
+# echo $XDOC_ROOT_DIR
+# mindthegap/doc/themes/xdoc        ; the root directory of the theme.
+
+# echo $XDOC_STATIC_DIR
+# mindthegap/doc/themes/xdoc/static ; static directory of the theme.
+
+# echo $XDOC_CONFIG_DIR 
+# mindthegap/doc/themes/xdoc/config ; path to the configuration directory of the theme.
+
+# echo $DOC_ROOT_DIR
+# mindthegap/doc                    ; root directory of the project documentation.
+
+# echo $DOC_BUILD_DIR               ; build directory of the project (not the theme).
+# mindthegap/doc/public
+
+# echo $RES_DIR
+# mindthegap/res                    ; resources directory of the project.
 ```
-
-where:
-
-- `XDOC_ROOT_DIR` - is the root directory of the theme.
-- `XDOC_STATIC_DIR` - static directory of the theme.
-- `XDOC_CONFIG_DIR` - path to the configuration directory of the theme.
-- `XDOC_PROJECT_DIR` - root directory of the project documentation.
-- `XDOC_BUILD_DIR` - build directory of the project (not the theme). Usually it is `${XDOC_PROJECT_DIR}/public` directory.
-- `XDOC_ICON_SVG_PATH` - path to the original SVG icon.
 
 ### 3. Bundle Icons
 
@@ -74,7 +83,7 @@ where:
 npm run icons
 ```
 
-The command, given an input SVG in `XDOC_ICON_SVG_PATH`-variable, will create:
+The command, given an input SVG in `RES_DIR`-variable and `logo.svg` inside, will create:
 
 ```text
 /static/icon-512.png

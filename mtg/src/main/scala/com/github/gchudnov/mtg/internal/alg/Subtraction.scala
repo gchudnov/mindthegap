@@ -1,13 +1,14 @@
 package com.github.gchudnov.mtg.internal.alg
 
-import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
+import com.github.gchudnov.mtg.Interval
+
 import scala.collection.mutable.ListBuffer
 
-private[mtg] object Minus:
+private[mtg] object Subtraction:
 
   /**
-   * Minus
+   * Subtraction
    *
    * Subtraction of two intervals, `a` minus `b` returns:
    *
@@ -50,7 +51,7 @@ private[mtg] object Minus:
    *   1       4 5           10          15   |
    * }}}
    */
-  final def minus[T: Domain](a: Interval[T], b: Interval[T]): List[Interval[T]] =
+  final def difference[T: Domain](a: Interval[T], b: Interval[T]): List[Interval[T]] =
     if a.nonEmpty && b.isEmpty then List(a)
     else
       val ordE = summon[Domain[T]].ordEndpoint
@@ -64,8 +65,24 @@ private[mtg] object Minus:
         if ordE.lt(b.rightEndpoint, a.rightEndpoint) then rs.addOne(Interval.make(b.rightEndpoint.succ, a.rightEndpoint))
       rs.toList
 
-  final def minusOne[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
-    val cs = minus(a, b)
+  final def minus[T: Domain](a: Interval[T], b: Interval[T]): Interval[T] =
+    val cs = difference(a, b)
     if cs.isEmpty then Interval.empty[T]
     else if cs.size == 1 then cs.head
-    else throw new UnsupportedOperationException("a.minus(b) is not defined when a.contains(b); use Interval.minus(a, b) instead")
+    else throw new UnsupportedOperationException("a.minus(b) is not defined when a.contains(b); use Interval.difference(a, b) instead")
+
+  /**
+   * Symmetric Difference
+   *
+   * Computes the intervals that are part of either `a` or `b` but not both. It finds the non-overlapping parts of both intervals.
+   *
+   * The symbol of symmetric difference is "Δ" which is read as "delta" or "symmetric difference". Therefore, "A Δ B" is read as "A delta B"
+   * or "set A symmetric difference set B".
+   */
+  final def differenceSymmetric[T: Domain](a: Interval[T], b: Interval[T]): List[Interval[T]] =
+    if a.isEmpty then List(b)
+    else if b.isEmpty then List(a)
+    else
+      val cs1 = difference(a, b)
+      val cs2 = difference(b, a)
+      cs1 ++ cs2

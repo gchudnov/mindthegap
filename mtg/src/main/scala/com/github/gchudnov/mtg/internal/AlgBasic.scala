@@ -38,4 +38,4 @@ private[mtg] transparent trait AlgBasic[T: Domain]:
    * Minus of two intervals
    */
   final def minus(b: Interval[T]): Interval[T] =
-    Minus.minusOne(a, b)
+    Subtraction.minus(a, b)

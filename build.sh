@@ -12,10 +12,12 @@ npm install
 # set env variables
 export XDOC_ROOT_DIR=$(readlink -f .)
 export XDOC_STATIC_DIR=$(realpath "${XDOC_ROOT_DIR}/static")
-export XDOC_CONFIG_DIR=$(realpath "${XDOC_STATIC_DIR}/../config")
-export XDOC_PROJECT_DIR=$(realpath "${XDOC_ROOT_DIR}/../..")
-export XDOC_BUILD_DIR=$(realpath "${XDOC_PROJECT_DIR}/public")
-export XDOC_ICON_SVG_PATH="${DIR_SELF}/res/logo.svg"
+export XDOC_CONFIG_DIR=$(realpath "${XDOC_ROOT_DIR}/config")
+
+export DOC_ROOT_DIR=$(realpath "${XDOC_ROOT_DIR}/../..")
+export DOC_BUILD_DIR=$(realpath "${DOC_ROOT_DIR}/public")
+
+export RES_DIR="${DOC_ROOT_DIR}/../res"
 
 # bundle icons
 npm run icons

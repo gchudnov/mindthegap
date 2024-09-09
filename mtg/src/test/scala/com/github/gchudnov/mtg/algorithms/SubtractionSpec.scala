@@ -6,8 +6,9 @@ import com.github.gchudnov.mtg.Interval
 import com.github.gchudnov.mtg.Domain
 import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.PropertyCheckConfiguration
 
-final class MinusSpec extends TestSpec:
+final class SubtractionSpec extends TestSpec:
 
   given intRange: IntRange = intRange5
   given intProb: IntProb   = intProb127
@@ -16,7 +17,7 @@ final class MinusSpec extends TestSpec:
 
   val ordE: Ordering[Endpoint[Int]] = summon[Domain[Int]].ordEndpoint
 
-  "Minus" when {
+  "Subtraction" when {
     "a.minus(b)" should {
 
       "∅ if A and B are empty" in {
@@ -271,14 +272,14 @@ final class MinusSpec extends TestSpec:
       }
     }
 
-    "Interval" should {
-      "Interval.minus(a, b)" in {
+    "Interval.difference(a, b)" should {
+      "check" in {
         forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
 
           whenever(xx.contains(yy)) {
-            val actual = Interval.minus(xx, yy)
+            val actual = Interval.difference(xx, yy)
 
             actual.size shouldBe (2)
             actual.foreach(_.nonEmpty shouldBe (true))
@@ -296,7 +297,7 @@ final class MinusSpec extends TestSpec:
         val b = Interval.closed(5, 10) // [5, 10]
 
         // val c = a.minus(b)           // throws UnsupportedOperationException
-        val cs = Interval.minus(a, b) // [[1, 4], [11, 15]]
+        val cs = Interval.difference(a, b) // [[1, 4], [11, 15]]
 
         val actual   = cs.map(_.canonical)
         val expected = List(Interval.closed(1, 4), Interval.closed(11, 15))
@@ -306,12 +307,107 @@ final class MinusSpec extends TestSpec:
       }
     }
 
+    "Interval.differenceSymmetric(a, b)" should {
+      "check if overlap" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.overlaps(yy) || yy.overlaps(xx)) {
+            val actual = Interval.differenceSymmetric(xx, yy)
+
+            actual.size shouldBe (2)
+            actual.foreach(_.nonEmpty shouldBe (true))
+
+            // (1) The symmetric difference is equivalent to the union of both relative complements: A Δ B = (A \ B) ∪ (B \ A).
+            val XXdiffYY = Interval.difference(xx, yy)
+            val YYdiffXX = Interval.difference(yy, xx)
+            val expected = XXdiffYY ++ YYdiffXX
+            actual.sorted shouldBe expected.sorted
+
+            // (2) The symmetric difference is equivalent to the union of two intervals minus their intersection: A Δ B = (A ∪ B) \ (A ∩ B).
+            val union     = xx.union(yy)
+            val intersect = xx.intersection(yy)
+
+            val expected2 = Interval.difference(union, intersect)
+            actual.sorted shouldBe expected2.sorted
+          }
+        }
+      }
+
+      "check commutativity: A Δ B = B Δ A" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          val actual1 = Interval.differenceSymmetric(xx, yy)
+          val actual2 = Interval.differenceSymmetric(yy, xx)
+
+          actual1.sorted shouldBe actual2.sorted
+        }
+      }
+
+      // Associative property: A Δ (B Δ C) = (A Δ B) Δ C.
+      // "check associative property" in {
+      //   forAll(genNonEmptyIntArgs, genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY, argsZ) =>
+      //     val xx = Interval.make(argsX.left, argsX.right)
+      //     val yy = Interval.make(argsY.left, argsY.right)
+      //     val zz = Interval.make(argsZ.left, argsZ.right)
+
+      //     val actual1 = Interval.differenceSymmetric(yy, zz).flatMap(Interval.differenceSymmetric(xx, _)).map(_.canonical).distinct
+      //     val actual2 = Interval.differenceSymmetric(xx, yy).flatMap(Interval.differenceSymmetric(_, zz)).map(_.canonical).distinct
+
+      //     actual1.sorted shouldBe actual2.sorted
+      //   }
+      // }
+
+      "the empty interval is neutral: A Δ ∅ = A" in {
+        forAll(genNonEmptyIntArgs) { argsX =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.empty[Int]
+
+          val actual = Interval.differenceSymmetric(xx, yy)
+
+          actual.size shouldBe (1)
+          actual.head shouldBe (xx)
+        }
+      }
+
+      // "every interval is its own inverse: A Δ A = ∅" in {
+      //   forAll(genNonEmptyIntArgs) { argsX =>
+      //     val xx = Interval.make(argsX.left, argsX.right)
+
+      //     val actual = Interval.differenceSymmetric(xx, xx)
+
+      //     actual.size shouldBe (1)
+      //     actual.head shouldBe (Interval.empty[Int])
+      //   }
+      // }
+
+      "check selected use-cases" in {
+        val t = Table(
+          ("a", "b", "cs"),
+          (Interval.closed(1, 5), Interval.closed(3, 7), List(Interval.closed(1, 2), Interval.closed(6, 7))),
+          (Interval.open(-3, 3), Interval.point(2), List(Interval.closed(-2, 1))),
+          (Interval.closed(1, 2), Interval.closed(3, 4), List(Interval.closed(1, 2), Interval.closed(3, 4))),
+          (Interval.closed(4, 5), Interval.point(-3), List(Interval.closed(4, 5), Interval.point(-3))),
+          (Interval.closed(3, 5), Interval.empty[Int], List(Interval.closed(3, 5))),
+          (Interval.empty[Int], Interval.closed(3, 5), List(Interval.closed(3, 5))),
+        )
+
+        forAll(t) { (a, b, expected) =>
+          val actual = Interval.differenceSymmetric(a, b).map(_.canonical)
+          actual shouldBe expected
+        }
+      }
+    }
+
     /**
-     * MinusAll
+     * difference
      *
      * Given a set of intervals A and an interval B, returns a collection of intervals that are the result of subtracting B from A.
      */
-    "minusAll" should {
+    "subtractAll" should {
       "[[0,2],[3,4],[5,7]] - [1,6] = [[0,1],[6,7]]" in {
         given domD: Domain[Double] = Domain.makeFractional(0.1)
 
@@ -323,7 +419,7 @@ final class MinusSpec extends TestSpec:
 
         val y = Interval.leftClosedRightOpen(1.0, 6.0)
 
-        val actual = minusAll(xs, y)
+        val actual = subtractAll(xs, y)
 
         // [[0,1],[6,7]]
         val expected = List(
@@ -343,7 +439,7 @@ final class MinusSpec extends TestSpec:
 
         val y = Interval.leftClosedRightOpen(2.0, 3.0)
 
-        val actual = minusAll(xs, y)
+        val actual = subtractAll(xs, y)
 
         // [[0,2],[3,5]]
         val expected = List(
@@ -388,7 +484,7 @@ final class MinusSpec extends TestSpec:
         val xs = List(x1, x2, x3, x4, x5)
         val y  = Interval.leftClosedRightOpen(-1.0, 4.0)
 
-        val actual = minusAll(xs, y)
+        val actual = subtractAll(xs, y)
 
         val z1 = Interval.leftClosedRightOpen(-5.0, -4.0)
         val z2 = Interval.leftClosedRightOpen(-3.0, -2.0)
@@ -403,7 +499,7 @@ final class MinusSpec extends TestSpec:
     }
   }
 
-  final def minusAll[T: Domain](xs: Iterable[Interval[T]], y: Interval[T]): List[Interval[T]] =
+  final def subtractAll[T: Domain](xs: Iterable[Interval[T]], y: Interval[T]): List[Interval[T]] =
     xs.foldLeft(List.empty[Interval[T]]) { (acc, x) =>
-      acc ++ Interval.minus(x, y).filter(_.nonEmpty)
+      acc ++ Interval.difference(x, y).filter(_.nonEmpty)
     }

@@ -4,7 +4,7 @@ import com.github.gchudnov.mtg.*
 import com.github.gchudnov.mtg.diagram.*
 
 /**
- * Munus #2
+ * Subtract #2
  *
  * {{{
  * Given
@@ -29,7 +29,7 @@ object Minus2 extends App:
   val intervals = List(a)
 
   val result = intervals.flatMap { x =>
-    if x.intersects(b) then Interval.minus(x, b)
+    if x.intersects(b) then Interval.difference(x, b)
     else List(x)
   }
 

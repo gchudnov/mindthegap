@@ -34,10 +34,16 @@ private[mtg] transparent trait AlgStatic:
     Gap.gap(a, b)
 
   /**
-   * Minus
+   * Difference
    */
-  final def minus[T: Domain](a: Interval[T], b: Interval[T]): List[Interval[T]] =
-    Minus.minus(a, b)
+  final def difference[T: Domain](a: Interval[T], b: Interval[T]): List[Interval[T]] =
+    Subtraction.difference(a, b)
+
+  /**
+   * Difference Symmetric
+   */
+  final def differenceSymmetric[T: Domain](a: Interval[T], b: Interval[T]): List[Interval[T]] =
+    Subtraction.differenceSymmetric(a, b)
 
   /**
    * Group

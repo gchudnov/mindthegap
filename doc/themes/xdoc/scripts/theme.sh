@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -exu
-: "${XDOC_BUILD_DIR}"
+: "${DOC_BUILD_DIR}"
 : "${XDOC_STATIC_DIR}"
 
 # Bundles theme initialization
 # - theme-init.js - sets the current theme if it was not set
 
-mkdir -p "${XDOC_BUILD_DIR}"
+mkdir -p "${DOC_BUILD_DIR}"
 
 BUNDLE_NAME=theme-init.min.js
 

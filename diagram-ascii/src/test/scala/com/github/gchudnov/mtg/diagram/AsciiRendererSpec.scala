@@ -921,13 +921,13 @@ final class AsciiRendererSpec extends AnyWordSpec with Matchers:
         actual shouldBe expected
       }
 
-      "display Interval.minus(a, b) if a.contains(b)" in {
+      "display Interval.difference(a, b) if a.contains(b)" in {
         val renderer = AsciiRenderer.make[Int]()
 
         val a = Interval.closed(1, 15)
         val b = Interval.closed(5, 10)
 
-        val cs = Interval.minus(a, b).map(_.canonical)
+        val cs = Interval.difference(a, b).map(_.canonical)
 
         val diagram = Diagram.empty[Int].withSection { s =>
           val s0 = s.addInterval(a, "a").addInterval(b, "b")

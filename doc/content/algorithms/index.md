@@ -107,9 +107,21 @@ val c = a.gap(b)               // ∅
 
 **Note:** _intersection_ and _gap_ operations are related: for any intervals `a` and `b`, `(a & b).swap == (a ∥ b).inflate`.
 
-## Minus
+## Subtraction
 
-Subtraction `-` of two intervals, `a` minus `b`, produces the interval `c` such that:
+In interval arithmetic, subtraction is used to find parts of one interval that do not overlap with another. This section covers three types of subtraction operations: `Minus`, `Complementary Difference`, and `Symmetric Difference`.
+
+**Comparison of Subtraction Functions:**
+
+| Operation                    | Output Type        | Behavior                                           |
+| ---------------------------- | ------------------ | -------------------------------------------------- |
+| **Minus**                    | Single interval    | Returns a single interval, throws if not possible. |
+| **Complementary Difference** | Multiple intervals | Returns the disjoint portions of `a` outside `b`.  |
+| **Symmetric Difference**     | Multiple intervals | Returns non-overlapping portions of `a` and `b`.   |
+
+### Minus
+
+`a.minus(b)` is a special form of subtraction where the result is guaranteed to be a single interval. This operation returns the part of `a` that lies outside `b` when `a` and `b` are disjoint or minimally overlap:
 
 - `c := a - b = [a-, min(pred(b-), a+)]` if `a- < b-` and `a+ <= b+`;
 - `c := a - b = [max(succ(b+), a-), a+]` if `a- >= b-` and `a+ > b+`.
@@ -119,12 +131,6 @@ Subtraction `-` of two intervals, `a` minus `b`, produces the interval `c` such 
 - `a` and `b` are _disjoint_;
 - `a` contains either `b-` or `b+` but not both;
 - either `b.starts(a)` or `b.finishes(a)`.
-
-`a.minus(b)` is undefined if:
-
-- either `a.starts(b)` or `a.finishes(b)`;
-- `a` or `b` is _properly included_ in the other.
-  - **Note:** when `a.contains(b)`, use `Intervals.minus(a, b)` instead. It returns a collection of intervals.
 
 ```scala
 val a = Interval.closed(1, 10)  // [1, 10]
@@ -144,19 +150,37 @@ val c = a.minus(b)             // [11, 15]
 
 ![minus-right.svg](./minus-right.svg)
 
-**Note:** The operation `a.minus(b)` is not defined if `a.contains(b)` and throws `UnsupportedOperationException`.  
-Use `Intervals.minus(a, b)` instead, which returns a collection of intervals:  
+When `a.contains(b)`, the operation will throw an `UnsupportedOperationException`. Use `Intervals.difference(a, b)` instead. It returns a collection of intervals.
+
+### Complementary Difference
+
+The `Intervals.difference(a, b)` computes the portions of interval `a` that do not overlap with `b`. Unlike `Minus`, this function can return multiple disjoint intervals if necessary:
+
 `c1, c2 := (a - b) = list([a-, pred(b-)], [succ(b+), a+])`.
 
 ```scala
 val a = Interval.closed(1, 15)  // [1, 15]
 val b = Interval.closed(5, 10)  // [5, 10]
 
-// val c = a.minus(b)           // throws UnsupportedOperationException
-val cs = Interval.minus(a, b)   // [[1, 4], [11, 15]]
+val cs = Interval.difference(a, b)  // [[1, 4], [11, 15]]
+
+// val c = a.minus(b)  // throws UnsupportedOperationException
 ```
 
 ![minus-contains.svg](./minus-contains.svg)
+
+### Symmetric Difference
+
+The `Intervals.differenceSymmetric(a, b)` computes the intervals that are part of either `a` or `b` but not both. It finds the non-overlapping parts of both intervals.
+
+```scala
+val a = Interval.closed(1, 5)   // [1, 5]
+val b = Interval.closed(3, 7)   // [3, 7]
+
+val result = Interval.differenceSymmetric(a, b)  // [[1, 2], [6, 7]]
+```
+
+![symmetric-difference.svg](./symmetric-difference.svg)
 
 ## Group
 
@@ -169,8 +193,8 @@ Methods:
 
 The resulting collection of intervals is:
 
-- *disjoint*, with no overlapping intervals;
-- contains no *adjacent* intervals if `isGroupAdjacent` is set to `false`;
+- _disjoint_, with no overlapping intervals;
+- contains no _adjacent_ intervals if `isGroupAdjacent` is set to `false`;
 - sorted.
 
 ```scala
@@ -234,7 +258,6 @@ Methods:
 
 - `Interval.split([a1, a2, ... an])` takes a collection of intervals and returns a collection of splits `[s1, s2, ... sn]`.
 - `Interval.splitFind([a1, a2, ... an])` takes a collection of intervals and returns a collection of tuples `[(s1, {i, ... }), (s2, {j, ... }), ... (sn, {k, ... })]`, where `sk` is the split-interval and `{i, ... }` is a set of indices of input intervals that belong to `sk`.
-
 
 ```scala
 val a = Interval.closed(0, 20)  // [0, 20]
