@@ -335,6 +335,11 @@ final class SubtractionSpec extends TestSpec:
         }
       }
 
+      /**
+       * Commutativity: symmetricDifference(a, b) == symmetricDifference(b, a)
+       * 
+       * The symmetric difference is commutative, meaning that the order of the intervals does not affect the result.
+       */
       "check commutativity: A Δ B = B Δ A" in {
         forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
@@ -347,8 +352,7 @@ final class SubtractionSpec extends TestSpec:
         }
       }
 
-      // Associative property: A Δ (B Δ C) = (A Δ B) Δ C.
-      // "check associative property" in {
+      // "check associative property: A Δ (B Δ C) = (A Δ B) Δ C" in {
       //   forAll(genNonEmptyIntArgs, genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY, argsZ) =>
       //     val xx = Interval.make(argsX.left, argsX.right)
       //     val yy = Interval.make(argsY.left, argsY.right)
@@ -361,28 +365,81 @@ final class SubtractionSpec extends TestSpec:
       //   }
       // }
 
+      /**
+       * Symmetric Difference with Empty: symmetricDifference(a, Interval.empty) == List(a)
+       */
       "the empty interval is neutral: A Δ ∅ = A" in {
         forAll(genNonEmptyIntArgs) { argsX =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.empty[Int]
 
-          val actual = Interval.differenceSymmetric(xx, yy)
+          val actual1 = Interval.differenceSymmetric(xx, yy) // A Δ ∅ = A
+          val actual2 = Interval.differenceSymmetric(yy, xx) // ∅ Δ A = A
 
-          actual.size shouldBe (1)
-          actual.head shouldBe (xx)
+          actual1.size shouldBe (1)
+          actual1.head shouldBe (xx)
+
+          actual2.size shouldBe (1)
+          actual2.head shouldBe (xx)
         }
       }
 
-      // "every interval is its own inverse: A Δ A = ∅" in {
-      //   forAll(genNonEmptyIntArgs) { argsX =>
-      //     val xx = Interval.make(argsX.left, argsX.right)
+      /**
+       * Idempotence: symmetricDifference(a, a) == Interval.empty
+       */
+      "check idempotence -- every interval is its own inverse: A Δ A = ∅" in {
+        forAll(genNonEmptyIntArgs) { argsX =>
+          val xx = Interval.make(argsX.left, argsX.right)
 
-      //     val actual = Interval.differenceSymmetric(xx, xx)
+          // return an empty list, indicating no remaining intervals after the symmetric difference operation.
+          val actual = Interval.differenceSymmetric(xx, xx)
 
-      //     actual.size shouldBe (1)
-      //     actual.head shouldBe (Interval.empty[Int])
-      //   }
-      // }
+          actual.size shouldBe (0)
+          actual shouldBe List.empty[Interval[Int]]
+        }
+      }
+
+      /**
+        * Disjoint Intervals: If a and b are disjoint, symmetricDifference(a, b) == List(a, b)
+        */
+      "check disjoint intervals" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.isDisjoint(yy)) {
+            val actual = Interval.differenceSymmetric(xx, yy)
+
+            actual.size shouldBe (2)
+            actual.foreach(_.nonEmpty shouldBe (true))
+
+            val expected = List(xx, yy)
+            actual.sorted shouldBe expected.sorted
+          }
+        }
+      }
+
+      /**
+       * Containment: If a.contains(b), symmetricDifference(a, b) returns the parts of a that aren't covered by b.
+       */
+      "check containment" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.contains(yy) || yy.contains(xx)) {
+            val actual = Interval.differenceSymmetric(xx, yy)
+
+            actual.size shouldBe (2)
+            actual.foreach(_.nonEmpty shouldBe (true))
+
+            val (qq, ww) = if xx.contains(yy) then (xx, yy) else (yy, xx)
+            val expected = Interval.difference(qq, ww)
+
+            actual.sorted shouldBe expected.sorted
+          }
+        }
+      }
 
       "check selected use-cases" in {
         val t = Table(
