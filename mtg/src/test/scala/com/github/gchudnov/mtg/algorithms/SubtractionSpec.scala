@@ -308,36 +308,10 @@ final class SubtractionSpec extends TestSpec:
     }
 
     "Interval.differenceSymmetric(a, b)" should {
-      "check if overlap" in {
-        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
-          val xx = Interval.make(argsX.left, argsX.right)
-          val yy = Interval.make(argsY.left, argsY.right)
-
-          whenever(xx.overlaps(yy) || yy.overlaps(xx)) {
-            val actual = Interval.differenceSymmetric(xx, yy)
-
-            actual.size shouldBe (2)
-            actual.foreach(_.nonEmpty shouldBe (true))
-
-            // (1) The symmetric difference is equivalent to the union of both relative complements: A Δ B = (A \ B) ∪ (B \ A).
-            val XXdiffYY = Interval.difference(xx, yy)
-            val YYdiffXX = Interval.difference(yy, xx)
-            val expected = XXdiffYY ++ YYdiffXX
-            actual.sorted shouldBe expected.sorted
-
-            // (2) The symmetric difference is equivalent to the union of two intervals minus their intersection: A Δ B = (A ∪ B) \ (A ∩ B).
-            val union     = xx.union(yy)
-            val intersect = xx.intersection(yy)
-
-            val expected2 = Interval.difference(union, intersect)
-            actual.sorted shouldBe expected2.sorted
-          }
-        }
-      }
 
       /**
        * Commutativity: symmetricDifference(a, b) == symmetricDifference(b, a)
-       * 
+       *
        * The symmetric difference is commutative, meaning that the order of the intervals does not affect the result.
        */
       "check commutativity: A Δ B = B Δ A" in {
@@ -351,19 +325,6 @@ final class SubtractionSpec extends TestSpec:
           actual1.sorted shouldBe actual2.sorted
         }
       }
-
-      // "check associative property: A Δ (B Δ C) = (A Δ B) Δ C" in {
-      //   forAll(genNonEmptyIntArgs, genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY, argsZ) =>
-      //     val xx = Interval.make(argsX.left, argsX.right)
-      //     val yy = Interval.make(argsY.left, argsY.right)
-      //     val zz = Interval.make(argsZ.left, argsZ.right)
-
-      //     val actual1 = Interval.differenceSymmetric(yy, zz).flatMap(Interval.differenceSymmetric(xx, _)).map(_.canonical).distinct
-      //     val actual2 = Interval.differenceSymmetric(xx, yy).flatMap(Interval.differenceSymmetric(_, zz)).map(_.canonical).distinct
-
-      //     actual1.sorted shouldBe actual2.sorted
-      //   }
-      // }
 
       /**
        * Symmetric Difference with Empty: symmetricDifference(a, Interval.empty) == List(a)
@@ -400,8 +361,8 @@ final class SubtractionSpec extends TestSpec:
       }
 
       /**
-        * Disjoint Intervals: If a and b are disjoint, symmetricDifference(a, b) == List(a, b)
-        */
+       * Disjoint Intervals: If a and b are disjoint, symmetricDifference(a, b) == List(a, b)
+       */
       "check disjoint intervals" in {
         forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
@@ -437,6 +398,33 @@ final class SubtractionSpec extends TestSpec:
             val expected = Interval.difference(qq, ww)
 
             actual.sorted shouldBe expected.sorted
+          }
+        }
+      }
+
+      "check overlapping intervals" in {
+        forAll(genNonEmptyIntArgs, genNonEmptyIntArgs) { case (argsX, argsY) =>
+          val xx = Interval.make(argsX.left, argsX.right)
+          val yy = Interval.make(argsY.left, argsY.right)
+
+          whenever(xx.overlaps(yy) || yy.overlaps(xx)) {
+            val actual = Interval.differenceSymmetric(xx, yy)
+
+            actual.size shouldBe (2)
+            actual.foreach(_.nonEmpty shouldBe (true))
+
+            // (1) The symmetric difference is equivalent to the union of both relative complements: A Δ B = (A \ B) ∪ (B \ A).
+            val XXdiffYY = Interval.difference(xx, yy)
+            val YYdiffXX = Interval.difference(yy, xx)
+            val expected = XXdiffYY ++ YYdiffXX
+            actual.sorted shouldBe expected.sorted
+
+            // (2) The symmetric difference is equivalent to the union of two intervals minus their intersection: A Δ B = (A ∪ B) \ (A ∩ B).
+            val union     = xx.union(yy)
+            val intersect = xx.intersection(yy)
+
+            val expected2 = Interval.difference(union, intersect)
+            actual.sorted shouldBe expected2.sorted
           }
         }
       }
