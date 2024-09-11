@@ -50,6 +50,7 @@ object Settings {
   ).toVector
 
   val shared: Seq[Setting[?]] = Seq(
+    ThisBuild / versionScheme := Some("early-semver"),
     ThisBuild / turbo         := true,
     ThisBuild / usePipelining := false, // enable pipelining, Scala >= 3.5.x
     scalacOptions             := sharedScalacOptions,
@@ -59,7 +60,7 @@ object Settings {
     compileOrder              := CompileOrder.JavaThenScala,
     organization              := "com.github.gchudnov",
     homepage                  := Some(url("https://github.com/gchudnov/mindthegap")),
-    description               := "Intervals, Relations and Algorithms",
+    description               := "Intervals, Relations, and Algorithms",
     licenses                  := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
     scmInfo := Some(
       ScmInfo(
@@ -72,14 +73,12 @@ object Settings {
     ),
   )
 
-  val publishSonatype: Seq[Setting[?]] = Seq(
+  private val publishSonatype: Seq[Setting[?]] = Seq(
     publishMavenStyle      := true,
     pomIncludeRepository   := { _ => false },
     Test / publishArtifact := false,
-    credentials            := Seq(Credentials(Path.userHome / ".sbt" / ".credentials-sonatype")),
-    usePgpKeyHex("8A64557ABEC7965C31A1DF8DE12F2C6DE96AF6D1"),
     publishTo := {
-      val nexus = "https://s01.oss.sonatype.org/"
+      val nexus = "https://oss.sonatype.org/"
       if (isSnapshot.value) Some("snapshots".at(nexus + "content/repositories/snapshots"))
       else Some("releases".at(nexus + "service/local/staging/deploy/maven2"))
     },
@@ -102,7 +101,7 @@ object Settings {
     ),
   )
 
-  val publishGithub: Seq[Setting[?]] = Seq(
+  private val publishGithub: Seq[Setting[?]] = Seq(
     publishMavenStyle := true,
     // pomIncludeRepository          := { _ => false },
     Test / publishArtifact := false,
@@ -110,6 +109,8 @@ object Settings {
     publishTo              := Some("GitHub MindTheGap Package Registry".at("https://maven.pkg.github.com/gchudnov/mindthegap")),
     publishConfiguration   := publishConfiguration.value.withOverwrite(true),
   )
+
+  val doPublish: Seq[Setting[?]] = publishSonatype
 
   val noPublish: Seq[Setting[?]] = Seq(
     publishArtifact := false,

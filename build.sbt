@@ -16,7 +16,7 @@ lazy val allSettings = Settings.shared ++ testSettings
 lazy val mtg = (project
   .in(file("mtg")))
   .settings(allSettings)
-  .settings(Settings.publishGithub)
+  .settings(Settings.doPublish)
   .settings(
     name := "mtg",
     libraryDependencies ++= Dependencies.Mtg,
@@ -26,7 +26,7 @@ lazy val diagram = (project
   .in(file("diagram")))
   .dependsOn(mtg)
   .settings(allSettings)
-  .settings(Settings.publishGithub)
+  .settings(Settings.doPublish)
   .settings(
     name := "mtg-diagram",
     libraryDependencies ++= Dependencies.Mtg,
@@ -36,7 +36,7 @@ lazy val diagramAscii = (project
   .in(file("diagram-ascii")))
   .dependsOn(mtg, diagram)
   .settings(allSettings)
-  .settings(Settings.publishGithub)
+  .settings(Settings.doPublish)
   .settings(
     name := "mtg-diagram-ascii",
     libraryDependencies ++= Dependencies.Mtg,
@@ -46,7 +46,7 @@ lazy val diagramMermaid = (project
   .in(file("diagram-mermaid")))
   .dependsOn(mtg, diagram)
   .settings(allSettings)
-  .settings(Settings.publishGithub)
+  .settings(Settings.doPublish)
   .settings(
     name := "mtg-diagram-mermaid",
     libraryDependencies ++= Dependencies.Mtg,
