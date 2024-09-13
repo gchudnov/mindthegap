@@ -81,7 +81,7 @@ trait Interval[T] extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
   /**
    * Swap left and right endpoint.
    *
-   * Can be used to create an empty interval out of a non-empty one or vice-versa.
+   * Can be used to create an empty interval out of a non-empty one or vice versa.
    *
    * {{{
    *   [a-, a+] -> [a+, a-]
@@ -130,7 +130,7 @@ trait Interval[T] extends RelBasic[T] with RelExtended[T] with AlgBasic[T]:
   /**
    * Deflate
    *
-   * Applies succ and pred functions to the left and right endpoints of an interval reducing it it.
+   * Applies 'succ' and 'pred' functions to the left and right endpoints of an interval reducing it.
    *
    * When deflating, the operation might produce an empty interval, where left endpoint is greater than the right endpoint.
    *
@@ -269,7 +269,7 @@ object Interval extends AlgStatic with RelStatic:
   /**
    * Unbounded
    *
-   * An interval is unbounded if is has no left and right bounds.
+   * An interval is unbounded if it has no left and right bounds.
    *
    * {{{
    *   (-∞, +∞)

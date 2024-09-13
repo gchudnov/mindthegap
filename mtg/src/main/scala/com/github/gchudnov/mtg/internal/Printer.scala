@@ -19,7 +19,7 @@ private[mtg] object Printer:
   private val sep = ','
 
   def print[T: Domain](i: Interval[T]): String =
-    if i.isEmpty then empty.toString()
+    if i.isEmpty then empty.toString
     else if i.isPoint then printPoint(i.leftEndpoint)
     else printInterval(i.leftEndpoint, i.rightEndpoint)
 
@@ -67,4 +67,4 @@ private[mtg] object Printer:
       case Value.InfPos =>
         s"+${infinite}"
       case Value.Finite(x) =>
-        x.toString()
+        x.toString

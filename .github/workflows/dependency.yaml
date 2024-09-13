@@ -1,16 +1,19 @@
-# .github/workflows/dependency-graph.yml
-name: Update Dependency Graph
+name: Submit Dependency Graph
 on:
   push:
     branches:
       - main # default branch of the project
 jobs:
-  dependency-graph:
+  dependency-submission:
     name: Update Dependency Graph
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: scalacenter/sbt-dependency-submission@v2
+      - name: Checkout current branch
+        uses: actions/checkout@v4
         with:
+          fetch-depth: 0
+      - name: Submit Dependencies
+        uses: scalacenter/sbt-dependency-submission@v2
+        with:
+          modules-ignore: examples_3 "mtg-root_3
           configs-ignore: test
-          modules-ignore: examples_3, root_3

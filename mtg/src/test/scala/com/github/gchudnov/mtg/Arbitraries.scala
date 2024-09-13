@@ -14,9 +14,9 @@ object Arbitraries:
    * @param empty
    *   frequency of an empty interval: (empty / (empty + point + proper))
    * @param point
-   *   frequency of an point interval: (point / (empty + point + proper))
+   *   frequency of a point interval: (point / (empty + point + proper))
    * @param proper
-   *   frequency of an proper interval: (proper / (empty + point + proper))
+   *   frequency of a proper interval: (proper / (empty + point + proper))
    */
   final case class IntProb(empty: Int, point: Int, proper: Int)
 
@@ -176,7 +176,7 @@ object Arbitraries:
   /**
    * Converts a tuple of values to the tuple of some values.
    */
-  private def toSome[T](t: Tuple2[T, T]): Tuple2[Option[T], Option[T]] =
+  private def toSome[T](t: (T, T)): (Option[T], Option[T]) =
     (Some(t._1), Some(t._2))
 
   private def toLeft[T](value: Option[T], isInclude: Boolean): Endpoint[T] =

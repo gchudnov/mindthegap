@@ -8,7 +8,7 @@ private[mtg] object IsDisjoint:
   /**
    * IsDisjoint
    *
-   * Checks if there A and B are disjoint.
+   * Checks if A and B are disjoint.
    *
    * A and B are disjoint if A does not intersect B.
    *

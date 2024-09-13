@@ -23,7 +23,7 @@ import com.github.gchudnov.mtg.diagram.*
  *     1 2 3     6   8   10        15    18   |
  * }}}
  */
-object Merge1 extends App:
+object Group3 extends App:
   val a = Interval.closed(1, 3)
   val b = Interval.closed(2, 6)
   val c = Interval.closed(8, 10)

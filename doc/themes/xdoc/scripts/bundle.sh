@@ -6,7 +6,7 @@ set -exu
 # /static/search-facade.js     - search-facade.js with sha-256 and sha-384 hashes.
 # /static/theme-switcher.js    - handler to switch the theme (light / dark).
 # /static/code-copy.js         - allow <code> to be copied to the clipboard.
-# /static/aside-highlighter.js - highligh <aside> depending on the position of a scrollbar.
+# /static/aside-highlighter.js - highlight <aside> depending on the position of a scrollbar.
 # /static/scroll-to-top.js     - scroll to top button behavior.
 
 BUNDLE_NAME=xdoc-bundle.min.js

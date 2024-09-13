@@ -8,7 +8,7 @@ import com.github.gchudnov.mtg.diagram.internal.input.*
  *
  * Represents an input date that can be used in the MermaidJS diagram.
  *
- * To allow Domain type T to be used with mermadjs, you need to provide an instance of InputFormat[T].
+ * To allow Domain type T to be used with MermaidJs, you need to provide an instance of InputFormat[T].
  */
 private[mtg] trait InputFormat[T]:
   /**

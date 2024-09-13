@@ -28,7 +28,7 @@ final class FinishesSpec extends TestSpec:
     import IntervalRelAssert.*
 
     "a.finishes(b)" should {
-      "b.finisedBy(a)" in {
+      "b.finishedBy(a)" in {
         forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)
           val yy = Interval.make(argsY.left, argsY.right)
@@ -52,7 +52,7 @@ final class FinishesSpec extends TestSpec:
       }
     }
 
-    "a.finisedBy(b)" should {
+    "a.finishedBy(b)" should {
       "b.finishes(a)" in {
         forAll(genAnyIntArgs, genAnyIntArgs) { case (argsX, argsY) =>
           val xx = Interval.make(argsX.left, argsX.right)

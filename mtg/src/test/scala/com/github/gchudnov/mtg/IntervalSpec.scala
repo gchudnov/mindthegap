@@ -31,7 +31,7 @@ final class IntervalSpec extends TestSpec:
        * }}}
        */
       "create intervals" in {
-        forAll(genAnyIntArgs) { case args =>
+        forAll(genAnyIntArgs) { args =>
           val actual = Interval.make(args.left, args.right)
 
           if ordE.gt(args.left, args.right) then
@@ -144,7 +144,7 @@ final class IntervalSpec extends TestSpec:
         ordE.equiv(a.rightEndpoint, Endpoint.at(5)) shouldBe true
       }
 
-      "Interval.proper(x, y) if enpoints are provided" in {
+      "Interval.proper(x, y) if endpoints are provided" in {
         // (1, 5)
         val a = Interval.proper(Endpoint.succ(1), Endpoint.pred(5))
 

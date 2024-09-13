@@ -1,5 +1,6 @@
 package com.github.gchudnov.mtg.diagram.internal
 
+import scala.annotation.tailrec
 import scala.quoted.*
 
 /**
@@ -20,6 +21,7 @@ private[mtg] object DiagramMacro:
   private def varNamesImpl(expr: Expr[Any])(using Quotes): Expr[List[String]] =
     import quotes.reflect.*
 
+    @tailrec
     def extract(tree: Tree): List[String] = tree match
       case Inlined(_, _, expr) => extract(expr)
       case Apply(_, List(Typed(Repeated(args, _), _))) =>

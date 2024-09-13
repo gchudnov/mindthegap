@@ -1,10 +1,9 @@
-import sbt.Keys._
-import sbt._
+import sbt.Keys.*
+import sbt.*
 
-import sbtrelease.ReleasePlugin.autoImport._
-import sbtrelease.ReleaseStateTransformations._
+import sbtrelease.ReleasePlugin.autoImport.*
+import sbtrelease.ReleaseStateTransformations.*
 import com.jsuereth.sbtpgp.PgpKeys
-import com.jsuereth.sbtpgp.SbtPgp.autoImport.usePgpKeyHex
 
 object Settings {
   private val scalaV = "3.3.3"

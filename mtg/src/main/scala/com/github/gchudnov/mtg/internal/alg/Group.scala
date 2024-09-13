@@ -112,7 +112,7 @@ private[mtg] object Group:
    */
   final def groupFind[T: Domain](xs: Iterable[Interval[T]], isGroupAdjacent: Boolean): List[GroupState[T]] =
     val canGroup = if isGroupAdjacent then Interval.merges[T] else Interval.intersects[T]
-    val xs1      = xs.zipWithIndex.toList.sortWith { case ((a, _), (b, _)) => isLess[T](a, b) };
+    val xs1      = xs.zipWithIndex.toList.sortWith { case ((a, _), (b, _)) => isLess[T](a, b) }
 
     val acc = xs1.foldLeft[Option[AccState[T]]](None) { case (acc, (it, i)) =>
       acc.fold(Some(AccState.of(it, i)))(acc =>

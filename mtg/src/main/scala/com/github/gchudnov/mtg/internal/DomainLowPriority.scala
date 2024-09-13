@@ -13,7 +13,7 @@ import java.time.temporal.TemporalUnit
 private[mtg] trait DomainLowPriority extends DomainFactory:
 
   given integralDomain[T: Integral]: Domain[T] =
-    makeIntergral
+    makeIntegral
 
   given offsetDateTimeDomain: Domain[OffsetDateTime] =
     makeOffsetDateTime(ChronoUnit.SECONDS)

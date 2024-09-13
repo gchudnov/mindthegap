@@ -23,7 +23,7 @@ import com.github.gchudnov.mtg.diagram.*
  *    0.0  1.0  2.0  3.0  4.0  5.0  6.0  7.0  |
  * }}}
  */
-object Minus1 extends App:
+object Subtract1 extends App:
   given domainDouble: Domain[Double] = Domain.makeFractional(0.1)
 
   val a = Interval.leftClosedRightOpen(0.0, 2.0)

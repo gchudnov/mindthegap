@@ -18,7 +18,7 @@ KATEX_TAR_GZ_URL="https://github.com/KaTeX/KaTeX/releases/download/${KATEX_VERSI
 
 KATEX_TMP_DIR=$(mktemp -d)
 if [[ ! "${KATEX_TMP_DIR}" || ! -d "${KATEX_TMP_DIR}" ]]; then
-  echo "Could not create a temporaty directory"
+  echo "Could not create a temporary directory"
   exit 1
 fi
 

@@ -35,7 +35,7 @@ private[mtg] object BeforeAfter:
    * @param b
    *   interval
    * @return
-   *   true if a is before b
+   *   true if 'a' is before 'b'
    */
   final def before[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     val ordE = summon[Domain[T]].ordEndpoint
@@ -49,7 +49,7 @@ private[mtg] object BeforeAfter:
    * @param b
    *   interval
    * @return
-   *   true if a is after b
+   *   true if 'a' is after 'b'
    */
   final def after[T: Domain](a: Interval[T], b: Interval[T]): Boolean =
     before(b, a)

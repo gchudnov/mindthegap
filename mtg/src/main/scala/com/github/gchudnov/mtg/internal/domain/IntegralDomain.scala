@@ -6,7 +6,7 @@ import com.github.gchudnov.mtg.Domain
  * Integral Domain: Int, Long, ...
  */
 private[internal] final class IntegralDomain[T: Integral] extends AnyDomain[T]:
-  val intT = summon[Integral[T]]
+  private val intT: Integral[T] = summon[Integral[T]]
 
   override def succ(x: T): T =
     intT.plus(x, intT.one)

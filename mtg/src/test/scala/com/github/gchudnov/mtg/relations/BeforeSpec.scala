@@ -8,7 +8,7 @@ import com.github.gchudnov.mtg.TestSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.*
 
 /**
- * Before, After (Preceeds, IsPreceededBy)
+ * Before, After (Precedes, IsPrecededBy)
  *
  * {{{
  *   AAA

@@ -1,5 +1,5 @@
-import sbt.Keys._
-import sbt._
+import sbt.Keys.*
+import sbt.*
 
 Global / cancelable        := true
 Global / scalaVersion      := Settings.globalScalaVersion
@@ -66,7 +66,7 @@ lazy val root = (project
   .aggregate(mtg, diagram, diagramAscii, diagramMermaid, examples)
   .settings(Settings.noPublish)
   .settings(
-    name := "root"
+    name := "mtg-root"
   )
 
 addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")

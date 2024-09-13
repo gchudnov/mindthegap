@@ -20,7 +20,7 @@ final case class Section[T](
   def addInterval(interval: Interval[T], annotation: String): Section[T] =
     this.copy(
       intervals = intervals :+ interval,
-      annotations = annotations :+ (if annotation.isEmpty then annotations.size.toString() else annotation),
+      annotations = annotations :+ (if annotation.isEmpty then annotations.size.toString else annotation),
     )
 
   def addInterval(start: T, end: T)(using D: Domain[T]): Section[T] =
@@ -29,7 +29,7 @@ final case class Section[T](
   def addInterval(start: T, end: T, annotation: String)(using D: Domain[T]): Section[T] =
     this.copy(
       intervals = intervals :+ Interval.closed(start, end),
-      annotations = annotations :+ (if annotation.isEmpty then annotations.size.toString() else annotation),
+      annotations = annotations :+ (if annotation.isEmpty then annotations.size.toString else annotation),
     )
 
 /**

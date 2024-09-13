@@ -17,7 +17,7 @@ BROWSER_HEADER="user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (
 
 ROBOTO_TMP_DIR=$(mktemp -d)
 if [[ ! "${ROBOTO_TMP_DIR}" || ! -d "${ROBOTO_TMP_DIR}" ]]; then
-  echo "Could not create a temporaty directory"
+  echo "Could not create a temporary directory"
   exit 1
 fi
 

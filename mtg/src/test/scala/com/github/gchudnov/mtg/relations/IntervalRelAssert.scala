@@ -44,7 +44,7 @@ trait IntervalRelAssert:
   )
 
   /**
-   * Finds relations two iNtervals are satisfying
+   * Finds relations two intervals are satisfying
    */
   def findRelations[T: Domain](xx: Interval[T], yy: Interval[T]): Set[Rel] =
     relFnMap[T].foldLeft(Set.empty[Rel]) { case (acc, (k, fn)) =>

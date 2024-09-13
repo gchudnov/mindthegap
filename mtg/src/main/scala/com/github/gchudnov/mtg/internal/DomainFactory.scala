@@ -9,7 +9,7 @@ import java.time.temporal.TemporalUnit
 
 private[internal] trait DomainFactory:
 
-  def makeIntergral[T: Integral]: Domain[T] =
+  def makeIntegral[T: Integral]: Domain[T] =
     new IntegralDomain()
 
   def makeFractional[T: Fractional](unit: T): Domain[T] =
