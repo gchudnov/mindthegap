@@ -29,11 +29,11 @@ This library is ideal for projects requiring precise control over intervals, whe
 To start using **Mind the Gap**, add the following dependency to your `build.sbt`:
 
 ```scala
-libraryDependencies += "com.github.gchudnov" %% "mtg" % "2.0.0"
+libraryDependencies += "com.github.gchudnov" %% "mtg" % "2.0.1"
 
 // Optional dependencies for diagram generation
-libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-ascii" % "2.0.0"   // ASCII diagrams
-libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-mermaid" % "2.0.0" // Mermaid diagrams
+libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-ascii" % "2.0.1"   // ASCII diagrams
+libraryDependencies += "com.github.gchudnov" %% "mtg-diagram-mermaid" % "2.0.1" // Mermaid diagrams
 ```
 
 ### Example: Interval Intersection

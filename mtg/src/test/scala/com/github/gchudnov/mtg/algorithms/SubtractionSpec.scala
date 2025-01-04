@@ -544,7 +544,7 @@ final class SubtractionSpec extends TestSpec:
     }
   }
 
-  final def subtractAll[T: Domain](xs: Iterable[Interval[T]], y: Interval[T]): List[Interval[T]] =
+  def subtractAll[T: Domain](xs: Iterable[Interval[T]], y: Interval[T]): List[Interval[T]] =
     xs.foldLeft(List.empty[Interval[T]]) { (acc, x) =>
       acc ++ Interval.difference(x, y).filter(_.nonEmpty)
     }

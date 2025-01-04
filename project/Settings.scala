@@ -6,7 +6,7 @@ import sbtrelease.ReleaseStateTransformations.*
 import com.jsuereth.sbtpgp.PgpKeys
 
 object Settings {
-  private val scalaV = "3.3.3"
+  private val scalaV = "3.3.4"
 
   private val sharedScalacOptions = Seq(
     "-encoding",

@@ -25,13 +25,12 @@ private[mtg] object DiagramMacro:
     def extract(tree: Tree): List[String] = tree match
       case Inlined(_, _, expr) => extract(expr)
       case Apply(_, List(Typed(Repeated(args, _), _))) =>
-        args.flatMap((a) =>
-          a match
-            case Ident(name) =>
-              List(name)
-            case other =>
-              List.empty[String] // unsupported expression, ignore
-        )
+        args.flatMap {
+          case Ident(name) =>
+            List(name)
+          case other =>
+            List.empty[String]
+        }
       case other =>
         List.empty[String] // unsupported expression, ignore
 
